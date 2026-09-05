@@ -1,0 +1,148 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Spa {
+  id              String       @id @default(cuid())
+  name            String
+  slug            String       @unique
+  address         String
+  district        String       @default("Cầu Giấy")
+  ward            String
+  phone           String
+  latitude        Float
+  longitude       Float
+  openHours       String       @default("09:00 - 21:00")
+  rating          Float        @default(4.8)
+  reviewCount     Int          @default(0)
+  tier            String       @default("STANDARD") // STANDARD, VERIFIED, CERTIFIED
+  yellowCards     Int          @default(0)
+  redCards        Int          @default(0)
+  exclusiveOffer  String?      // Ưu đãi riêng: "Tặng 10p massage vai gáy"
+  imageUrl        String?
+  isActive        Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  slots           Slot[]
+  bookings        Booking[]
+  reviews         Review[]
+}
+
+model ServiceSku {
+  id               String    @id @default(cuid())
+  name             String
+  code             String    @unique // GOI_SACH, GOI_PREMIUM, GOI_DUONG_SINH
+  durationMinutes  Int       @default(45)
+  pricePhase1      Int       // 49000, 69000, 149000
+  pricePhase2      Int       // 59000, 85000, 179000
+  spaCost          Int       // 49000, 69000, 149000
+  description      String
+  standardProducts String?   // Danh mục sản phẩm chuẩn (gói Premium)
+  bookings         Booking[]
+}
+
+model Customer {
+  id             String         @id @default(cuid())
+  phone          String         @unique
+  name           String?
+  zaloId         String?        @unique
+  firstContactAt DateTime       @default(now())
+  lastContactAt  DateTime       @default(now())
+  bookingCount   Int            @default(0)
+  bookings       Booking[]
+  conversations  Conversation[]
+}
+
+model Conversation {
+  id                     String    @id @default(cuid())
+  zaloChatId             String    @unique
+  customerId             String?
+  customer               Customer? @relation(fields: [customerId], references: [id])
+  customerName           String?
+  customerPhone          String?
+  status                 String    @default("PENDING") // PENDING, CHATTING, CONFIRMED, CLOSED
+  assignedStaff          String?
+  firstMessageAt         DateTime  @default(now())
+  firstResponseAt        DateTime?
+  slaFirstResponseSec    Int?
+  slaBreached            Boolean   @default(false)
+  lastMessageContent     String?
+  lastMessageAt          DateTime  @default(now())
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  messages               Message[]
+  bookings               Booking[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderType     String       // CUSTOMER, HUB_STAFF, BOT, SYSTEM
+  content        String
+  zaloMessageId  String?
+  isQuickReply   Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+}
+
+model Slot {
+  id         String   @id @default(cuid())
+  spaId      String
+  spa        Spa      @relation(fields: [spaId], references: [id], onDelete: Cascade)
+  date       String   // YYYY-MM-DD
+  timeSlot   String   // MORNING (09-12), AFTERNOON (13-17), EVENING (17-21)
+  isOffPeak  Boolean  @default(true)
+  totalSeats Int      @default(3)
+  bookedSeats Int     @default(0)
+
+  bookings   Booking[]
+
+  @@unique([spaId, date, timeSlot])
+}
+
+model Booking {
+  id                     String        @id @default(cuid())
+  code                   String        @unique // GBP-xxxx
+  customerId             String?
+  customer               Customer?     @relation(fields: [customerId], references: [id])
+  customerPhone          String
+  customerName           String?
+  conversationId         String?
+  conversation           Conversation? @relation(fields: [conversationId], references: [id])
+  spaId                  String
+  spa                    Spa           @relation(fields: [spaId], references: [id])
+  skuId                  String
+  sku                    ServiceSku    @relation(fields: [skuId], references: [id])
+  slotId                 String?
+  slot                   Slot?         @relation(fields: [slotId], references: [id])
+  bookingDate            String        // YYYY-MM-DD
+  bookingTime            String        // e.g. "14:30"
+  status                 String        @default("CONFIRMED") // CONFIRMED, COMPLETED, CANCELLED_BY_CUSTOMER, CANCELLED_BY_SPA, REJECTED_BY_SPA
+  pricePaid              Int
+  spaPayout              Int
+  feedbackRating         Int?
+  priceViolated          Boolean       @default(false) // Spa có giữ đúng giá hay không?
+  notes                  String?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+}
+
+model Review {
+  id            String   @id @default(cuid())
+  spaId         String
+  spa           Spa      @relation(fields: [spaId], references: [id], onDelete: Cascade)
+  customerPhone String
+  customerName  String?
+  rating        Int      // 1 - 5 sao
+  comment       String
+  photoUrls     String?  // JSON string array
+  isOtpVerified Boolean  @default(true)
+  createdAt     DateTime @default(now())
+}
