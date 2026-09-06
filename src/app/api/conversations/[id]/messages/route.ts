@@ -13,6 +13,27 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
     const result = await persistOutboundMessage(id, content.trim(), staffName, isQuickReply)
 
+    // Nếu cấu hình ZALO_WORKER_URL (Koyeb Worker), chuyển tiếp tin nhắn để gửi thực tế đến Zalo của khách
+    const workerUrl = process.env.ZALO_WORKER_URL
+    if (workerUrl && result.conversation.zaloChatId) {
+      try {
+        const secret = process.env.ZALO_WEBHOOK_SECRET || 'glow_secret_key_2026'
+        await fetch(`${workerUrl}/send`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-webhook-secret': secret,
+          },
+          body: JSON.stringify({
+            threadId: result.conversation.zaloChatId,
+            content: content.trim(),
+          }),
+        })
+      } catch (workerErr) {
+        console.warn('Could not forward message to Zalo Worker:', workerErr)
+      }
+    }
+
     return NextResponse.json({
       success: true,
       message: result.message,

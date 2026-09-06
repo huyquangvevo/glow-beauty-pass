@@ -1,0 +1,14 @@
+{
+  "name": "glow-zalo-worker",
+  "version": "1.0.0",
+  "description": "Zalo Personal Connector Worker running on Koyeb Free Tier",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "zca-js": "^2.1.2",
+    "dotenv": "^16.4.7"
+  }
+}
