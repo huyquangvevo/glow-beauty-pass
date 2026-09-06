@@ -8,9 +8,9 @@ Mạng lưới spa nhỏ chuẩn hóa quy trình, giá rõ trước, đặt lị
 
 ---
 
-## 📖 Tài Liệu Kiến Trúc & Vận Hành Chi Tiết
-Toàn bộ sơ đồ kiến trúc, luồng webhook 2 chiều, hướng dẫn triển khai 0đ (Vercel, Supabase, Koyeb/Local Worker) và runbook quản trị được lưu tại:
-👉 **[DEPLOYMENT_ARCHITECTURE.md](./DEPLOYMENT_ARCHITECTURE.md)**
+## 📖 Tài Liệu Dự Án (Thư Mục `docs/`)
+* 👉 **[Kiến Trúc & Hạ Tầng Triển Khai (0đ)](./docs/DEPLOYMENT_ARCHITECTURE.md)**: Sơ đồ kiến trúc, luồng webhook 2 chiều, hướng dẫn Vercel, Supabase, Zalo Worker và runbook quản trị.
+* 👉 **[Kế Hoạch Triển Khai MVP 2 Tuần](./docs/PILOT_PLAN_MVP.md)**: Chiến lược cắt giảm phạm vi, lộ trình sprint 10 ngày và tiêu chuẩn Go/No-Go.
 
 ---
 
