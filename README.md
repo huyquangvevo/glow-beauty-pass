@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌸 GlowBeautyPass — MVP Pilot 90 Ngày
 
-## Getting Started
+Mạng lưới spa nhỏ chuẩn hóa quy trình, giá rõ trước, đặt lịch qua Zalo tại Quận Cầu Giấy, Hà Nội.
 
-First, run the development server:
+* **Website Production:** [https://glow-beauty-pass.vercel.app](https://glow-beauty-pass.vercel.app)
+* **GitHub Repository:** [https://github.com/huyquangvevo/glow-beauty-pass](https://github.com/huyquangvevo/glow-beauty-pass)
+* **Supabase Project:** `glow-beauty-pass` (`olujbvuvtxuaybeedhjh` - Singapore)
+
+---
+
+## 📖 Tài Liệu Kiến Trúc & Vận Hành Chi Tiết
+Toàn bộ sơ đồ kiến trúc, luồng webhook 2 chiều, hướng dẫn triển khai 0đ (Vercel, Supabase, Koyeb/Local Worker) và runbook quản trị được lưu tại:
+👉 **[DEPLOYMENT_ARCHITECTURE.md](./DEPLOYMENT_ARCHITECTURE.md)**
+
+---
+
+## 🚀 Các Trang Chính Của Ứng Dụng
+
+| Đường dẫn | Đối tượng sử dụng | Mô tả chức năng |
+| :--- | :--- | :--- |
+| **`/`** | **Khách Hàng** | Xem bảng giá 3 gói niêm yết (49k, 69k, 149k), danh mục 15 spa Cầu Giấy kèm tính khoảng cách GPS, đặt lịch qua Zalo. |
+| **`/spa/[slug]`** | **Khách Hàng** | Chi tiết điểm spa, ảnh thực tế, giờ mở cửa, ưu đãi độc quyền và review xác thực SĐT. |
+| **`/hub`** | **CSKH / Điều Phối** | Hub Ops CRM: Hàng đợi chat Zalo tập trung, bộ đếm SLA (< 5 phút), kịch bản mẫu 1-click, form chốt lịch 1-click sinh mã `GBP-xxxxx`. |
+| **`/admin/kpi`** | **Ban Quản Trị** | Giám sát trực tiếp 5 chỉ số sống còn Go/No-Go sau ngày thứ 90 (Booking/spa, tỷ lệ chốt, tỷ lệ quay lại 45 ngày, giữ đúng giá, rating TB). |
+
+---
+
+## 🛠️ Chạy Ứng Dụng Tại Cục Bộ (Local Development)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# 1. Cài đặt dependencies
+pnpm install
+
+# 2. Đồng bộ Prisma Database
+pnpm exec prisma db push
+
+# 3. Nạp dữ liệu mẫu 15 spa Cầu Giấy
+pnpm dlx tsx prisma/seed.ts
+
+# 4. Khởi động server
 pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Mở trình duyệt tại [http://localhost:3000](http://localhost:3000).
