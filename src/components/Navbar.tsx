@@ -14,6 +14,7 @@ import {
   ArrowLeft,
   X,
 } from 'lucide-react'
+import { BrandIcon, BrandWordmark } from './BrandLogo'
 
 export function Navbar() {
   const pathname = usePathname()
@@ -29,7 +30,7 @@ export function Navbar() {
     <>
       {/* TOP HEADER: GLOW BEAUTY PASS (Bigger text & breathable spacing) */}
       <header className="sticky top-0 z-40 bg-[#236B38] text-white shadow-xs">
-        <div className="max-w-md mx-auto px-4 pt-3.5 pb-3 space-y-3">
+        <div className="max-w-md mx-auto px-4 pt-3 pb-2.5 space-y-2.5">
           {/* Brand Row */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
@@ -43,14 +44,8 @@ export function Navbar() {
                 </Link>
               )}
 
-              <Link href="/" className="flex items-center gap-1.5 group">
-                <span className="font-black text-xl sm:text-2xl tracking-tight text-white">
-                  glow
-                </span>
-                <span className="font-normal text-xl sm:text-2xl tracking-tight text-emerald-100">
-                  beauty pass
-                </span>
-                <span className="w-2 h-2 rounded-full bg-amber-300 ml-0.5"></span>
+              <Link href="/" className="flex items-center group py-0.5" aria-label="glow beauty pass">
+                <BrandWordmark className="h-7.5 text-white hover:opacity-90 transition-opacity" />
               </Link>
             </div>
 

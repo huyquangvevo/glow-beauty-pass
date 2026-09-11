@@ -9,6 +9,7 @@ import {
   MessageCircle,
   Sparkles,
 } from 'lucide-react'
+import { BrandIcon, BrandWordmark } from '@/components/BrandLogo'
 
 interface SpaItem {
   id: string
@@ -85,10 +86,16 @@ export default function HomePage() {
           <span>15 Spa Tuyển Chọn • Quận Cầu Giấy</span>
         </div>
 
-        <div className="space-y-1.5">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#093E06] leading-tight">
-            glow beauty pass
-          </h1>
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="sr-only">glow beauty pass</h1>
+              <BrandWordmark className="h-8 text-[#093E06]" />
+            </div>
+            <span className="text-xs font-bold text-[#236B38] px-3 py-1 rounded-full bg-[#E8F5E9] border border-emerald-200">
+              Pilot 90 Ngày
+            </span>
+          </div>
           <p className="text-sm text-[#5B6B58] leading-relaxed">
             Mạng lưới spa nhỏ đạt chuẩn: Giá niêm yết rõ trước, quy trình SOP kiểm định, đặt lịch qua Zalo trong 5 phút.
           </p>
