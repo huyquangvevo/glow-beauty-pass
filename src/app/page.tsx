@@ -94,17 +94,20 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* 3 Core Pillars - Clean Pills */}
-        <div className="flex items-center gap-2 pt-1 text-xs text-[#093E06] font-semibold overflow-x-auto no-scrollbar">
-          <span className="px-3 py-1.5 rounded-full bg-[#E8F5E9] whitespace-nowrap">
-            ✓ Đúng giá niêm yết
-          </span>
-          <span className="px-3 py-1.5 rounded-full bg-[#E8F5E9] whitespace-nowrap">
-            ✓ Không chèo kéo
-          </span>
-          <span className="px-3 py-1.5 rounded-full bg-[#E8F5E9] whitespace-nowrap">
-            ✓ Phản hồi &lt; 5p
-          </span>
+        {/* 3 Core Pillars: Grid layout with zero horizontal scroll */}
+        <div className="grid grid-cols-3 gap-2 pt-1 text-center">
+          <div className="py-2 px-1 rounded-2xl bg-[#E8F5E9] text-[#093E06] flex flex-col items-center justify-center">
+            <span className="text-xs font-bold leading-tight">Đúng giá 100%</span>
+            <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Không phát sinh</span>
+          </div>
+          <div className="py-2 px-1 rounded-2xl bg-[#E8F5E9] text-[#093E06] flex flex-col items-center justify-center">
+            <span className="text-xs font-bold leading-tight">Không chèo kéo</span>
+            <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Quy trình SOP</span>
+          </div>
+          <div className="py-2 px-1 rounded-2xl bg-[#E8F5E9] text-[#093E06] flex flex-col items-center justify-center">
+            <span className="text-xs font-bold leading-tight">Phản hồi 5 phút</span>
+            <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Xác nhận Zalo</span>
+          </div>
         </div>
 
         {/* CTA */}
@@ -130,49 +133,63 @@ export default function HomePage() {
           <span className="text-xs text-[#5B6B58] font-medium">Đồng giá tại cả 15 spa</span>
         </div>
 
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           {skus.map((sku) => {
             const isPopular = sku.code === 'GOI_DUONG_SINH'
             return (
               <div
                 key={sku.id}
-                className={`p-4.5 rounded-2xl bg-white border transition-all flex items-center justify-between gap-3 ${
+                className={`p-4 sm:p-5 rounded-2xl bg-white border transition-all space-y-3 ${
                   isPopular
-                    ? 'border-[#236B38] shadow-xs'
+                    ? 'border-[#236B38] shadow-xs ring-1 ring-[#236B38]/15'
                     : 'border-[#E5E9E4]'
                 }`}
               >
-                <div className="space-y-1.5 min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-base text-[#093E06] truncate">
-                      {sku.name}
-                    </h3>
-                    {isPopular && (
-                      <span className="text-[10.5px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-[#E8F5E9] text-[#236B38] shrink-0">
-                        Phổ biến
-                      </span>
-                    )}
+                {/* Header: Title + Popular Badge + Price */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold text-base text-[#093E06] leading-snug">
+                        {sku.name}
+                      </h3>
+                      {isPopular && (
+                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-[#E8F5E9] text-[#236B38] shrink-0">
+                          Phổ biến nhất
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs text-[#5B6B58] font-medium">
+                      <Clock className="w-3.5 h-3.5 text-[#236B38]" />
+                      <span>{sku.durationMinutes} phút</span>
+                    </div>
                   </div>
-                  <p className="text-xs sm:text-[13px] text-[#5B6B58] line-clamp-1 leading-normal">
-                    {sku.description}
-                  </p>
-                  <p className="text-xs text-[#5B6B58] flex items-center gap-1.5 font-medium">
-                    <Clock className="w-3.5 h-3.5 text-[#236B38]" />
-                    <span>Thời lượng: {sku.durationMinutes} phút</span>
-                  </p>
+
+                  <div className="text-right shrink-0">
+                    <span className="font-black text-lg sm:text-xl text-[#093E06] block leading-none">
+                      {sku.pricePhase1.toLocaleString('vi-VN')}đ
+                    </span>
+                    <span className="text-[11px] text-[#5B6B58] block mt-1">Đồng giá toàn quận</span>
+                  </div>
                 </div>
 
-                <div className="flex flex-col items-end gap-2 shrink-0">
-                  <span className="font-black text-lg sm:text-xl text-[#093E06]">
-                    {sku.pricePhase1.toLocaleString('vi-VN')}đ
+                {/* Description without truncation or line-clamp */}
+                <p className="text-xs sm:text-[13px] text-[#5B6B58] leading-relaxed">
+                  {sku.description}
+                </p>
+
+                {/* Action Row */}
+                <div className="flex items-center justify-between pt-1 border-t border-stone-100 gap-2">
+                  <span className="text-xs font-semibold text-[#236B38] flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Cam kết chuẩn SOP</span>
                   </span>
                   <a
                     href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3.5 py-1.5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] text-white text-xs font-bold active:scale-95 transition-all shadow-xs"
+                    className="px-4 py-2 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] text-white text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-xs"
                   >
-                    Đặt lịch
+                    Đặt lịch gói này
                   </a>
                 </div>
               </div>
@@ -194,16 +211,16 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Filter Chips */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1.5 no-scrollbar -mx-4 px-4">
+        {/* Filter Chips: Clean wrapping grid without horizontal scrolling */}
+        <div className="flex flex-wrap gap-2 pt-0.5">
           {wards.map((w) => (
             <button
               key={w.id}
               onClick={() => setSelectedWard(w.id)}
-              className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm whitespace-nowrap transition-all border shrink-0 ${
+              className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all border ${
                 selectedWard === w.id
-                  ? 'bg-[#236B38] text-white border-[#236B38] font-bold shadow-xs'
-                  : 'bg-white text-[#5B6B58] hover:bg-stone-50 border-[#E5E9E4] font-medium'
+                  ? 'bg-[#236B38] text-white border-[#236B38] shadow-xs'
+                  : 'bg-white text-[#5B6B58] hover:bg-stone-50 border-[#E5E9E4]'
               }`}
             >
               {w.name}
@@ -214,7 +231,7 @@ export default function HomePage() {
         {/* Spa List */}
         {isLoading ? (
           <div className="py-10 text-center text-sm text-[#5B6B58]">
-            Đang tải danh sách spa...
+            Đang tải danh sách spa
           </div>
         ) : spas.length === 0 ? (
           <div className="py-10 text-center bg-white rounded-2xl border border-[#E5E9E4] text-sm text-[#5B6B58]">
@@ -229,13 +246,13 @@ export default function HomePage() {
               >
                 {/* Header: Name + Distance Badge */}
                 <div className="flex items-start justify-between gap-2.5">
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <Link href={`/spa/${spa.slug}`}>
-                      <h3 className="font-bold text-base sm:text-[17px] leading-snug tracking-tight text-[#093E06] hover:text-[#236B38] transition-colors truncate">
+                      <h3 className="font-bold text-base sm:text-[17px] leading-snug tracking-tight text-[#093E06] hover:text-[#236B38] transition-colors">
                         {spa.name}
                       </h3>
                     </Link>
-                    <p className="text-xs sm:text-sm text-[#5B6B58] mt-1 line-clamp-1">
+                    <p className="text-xs sm:text-sm text-[#5B6B58] mt-1 leading-relaxed">
                       {spa.address}
                     </p>
                   </div>
@@ -245,22 +262,24 @@ export default function HomePage() {
                   </span>
                 </div>
 
-                {/* Rating & Exclusive Offer */}
-                <div className="flex items-center justify-between text-xs sm:text-sm text-[#5B6B58]">
+                {/* Rating */}
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm">
                   <div className="flex items-center gap-1 text-amber-600 font-bold">
                     <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                     <span className="text-[#093E06] text-sm font-extrabold">{spa.rating}</span>
                     <span className="text-[#5B6B58] font-normal text-xs">
-                      ({spa.reviewCount} đánh giá)
+                      ({spa.reviewCount} đánh giá thật)
                     </span>
                   </div>
-
-                  {spa.exclusiveOffer && (
-                    <span className="text-xs text-amber-900 bg-amber-50 px-2.5 py-1 rounded-lg truncate max-w-[210px] font-medium">
-                      🎁 {spa.exclusiveOffer}
-                    </span>
-                  )}
                 </div>
+
+                {/* Exclusive Offer without truncation */}
+                {spa.exclusiveOffer && (
+                  <div className="text-xs text-amber-950 bg-amber-50 border border-amber-200/70 px-3 py-2 rounded-xl font-medium leading-snug flex items-start gap-1.5">
+                    <span className="text-amber-600 font-bold shrink-0">Ưu đãi:</span>
+                    <span>{spa.exclusiveOffer}</span>
+                  </div>
+                )}
 
                 {/* Action Row */}
                 <div className="flex items-center gap-2.5 pt-2 border-t border-stone-100">

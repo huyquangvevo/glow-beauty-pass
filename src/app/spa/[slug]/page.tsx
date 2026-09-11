@@ -45,7 +45,7 @@ export default function SpaDetailPage() {
     return (
       <div className="p-12 text-center text-sm text-[#5B6B58] flex flex-col items-center gap-2">
         <div className="w-6 h-6 border-2 border-[#236B38] border-t-transparent rounded-full animate-spin" />
-        <span>Đang tải thông tin spa...</span>
+        <span>Đang tải thông tin spa</span>
       </div>
     )
   }
@@ -149,33 +149,43 @@ export default function SpaDetailPage() {
           3 Gói Dịch Vụ Niêm Yết
         </h2>
 
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           {skus.map((sku) => (
             <div
               key={sku.id}
-              className="p-4 rounded-2xl bg-white border border-[#E5E9E4] flex items-center justify-between gap-3 shadow-xs"
+              className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E5E9E4] shadow-xs space-y-2.5 transition-all"
             >
-              <div className="space-y-1 min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-base text-[#093E06] truncate">{sku.name}</h3>
-                  <span className="text-xs text-[#236B38] font-bold flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" /> {sku.durationMinutes}p
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <h3 className="font-bold text-base text-[#093E06] leading-snug">{sku.name}</h3>
+                  <div className="flex items-center gap-1.5 text-xs text-[#5B6B58] font-medium">
+                    <Clock className="w-3.5 h-3.5 text-[#236B38]" />
+                    <span>Thời lượng: {sku.durationMinutes} phút</span>
+                  </div>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-black text-lg text-[#093E06] block leading-none">
+                    {sku.pricePhase1.toLocaleString('vi-VN')}đ
                   </span>
                 </div>
-                <p className="text-xs text-[#5B6B58] line-clamp-1">{sku.description}</p>
               </div>
 
-              <div className="flex flex-col items-end gap-1.5 shrink-0">
-                <span className="font-black text-base text-[#093E06]">
-                  {sku.pricePhase1.toLocaleString('vi-VN')}đ
+              <p className="text-xs sm:text-[13px] text-[#5B6B58] leading-relaxed">
+                {sku.description}
+              </p>
+
+              <div className="pt-2 flex items-center justify-between border-t border-stone-100">
+                <span className="text-xs text-[#236B38] font-semibold">
+                  ✓ Cam kết tiêu chuẩn SOP
                 </span>
                 <a
                   href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}%20tại%20${encodeURIComponent(spa.name)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3.5 py-1.5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] text-white font-bold text-xs shadow-xs"
+                  className="px-4 py-2 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] text-white font-bold text-xs sm:text-sm shadow-xs active:scale-95 transition-all"
                 >
-                  Chọn
+                  Chọn gói này
                 </a>
               </div>
             </div>

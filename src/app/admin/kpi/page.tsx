@@ -64,9 +64,9 @@ export default function AdminKpiPage() {
 
   if (loading || !data) {
     return (
-      <div className="p-12 text-center text-xs text-stone-500 flex flex-col items-center gap-2">
+      <div className="p-12 text-center text-sm text-[#5B6B58] flex flex-col items-center gap-2">
         <div className="w-6 h-6 border-2 border-[#236B38] border-t-transparent rounded-full animate-spin" />
-        <span>Đang tải số liệu KPI Go/No-Go Pilot 90 ngày...</span>
+        <span>Đang tải số liệu KPI Go/No-Go Pilot 90 ngày</span>
       </div>
     )
   }

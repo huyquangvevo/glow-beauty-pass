@@ -11,9 +11,9 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Glow Beauty Pass — Mạng Lưới Spa Chuẩn Hóa Cầu Giấy',
+  title: 'Glow Beauty Pass - Mạng Lưới Spa Chuẩn Hóa Cầu Giấy',
   description:
-    'Kết nối nhu cầu làm đẹp với ghế trống spa nhỏ tại Cầu Giấy. 1 Bảng giá niêm yết (49k, 69k, 149k), 1 Quy trình SOP chuẩn, 1 Đầu mối đặt lịch Zalo.',
+    'Nền tảng đặt lịch làm đẹp chuẩn hóa đầu tiên tại Cầu Giấy, Hà Nội. 15 spa tuyển chọn, 3 gói gội cố định, 1 quy trình SOP kiểm định nghiêm ngặt. 1 Đầu mối đặt lịch Zalo.',
 }
 
 export const viewport: Viewport = {

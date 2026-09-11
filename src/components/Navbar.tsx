@@ -68,7 +68,7 @@ export function Navbar() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Tìm spa, dịch vụ gội dưỡng sinh..."
+              placeholder="Tìm kiếm spa hoặc dịch vụ gội"
               className="w-full bg-white text-stone-900 placeholder:text-stone-400 text-sm pl-10 pr-9 py-2.5 rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-emerald-300 transition-all"
             />
             {searchQuery && (

@@ -416,7 +416,7 @@ export default function HubOpsPage() {
               <div className="bg-white border-b border-stone-200 px-4 py-3 flex items-center justify-between">
                 <div>
                   <h3 className="font-bold text-sm text-stone-900">
-                    {selectedConv.customerName || 'Khách Zalo'} — {selectedConv.customerPhone || 'Chưa cập nhật SĐT'}
+                    {selectedConv.customerName || 'Khách Zalo'} - {selectedConv.customerPhone || 'Chưa cập nhật SĐT'}
                   </h3>
                   <div className="flex items-center gap-2 text-[11px] text-stone-500 mt-0.5">
                     <span>Chat ID: {selectedConv.zaloChatId}</span>

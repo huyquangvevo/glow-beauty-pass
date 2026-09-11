@@ -114,6 +114,18 @@ async function run() {
       const outPath = path.join(ARTIFACT_DIR, p.name);
       fs.writeFileSync(outPath, buffer);
       console.log(`✓ Screenshot saved: ${p.name} (${buffer.length} bytes)`);
+
+      if (p.url === 'http://localhost:3000') {
+        // Scroll down to see ward chips and spa list
+        await cdp.send('Runtime.evaluate', {
+          expression: 'window.scrollTo({ top: 850, behavior: "instant" });',
+        });
+        await new Promise((r) => setTimeout(r, 1000));
+        const scrollShot = await cdp.send('Page.captureScreenshot', { format: 'png' });
+        const scrollBuffer = Buffer.from(scrollShot.data, 'base64');
+        fs.writeFileSync(path.join(ARTIFACT_DIR, 'mobile_home_spas.png'), scrollBuffer);
+        console.log(`✓ Screenshot saved: mobile_home_spas.png (${scrollBuffer.length} bytes)`);
+      }
     }
 
     ws.close();
