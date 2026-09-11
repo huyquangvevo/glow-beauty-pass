@@ -1,73 +1,157 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sparkles, MessageCircle, BarChart3, MapPin } from 'lucide-react'
+import {
+  Compass,
+  CalendarCheck,
+  Tag,
+  BarChart3,
+  Search,
+  MapPin,
+  Headphones,
+  ArrowLeft,
+  X,
+} from 'lucide-react'
 
 export function Navbar() {
   const pathname = usePathname()
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
+
+  const isSpaDetail = pathname.startsWith('/spa/')
+  const isHub = pathname.startsWith('/hub')
+  const isAdmin = pathname.startsWith('/admin')
 
   return (
-    <header className="sticky top-0 z-50 bg-stone-900/95 backdrop-blur border-b border-stone-800 text-stone-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 via-rose-500 to-orange-400 flex items-center justify-center shadow-lg shadow-rose-950/40">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-bold text-lg tracking-tight text-white">GlowBeautyPass</span>
-              <span className="text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                Pilot 90D
-              </span>
-            </div>
-            <p className="text-[11px] text-stone-400 flex items-center gap-1">
-              <MapPin className="w-3 h-3 text-rose-400" /> Quận Cầu Giấy • 15 Spa
-            </p>
-          </div>
-        </Link>
+    <>
+      {/* TOP HEADER: GLOW BEAUTY PASS (Bigger text & breathable spacing) */}
+      <header className="sticky top-0 z-40 bg-[#236B38] text-white shadow-xs">
+        <div className="max-w-md mx-auto px-4 pt-3.5 pb-3 space-y-3">
+          {/* Brand Row */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              {isSpaDetail && (
+                <Link
+                  href="/"
+                  className="p-1 -ml-1 rounded-full hover:bg-white/10 active:scale-95 transition-all text-white/90"
+                  aria-label="Quay lại"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </Link>
+              )}
 
-        {/* Navigation Tabs */}
-        <nav className="flex items-center gap-1.5 sm:gap-2">
+              <Link href="/" className="flex items-center gap-1.5 group">
+                <span className="font-black text-xl sm:text-2xl tracking-tight text-white">
+                  glow
+                </span>
+                <span className="font-normal text-xl sm:text-2xl tracking-tight text-emerald-100">
+                  beauty pass
+                </span>
+                <span className="w-2 h-2 rounded-full bg-amber-300 ml-0.5"></span>
+              </Link>
+            </div>
+
+            {/* Region Pill */}
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/15 text-xs text-emerald-100 font-semibold">
+              <MapPin className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+              <span>Cầu Giấy, Hà Nội</span>
+            </div>
+          </div>
+
+          {/* Search Input */}
+          <div className="relative">
+            <Search className="w-4.5 h-4.5 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Tìm spa, dịch vụ gội dưỡng sinh..."
+              className="w-full bg-white text-stone-900 placeholder:text-stone-400 text-sm pl-10 pr-9 py-2.5 rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-emerald-300 transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 p-0.5 text-stone-400 hover:text-stone-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* FLOATING SUPPORT ZALO */}
+      {!isSpaDetail && (
+        <aside
+          aria-label="Hỗ trợ và đặt lịch Zalo"
+          className="fixed bottom-20 right-4 z-40"
+        >
+          <a
+            href={zaloHubLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] text-white shadow-lg shadow-[#236B38]/35 border border-white/20 active:scale-95 transition-all text-sm font-bold"
+          >
+            <Headphones className="w-4 h-4 text-emerald-200" />
+            <span>Zalo Hotline</span>
+          </a>
+        </aside>
+      )}
+
+      {/* BOTTOM APP NAVIGATION BAR */}
+      <nav
+        aria-label="Điều hướng glow beauty pass"
+        className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200 shadow-sm"
+      >
+        <div className="max-w-md mx-auto px-6 h-15 flex items-center justify-between">
           <Link
             href="/"
-            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+            className={`flex flex-col items-center gap-1 py-1 transition-colors ${
               pathname === '/'
-                ? 'bg-stone-800 text-white shadow-sm border border-stone-700'
-                : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
+                ? 'text-[#236B38] font-bold'
+                : 'text-stone-400 hover:text-stone-700 font-medium'
             }`}
           >
-            Mạng Lưới Spa
+            <Compass className="w-5 h-5" />
+            <span className="text-[11.5px]">Khám Phá</span>
+          </Link>
+
+          <Link
+            href="/#bang-gia"
+            className="flex flex-col items-center gap-1 py-1 text-stone-400 hover:text-[#236B38] font-medium transition-colors"
+          >
+            <Tag className="w-5 h-5" />
+            <span className="text-[11.5px]">Bảng Giá</span>
           </Link>
 
           <Link
             href="/hub"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
-              pathname.startsWith('/hub')
-                ? 'bg-rose-600 text-white shadow-sm shadow-rose-600/30'
-                : 'text-stone-300 hover:text-white hover:bg-stone-800/60'
+            className={`flex flex-col items-center gap-1 py-1 transition-colors ${
+              isHub
+                ? 'text-[#236B38] font-bold'
+                : 'text-stone-400 hover:text-stone-700 font-medium'
             }`}
           >
-            <MessageCircle className="w-4 h-4 text-rose-300" />
-            <span>Hub Điều Phối</span>
-            <span className="hidden sm:inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <CalendarCheck className="w-5 h-5" />
+            <span className="text-[11.5px]">Lịch Hẹn</span>
           </Link>
 
           <Link
             href="/admin/kpi"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
-              pathname.startsWith('/admin')
-                ? 'bg-amber-600 text-white shadow-sm shadow-amber-600/30'
-                : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/50'
+            className={`flex flex-col items-center gap-1 py-1 transition-colors ${
+              isAdmin
+                ? 'text-[#236B38] font-bold'
+                : 'text-stone-400 hover:text-stone-700 font-medium'
             }`}
           >
-            <BarChart3 className="w-4 h-4 text-amber-400" />
-            <span className="hidden sm:inline">5 Chỉ Số Go/No-Go</span>
-            <span className="sm:hidden">KPIs</span>
+            <BarChart3 className="w-5 h-5" />
+            <span className="text-[11.5px]">KPIs</span>
           </Link>
-        </nav>
-      </div>
-    </header>
+        </div>
+      </nav>
+    </>
   )
 }

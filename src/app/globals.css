@@ -1,17 +1,67 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --color-glow-primary: #236B38;
+  --color-glow-primary-hover: #1D5A2E;
+  --color-glow-primary-subtle: #E8F5E9;
+  --color-glow-primary-border: #A5D6A7;
+  --color-glow-secondary: #2C7A39;
+  --color-glow-accent: #F59E0B;
+  --color-glow-accent-hover: #D97706;
+  --color-glow-accent-light: #FEF3C7;
+  --color-glow-bg: #FAF8F5;
+  --color-glow-surface: #FFFFFF;
+  --color-glow-title: #093E06;
+  --color-glow-body: #3F4941;
+  --color-glow-muted: #5B6B58;
+  --color-glow-border: #E3E8E4;
+}
+
 :root {
-  --background: #faf8f5;
-  --foreground: #1c1917;
-  --primary: #c2410c;
-  --primary-glow: #ea580c;
+  --background: #FAF8F5;
+  --foreground: #17231A;
+  --primary: #236B38;
+  --primary-hover: #1D5A2E;
+  --primary-subtle: #E8F5E9;
+  --accent: #F59E0B;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
 }
 
 body {
-  background: #faf8f5;
-  color: #1c1917;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem; /* 15px base size for better readability */
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 @keyframes pulse-fast {

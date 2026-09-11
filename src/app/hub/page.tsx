@@ -15,6 +15,8 @@ import {
   PlusCircle,
   ShieldAlert,
   CalendarCheck,
+  ChevronLeft,
+  Phone,
 } from 'lucide-react'
 
 interface ConversationItem {
@@ -66,6 +68,9 @@ export default function HubOpsPage() {
   const [activeTab, setActiveTab] = useState<string>('ALL')
   const [spas, setSpas] = useState<SpaItem[]>([])
   const [skus, setSkus] = useState<SkuItem[]>([])
+
+  // Mobile View state: 'QUEUE' or 'CHAT_OPS'
+  const [mobileView, setMobileView] = useState<'QUEUE' | 'CHAT_OPS'>('QUEUE')
 
   // Dispatch form state
   const [selectedSpaId, setSelectedSpaId] = useState('')
@@ -131,7 +136,7 @@ export default function HubOpsPage() {
 
   useEffect(() => {
     loadConversations()
-    const interval = setInterval(loadConversations, 5000) // Polling mỗi 5s
+    const interval = setInterval(loadConversations, 5000)
     return () => clearInterval(interval)
   }, [activeTab])
 
@@ -233,7 +238,7 @@ export default function HubOpsPage() {
 
   const selectedConv = conversations.find((c) => c.id === selectedConvId)
 
-  // Danh mục tin nhắn mẫu (Quick Replies)
+  // Danh mục tin nhắn mẫu (Quick Replies SOP Hub)
   const quickReplies = [
     {
       label: '1. Chào & Gửi Menu 3 SKU',
@@ -252,27 +257,35 @@ export default function HubOpsPage() {
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col bg-stone-100">
       {/* HUB SUB-HEADER */}
-      <div className="bg-white border-b border-stone-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+      <div className="bg-white border-b border-stone-200 px-3.5 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
         <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-bold text-sm text-stone-900">Hub Điều Phối Zalo • Quận Cầu Giấy</span>
-          <span className="text-xs text-stone-500 hidden sm:inline">
-            (SLA phản hồi: Giờ hành chính &lt; 5 phút | Ngoài giờ &lt; 15 phút)
+          {mobileView === 'CHAT_OPS' && (
+            <button
+              onClick={() => setMobileView('QUEUE')}
+              className="p-1 -ml-1 rounded-full text-stone-600 hover:bg-stone-100 sm:hidden"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+          )}
+          <div className="w-2.5 h-2.5 rounded-full bg-[#236B38] animate-pulse" />
+          <span className="font-extrabold text-sm text-stone-900">Hub Điều Phối Zalo • Cầu Giấy</span>
+          <span className="text-[11px] text-stone-500 hidden md:inline">
+            (SLA: Giờ hành chính &lt; 5 phút | Ngoài giờ &lt; 15 phút)
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={handleSimulateInbound}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold border border-rose-200 transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-[#236B38] text-xs font-bold border border-emerald-200 transition-all shadow-xs"
           >
             <PlusCircle className="w-3.5 h-3.5" />
-            <span>Mô phỏng Khách Nhắn Zalo</span>
+            <span>Mô phỏng Khách Nhắn</span>
           </button>
 
           <button
             onClick={loadConversations}
-            className="p-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-600 transition-all"
+            className="p-1.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 transition-all"
             title="Làm mới"
           >
             <RefreshCw className="w-3.5 h-3.5" />
@@ -280,19 +293,23 @@ export default function HubOpsPage() {
         </div>
       </div>
 
-      {/* 3-COLUMN WORKSPACE */}
+      {/* 3-COLUMN WORKSPACE (Responsive Mobile Switch) */}
       <div className="flex-1 flex overflow-hidden">
         {/* COLUMN 1: CONVERSATION QUEUE */}
-        <div className="w-80 lg:w-96 bg-white border-r border-stone-200 flex flex-col shrink-0">
+        <div
+          className={`${
+            mobileView === 'QUEUE' ? 'flex' : 'hidden sm:flex'
+          } w-full sm:w-80 lg:w-96 bg-white border-r border-stone-200 flex-col shrink-0`}
+        >
           {/* Tabs */}
           <div className="flex border-b border-stone-200 p-1.5 bg-stone-50 gap-1 text-xs font-medium">
             {['ALL', 'PENDING', 'CHATTING', 'CONFIRMED'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-1 rounded-md transition-all ${
+                className={`flex-1 py-1 rounded-lg transition-all ${
                   activeTab === tab
-                    ? 'bg-white text-stone-900 shadow-sm font-semibold'
+                    ? 'bg-[#236B38] text-white shadow-xs font-bold'
                     : 'text-stone-500 hover:text-stone-800'
                 }`}
               >
@@ -315,7 +332,7 @@ export default function HubOpsPage() {
                 <p>Chưa có hội thoại nào trong hàng đợi.</p>
                 <button
                   onClick={handleSimulateInbound}
-                  className="text-rose-600 font-medium underline hover:text-rose-700"
+                  className="text-[#236B38] font-bold underline hover:text-[#1D5A2E]"
                 >
                   Bấm để tạo tin nhắn giả lập
                 </button>
@@ -329,29 +346,32 @@ export default function HubOpsPage() {
                 return (
                   <div
                     key={conv.id}
-                    onClick={() => setSelectedConvId(conv.id)}
+                    onClick={() => {
+                      setSelectedConvId(conv.id)
+                      setMobileView('CHAT_OPS')
+                    }}
                     className={`p-3.5 cursor-pointer transition-all border-l-4 ${
                       isSelected
-                        ? 'bg-rose-50/50 border-l-rose-600'
+                        ? 'bg-emerald-50/60 border-l-[#236B38]'
                         : 'hover:bg-stone-50 border-l-transparent'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-1.5 min-w-0">
                         <User className="w-3.5 h-3.5 text-stone-400 shrink-0" />
-                        <span className="font-semibold text-xs text-stone-900 truncate">
+                        <span className="font-bold text-xs text-stone-900 truncate">
                           {conv.customerName || conv.customerPhone || 'Khách Zalo'}
                         </span>
                       </div>
 
                       {/* SLA Timer Badge */}
                       <span
-                        className={`inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                        className={`inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
                           isCritical
                             ? 'bg-red-100 text-red-700 border border-red-300 animate-pulse-fast'
                             : isWarning
                             ? 'bg-amber-100 text-amber-800 border border-amber-300'
-                            : 'bg-stone-100 text-stone-600'
+                            : 'bg-emerald-50 text-[#236B38] border border-emerald-200'
                         }`}
                       >
                         <Clock className="w-2.5 h-2.5" />
@@ -359,19 +379,19 @@ export default function HubOpsPage() {
                       </span>
                     </div>
 
-                    <p className="text-xs text-stone-500 line-clamp-1 mt-1.5">
+                    <p className="text-xs text-stone-600 line-clamp-1 mt-1.5">
                       {conv.lastMessageContent || 'Không có nội dung'}
                     </p>
 
                     <div className="flex items-center justify-between mt-2 pt-1 text-[10px] text-stone-400">
                       <span>{conv.customerPhone || 'Chưa có SĐT'}</span>
                       <span
-                        className={`font-semibold px-1.5 py-0.2 rounded uppercase ${
+                        className={`font-bold px-1.5 py-0.5 rounded-full uppercase text-[9px] ${
                           conv.status === 'CONFIRMED'
-                            ? 'bg-emerald-100 text-emerald-700'
+                            ? 'bg-emerald-100 text-emerald-800'
                             : conv.status === 'PENDING'
-                            ? 'bg-rose-100 text-rose-700'
-                            : 'bg-blue-100 text-blue-700'
+                            ? 'bg-amber-100 text-amber-900'
+                            : 'bg-blue-100 text-blue-800'
                         }`}
                       >
                         {conv.status}
@@ -385,7 +405,11 @@ export default function HubOpsPage() {
         </div>
 
         {/* COLUMN 2: LIVE CHAT WINDOW */}
-        <div className="flex-1 bg-stone-50 flex flex-col min-w-0 border-r border-stone-200">
+        <div
+          className={`${
+            mobileView === 'CHAT_OPS' ? 'flex' : 'hidden sm:flex'
+          } flex-1 bg-stone-50 flex-col min-w-0 border-r border-stone-200`}
+        >
           {selectedConv ? (
             <>
               {/* Chat Header */}
@@ -398,16 +422,16 @@ export default function HubOpsPage() {
                     <span>Chat ID: {selectedConv.zaloChatId}</span>
                     <span>•</span>
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-rose-500" />
+                      <Clock className="w-3 h-3 text-[#236B38]" />
                       Thời gian chờ: <strong>{selectedConv.sla.formattedElapsed}</strong>
                     </span>
                   </div>
                 </div>
 
                 {selectedConv.sla.isBreached && (
-                  <div className="flex items-center gap-1.5 text-xs text-red-600 font-semibold bg-red-50 px-2.5 py-1 rounded-lg border border-red-200">
+                  <div className="flex items-center gap-1.5 text-xs text-red-600 font-bold bg-red-50 px-2.5 py-1 rounded-full border border-red-200">
                     <AlertTriangle className="w-4 h-4 text-red-600" />
-                    <span>Vi Phạm Cam Kết SLA &lt; 5 phút!</span>
+                    <span>Vi Phạm SLA &lt; 5p!</span>
                   </div>
                 )}
               </div>
@@ -419,19 +443,19 @@ export default function HubOpsPage() {
                   return (
                     <div key={m.id} className={`flex ${isStaff ? 'justify-end' : 'justify-start'}`}>
                       <div
-                        className={`max-w-md rounded-2xl px-4 py-2.5 text-xs sm:text-sm space-y-1 shadow-sm ${
+                        className={`max-w-md rounded-2xl px-4 py-2.5 text-xs sm:text-sm space-y-1 shadow-xs ${
                           isStaff
-                            ? 'bg-rose-600 text-white rounded-tr-none'
+                            ? 'bg-[#236B38] text-white rounded-tr-none'
                             : 'bg-white text-stone-900 border border-stone-200/80 rounded-tl-none'
                         }`}
                       >
                         <p className="whitespace-pre-line leading-relaxed">{m.content}</p>
                         <div
                           className={`text-[10px] flex items-center justify-end gap-1 ${
-                            isStaff ? 'text-rose-200' : 'text-stone-400'
+                            isStaff ? 'text-emerald-100' : 'text-stone-400'
                           }`}
                         >
-                          {m.isQuickReply && <span>(Tin mẫu) •</span>}
+                          {m.isQuickReply && <span>(Tin mẫu SOP) •</span>}
                           <span>
                             {new Date(m.createdAt).toLocaleTimeString('vi-VN', {
                               hour: '2-digit',
@@ -454,11 +478,11 @@ export default function HubOpsPage() {
                   onChange={(e) => setReplyText(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSendReply()}
                   placeholder="Nhập nội dung trả lời khách trên Zalo (bấm Enter để gửi)..."
-                  className="flex-1 border border-stone-300 rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  className="flex-1 border border-stone-300 rounded-full px-4 py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#236B38]"
                 />
                 <button
                   onClick={() => handleSendReply()}
-                  className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-medium text-xs sm:text-sm flex items-center gap-1.5 transition-all shadow-sm"
+                  className="px-4 py-2 bg-[#236B38] hover:bg-[#1D5A2E] text-white rounded-full font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all shadow-xs active:scale-95"
                 >
                   <Send className="w-4 h-4" />
                   <span>Gửi</span>
@@ -473,11 +497,15 @@ export default function HubOpsPage() {
         </div>
 
         {/* COLUMN 3: OPS TOOL (QUICK REPLIES & DISPATCH FORM) */}
-        <div className="w-80 lg:w-96 bg-white flex flex-col shrink-0 overflow-y-auto divide-y divide-stone-200">
+        <div
+          className={`${
+            mobileView === 'CHAT_OPS' ? 'flex' : 'hidden lg:flex'
+          } w-full sm:w-80 lg:w-96 bg-white flex-col shrink-0 overflow-y-auto divide-y divide-stone-200`}
+        >
           {/* Quick Replies Section */}
           <div className="p-4 space-y-3">
             <h4 className="font-bold text-xs uppercase tracking-wider text-stone-600 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-rose-500" />
+              <Sparkles className="w-3.5 h-3.5 text-[#236B38]" />
               <span>Kịch Bản Mẫu 1-Click (SOP Hub)</span>
             </h4>
 
@@ -486,9 +514,9 @@ export default function HubOpsPage() {
                 <button
                   key={idx}
                   onClick={() => handleSendReply(qr.text)}
-                  className="w-full text-left p-2.5 rounded-xl border border-stone-200 hover:border-rose-300 hover:bg-rose-50/40 transition-all text-xs space-y-1 group"
+                  className="w-full text-left p-2.5 rounded-2xl border border-stone-200 hover:border-[#236B38] hover:bg-emerald-50/40 transition-all text-xs space-y-1 group"
                 >
-                  <p className="font-semibold text-stone-800 group-hover:text-rose-600">{qr.label}</p>
+                  <p className="font-bold text-stone-800 group-hover:text-[#236B38]">{qr.label}</p>
                   <p className="text-[11px] text-stone-500 line-clamp-2">{qr.text}</p>
                 </button>
               ))}
@@ -498,27 +526,27 @@ export default function HubOpsPage() {
           {/* Form Chốt Lịch 1-Click */}
           <div className="p-4 space-y-3">
             <h4 className="font-bold text-xs uppercase tracking-wider text-stone-600 flex items-center gap-1.5">
-              <CalendarCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <CalendarCheck className="w-3.5 h-3.5 text-[#236B38]" />
               <span>Chốt Lịch & Điều Phối Spa</span>
             </h4>
 
             {dispatchSuccess && (
-              <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-1.5">
-                <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="p-2.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-bold flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4 text-[#236B38] shrink-0" />
                 <span>{dispatchSuccess}</span>
               </div>
             )}
 
             <form onSubmit={handleDispatchBooking} className="space-y-3 text-xs">
               <div>
-                <label className="block text-stone-600 font-medium mb-1">Số điện thoại khách (Bắt buộc):</label>
+                <label className="block text-stone-600 font-medium mb-1">Số điện thoại khách:</label>
                 <input
                   type="text"
                   required
                   value={customerPhoneInput}
                   onChange={(e) => setCustomerPhoneInput(e.target.value)}
                   placeholder="0988..."
-                  className="w-full border border-stone-300 rounded-lg p-2 focus:ring-1 focus:ring-rose-500"
+                  className="w-full border border-stone-300 rounded-xl p-2 focus:ring-1 focus:ring-[#236B38]"
                 />
               </div>
 
@@ -529,7 +557,7 @@ export default function HubOpsPage() {
                   value={customerNameInput}
                   onChange={(e) => setCustomerNameInput(e.target.value)}
                   placeholder="Chị Mai..."
-                  className="w-full border border-stone-300 rounded-lg p-2 focus:ring-1 focus:ring-rose-500"
+                  className="w-full border border-stone-300 rounded-xl p-2 focus:ring-1 focus:ring-[#236B38]"
                 />
               </div>
 
@@ -538,7 +566,7 @@ export default function HubOpsPage() {
                 <select
                   value={selectedSpaId}
                   onChange={(e) => setSelectedSpaId(e.target.value)}
-                  className="w-full border border-stone-300 rounded-lg p-2 focus:ring-1 focus:ring-rose-500 bg-white"
+                  className="w-full border border-stone-300 rounded-xl p-2 focus:ring-1 focus:ring-[#236B38] bg-white"
                 >
                   {spas.map((s) => (
                     <option key={s.id} value={s.id}>
@@ -553,7 +581,7 @@ export default function HubOpsPage() {
                 <select
                   value={selectedSkuId}
                   onChange={(e) => setSelectedSkuId(e.target.value)}
-                  className="w-full border border-stone-300 rounded-lg p-2 focus:ring-1 focus:ring-rose-500 bg-white"
+                  className="w-full border border-stone-300 rounded-xl p-2 focus:ring-1 focus:ring-[#236B38] bg-white"
                 >
                   {skus.map((sku) => (
                     <option key={sku.id} value={sku.id}>
@@ -570,7 +598,7 @@ export default function HubOpsPage() {
                     type="date"
                     value={bookingDate}
                     onChange={(e) => setBookingDate(e.target.value)}
-                    className="w-full border border-stone-300 rounded-lg p-2 focus:ring-1 focus:ring-rose-500 bg-white"
+                    className="w-full border border-stone-300 rounded-xl p-2 focus:ring-1 focus:ring-[#236B38] bg-white"
                   />
                 </div>
                 <div>
@@ -579,7 +607,7 @@ export default function HubOpsPage() {
                     type="time"
                     value={bookingTime}
                     onChange={(e) => setBookingTime(e.target.value)}
-                    className="w-full border border-stone-300 rounded-lg p-2 focus:ring-1 focus:ring-rose-500 bg-white"
+                    className="w-full border border-stone-300 rounded-xl p-2 focus:ring-1 focus:ring-[#236B38] bg-white"
                   />
                 </div>
               </div>
@@ -587,10 +615,10 @@ export default function HubOpsPage() {
               <button
                 type="submit"
                 disabled={isDispatching}
-                className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                className="w-full py-2.5 px-4 bg-[#236B38] hover:bg-[#1D5A2E] text-white rounded-full font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-98"
               >
                 <CheckCircle className="w-4 h-4" />
-                <span>{isDispatching ? 'Đang lưu...' : 'Xác Nhận Chốt Lịch (Sinh Mã GBP)'}</span>
+                <span>{isDispatching ? 'Đang lưu...' : 'Xác Nhận Chốt Lịch (Mã GBP)'}</span>
               </button>
             </form>
           </div>
