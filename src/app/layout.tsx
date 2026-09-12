@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/Navbar'
+import { SearchProvider } from '@/context/SearchContext'
 
 const inter = Inter({
   subsets: ['latin', 'vietnamese'],
@@ -21,7 +22,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: 'cover',
-  themeColor: '#236B38',
+  themeColor: '#40813D',
 }
 
 export default function RootLayout({
@@ -31,11 +32,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={`scroll-smooth ${inter.variable}`}>
-      <body className="font-sans antialiased min-h-screen flex flex-col bg-[#FAF8F5] text-[#17231A] selection:bg-[#236B38] selection:text-white pb-20">
-        <Navbar />
-        <main className="flex-1 w-full">{children}</main>
+      <body className="font-sans antialiased min-h-screen flex flex-col bg-[#FAF8F5] text-[#17231A] selection:bg-[#40813D] selection:text-white pb-20">
+        <SearchProvider>
+          <Navbar />
+          <main className="flex-1 w-full">{children}</main>
+        </SearchProvider>
         <footer className="border-t border-stone-200/80 bg-white py-5 text-center text-xs text-[#5B6B58] mb-8">
-          <p className="font-bold text-[#093E06]">
+          <p className="font-bold text-[#234E21]">
             glow beauty pass
           </p>
           <p className="mt-1 text-[11px] text-[#5B6B58]">

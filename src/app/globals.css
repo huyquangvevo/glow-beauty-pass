@@ -3,28 +3,28 @@
 @theme {
   --font-sans: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  --color-glow-primary: #236B38;
-  --color-glow-primary-hover: #1D5A2E;
-  --color-glow-primary-subtle: #E8F5E9;
-  --color-glow-primary-border: #A5D6A7;
-  --color-glow-secondary: #2C7A39;
+  --color-glow-primary: #40813D;
+  --color-glow-primary-hover: #356F32;
+  --color-glow-primary-subtle: #EBF4EA;
+  --color-glow-primary-border: #B7DDB5;
+  --color-glow-secondary: #4A9347;
   --color-glow-accent: #F59E0B;
   --color-glow-accent-hover: #D97706;
   --color-glow-accent-light: #FEF3C7;
   --color-glow-bg: #FAF8F5;
   --color-glow-surface: #FFFFFF;
-  --color-glow-title: #093E06;
+  --color-glow-title: #234E21;
   --color-glow-body: #3F4941;
   --color-glow-muted: #5B6B58;
-  --color-glow-border: #E3E8E4;
+  --color-glow-border: #E0EAE1;
 }
 
 :root {
   --background: #FAF8F5;
   --foreground: #17231A;
-  --primary: #236B38;
-  --primary-hover: #1D5A2E;
-  --primary-subtle: #E8F5E9;
+  --primary: #40813D;
+  --primary-hover: #356F32;
+  --primary-subtle: #EBF4EA;
   --accent: #F59E0B;
 }
 

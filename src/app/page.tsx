@@ -8,8 +8,11 @@ import {
   Star,
   MessageCircle,
   Sparkles,
+  Search,
+  X,
 } from 'lucide-react'
-import { BrandIcon, BrandWordmark } from '@/components/BrandLogo'
+import { BrandLogo } from '@/components/BrandLogo'
+import { useSearch } from '@/context/SearchContext'
 
 interface SpaItem {
   id: string
@@ -41,6 +44,7 @@ export default function HomePage() {
   const [spas, setSpas] = useState<SpaItem[]>([])
   const [skus, setSkus] = useState<SkuItem[]>([])
   const [selectedWard, setSelectedWard] = useState<string>('ALL')
+  const { searchQuery, setSearchQuery } = useSearch()
   const [isLoading, setIsLoading] = useState(true)
 
   const wards = [
@@ -79,39 +83,38 @@ export default function HomePage() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-5 space-y-7 pb-24">
-      {/* 1. HERO SECTION: TO RÕ, THOÁNG ĐÃNG */}
-      <section className="bg-white rounded-3xl p-6 border border-[#E5E9E4] shadow-xs space-y-4">
-        <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#236B38]">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#236B38]"></span>
-          <span>15 Spa Tuyển Chọn • Quận Cầu Giấy</span>
+      {/* 1. HERO SECTION: TO RÕ, THOÁNG ĐÃNG, NỔI BẬT THƯƠNG HIỆU */}
+      <section className="bg-gradient-to-b from-white via-[#F7FAF7] to-white rounded-3xl p-5 sm:p-6 border border-[#D5E7D8] shadow-xs space-y-4">
+        <div className="flex items-center justify-between gap-2">
+          <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[#40813D]">
+            <span className="w-2 h-2 rounded-full bg-[#40813D] animate-pulse"></span>
+            <span>15 Spa Tuyển Chọn • Q. Cầu Giấy</span>
+          </div>
+          <span className="text-[11px] font-extrabold text-[#40813D] px-2.5 py-0.5 rounded-full bg-[#EBF4EA] border border-[#B7DDB5] shrink-0 shadow-2xs">
+            Pilot 90 Ngày
+          </span>
         </div>
 
-        <div className="space-y-2.5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="sr-only">glow beauty pass</h1>
-              <BrandWordmark className="h-8 text-[#093E06]" />
-            </div>
-            <span className="text-xs font-bold text-[#236B38] px-3 py-1 rounded-full bg-[#E8F5E9] border border-emerald-200">
-              Pilot 90 Ngày
-            </span>
-          </div>
-          <p className="text-sm text-[#5B6B58] leading-relaxed">
-            Mạng lưới spa nhỏ đạt chuẩn: Giá niêm yết rõ trước, quy trình SOP kiểm định, đặt lịch qua Zalo trong 5 phút.
+        <div className="space-y-2">
+          <h1 className="text-xl sm:text-2xl font-black text-[#234E21] tracking-tight leading-snug">
+            Gội Thư Giãn & Trị Liệu Chuẩn SOP
+          </h1>
+          <p className="text-xs sm:text-sm text-[#4E5C4C] leading-relaxed">
+            Mạng lưới spa kiểm định độc lập tại Cầu Giấy: Giá niêm yết rõ trước, cam kết không chèo kéo, xác nhận lịch qua Zalo trong 5 phút.
           </p>
         </div>
 
-        {/* 3 Core Pillars: Grid layout with zero horizontal scroll */}
+        {/* 3 Core Pillars: Bento format */}
         <div className="grid grid-cols-3 gap-2 pt-1 text-center">
-          <div className="py-2 px-1 rounded-2xl bg-[#E8F5E9] text-[#093E06] flex flex-col items-center justify-center">
+          <div className="py-2.5 px-1.5 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
             <span className="text-xs font-bold leading-tight">Đúng giá 100%</span>
-            <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Không phát sinh</span>
+            <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Không phụ thu</span>
           </div>
-          <div className="py-2 px-1 rounded-2xl bg-[#E8F5E9] text-[#093E06] flex flex-col items-center justify-center">
+          <div className="py-2.5 px-1.5 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
             <span className="text-xs font-bold leading-tight">Không chèo kéo</span>
             <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Quy trình SOP</span>
           </div>
-          <div className="py-2 px-1 rounded-2xl bg-[#E8F5E9] text-[#093E06] flex flex-col items-center justify-center">
+          <div className="py-2.5 px-1.5 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
             <span className="text-xs font-bold leading-tight">Phản hồi 5 phút</span>
             <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Xác nhận Zalo</span>
           </div>
@@ -123,9 +126,9 @@ export default function HomePage() {
             href={zaloHubLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-3 px-5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-xs active:scale-98 transition-all"
+            className="w-full py-3.5 px-5 rounded-full bg-gradient-to-r from-[#356F32] to-[#40813D] hover:from-[#2E602C] hover:to-[#356F32] text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-md shadow-[#40813D]/30 active:scale-98 transition-all"
           >
-            <MessageCircle className="w-5 h-5 text-emerald-200" />
+            <MessageCircle className="w-5 h-5 text-emerald-100" />
             <span>Nhắn Zalo Đặt Lịch Ngay</span>
           </a>
         </div>
@@ -134,10 +137,10 @@ export default function HomePage() {
       {/* 2. BẢNG GIÁ 3 GÓI NIÊM YẾT */}
       <section id="bang-gia" className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <h2 className="text-base font-extrabold uppercase tracking-wider text-[#093E06]">
+          <h2 className="text-base font-extrabold uppercase tracking-wider text-[#234E21]">
             3 Gói Dịch Vụ Niêm Yết
           </h2>
-          <span className="text-xs text-[#5B6B58] font-medium">Đồng giá tại cả 15 spa</span>
+          <span className="text-xs text-[#5B6B58] font-semibold">Đồng giá tại cả 15 spa</span>
         </div>
 
         <div className="space-y-3">
@@ -148,31 +151,31 @@ export default function HomePage() {
                 key={sku.id}
                 className={`p-4 sm:p-5 rounded-2xl bg-white border transition-all space-y-3 ${
                   isPopular
-                    ? 'border-[#236B38] shadow-xs ring-1 ring-[#236B38]/15'
-                    : 'border-[#E5E9E4]'
+                    ? 'border-2 border-[#40813D] shadow-md ring-2 ring-[#40813D]/15'
+                    : 'border-[#DCE8DE] shadow-xs'
                 }`}
               >
                 {/* Header: Title + Popular Badge + Price */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-bold text-base text-[#093E06] leading-snug">
+                      <h3 className="font-extrabold text-base text-[#234E21] leading-snug">
                         {sku.name}
                       </h3>
                       {isPopular && (
-                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-[#E8F5E9] text-[#236B38] shrink-0">
+                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-[#40813D] text-white shadow-2xs shrink-0">
                           Phổ biến nhất
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-[#5B6B58] font-medium">
-                      <Clock className="w-3.5 h-3.5 text-[#236B38]" />
+                      <Clock className="w-3.5 h-3.5 text-[#40813D]" />
                       <span>{sku.durationMinutes} phút</span>
                     </div>
                   </div>
 
                   <div className="text-right shrink-0">
-                    <span className="font-black text-lg sm:text-xl text-[#093E06] block leading-none">
+                    <span className="font-black text-lg sm:text-xl text-[#234E21] block leading-none">
                       {sku.pricePhase1.toLocaleString('vi-VN')}đ
                     </span>
                     <span className="text-[11px] text-[#5B6B58] block mt-1">Đồng giá toàn quận</span>
@@ -180,13 +183,13 @@ export default function HomePage() {
                 </div>
 
                 {/* Description without truncation or line-clamp */}
-                <p className="text-xs sm:text-[13px] text-[#5B6B58] leading-relaxed">
+                <p className="text-xs sm:text-[13px] text-[#4E5C4C] leading-relaxed">
                   {sku.description}
                 </p>
 
                 {/* Action Row */}
                 <div className="flex items-center justify-between pt-1 border-t border-stone-100 gap-2">
-                  <span className="text-xs font-semibold text-[#236B38] flex items-center gap-1">
+                  <span className="text-xs font-bold text-[#40813D] flex items-center gap-1">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                     <span>Cam kết chuẩn SOP</span>
                   </span>
@@ -194,7 +197,7 @@ export default function HomePage() {
                     href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] text-white text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-xs"
+                    className="px-4 py-2 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-xs"
                   >
                     Đặt lịch gói này
                   </a>
@@ -209,7 +212,7 @@ export default function HomePage() {
       <section className="space-y-3.5">
         <div className="flex items-center justify-between px-1">
           <div>
-            <h2 className="text-base font-extrabold uppercase tracking-wider text-[#093E06]">
+            <h2 className="text-base font-extrabold uppercase tracking-wider text-[#234E21]">
               Điểm Spa Gần Bạn
             </h2>
             <p className="text-xs text-[#5B6B58] mt-0.5">
@@ -217,6 +220,23 @@ export default function HomePage() {
             </p>
           </div>
         </div>
+
+        {/* Active search filter badge (if user typed in header search) */}
+        {searchQuery && (
+          <div className="flex items-center justify-between px-3.5 py-2 rounded-2xl bg-[#EBF4EA] border border-[#B7DDB5] text-xs text-[#234E21] shadow-2xs">
+            <span>
+              Kết quả tìm kiếm cho: &ldquo;<strong className="font-bold text-[#40813D]">{searchQuery}</strong>&rdquo;
+            </span>
+            <button
+              onClick={() => setSearchQuery('')}
+              className="text-xs font-bold text-[#40813D] hover:text-[#356F32] flex items-center gap-1 bg-white px-2.5 py-0.5 rounded-full border border-[#B7DDB5] shadow-2xs"
+              aria-label="Xoá tìm kiếm"
+            >
+              <span>Xoá</span>
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
 
         {/* Filter Chips: Clean wrapping grid without horizontal scrolling */}
         <div className="flex flex-wrap gap-2 pt-0.5">
@@ -226,8 +246,8 @@ export default function HomePage() {
               onClick={() => setSelectedWard(w.id)}
               className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all border ${
                 selectedWard === w.id
-                  ? 'bg-[#236B38] text-white border-[#236B38] shadow-xs'
-                  : 'bg-white text-[#5B6B58] hover:bg-stone-50 border-[#E5E9E4]'
+                  ? 'bg-[#40813D] text-white border-[#40813D] shadow-xs'
+                  : 'bg-white text-[#4E5C4C] hover:bg-[#F7FAF7] border-[#D5E7D8]'
               }`}
             >
               {w.name}
@@ -240,22 +260,33 @@ export default function HomePage() {
           <div className="py-10 text-center text-sm text-[#5B6B58]">
             Đang tải danh sách spa
           </div>
-        ) : spas.length === 0 ? (
-          <div className="py-10 text-center bg-white rounded-2xl border border-[#E5E9E4] text-sm text-[#5B6B58]">
-            Không tìm thấy spa trong khu vực này.
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {spas.map((spa) => (
+        ) : (() => {
+          const displaySpas = spas.filter((spa) => {
+            if (!searchQuery.trim()) return true
+            const q = searchQuery.toLowerCase()
+            return (
+              spa.name.toLowerCase().includes(q) ||
+              spa.address.toLowerCase().includes(q) ||
+              spa.ward.toLowerCase().includes(q)
+            )
+          })
+
+          return displaySpas.length === 0 ? (
+            <div className="py-10 text-center bg-white rounded-2xl border border-[#DCE8DE] text-sm text-[#5B6B58]">
+              Không tìm thấy spa phù hợp với từ khóa &ldquo;{searchQuery}&rdquo;.
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {displaySpas.map((spa) => (
               <div
                 key={spa.id}
-                className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E5E9E4] hover:border-[#236B38]/50 shadow-xs space-y-3 transition-all"
+                className="p-4 sm:p-5 rounded-2xl bg-white border border-[#DCE8DE] hover:border-[#40813D]/60 shadow-xs space-y-3 transition-all"
               >
                 {/* Header: Name + Distance Badge */}
                 <div className="flex items-start justify-between gap-2.5">
                   <div className="min-w-0 flex-1">
                     <Link href={`/spa/${spa.slug}`}>
-                      <h3 className="font-bold text-base sm:text-[17px] leading-snug tracking-tight text-[#093E06] hover:text-[#236B38] transition-colors">
+                      <h3 className="font-extrabold text-base sm:text-[17px] leading-snug tracking-tight text-[#234E21] hover:text-[#40813D] transition-colors">
                         {spa.name}
                       </h3>
                     </Link>
@@ -264,7 +295,7 @@ export default function HomePage() {
                     </p>
                   </div>
 
-                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#E8F5E9] text-[#093E06] shrink-0 border border-emerald-200">
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EBF4EA] text-[#40813D] shrink-0 border border-[#B7DDB5]">
                     {spa.formattedDistance || 'Gần bạn'}
                   </span>
                 </div>
@@ -309,7 +340,8 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        )}
+        )
+      })()}
       </section>
     </div>
   )

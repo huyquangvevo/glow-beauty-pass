@@ -81,10 +81,12 @@ Bảng màu được trích xuất trực tiếp từ nhận diện thương hi�
 
 ## 5. CORE COMPONENT GUIDELINES
 
-### 5.1. Glow Explore App Header (Mobile-First)
-- Nền xanh lá rừng `--glow-primary` (`#236B38`).
-- Thanh tìm kiếm màu trắng bo cong `rounded-full` kèm icon kính lúp: *"Tìm dịch vụ, spa Cầu Giấy..."*.
-- Nhãn chọn khu vực: `📍 Cầu Giấy, Hà Nội` kèm nút đổi vị trí hoặc định vị GPS gần bạn.
+### 5.1. Glow Explore App Header (Mobile-First — Clean Glassmorphic Standard)
+- **Nền Header**: Warm Linen Glass (`bg-[#FAF8F5]/90`), `backdrop-blur-md` kết hợp viền hairline siêu mỏng `border-b border-stone-200/70`. Chiều cao tiêu chuẩn 56px (`h-14`), tạo cảm giác thoáng đãng, sang trọng chuẩn Asian Wellness.
+- **Logo Variant**: Sử dụng `BrandLogo` dạng **Horizontal Wordmark** (chữ script `glow` xanh rừng đậm `#174F27` đi kèm badge `pass` thanh lịch). Khắc phục triệt để tình trạng chữ nhỏ li ti của logo 2 tầng cũ.
+- **Location Selector**: Pill bo cong dạng viên thuốc màu trắng `📍 Cầu Giấy`, nhỏ gọn và sắc nét.
+- **Quick Action**: Tích hợp nút Zalo Hotline tròn trực tiếp trên Top Bar.
+- **Search Context**: Chuyển thanh tìm kiếm xuống khu vực danh sách spa (nơi người dùng có nhu cầu tìm kiếm thực tế), loại bỏ việc che khuất màn hình đầu tiên (Above the fold).
 
 ### 5.2. Quick Category Grid
 - Hàng 4 cột icon dịch vụ phong cách chuẩn app Glow (Massage & Spa, Gội Đầu Dưỡng Sinh, Chăm Sóc Da, Combo Thư Giãn) với viền mềm và hiệu ứng bấm nhạy (active scale 0.96).
