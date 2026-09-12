@@ -2,7 +2,10 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/Navbar'
+import { Footer } from '@/components/Footer'
+import { LocationPrompt } from '@/components/LocationPrompt'
 import { SearchProvider } from '@/context/SearchContext'
+import { LocationProvider } from '@/context/LocationContext'
 
 const inter = Inter({
   subsets: ['latin', 'vietnamese'],
@@ -32,19 +35,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={`scroll-smooth ${inter.variable}`}>
-      <body className="font-sans antialiased min-h-screen flex flex-col bg-[#FAF8F5] text-[#17231A] selection:bg-[#40813D] selection:text-white pb-20">
-        <SearchProvider>
-          <Navbar />
-          <main className="flex-1 w-full">{children}</main>
-        </SearchProvider>
-        <footer className="border-t border-stone-200/80 bg-white py-5 text-center text-xs text-[#5B6B58] mb-8">
-          <p className="font-bold text-[#234E21]">
-            glow beauty pass
-          </p>
-          <p className="mt-1 text-[11px] text-[#5B6B58]">
-            Mạng lưới spa nhỏ chuẩn hóa • Quận Cầu Giấy, Hà Nội
-          </p>
-        </footer>
+      <body className="font-sans antialiased min-h-screen flex flex-col bg-[#FAF8F5] text-[#17231A] selection:bg-[#40813D] selection:text-white">
+        <LocationProvider>
+          <SearchProvider>
+            <Navbar />
+            <main className="flex-1 w-full">{children}</main>
+            <Footer />
+            <LocationPrompt />
+          </SearchProvider>
+        </LocationProvider>
       </body>
     </html>
   )

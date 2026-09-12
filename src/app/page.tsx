@@ -10,9 +10,11 @@ import {
   Sparkles,
   Search,
   X,
+  Tag,
 } from 'lucide-react'
 import { BrandLogo } from '@/components/BrandLogo'
 import { useSearch } from '@/context/SearchContext'
+import { useLocation } from '@/context/LocationContext'
 
 interface SpaItem {
   id: string
@@ -45,6 +47,7 @@ export default function HomePage() {
   const [skus, setSkus] = useState<SkuItem[]>([])
   const [selectedWard, setSelectedWard] = useState<string>('ALL')
   const { searchQuery, setSearchQuery } = useSearch()
+  const { userCoords, openPrompt } = useLocation()
   const [isLoading, setIsLoading] = useState(true)
 
   const wards = [
@@ -64,6 +67,10 @@ export default function HomePage() {
         if (selectedWard !== 'ALL') {
           params.append('ward', selectedWard)
         }
+        if (userCoords) {
+          params.append('lat', userCoords.lat.toString())
+          params.append('lon', userCoords.lon.toString())
+        }
         const res = await fetch(`/api/spas?${params.toString()}`)
         const data = await res.json()
         if (data.spas) {
@@ -77,12 +84,12 @@ export default function HomePage() {
       }
     }
     loadData()
-  }, [selectedWard])
+  }, [selectedWard, userCoords])
 
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
 
   return (
-    <div className="max-w-md mx-auto px-4 py-5 space-y-7 pb-24">
+    <div className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto px-4 py-5 space-y-7 pb-12">
       {/* 1. HERO SECTION: TO RÕ, THOÁNG ĐÃNG, NỔI BẬT THƯƠNG HIỆU */}
       <section className="bg-gradient-to-b from-white via-[#F7FAF7] to-white rounded-3xl p-5 sm:p-6 border border-[#D5E7D8] shadow-xs space-y-4">
         <div className="flex items-center justify-between gap-2">
@@ -134,60 +141,97 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. BẢNG GIÁ 3 GÓI NIÊM YẾT */}
-      <section id="bang-gia" className="space-y-3">
+      {/* 2. BẢNG GIÁ 3 GÓI DỊCH VỤ NIÊM YẾT (Nổi Bật Mức Giá Hấp Dẫn) */}
+      <section id="bang-gia" className="space-y-3.5 scroll-mt-20">
         <div className="flex items-center justify-between px-1">
-          <h2 className="text-base font-extrabold uppercase tracking-wider text-[#234E21]">
-            3 Gói Dịch Vụ Niêm Yết
-          </h2>
-          <span className="text-xs text-[#5B6B58] font-semibold">Đồng giá tại cả 15 spa</span>
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-black uppercase tracking-wide text-[#234E21]">
+                3 Gói Dịch Vụ Niêm Yết
+              </h2>
+              <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-[#40813D] text-white shadow-2xs">
+                Chỉ từ 49K
+              </span>
+            </div>
+            <p className="text-xs text-[#5B6B58] mt-0.5">
+              Đồng giá tại tất cả 15 spa đối tác • Cam kết 100% không phụ thu
+            </p>
+          </div>
+          <span className="text-xs font-bold text-[#40813D] bg-[#EBF4EA] px-2.5 py-1 rounded-full border border-[#B7DDB5] shrink-0">
+            Đồng giá 15 spa
+          </span>
         </div>
 
-        <div className="space-y-3">
-          {skus.map((sku) => {
-            const isPopular = sku.code === 'GOI_DUONG_SINH'
+        <div className="space-y-3.5">
+          {skus.map((sku, index) => {
+            const isPopular = index === 0 // Gói gội thư giãn 49k
+            const discountPercent = sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
+              ? Math.round(((sku.pricePhase2 - sku.pricePhase1) / sku.pricePhase2) * 100)
+              : null
+
             return (
               <div
                 key={sku.id}
-                className={`p-4 sm:p-5 rounded-2xl bg-white border transition-all space-y-3 ${
+                className={`p-4.5 sm:p-5 rounded-2xl bg-white border transition-all space-y-3.5 relative ${
                   isPopular
-                    ? 'border-2 border-[#40813D] shadow-md ring-2 ring-[#40813D]/15'
-                    : 'border-[#DCE8DE] shadow-xs'
+                    ? 'border-[#40813D] ring-2 ring-[#40813D]/20 shadow-md shadow-[#40813D]/5'
+                    : 'border-[#D5E7D8] shadow-xs hover:border-[#40813D]/60'
                 }`}
               >
-                {/* Header: Title + Popular Badge + Price */}
+                {/* Package Header with Ultra-Prominent Price Block */}
                 <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1">
+                  <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-extrabold text-base text-[#234E21] leading-snug">
+                      <h3 className="font-black text-base sm:text-[17px] text-[#234E21] leading-snug">
                         {sku.name}
                       </h3>
                       {isPopular && (
-                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-[#40813D] text-white shadow-2xs shrink-0">
-                          Phổ biến nhất
+                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500 text-white shadow-2xs shrink-0 tracking-wider">
+                          HOT NHẤT
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-[#5B6B58] font-medium">
                       <Clock className="w-3.5 h-3.5 text-[#40813D]" />
-                      <span>{sku.durationMinutes} phút</span>
+                      <span>Thời lượng: <strong className="text-[#234E21]">{sku.durationMinutes} phút</strong></span>
                     </div>
                   </div>
 
-                  <div className="text-right shrink-0">
-                    <span className="font-black text-lg sm:text-xl text-[#234E21] block leading-none">
-                      {sku.pricePhase1.toLocaleString('vi-VN')}đ
+                  {/* HIGH-IMPACT PROMINENT PRICE BADGE */}
+                  <div className="shrink-0 flex flex-col items-end">
+                    <div className="bg-gradient-to-br from-[#EBF6EA] to-[#DCF0DA] px-3.5 py-2 rounded-2xl border border-[#A4D5A1] shadow-2xs flex flex-col items-end text-right">
+                      {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
+                        <div className="flex items-center gap-1 leading-none mb-1">
+                          <span className="text-[11px] font-semibold text-stone-400 line-through">
+                            {sku.pricePhase2.toLocaleString('vi-VN')}đ
+                          </span>
+                          {discountPercent && (
+                            <span className="text-[10px] font-extrabold text-amber-700 bg-amber-200/80 px-1.5 py-0.2 rounded-md">
+                              -{discountPercent}%
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      <div className="flex items-baseline leading-none">
+                        <span className="font-black text-2xl sm:text-[27px] text-[#1E5C23] tracking-tight">
+                          {sku.pricePhase1.toLocaleString('vi-VN')}
+                        </span>
+                        <span className="text-sm font-black text-[#2E7234] ml-0.5">đ</span>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-extrabold text-[#40813D] mt-1 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#40813D] animate-pulse"></span>
+                      Đồng giá • Không phụ thu
                     </span>
-                    <span className="text-[11px] text-[#5B6B58] block mt-1">Đồng giá toàn quận</span>
                   </div>
                 </div>
 
-                {/* Description without truncation or line-clamp */}
-                <p className="text-xs sm:text-[13px] text-[#4E5C4C] leading-relaxed">
+                {/* Description */}
+                <p className="text-xs sm:text-[13px] text-[#4E5C4C] leading-relaxed bg-[#F9FCF9] p-3 rounded-xl border border-[#E8F2E8]">
                   {sku.description}
                 </p>
 
-                {/* Action Row */}
+                {/* Action Row with Clear Price on CTA Button */}
                 <div className="flex items-center justify-between pt-1 border-t border-stone-100 gap-2">
                   <span className="text-xs font-bold text-[#40813D] flex items-center gap-1">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />
@@ -197,9 +241,10 @@ export default function HomePage() {
                     href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-xs"
+                    className="px-4.5 py-2.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-sm shadow-[#40813D]/25 flex items-center gap-1.5"
                   >
-                    Đặt lịch gói này
+                    <span>Đặt lịch</span>
+                    <span className="opacity-90 font-extrabold">• {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
                   </a>
                 </div>
               </div>
@@ -212,13 +257,30 @@ export default function HomePage() {
       <section className="space-y-3.5">
         <div className="flex items-center justify-between px-1">
           <div>
-            <h2 className="text-base font-extrabold uppercase tracking-wider text-[#234E21]">
-              Điểm Spa Gần Bạn
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-extrabold uppercase tracking-wider text-[#234E21]">
+                Điểm Spa Gần Bạn
+              </h2>
+              {userCoords ? (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-[#236B38] border border-emerald-200 shadow-2xs">
+                  GPS chính xác
+                </span>
+              ) : null}
+            </div>
             <p className="text-xs text-[#5B6B58] mt-0.5">
               {spas.length} spa đạt tiêu chuẩn kiểm định tại Cầu Giấy
             </p>
           </div>
+
+          {!userCoords && (
+            <button
+              onClick={openPrompt}
+              className="flex items-center gap-1 text-xs font-bold text-[#40813D] bg-[#EBF4EA] hover:bg-[#DCF0DA] px-2.5 py-1 rounded-full border border-[#B7DDB5] transition-all shrink-0 cursor-pointer shadow-2xs active:scale-95"
+            >
+              <MapPin className="w-3.5 h-3.5 text-amber-600" />
+              <span>Bật vị trí</span>
+            </button>
+          )}
         </div>
 
         {/* Active search filter badge (if user typed in header search) */}
@@ -306,7 +368,7 @@ export default function HomePage() {
                     <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                     <span className="text-[#093E06] text-sm font-extrabold">{spa.rating}</span>
                     <span className="text-[#5B6B58] font-normal text-xs">
-                      ({spa.reviewCount} đánh giá thật)
+                      ({spa.reviewCount} đánh giá)
                     </span>
                   </div>
                 </div>
@@ -319,23 +381,29 @@ export default function HomePage() {
                   </div>
                 )}
 
-                {/* Action Row */}
-                <div className="flex items-center gap-2.5 pt-2 border-t border-stone-100">
-                  <a
-                    href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 py-2.5 px-4 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] text-white text-xs sm:text-sm font-bold text-center transition-all active:scale-98 shadow-xs"
-                  >
-                    Đặt lịch Zalo
-                  </a>
+                {/* Price Guarantee & Action Row */}
+                <div className="flex items-center justify-between gap-2.5 pt-2 border-t border-stone-100">
+                  <div className="flex items-center gap-1.5 text-xs text-[#2E682A]">
+                    <Tag className="w-3.5 h-3.5 text-[#40813D] shrink-0" />
+                    <span className="font-bold">Đồng giá từ <strong className="text-sm font-black text-[#1E5C23]">49K</strong></span>
+                  </div>
 
-                  <Link
-                    href={`/spa/${spa.slug}`}
-                    className="py-2.5 px-4 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs sm:text-sm font-semibold transition-all"
-                  >
-                    Chi tiết
-                  </Link>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Link
+                      href={`/spa/${spa.slug}`}
+                      className="py-2 px-3 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold transition-all"
+                    >
+                      Chi tiết
+                    </Link>
+                    <a
+                      href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-2 px-3.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs font-bold text-center transition-all active:scale-95 shadow-xs"
+                    >
+                      Đặt Zalo
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}
