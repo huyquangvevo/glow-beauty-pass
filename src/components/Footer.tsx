@@ -63,22 +63,22 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 text-emerald-100/90">
               <li>
-                <Link href="/#bang-gia" className="hover:text-white transition-colors">
+                <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
                   Gội Thư Giãn (49.000đ)
                 </Link>
               </li>
               <li>
-                <Link href="/#bang-gia" className="hover:text-white transition-colors">
+                <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
                   Gội Dưỡng Sinh SOP (69.000đ)
                 </Link>
               </li>
               <li>
-                <Link href="/#bang-gia" className="hover:text-white transition-colors">
+                <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
                   Trị Liệu Cổ Vai Gáy (149.000đ)
                 </Link>
               </li>
               <li>
-                <Link href="/#bang-gia" className="hover:text-white transition-colors">
+                <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
                   Bấm Huyệt Khai Thông Kinh Lạc
                 </Link>
               </li>

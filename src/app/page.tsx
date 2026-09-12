@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   MapPin,
   Clock,
@@ -28,6 +29,7 @@ interface SpaItem {
   rating: number
   reviewCount: number
   tier: string
+  imageUrl?: string
   exclusiveOffer?: string
   formattedDistance?: string
   distanceKm?: number
@@ -96,8 +98,8 @@ export default function HomePage() {
         <HeroBannerCarousel />
       </section>
 
-      {/* 2. BẢNG GIÁ 3 GÓI DỊCH VỤ NIÊM YẾT (Nổi Bật Mức Giá Hấp Dẫn) */}
-      <section id="bang-gia" className="space-y-3.5 scroll-mt-20">
+      {/* 2. 3 GÓI DỊCH VỤ NIÊM YẾT (Đồng Giá Toàn Hệ Thống) */}
+      <section id="goi-dich-vu" className="space-y-3.5 scroll-mt-20">
         <div className="flex items-center justify-between px-1">
           <div>
             <div className="flex items-center gap-2">
@@ -288,83 +290,112 @@ export default function HomePage() {
             )
           })
 
-          return displaySpas.length === 0 ? (
-            <div className="py-10 text-center bg-white rounded-2xl border border-[#DCE8DE] text-sm text-[#5B6B58]">
-              Không tìm thấy spa phù hợp với từ khóa &ldquo;{searchQuery}&rdquo;.
-            </div>
-          ) : (
+          if (displaySpas.length === 0) {
+            return (
+              <div className="py-10 text-center bg-white rounded-2xl border border-[#DCE8DE] text-sm text-[#5B6B58]">
+                Không tìm thấy spa phù hợp với từ khóa &ldquo;{searchQuery}&rdquo;.
+              </div>
+            )
+          }
+
+          const spaThumbnails = [
+            '/spas/spa_thumb_1.jpg',
+            '/spas/spa_thumb_2.jpg',
+            '/spas/spa_thumb_3.jpg',
+            '/spas/spa_thumb_4.jpg',
+            '/spas/spa_thumb_5.jpg',
+          ]
+
+          return (
             <div className="space-y-3">
-              {displaySpas.map((spa) => (
-              <div
-                key={spa.id}
-                className="p-4 sm:p-5 rounded-2xl bg-white border border-[#DCE8DE] hover:border-[#40813D]/60 shadow-xs space-y-3 transition-all"
-              >
-                {/* Header: Name + Distance Badge */}
-                <div className="flex items-start justify-between gap-2.5">
-                  <div className="min-w-0 flex-1">
-                    <Link href={`/spa/${spa.slug}`}>
-                      <h3 className="font-extrabold text-base sm:text-[17px] leading-snug tracking-tight text-[#234E21] hover:text-[#40813D] transition-colors">
-                        {spa.name}
-                      </h3>
-                    </Link>
-                    <p className="text-xs sm:text-sm text-[#5B6B58] mt-1 leading-relaxed">
-                      {spa.address}
-                    </p>
-                  </div>
-
-                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EBF4EA] text-[#40813D] shrink-0 border border-[#B7DDB5]">
-                    {spa.formattedDistance || 'Gần bạn'}
-                  </span>
-                </div>
-
-                {/* Rating */}
-                <div className="flex items-center gap-1.5 text-xs sm:text-sm">
-                  <div className="flex items-center gap-1 text-amber-600 font-bold">
-                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    <span className="text-[#093E06] text-sm font-extrabold">{spa.rating}</span>
-                    <span className="text-[#5B6B58] font-normal text-xs">
-                      ({spa.reviewCount} đánh giá)
-                    </span>
-                  </div>
-                </div>
-
-                {/* Exclusive Offer without truncation */}
-                {spa.exclusiveOffer && (
-                  <div className="text-xs text-amber-950 bg-amber-50 border border-amber-200/70 px-3 py-2 rounded-xl font-medium leading-snug flex items-start gap-1.5">
-                    <span className="text-amber-600 font-bold shrink-0">Ưu đãi:</span>
-                    <span>{spa.exclusiveOffer}</span>
-                  </div>
-                )}
-
-                {/* Price Guarantee & Action Row */}
-                <div className="flex items-center justify-between gap-2.5 pt-2 border-t border-stone-100">
-                  <div className="flex items-center gap-1.5 text-xs text-[#2E682A]">
-                    <Tag className="w-3.5 h-3.5 text-[#40813D] shrink-0" />
-                    <span className="font-bold">Đồng giá từ <strong className="text-sm font-black text-[#1E5C23]">49K</strong></span>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
+              {displaySpas.map((spa, index) => (
+                <div
+                  key={spa.id}
+                  className="p-4 sm:p-5 rounded-2xl bg-white border border-[#DCE8DE] hover:border-[#40813D]/60 shadow-xs space-y-3 transition-all"
+                >
+                  {/* Upper: Thumbnail + Info */}
+                  <div className="flex items-start gap-3">
+                    {/* Thumbnail */}
                     <Link
                       href={`/spa/${spa.slug}`}
-                      className="py-2 px-3 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold transition-all"
+                      className="relative w-20 h-20 sm:w-22 sm:h-22 rounded-2xl overflow-hidden shrink-0 bg-stone-100 border border-stone-200/80 shadow-2xs group"
                     >
-                      Chi tiết
+                      <Image
+                        src={spa.imageUrl || spaThumbnails[index % spaThumbnails.length]}
+                        alt={spa.name}
+                        fill
+                        sizes="88px"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
                     </Link>
-                    <a
-                      href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-2 px-3.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs font-bold text-center transition-all active:scale-95 shadow-xs"
-                    >
-                      Đặt Zalo
-                    </a>
+
+                    {/* Header: Name + Distance Badge */}
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <div className="flex items-start justify-between gap-1.5">
+                        <Link href={`/spa/${spa.slug}`} className="flex-1 min-w-0">
+                          <h3 className="font-extrabold text-[15px] sm:text-[16px] leading-snug tracking-tight text-[#234E21] hover:text-[#40813D] transition-colors truncate">
+                            {spa.name}
+                          </h3>
+                        </Link>
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#EBF4EA] text-[#40813D] shrink-0 border border-[#B7DDB5]">
+                          {spa.formattedDistance || 'Gần bạn'}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-[#5B6B58] line-clamp-1 leading-normal">
+                        {spa.address}
+                      </p>
+
+                      {/* Rating */}
+                      <div className="flex items-center gap-1.5 text-xs pt-0.5">
+                        <div className="flex items-center gap-1 text-amber-600 font-bold">
+                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                          <span className="text-[#093E06] font-extrabold text-xs">{spa.rating}</span>
+                          <span className="text-[#5B6B58] font-normal text-[11px]">
+                            ({spa.reviewCount} đánh giá)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Exclusive Offer without truncation */}
+                  {spa.exclusiveOffer && (
+                    <div className="text-xs text-amber-950 bg-amber-50 border border-amber-200/70 px-3 py-2 rounded-xl font-medium leading-snug flex items-start gap-1.5">
+                      <span className="text-amber-600 font-bold shrink-0">Ưu đãi:</span>
+                      <span>{spa.exclusiveOffer}</span>
+                    </div>
+                  )}
+
+                  {/* Price Guarantee & Action Row */}
+                  <div className="flex items-center justify-between gap-2.5 pt-2 border-t border-stone-100">
+                    <div className="flex items-center gap-1.5 text-xs text-[#2E682A]">
+                      <Tag className="w-3.5 h-3.5 text-[#40813D] shrink-0" />
+                      <span className="font-bold">Đồng giá từ <strong className="text-sm font-black text-[#1E5C23]">49K</strong></span>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Link
+                        href={`/spa/${spa.slug}`}
+                        className="py-2 px-3 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold transition-all"
+                      >
+                        Chi tiết
+                      </Link>
+                      <a
+                        href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-2 px-3.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs font-bold text-center transition-all active:scale-95 shadow-xs"
+                      >
+                        Đặt Zalo
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )
-      })()}
+              ))}
+            </div>
+          )
+        })()}
       </section>
     </div>
   )

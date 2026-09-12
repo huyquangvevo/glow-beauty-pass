@@ -27,9 +27,26 @@ const DEFAULT_COORDS: Coords = {
 
 export function LocationProvider({ children }: { children: React.ReactNode }) {
   const [userCoords, setUserCoords] = useState<Coords | null>(null)
-  const [locationLabel, setLocationLabel] = useState<string>('Cầu Giấy')
+  const [locationLabel, setLocationLabel] = useState<string>('Bật vị trí')
   const [isLocating, setIsLocating] = useState<boolean>(false)
   const [isPromptOpen, setIsPromptOpen] = useState<boolean>(false)
+
+  // Hàm tra cứu tên khu vực thực tế từ tọa độ GPS
+  const resolveAreaName = async (lat: number, lon: number) => {
+    try {
+      const res = await fetch(`/api/reverse-geocode?lat=${lat}&lon=${lon}`)
+      if (res.ok) {
+        const data = await res.json()
+        if (data?.area) {
+          setLocationLabel(data.area)
+          return
+        }
+      }
+    } catch (err) {
+      console.warn('Reverse geocoding error:', err)
+    }
+    setLocationLabel('Cầu Giấy')
+  }
 
   useEffect(() => {
     // Kiểm tra xem người dùng đã từng cấp quyền hoặc bỏ qua chưa
@@ -55,11 +72,12 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
             lon: position.coords.longitude,
           }
           setUserCoords(coords)
-          setLocationLabel('Vị trí của bạn')
+          resolveAreaName(coords.lat, coords.lon)
         },
         (error) => {
           console.warn('Geolocation silent error:', error)
           setUserCoords(DEFAULT_COORDS)
+          setLocationLabel('Cầu Giấy')
         },
         { enableHighAccuracy: true, timeout: 8000 }
       )
@@ -74,14 +92,15 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
     }
 
     setIsLocating(true)
+    setLocationLabel('Đang định vị...')
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const coords = {
           lat: position.coords.latitude,
           lon: position.coords.longitude,
         }
         setUserCoords(coords)
-        setLocationLabel('Vị trí của bạn')
+        await resolveAreaName(coords.lat, coords.lon)
         setIsLocating(false)
         setIsPromptOpen(false)
         localStorage.setItem('glow_location_permission', 'granted')
@@ -90,6 +109,7 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
         console.warn('User denied or error locating:', error)
         setIsLocating(false)
         setIsPromptOpen(false)
+        setLocationLabel('Bật vị trí')
         localStorage.setItem('glow_location_permission', 'dismissed')
       },
       { enableHighAccuracy: true, timeout: 10000 }

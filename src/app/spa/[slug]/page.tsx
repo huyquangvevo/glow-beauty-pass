@@ -65,15 +65,6 @@ export default function SpaDetailPage() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-4 space-y-5 pb-20">
-      {/* Back button */}
-      <Link
-        href="/"
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#5B6B58] hover:text-[#093E06] transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span>Danh sách 15 spa Cầu Giấy</span>
-      </Link>
-
       {/* SPA HEADER CARD */}
       <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E5E9E4] shadow-xs space-y-4">
         <div className="space-y-2.5">
