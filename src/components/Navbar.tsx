@@ -1,15 +1,16 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   Search,
   MapPin,
-  Headphones,
   ArrowLeft,
   X,
 } from 'lucide-react'
 import { BrandWordmark } from './BrandLogo'
+import { ZaloIcon } from './ZaloIcon'
 import { useSearch } from '@/context/SearchContext'
 import { useLocation } from '@/context/LocationContext'
 
@@ -87,20 +88,42 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* FLOATING SUPPORT ZALO (Placed at bottom-5 since bottom tab bar is removed) */}
+      {/* FLOATING SUPPORT ZALO FAB (Logo Only, High-Impact Radar Waves & Online Beacon) */}
       {!isSpaDetail && (
         <aside
-          aria-label="Hỗ trợ và đặt lịch Zalo"
-          className="fixed bottom-5 right-4 z-40"
+          aria-label="Nhắn Zalo tư vấn và đặt lịch"
+          className="fixed bottom-6 right-4.5 z-40 group pointer-events-auto"
         >
+          {/* Layer 1: Outer Radar Wave Ping */}
+          <span className="absolute -inset-2 rounded-full bg-[#0068FF]/35 animate-ping pointer-events-none duration-1000" />
+          {/* Layer 2: Subtle Breathing Glow */}
+          <span className="absolute -inset-1 rounded-full bg-[#0068FF]/20 animate-pulse pointer-events-none" />
+
           <a
             href={zaloHubLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white shadow-lg shadow-[#40813D]/40 border border-white/20 active:scale-95 transition-all text-xs sm:text-sm font-bold"
+            aria-label="Nhắn tin Zalo"
+            title="Nhắn Zalo tư vấn & đặt lịch nhanh (< 5p)"
+            className="relative w-13.5 h-13.5 sm:w-14 sm:h-14 rounded-full bg-white shadow-2xl shadow-[#0068FF]/50 border-2 border-white flex items-center justify-center p-0.5 hover:scale-110 active:scale-95 transition-all duration-300 group-hover:shadow-[#0068FF]/70"
           >
-            <Headphones className="w-4 h-4 text-emerald-100" />
-            <span>Zalo Hotline</span>
+            {/* Official Zalo Logo from docs/brand/Logo-Zalo-App-Rec.webp */}
+            <div className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center">
+              <Image
+                src="/brand/zalo-logo.webp"
+                alt="Zalo"
+                width={56}
+                height={56}
+                className="w-full h-full object-cover rounded-full"
+                priority
+              />
+            </div>
+
+            {/* Active Online Green Beacon Dot */}
+            <span className="absolute top-0 right-0 flex h-3.5 w-3.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white shadow-xs"></span>
+            </span>
           </a>
         </aside>
       )}

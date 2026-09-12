@@ -13,6 +13,7 @@ import {
   Tag,
 } from 'lucide-react'
 import { BrandLogo } from '@/components/BrandLogo'
+import { HeroBannerCarousel } from '@/components/HeroBannerCarousel'
 import { useSearch } from '@/context/SearchContext'
 import { useLocation } from '@/context/LocationContext'
 
@@ -90,55 +91,9 @@ export default function HomePage() {
 
   return (
     <div className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto px-4 py-5 space-y-7 pb-12">
-      {/* 1. HERO SECTION: TO RÕ, THOÁNG ĐÃNG, NỔI BẬT THƯƠNG HIỆU */}
-      <section className="bg-gradient-to-b from-white via-[#F7FAF7] to-white rounded-3xl p-5 sm:p-6 border border-[#D5E7D8] shadow-xs space-y-4">
-        <div className="flex items-center justify-between gap-2">
-          <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[#40813D]">
-            <span className="w-2 h-2 rounded-full bg-[#40813D] animate-pulse"></span>
-            <span>15 Spa Tuyển Chọn • Q. Cầu Giấy</span>
-          </div>
-          <span className="text-[11px] font-extrabold text-[#40813D] px-2.5 py-0.5 rounded-full bg-[#EBF4EA] border border-[#B7DDB5] shrink-0 shadow-2xs">
-            Pilot 90 Ngày
-          </span>
-        </div>
-
-        <div className="space-y-2">
-          <h1 className="text-xl sm:text-2xl font-black text-[#234E21] tracking-tight leading-snug">
-            Gội Thư Giãn & Trị Liệu Chuẩn SOP
-          </h1>
-          <p className="text-xs sm:text-sm text-[#4E5C4C] leading-relaxed">
-            Mạng lưới spa kiểm định độc lập tại Cầu Giấy: Giá niêm yết rõ trước, cam kết không chèo kéo, xác nhận lịch qua Zalo trong 5 phút.
-          </p>
-        </div>
-
-        {/* 3 Core Pillars: Bento format */}
-        <div className="grid grid-cols-3 gap-2 pt-1 text-center">
-          <div className="py-2.5 px-1.5 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
-            <span className="text-xs font-bold leading-tight">Đúng giá 100%</span>
-            <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Không phụ thu</span>
-          </div>
-          <div className="py-2.5 px-1.5 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
-            <span className="text-xs font-bold leading-tight">Không chèo kéo</span>
-            <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Quy trình SOP</span>
-          </div>
-          <div className="py-2.5 px-1.5 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
-            <span className="text-xs font-bold leading-tight">Phản hồi 5 phút</span>
-            <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Xác nhận Zalo</span>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="pt-1.5">
-          <a
-            href={zaloHubLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full py-3.5 px-5 rounded-full bg-gradient-to-r from-[#356F32] to-[#40813D] hover:from-[#2E602C] hover:to-[#356F32] text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-md shadow-[#40813D]/30 active:scale-98 transition-all"
-          >
-            <MessageCircle className="w-5 h-5 text-emerald-100" />
-            <span>Nhắn Zalo Đặt Lịch Ngay</span>
-          </a>
-        </div>
+      {/* 1. VISUAL HERO BANNER CAROUSEL (Lifestyle Photography & Promo) */}
+      <section className="w-full">
+        <HeroBannerCarousel />
       </section>
 
       {/* 2. BẢNG GIÁ 3 GÓI DỊCH VỤ NIÊM YẾT (Nổi Bật Mức Giá Hấp Dẫn) */}
@@ -254,7 +209,7 @@ export default function HomePage() {
       </section>
 
       {/* 3. MẠNG LƯỚI 15 SPA (To rõ, thoáng đãng) */}
-      <section className="space-y-3.5">
+      <section id="danh-sach-spa" className="space-y-3.5 scroll-mt-20">
         <div className="flex items-center justify-between px-1">
           <div>
             <div className="flex items-center gap-2">
