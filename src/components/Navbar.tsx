@@ -30,6 +30,7 @@ export function Navbar() {
     }
   }
 
+
   return (
     <>
       {/* TOP HEADER: GLOW BEAUTY PASS (Brand Green #40813D, Logo + Search + Location) */}

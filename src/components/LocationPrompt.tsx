@@ -1,9 +1,11 @@
 'use client'
 
 import { useLocation } from '@/context/LocationContext'
+import { usePathname } from 'next/navigation'
 import { MapPin, X, Loader2 } from 'lucide-react'
 
 export function LocationPrompt() {
+  const pathname = usePathname()
   const { isPromptOpen, isLocating, requestLocation, dismissPrompt } = useLocation()
 
   if (!isPromptOpen) return null

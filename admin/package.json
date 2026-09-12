@@ -1,18 +1,11 @@
 {
-  "name": "app",
+  "name": "glow-beauty-pass-admin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
-    "dev:portal": "next dev -p 3000",
-    "dev:admin": "pnpm --prefix admin dev",
+    "dev": "next dev -p 3002",
     "build": "prisma generate && next build",
-    "build:portal": "prisma generate && next build",
-    "build:admin": "pnpm --prefix admin run build",
-    "build:all": "pnpm run build:portal && pnpm run build:admin",
-    "start": "next start",
-    "start:portal": "next start -p 3000",
-    "start:admin": "pnpm --prefix admin start",
+    "start": "next start -p 3002",
     "lint": "eslint",
     "postinstall": "prisma generate"
   },
@@ -33,6 +26,5 @@
     "prisma": "6.19.3",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "packageManager": "pnpm@10.33.4"
+  }
 }

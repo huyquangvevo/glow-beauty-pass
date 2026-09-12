@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
+# dependencies (recursive for monorepo and subprojects)
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -11,18 +11,18 @@
 !.yarn/versions
 
 # testing
-/coverage
+coverage/
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
+# next.js & bundler build outputs (recursive)
+.next/
+out/
+build/
+dist/
 
 # misc
 .DS_Store
 *.pem
+Thumbs.db
 
 # debug
 npm-debug.log*
@@ -30,8 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (recursive)
 .env*
+!.env.example
 
 # vercel
 .vercel
