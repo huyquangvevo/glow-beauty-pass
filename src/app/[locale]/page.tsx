@@ -43,6 +43,24 @@ interface SkuItem {
   description: string
 }
 
+function SpaThumbnail({ src, fallback, alt }: { src?: string; fallback: string; alt: string }) {
+  const [imgSrc, setImgSrc] = useState(src || fallback)
+  useEffect(() => {
+    setImgSrc(src || fallback)
+  }, [src, fallback])
+
+  return (
+    <Image
+      src={imgSrc}
+      alt={alt}
+      fill
+      sizes="88px"
+      className="object-cover group-hover:scale-105 transition-transform duration-300"
+      onError={() => setImgSrc(fallback)}
+    />
+  )
+}
+
 export default function HomePage() {
   const tCommon = useTranslations('Common')
   const tServices = useTranslations('Services')
@@ -336,12 +354,10 @@ export default function HomePage() {
                       href={`/spa/${spa.slug}`}
                       className="relative w-20 h-20 sm:w-22 sm:h-22 rounded-2xl overflow-hidden shrink-0 bg-stone-100 border border-stone-200/80 shadow-2xs group"
                     >
-                      <Image
-                        src={spa.imageUrl || spaThumbnails[index % spaThumbnails.length]}
+                      <SpaThumbnail
+                        src={spa.imageUrl}
+                        fallback={spaThumbnails[index % spaThumbnails.length]}
                         alt={spa.name}
-                        fill
-                        sizes="88px"
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </Link>
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   MapPin,
   Clock,
@@ -81,6 +82,19 @@ export default function SpaDetailPage() {
               <span>{tSpaDetail('guarantee100')}</span>
             </span>
           </div>
+
+          {spa.imageUrl && (
+            <div className="relative w-full h-48 sm:h-56 rounded-2xl overflow-hidden border border-stone-200/80 shadow-2xs">
+              <Image
+                src={spa.imageUrl}
+                alt={spa.name}
+                fill
+                sizes="(max-width: 640px) 100vw, 448px"
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
 
           <h1 className="text-2xl sm:text-3xl font-black text-[#093E06] tracking-tight leading-tight">
             {spa.name}
