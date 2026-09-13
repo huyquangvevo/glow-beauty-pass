@@ -20,10 +20,16 @@ import {
 } from 'lucide-react'
 import { ZaloIcon } from '@/components/ZaloIcon'
 import { PaginationControls } from '@/components/PaginationControls'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 
 // Minimalist Clean Rating Summary (Anti-Slop)
-function RatingSummary({ rating, reviewCount }: { rating: number | string; reviewCount: number }) {
+function RatingSummary({
+  rating,
+  summaryText,
+}: {
+  rating: number | string
+  summaryText: string
+}) {
   return (
     <div className="flex items-center gap-3 py-2 px-1">
       <div className="flex items-baseline gap-1.5">
@@ -38,7 +44,7 @@ function RatingSummary({ rating, reviewCount }: { rating: number | string; revie
       </div>
       <span className="text-stone-300">•</span>
       <span className="text-xs text-stone-500 font-medium">
-        {reviewCount} đánh giá từ khách hàng đã trải nghiệm
+        {summaryText}
       </span>
     </div>
   )
@@ -48,9 +54,65 @@ export default function SpaDetailPage() {
   const tSpaDetail = useTranslations('SpaDetail')
   const tServices = useTranslations('Services')
   const tCommon = useTranslations('Common')
+  const locale = useLocale()
 
   const params = useParams()
   const slug = params?.slug as string
+
+  const getLocalizedExclusiveOffer = (offer: string) => {
+    if (!offer) return ''
+    if (locale === 'ko') {
+      return '등·목 온석(핫스톤) 마사지 15분 무료 증정'
+    }
+    if (locale === 'en') {
+      return 'Complimentary 15-minute hot stone back & neck massage'
+    }
+    return offer
+  }
+
+  const getLocalizedFaq = (faq: any, i: number, spaName: string) => {
+    if (locale === 'ko') {
+      if (i === 0) {
+        return {
+          question: `Glow Beauty Pass를 통해 ${spaName} 예약 시 사전 결제가 필요한가요?`,
+          answer: '사전 결제가 필요 없습니다. 희망 시간을 선택하고 Zalo Hub 또는 핫라인을 통해 예약 확정 후, 스파에 방문하여 예약 코드를 제시하면 즉시 서비스를 받고 현장에서 정찰가로 결제하시면 됩니다.'
+        }
+      }
+      if (i === 1) {
+        return {
+          question: '주말이나 피크 시간대에 추가 요금이 발생하나요?',
+          answer: '전혀 없습니다. 주말이나 공휴일, 피크 시간대에도 100% 정찰제로 운영되며 추가 요금이나 팁을 일체 요구하지 않습니다.'
+        }
+      }
+      if (i === 2) {
+        return {
+          question: '해당 스파 지점에 주차(오토바이 및 자동차)가 가능한가요?',
+          answer: '네, 건물 내에 안전한 오토바이 및 자동차 주차장이 마련되어 있으며 보안 요원의 친절한 안내를 받으실 수 있습니다.'
+        }
+      }
+    }
+    if (locale === 'en') {
+      if (i === 0) {
+        return {
+          question: `Do I need to pay in advance when booking ${spaName} via Glow Beauty Pass?`,
+          answer: 'No advance payment is needed. Simply choose your preferred time slot and confirm your booking via Zalo Hub or Hotline. Upon arrival, present your booking code to receive immediate service and pay the transparent fixed price on-site.'
+        }
+      }
+      if (i === 1) {
+        return {
+          question: 'Are there any extra surcharges for weekends or peak hours?',
+          answer: 'Zero extra fees. All services are strictly transparent and fixed-price at all times, with no weekend, holiday, or peak hour surcharges.'
+        }
+      }
+      if (i === 2) {
+        return {
+          question: 'Is parking available for motorbikes and cars at this location?',
+          answer: 'Yes, secure on-site parking for both motorbikes and cars is available with dedicated building security staff assistance.'
+        }
+      }
+    }
+    return faq
+  }
 
   const initialSpa = useMemo(() => {
     if (!slug) return null
@@ -296,7 +358,7 @@ export default function SpaDetailPage() {
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-2">
             <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-stone-500 bg-stone-100 px-2.5 py-0.5 rounded-full">
-              Đối tác kiểm định • Cầu Giấy
+              {tSpaDetail('verifiedPartnerDistrict')}
             </span>
             <div className="flex items-center gap-1 text-xs text-stone-600">
               <Clock className="w-3.5 h-3.5 text-stone-400" />
@@ -331,7 +393,7 @@ export default function SpaDetailPage() {
             <Gift className="w-4 h-4 text-amber-600 shrink-0" />
             <p className="font-medium">
               <strong className="font-semibold">{tSpaDetail('exclusiveOffer')} </strong>
-              {spa.exclusiveOffer}
+              {getLocalizedExclusiveOffer(spa.exclusiveOffer)}
             </p>
           </div>
         )}
@@ -341,10 +403,10 @@ export default function SpaDetailPage() {
       <div className="space-y-3">
         <div className="px-1">
           <h2 className="text-base sm:text-lg font-bold text-stone-900 tracking-tight">
-            Menu Dịch Vụ Niêm Yết
+            {tSpaDetail('servicesTitle')}
           </h2>
           <p className="text-xs text-stone-500 mt-0.5">
-            Đồng giá toàn mạng lưới • Không phụ thu • Giữ chỗ 0đ
+            {tSpaDetail('servicesMenuSubtitle')}
           </p>
         </div>
 
@@ -354,7 +416,7 @@ export default function SpaDetailPage() {
             const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
 
             const isPopular = index === 1
-            const badgeLabel = index === 0 ? 'Gói cơ bản' : index === 1 ? 'Phổ biến nhất' : 'Chuyên sâu'
+            const badgeLabel = index === 0 ? tSpaDetail('pkg1Badge') : index === 1 ? tSpaDetail('pkg2Badge') : tSpaDetail('pkg3Badge')
 
             // Extract 3 clean bullet points
             const bullet1 = tServices.has(`${pkgKey}.f1` as any) ? tServices(`${pkgKey}.f1` as any) : ''
@@ -385,9 +447,9 @@ export default function SpaDetailPage() {
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-stone-500 font-medium">
                       <Clock className="w-3.5 h-3.5 text-stone-400" />
-                      <span>{sku.durationMinutes} phút</span>
+                      <span>{sku.durationMinutes} {tCommon('minutes')}</span>
                       <span>•</span>
-                      <span>Quy trình chuẩn</span>
+                      <span>{tSpaDetail('sopProcess')}</span>
                     </div>
                   </div>
 
@@ -419,16 +481,16 @@ export default function SpaDetailPage() {
                 {/* Quick Zalo Booking CTA */}
                 <div className="mt-3.5 pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
                   <span className="text-[11px] text-stone-400 font-medium">
-                    Không thu thêm phụ phí
+                    {tSpaDetail('noExtraFee')}
                   </span>
                   <a
-                    href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}%20tại%20${encodeURIComponent(spa.name)}`}
+                    href={zaloHubLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold active:scale-95 transition-all"
                   >
                     <ZaloIcon className="w-3.5 h-3.5 text-white" />
-                    <span>Đặt lịch {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
+                    <span>{tCommon('bookNow')} • {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
                   </a>
                 </div>
               </div>
@@ -441,7 +503,7 @@ export default function SpaDetailPage() {
       <div id="customer-reviews" className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/80 space-y-4 scroll-mt-24">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-bold text-stone-900 tracking-tight">
-            Đánh giá từ khách hàng
+            {tSpaDetail('reviewsTitle')}
           </h2>
           <span className="text-xs text-stone-500 font-medium">
             {reviewsList.length} {tCommon('reviews')}
@@ -449,7 +511,10 @@ export default function SpaDetailPage() {
         </div>
 
         {/* Minimalist Clean Rating Summary */}
-        <RatingSummary rating={spa.rating} reviewCount={spa.reviewCount || reviewsList.length} />
+        <RatingSummary
+          rating={spa.rating}
+          summaryText={tSpaDetail('reviewsSummary', { count: spa.reviewCount || reviewsList.length })}
+        />
 
         {/* Review Filter Tabs */}
         {reviewsList.length > 0 && (
@@ -588,12 +653,13 @@ export default function SpaDetailPage() {
               {tSpaDetail('faqTitle')}
             </h3>
             <p className="text-xs text-stone-500 mt-0.5">
-              Giải đáp các câu hỏi thường gặp khi đặt dịch vụ
+              {tSpaDetail('faqSubtitle')}
             </p>
           </div>
 
           <div className="divide-y divide-stone-100 pt-1">
-            {spa.faqs.map((faq: any, i: number) => {
+            {spa.faqs.map((rawFaq: any, i: number) => {
+              const faq = getLocalizedFaq(rawFaq, i, spa.name)
               const isOpen = !!openFaqs[i]
               return (
                 <div key={i} className="py-3 first:pt-0 last:pb-0">
@@ -644,16 +710,16 @@ export default function SpaDetailPage() {
           <div className="flex items-center gap-2 flex-1 justify-end">
             {/* Hotline Icon Button */}
             <a
-              href={`tel:${spa.phone}`}
+              href={`tel:${spa.phone || '0359178342'}`}
               className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center border border-stone-200/80 transition-all active:scale-95 shrink-0"
-              title={tSpaDetail('hotline')}
+              title={tSpaDetail('callHotline')}
             >
               <Phone className="w-5 h-5 text-stone-700" />
             </a>
 
             {/* Clean, High-Impact Zalo Button with Prominent Zalo Icon */}
             <a
-              href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
+              href={zaloHubLink}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 max-w-xs sm:max-w-sm h-11 sm:h-12 px-4 sm:px-5 rounded-xl bg-[#0068FF] hover:bg-[#0052CC] text-white flex items-center justify-center gap-2.5 shadow-sm shadow-blue-500/20 transition-all active:scale-[0.98]"

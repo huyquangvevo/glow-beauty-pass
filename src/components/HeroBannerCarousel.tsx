@@ -37,7 +37,7 @@ export function HeroBannerCarousel() {
       highlight: tHero('slide1.highlight'),
       description: tHero('slide1.description'),
       ctaText: tHero('slide1.cta'),
-      ctaLink: `${zaloHubLink}?text=Gói%20Gội%20Thư%20Giãn%2049K`,
+      ctaLink: zaloHubLink,
       badgeColor: 'bg-emerald-600/90 text-white border-emerald-400/40',
     },
     {
@@ -48,7 +48,7 @@ export function HeroBannerCarousel() {
       highlight: tHero('slide2.highlight'),
       description: tHero('slide2.description'),
       ctaText: tHero('slide2.cta'),
-      ctaLink: `${zaloHubLink}?text=Trị%20Liệu%20Cổ%20Vai%20Gáy%20149K`,
+      ctaLink: zaloHubLink,
       badgeColor: 'bg-amber-600/90 text-white border-amber-300/40',
     },
     {

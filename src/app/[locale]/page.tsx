@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   MapPin,
   Clock,
@@ -271,7 +272,8 @@ export default function HomePage() {
             const isPopular = index === 1
             const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
             const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
-            const badgeLabel = index === 0 ? 'Gói cơ bản' : index === 1 ? 'Phổ biến nhất' : 'Chuyên sâu'
+            const badgeKey = index === 0 ? 'pkg1Badge' : index === 1 ? 'pkg2Badge' : 'pkg3Badge'
+            const badgeLabel = tServices.has(badgeKey as any) ? tServices(badgeKey as any) : (index === 0 ? 'Gói cơ bản' : index === 1 ? 'Phổ biến nhất' : 'Chuyên sâu')
 
             const bullet1 = tServices.has(`${pkgKey}.f1` as any) ? tServices(`${pkgKey}.f1` as any) : ''
             const bullet2 = tServices.has(`${pkgKey}.f2` as any) ? tServices(`${pkgKey}.f2` as any) : ''
@@ -302,7 +304,7 @@ export default function HomePage() {
                       </div>
                       <div className="inline-flex items-center gap-1 text-xs text-stone-500 font-medium">
                         <Clock className="w-3.5 h-3.5 text-stone-400" />
-                        <span>{sku.durationMinutes} phút</span>
+                        <span>{sku.durationMinutes} {tServices('durationUnit')}</span>
                       </div>
                     </div>
 
@@ -332,15 +334,22 @@ export default function HomePage() {
 
                 <div className="pt-3 mt-3 border-t border-stone-100 flex items-center justify-between gap-2">
                   <span className="text-[11px] text-stone-400 font-medium">
-                    Không thu thêm phụ phí
+                    {tServices('noExtraFee')}
                   </span>
                   <a
-                    href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}`}
+                    href={zaloHubLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold active:scale-95 transition-all"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs font-bold active:scale-95 transition-all shadow-xs"
                   >
-                    <span>Đặt lịch {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
+                    <Image
+                      src="/brand/Logo-Zalo-App-Rec.webp"
+                      alt="Zalo"
+                      width={14}
+                      height={14}
+                      className="w-3.5 h-3.5 rounded-xs shrink-0 object-contain"
+                    />
+                    <span>{tServices('bookPrice', { price: sku.pricePhase1.toLocaleString('vi-VN') })}</span>
                   </a>
                 </div>
               </div>
@@ -423,12 +432,16 @@ export default function HomePage() {
         )}
 
         {/* MOBILE-FIRST STREAMLINED FILTER BAR */}
-        <div className="space-y-2 pt-0.5">
+        <div className="space-y-2.5 pt-0.5">
           {/* Row 1: Ward Filter Chips (Horizontal Scroll with Counts & Distance) */}
           <div
             className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
+            <span className="text-[11px] font-bold text-[#5B6B58] uppercase tracking-wider shrink-0 mr-1">
+              {tSpaNetwork('areaLabel')}
+            </span>
+
             {/* ALL Chip */}
             <button
               type="button"
@@ -471,6 +484,10 @@ export default function HomePage() {
             className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
+            <span className="text-[11px] font-bold text-[#5B6B58] uppercase tracking-wider shrink-0 mr-1">
+              {tSpaNetwork('filterSortLabel')}
+            </span>
+
             {/* Sort Dropdown */}
             <div className="flex items-center gap-1 bg-white border border-[#DDE4D9] rounded-full px-2.5 py-1 text-xs shrink-0 shadow-2xs">
               <ArrowUpDown className="w-3 h-3 text-stone-400" />
@@ -525,6 +542,23 @@ export default function HomePage() {
               <span>{tSpaNetwork('filterDeal49k')}</span>
               {deal49kOnly && <Check className="w-3 h-3 text-[#40813D]" />}
             </button>
+
+            {/* Clear Filters Button if any active */}
+            {(selectedWard !== 'ALL' || openNowOnly || topRatedOnly || deal49kOnly) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedWard('ALL')
+                  setOpenNowOnly(false)
+                  setTopRatedOnly(false)
+                  setDeal49kOnly(false)
+                }}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 shrink-0 transition-colors cursor-pointer ml-1"
+              >
+                <X className="w-3 h-3" />
+                <span>{tSpaNetwork('clearFilter')}</span>
+              </button>
+            )}
           </div>
         </div>
 

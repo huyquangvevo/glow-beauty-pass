@@ -166,14 +166,19 @@ export function NearbySpaCard({
             {tSpaNetwork('viewDetails')}
           </Link>
           <a
-            href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(
-              spa.name
-            )}`}
+            href={zaloHubLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 py-2 px-3 rounded-xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#2E602C] text-white text-xs font-bold text-center transition-all shadow-xs"
+            className="flex-1 py-2 px-3 rounded-xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#2E602C] text-white text-xs font-bold text-center transition-all shadow-xs flex items-center justify-center gap-1.5"
           >
-            {tSpaNetwork('bookSlot')}
+            <Image
+              src="/brand/Logo-Zalo-App-Rec.webp"
+              alt="Zalo"
+              width={16}
+              height={16}
+              className="w-4 h-4 rounded-xs shrink-0 object-contain"
+            />
+            <span>{tSpaNetwork('bookSlot')}</span>
           </a>
         </div>
       </div>

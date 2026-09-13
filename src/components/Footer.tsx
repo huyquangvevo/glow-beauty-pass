@@ -147,15 +147,29 @@ export function Footer() {
               </li>
             </ul>
 
-            <div className="pt-2">
+            <div className="pt-2 flex flex-wrap items-center gap-2">
+              <a
+                href="tel:0359178342"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-white hover:text-amber-200 transition-colors bg-white/15 hover:bg-white/25 px-3 py-1.5 rounded-full border border-white/20"
+              >
+                <Phone className="w-3.5 h-3.5 text-amber-300" />
+                <span>{t('callHotline')}</span>
+              </a>
+
               <a
                 href={zaloHubLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-black text-amber-200 hover:text-white transition-colors bg-black/15 px-3 py-1.5 rounded-full border border-white/20"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#093E06] hover:bg-white transition-colors bg-amber-300 px-3 py-1.5 rounded-full shadow-xs"
               >
-                <Phone className="w-3.5 h-3.5" />
-                <span>{t('hotlineZaloLabel')}</span>
+                <Image
+                  src="/brand/Logo-Zalo-App-Rec.webp"
+                  alt="Zalo"
+                  width={15}
+                  height={15}
+                  className="w-3.5 h-3.5 rounded-xs shrink-0 object-contain"
+                />
+                <span>{t('chatZalo')}</span>
               </a>
             </div>
           </div>
