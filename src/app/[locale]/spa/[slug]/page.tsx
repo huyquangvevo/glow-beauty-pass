@@ -197,7 +197,7 @@ export default function SpaDetailPage() {
     return 49000
   }, [skus])
 
-  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
+  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342'
 
   // Build reviews list: priority for curatedReviews, fallback to reviews relation
   const reviewsList =
@@ -259,7 +259,7 @@ export default function SpaDetailPage() {
       name: spa.name,
       description: `${spa.name} - Đối tác kiểm định mạng lưới Glow Beauty Pass Cầu Giấy, Hà Nội. Gói gội đầu dưỡng sinh, massage trị liệu tiêu chuẩn SOP.`,
       url: fullUrl,
-      telephone: spa.phone || '+84-988-888-888',
+      telephone: spa.phone || '+84-359-178-342',
       image: spa.imageUrl ? `${baseUrl}${spa.imageUrl}` : `${baseUrl}/brand/banner-meta.webp`,
       priceRange: '49.000đ - 149.000đ',
       address: {

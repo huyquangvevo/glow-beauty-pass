@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl'
 
 export function Footer() {
   const t = useTranslations('Footer')
-  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
+  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342'
 
   return (
     <footer className="bg-[#40813D] text-white pt-12 pb-16 border-t border-white/15">

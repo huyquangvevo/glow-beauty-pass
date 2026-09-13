@@ -24,7 +24,7 @@ interface BannerSlide {
 }
 
 export function HeroBannerCarousel() {
-  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
+  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342'
   const tHero = useTranslations('Hero')
   const tTrust = useTranslations('TrustBadges')
 

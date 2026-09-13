@@ -155,14 +155,14 @@ export default async function LocaleLayout({
     logo: 'https://glowbeautypass.com/brand/logo.svg',
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+84-988-888-888',
+      telephone: '+84-359-178-342',
       contactType: 'customer service',
       areaServed: 'VN',
       availableLanguage: ['vi', 'en', 'ko'],
     },
     sameAs: [
       'https://www.facebook.com/glowbeautypass',
-      'https://zalo.me/0988888888',
+      'https://zalo.me/0359178342',
     ],
   }
 

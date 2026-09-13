@@ -11,7 +11,7 @@ export function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
 
-  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
+  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342'
   const isSpaDetail = pathname.startsWith('/spa/')
 
   return (
