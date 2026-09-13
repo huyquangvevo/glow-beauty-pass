@@ -255,124 +255,92 @@ export default function HomePage() {
         <HeroBannerCarousel />
       </section>
 
-      {/* 2. 3 GÓI DỊCH VỤ NIÊM YẾT (Đồng Giá Toàn Hệ Thống - Taste Design Upgrade) */}
-      <section id="goi-dich-vu" className="space-y-3.5 sm:space-y-4 scroll-mt-20">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 px-1">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="text-lg sm:text-xl md:text-2xl font-black text-[#0B3A08] tracking-tight">
-                {tServices('heading')}
-              </h2>
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1D541B] bg-[#EAF5E9] px-2.5 py-0.5 rounded-full border border-[#B7DDB5]/70 shadow-2xs">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#356F32]" />
-                {tServices('fixedBadge')}
-              </span>
-            </div>
-            <p className="text-xs sm:text-sm text-[#5B6B58] font-medium leading-normal">
-              {tServices('subheading')}
-            </p>
-          </div>
+      {/* 2. 3 GÓI DỊCH VỤ NIÊM YẾT (Clean Service Menu) */}
+      <section id="goi-dich-vu" className="space-y-3.5 scroll-mt-20">
+        <div className="px-1">
+          <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight">
+            {tServices('heading')}
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
+            {tServices('subheading')}
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
           {skus.map((sku, index) => {
-            const isPopular = index === 1 // Gói 2: Gội Toàn Diện Chuẩn Sạch là Hot Nhất
+            const isPopular = index === 1
             const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
             const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
-            const localizedDesc = tServices.has(`${pkgKey}.desc` as any) ? tServices(`${pkgKey}.desc` as any) : sku.description
-            const localizedBadge = tServices.has(`${pkgKey}.badge` as any) ? tServices(`${pkgKey}.badge` as any) : null
+            const badgeLabel = index === 0 ? 'Gói cơ bản' : index === 1 ? 'Phổ biến nhất' : 'Chuyên sâu'
 
-            const discountPercent = sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
-              ? Math.round(((sku.pricePhase2 - sku.pricePhase1) / sku.pricePhase2) * 100)
-              : null
+            const bullet1 = tServices.has(`${pkgKey}.f1` as any) ? tServices(`${pkgKey}.f1` as any) : ''
+            const bullet2 = tServices.has(`${pkgKey}.f2` as any) ? tServices(`${pkgKey}.f2` as any) : ''
+            const bullet3 = tServices.has(`${pkgKey}.f3` as any) ? tServices(`${pkgKey}.f3` as any) : ''
+            const highlights = [bullet1, bullet2, bullet3].filter(Boolean)
 
             return (
               <div
                 key={sku.id}
-                className={`p-4.5 sm:p-5 rounded-2xl bg-white border transition-all flex flex-col justify-between relative group ${
+                className={`p-4.5 sm:p-5 rounded-2xl bg-white border transition-all flex flex-col justify-between ${
                   isPopular
-                    ? 'border-[#356F32] shadow-md shadow-[#356F32]/10 ring-1 ring-[#356F32]/20'
-                    : 'border-[#DDE5DC] shadow-xs hover:border-[#356F32]/50 hover:shadow-md'
+                    ? 'border-stone-900 shadow-xs'
+                    : 'border-stone-200/80 hover:border-stone-400'
                 }`}
               >
-                <div className="space-y-3.5">
-                  {/* Package Header: Title, Badge & Price */}
+                <div className="space-y-3">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1.5 flex-1 min-w-0">
+                    <div className="space-y-1 flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <h3 className="font-black text-base sm:text-[17px] text-[#0A3C08] tracking-tight leading-snug">
+                        <h3 className="font-bold text-base text-stone-900 leading-snug">
                           {localizedName}
                         </h3>
-                        {localizedBadge && (
-                          <span className={`text-[9.5px] font-black uppercase px-2 py-0.5 rounded-full text-white shadow-2xs shrink-0 tracking-wider ${
-                            index === 1 ? 'bg-emerald-600' : 'bg-amber-600'
-                          }`}>
-                            {localizedBadge}
+                        {isPopular && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-stone-900 text-white px-2 py-0.5 rounded-md">
+                            {badgeLabel}
                           </span>
                         )}
                       </div>
-                      <div className="inline-flex items-center gap-1.5 text-xs text-[#5B6B58] font-medium bg-[#F4F8F3] px-2.5 py-0.5 rounded-full border border-[#E0EBE0]">
-                        <Clock className="w-3.5 h-3.5 text-[#356F32]" />
-                        <span>
-                          {sku.durationMinutes} {tCommon('minutes')}
-                        </span>
+                      <div className="inline-flex items-center gap-1 text-xs text-stone-500 font-medium">
+                        <Clock className="w-3.5 h-3.5 text-stone-400" />
+                        <span>{sku.durationMinutes} phút</span>
                       </div>
                     </div>
 
-                    {/* Clean Price Display */}
                     <div className="text-right shrink-0">
-                      <div className="text-xl sm:text-2xl font-black text-[#1B5E20] leading-none tracking-tight">
+                      <div className="text-xl font-bold text-stone-900 leading-none tracking-tight">
                         {sku.pricePhase1.toLocaleString('vi-VN')}đ
                       </div>
                       {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
-                        <div className="flex items-center justify-end gap-1 mt-1 leading-none">
-                          <span className="text-[11px] text-stone-400 line-through font-medium">
-                            {sku.pricePhase2.toLocaleString('vi-VN')}đ
-                          </span>
-                          {discountPercent && (
-                            <span className="text-[10px] font-extrabold text-amber-800 bg-amber-100 px-1 py-0.2 rounded-xs">
-                              -{discountPercent}%
-                            </span>
-                          )}
+                        <div className="text-[11px] text-stone-400 line-through mt-1">
+                          {sku.pricePhase2.toLocaleString('vi-VN')}đ
                         </div>
                       )}
                     </div>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-xs sm:text-[13px] text-[#4A5E47] leading-relaxed font-normal">
-                    {localizedDesc}
-                  </p>
-
-                  {/* Feature Highlights (Micro-bullets for real value!) */}
-                  <div className="space-y-1.5 pt-1.5 border-t border-stone-100">
-                    {[1, 2, 3].map((fNum) => {
-                      const fKey = `${pkgKey}.f${fNum}` as any
-                      if (!tServices.has(fKey)) return null
-                      return (
-                        <div key={fNum} className="flex items-start gap-2 text-xs text-[#3E4F3B] leading-snug">
-                          <Check className="w-3.5 h-3.5 text-[#356F32] shrink-0 mt-0.5" />
-                          <span>{tServices(fKey)}</span>
+                  {highlights.length > 0 && (
+                    <div className="space-y-1 pt-2 border-t border-stone-100">
+                      {highlights.map((h: string, idx: number) => (
+                        <div key={idx} className="text-xs text-stone-600 flex items-start gap-1.5 leading-snug">
+                          <span className="text-stone-400 font-bold">•</span>
+                          <span>{h}</span>
                         </div>
-                      )
-                    })}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                {/* CTA Button Row */}
-                <div className="pt-3.5 mt-3.5 border-t border-stone-100 flex items-center justify-between gap-2.5">
-                  <span className="text-[11px] font-bold text-[#356F32] flex items-center gap-1 shrink-0">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                    <span>SOP Chuẩn</span>
+                <div className="pt-3 mt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                  <span className="text-[11px] text-stone-400 font-medium">
+                    Không thu thêm phụ phí
                   </span>
                   <a
                     href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#356F32] to-[#40813D] hover:from-[#2E602C] hover:to-[#356F32] active:scale-95 text-white text-xs sm:text-[13px] font-bold transition-all shadow-xs"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold active:scale-95 transition-all"
                   >
-                    <MessageCircle className="w-3.5 h-3.5" />
-                    <span>Đặt lịch • {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
+                    <span>Đặt lịch {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
                   </a>
                 </div>
               </div>

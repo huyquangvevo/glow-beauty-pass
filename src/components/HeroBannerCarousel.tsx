@@ -214,51 +214,36 @@ export function HeroBannerCarousel() {
         </div>
       </div>
 
-      {/* 3 CORE TRUST PILLARS (Elevated Bento Style, Prominent, Clean Micro-Pills) */}
-      <div className="grid grid-cols-3 gap-2.5 sm:gap-4">
-        <div className="relative overflow-hidden p-3 sm:p-4.5 rounded-2xl sm:rounded-3xl bg-gradient-to-b from-white via-white to-[#F7FAF6] border border-[#C5E0C8] shadow-[0_4px_16px_rgba(20,60,25,0.06)] hover:shadow-md hover:border-[#356F32]/60 hover:-translate-y-0.5 transition-all duration-300 flex flex-col items-center justify-between text-center group cursor-default">
-          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#40813D]/40 to-transparent" />
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-[#E8F5E9] to-[#D5EDD7] text-[#1E6020] flex items-center justify-center mb-2 sm:mb-2.5 shadow-2xs border border-[#BDDFBF] group-hover:scale-110 transition-transform duration-300">
-            <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#2E722A]" />
-          </div>
-          <div className="space-y-1.5 flex flex-col items-center">
-            <h4 className="text-[12.5px] sm:text-[15px] md:text-base font-black text-[#0A3C08] tracking-tight leading-tight">
-              {tTrust('badge1.title')}
-            </h4>
-            <span className="inline-block px-2 sm:px-2.5 py-0.5 rounded-full bg-[#EAF5EB] text-[#245D21] text-[10px] sm:text-[11.5px] font-extrabold tracking-tight border border-[#C2E3C6] shadow-2xs">
-              {tTrust('badge1.desc')}
-            </span>
-          </div>
+      {/* 3 CORE TRUST PILLARS - CLEAN & MINIMALIST */}
+      <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+        <div className="p-3 sm:p-4 rounded-2xl bg-white border border-stone-200/80 flex flex-col items-center text-center">
+          <ShieldCheck className="w-5 h-5 text-stone-700 mb-1.5" />
+          <h4 className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight">
+            {tTrust('badge1.title')}
+          </h4>
+          <span className="text-[11px] text-stone-500 mt-0.5">
+            {tTrust('badge1.desc')}
+          </span>
         </div>
 
-        <div className="relative overflow-hidden p-3 sm:p-4.5 rounded-2xl sm:rounded-3xl bg-gradient-to-b from-white via-white to-[#F7FAF6] border border-[#C5E0C8] shadow-[0_4px_16px_rgba(20,60,25,0.06)] hover:shadow-md hover:border-[#356F32]/60 hover:-translate-y-0.5 transition-all duration-300 flex flex-col items-center justify-between text-center group cursor-default">
-          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#40813D]/40 to-transparent" />
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-[#E8F5E9] to-[#D5EDD7] text-[#1E6020] flex items-center justify-center mb-2 sm:mb-2.5 shadow-2xs border border-[#BDDFBF] group-hover:scale-110 transition-transform duration-300">
-            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-[#2E722A]" />
-          </div>
-          <div className="space-y-1.5 flex flex-col items-center">
-            <h4 className="text-[12.5px] sm:text-[15px] md:text-base font-black text-[#0A3C08] tracking-tight leading-tight">
-              {tTrust('badge2.title')}
-            </h4>
-            <span className="inline-block px-2 sm:px-2.5 py-0.5 rounded-full bg-[#EAF5EB] text-[#245D21] text-[10px] sm:text-[11.5px] font-extrabold tracking-tight border border-[#C2E3C6] shadow-2xs">
-              {tTrust('badge2.desc')}
-            </span>
-          </div>
+        <div className="p-3 sm:p-4 rounded-2xl bg-white border border-stone-200/80 flex flex-col items-center text-center">
+          <Sparkles className="w-5 h-5 text-stone-700 mb-1.5" />
+          <h4 className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight">
+            {tTrust('badge2.title')}
+          </h4>
+          <span className="text-[11px] text-stone-500 mt-0.5">
+            {tTrust('badge2.desc')}
+          </span>
         </div>
 
-        <div className="relative overflow-hidden p-3 sm:p-4.5 rounded-2xl sm:rounded-3xl bg-gradient-to-b from-white via-white to-[#F7FAF6] border border-[#C5E0C8] shadow-[0_4px_16px_rgba(20,60,25,0.06)] hover:shadow-md hover:border-[#356F32]/60 hover:-translate-y-0.5 transition-all duration-300 flex flex-col items-center justify-between text-center group cursor-default">
-          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#40813D]/40 to-transparent" />
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-[#E8F5E9] to-[#D5EDD7] text-[#1E6020] flex items-center justify-center mb-2 sm:mb-2.5 shadow-2xs border border-[#BDDFBF] group-hover:scale-110 transition-transform duration-300">
-            <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-[#2E722A]" />
-          </div>
-          <div className="space-y-1.5 flex flex-col items-center">
-            <h4 className="text-[12.5px] sm:text-[15px] md:text-base font-black text-[#0A3C08] tracking-tight leading-tight">
-              {tTrust('badge3.title')}
-            </h4>
-            <span className="inline-block px-2 sm:px-2.5 py-0.5 rounded-full bg-[#EAF5EB] text-[#245D21] text-[10px] sm:text-[11.5px] font-extrabold tracking-tight border border-[#C2E3C6] shadow-2xs">
-              {tTrust('badge3.desc')}
-            </span>
-          </div>
+        <div className="p-3 sm:p-4 rounded-2xl bg-white border border-stone-200/80 flex flex-col items-center text-center">
+          <Clock className="w-5 h-5 text-stone-700 mb-1.5" />
+          <h4 className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight">
+            {tTrust('badge3.title')}
+          </h4>
+          <span className="text-[11px] text-stone-500 mt-0.5">
+            {tTrust('badge3.desc')}
+          </span>
         </div>
       </div>
     </div>
