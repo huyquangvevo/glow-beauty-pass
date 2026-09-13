@@ -11,6 +11,7 @@ import {
   MapPin,
   Clock,
 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface BannerSlide {
   id: string
@@ -26,38 +27,40 @@ interface BannerSlide {
 
 export function HeroBannerCarousel() {
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
+  const tHero = useTranslations('Hero')
+  const tTrust = useTranslations('TrustBadges')
 
   const slides: BannerSlide[] = [
     {
       id: 'slide-1',
       image: '/banners/banner_herbal_wash.jpg',
-      tag: 'ĐỒNG GIÁ 15 SPA CẦU GIẤY',
-      title: 'Gội Thư Giãn',
-      highlight: 'Chỉ Từ 49.000đ',
-      description: 'Làn nước thảo dược ấm xoa dịu căng thẳng, sạch sâu da đầu sau ngày dài công sở.',
-      ctaText: 'Nhắn Zalo Đặt Chỗ 49K',
-      ctaLink: `${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20Gói%20Gội%20Thư%20Giãn%2049K`,
+      tag: tHero('slide1.tag'),
+      title: tHero('slide1.title'),
+      highlight: tHero('slide1.highlight'),
+      description: tHero('slide1.description'),
+      ctaText: tHero('slide1.cta'),
+      ctaLink: `${zaloHubLink}?text=Gói%20Gội%20Thư%20Giãn%2049K`,
       badgeColor: 'bg-emerald-600/90 text-white border-emerald-400/40',
     },
     {
       id: 'slide-2',
       image: '/banners/banner_neck_massage.jpg',
-      tag: 'CHUẨN QUY TRÌNH SOP',
-      title: 'Trị Liệu Cổ Vai Gáy',
-      highlight: 'Chuyên Sâu 149.000đ',
-      description: 'Đả thông kinh lạc, giải phóng cơn đau nhức cổ vai gáy với kỹ thuật viên tay nghề cao.',
-      ctaText: 'Đặt Lịch Trị Liệu 149K',
-      ctaLink: `${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20Trị%20Liệu%20Cổ%20Vai%20Gáy%20149K`,
+      tag: tHero('slide2.tag'),
+      title: tHero('slide2.title'),
+      highlight: tHero('slide2.highlight'),
+      description: tHero('slide2.description'),
+      ctaText: tHero('slide2.cta'),
+      ctaLink: `${zaloHubLink}?text=Trị%20Liệu%20Cổ%20Vai%20Gáy%20149K`,
       badgeColor: 'bg-amber-600/90 text-white border-amber-300/40',
     },
     {
       id: 'slide-3',
       image: '/banners/banner_spa_ambiance.jpg',
-      tag: 'CAM KẾT MINH BẠCH 100%',
-      title: 'Không Gian Chuẩn Sạch',
-      highlight: 'Tuyệt Đối Không Phụ Thu',
-      description: 'Mạng lưới 15 spa kiểm định nghiêm ngặt. Cam kết hoàn tiền nếu bị ép mua thẻ gói.',
-      ctaText: 'Chọn Spa Gần Bạn Nhất',
+      tag: tHero('slide3.tag'),
+      title: tHero('slide3.title'),
+      highlight: tHero('slide3.highlight'),
+      description: tHero('slide3.description'),
+      ctaText: tHero('slide3.cta'),
       ctaLink: '#danh-sach-spa',
       badgeColor: 'bg-[#40813D]/90 text-white border-white/30',
     },
@@ -206,25 +209,25 @@ export function HeroBannerCarousel() {
         <div className="py-2.5 px-2 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
           <div className="flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5 text-[#40813D]" />
-            <span className="text-xs font-bold leading-tight">Đúng giá 100%</span>
+            <span className="text-xs font-bold leading-tight">{tTrust('badge1.title')}</span>
           </div>
-          <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Không phụ thu</span>
+          <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">{tTrust('badge1.desc')}</span>
         </div>
 
         <div className="py-2.5 px-2 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
           <div className="flex items-center gap-1">
             <Sparkles className="w-3.5 h-3.5 text-[#40813D]" />
-            <span className="text-xs font-bold leading-tight">Không chèo kéo</span>
+            <span className="text-xs font-bold leading-tight">{tTrust('badge2.title')}</span>
           </div>
-          <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Quy trình SOP</span>
+          <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">{tTrust('badge2.desc')}</span>
         </div>
 
         <div className="py-2.5 px-2 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
           <div className="flex items-center gap-1">
             <Clock className="w-3.5 h-3.5 text-[#40813D]" />
-            <span className="text-xs font-bold leading-tight">Phản hồi 5p</span>
+            <span className="text-xs font-bold leading-tight">{tTrust('badge3.title')}</span>
           </div>
-          <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">Xác nhận Zalo</span>
+          <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">{tTrust('badge3.desc')}</span>
         </div>
       </div>
     </div>

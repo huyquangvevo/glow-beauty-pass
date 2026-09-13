@@ -2,14 +2,13 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
 import { BrandWordmark } from './BrandLogo'
 import { ShieldCheck, Sparkles, MessageCircle, Phone, Heart } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export function Footer() {
-  const pathname = usePathname()
+  const t = useTranslations('Footer')
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
-
 
   return (
     <footer className="bg-[#40813D] text-white pt-12 pb-16 border-t border-white/15">
@@ -20,7 +19,7 @@ export function Footer() {
             <BrandWordmark className="h-10 sm:h-11 text-white hover:opacity-90 transition-opacity drop-shadow-xs" />
           </Link>
           <p className="text-xs sm:text-sm text-emerald-50/90 max-w-md leading-relaxed font-normal">
-            Mạng lưới spa gội đầu dưỡng sinh & trị liệu chuẩn hoá độc lập tại Quận Cầu Giấy. Đồng giá niêm yết, không phụ thu, bảo vệ quyền lợi khách hàng tuyệt đối.
+            {t('tagline')}
           </p>
 
           {/* OFFICIAL APP STORE & GOOGLE PLAY BADGES (Exact from Glow Explore) */}
@@ -64,27 +63,27 @@ export function Footer() {
           {/* Col 1: Dịch vụ đồng giá */}
           <div className="space-y-3">
             <h4 className="font-extrabold text-[12px] uppercase tracking-wider text-white">
-              Gói Dịch Vụ Đồng Giá
+              {t('colPackages')}
             </h4>
             <ul className="space-y-2 text-emerald-100/90">
               <li>
                 <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
-                  Gội Thư Giãn (49.000đ)
+                  {t('pkg1')}
                 </Link>
               </li>
               <li>
                 <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
-                  Gội Dưỡng Sinh SOP (69.000đ)
+                  {t('pkg2')}
                 </Link>
               </li>
               <li>
                 <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
-                  Trị Liệu Cổ Vai Gáy (149.000đ)
+                  {t('pkg3')}
                 </Link>
               </li>
               <li>
                 <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
-                  Bấm Huyệt Khai Thông Kinh Lạc
+                  {t('pkg4')}
                 </Link>
               </li>
             </ul>
@@ -93,32 +92,32 @@ export function Footer() {
           {/* Col 2: Khu Vực Cầu Giấy */}
           <div className="space-y-3">
             <h4 className="font-extrabold text-[12px] uppercase tracking-wider text-white">
-              Khu Vực Phủ Sóng
+              {t('colCoverage')}
             </h4>
             <ul className="space-y-2 text-emerald-100/90">
               <li>
                 <Link href="/#danh-sach-spa" className="hover:text-white transition-colors">
-                  Spa Phường Dịch Vọng
+                  {t('wardDichVong')}
                 </Link>
               </li>
               <li>
                 <Link href="/#danh-sach-spa" className="hover:text-white transition-colors">
-                  Spa Cụm Duy Tân (Dịch Vọng Hậu)
+                  {t('wardDuyTan')}
                 </Link>
               </li>
               <li>
                 <Link href="/#danh-sach-spa" className="hover:text-white transition-colors">
-                  Spa Hoàng Đạo Thúy (Trung Hòa)
+                  {t('wardHoangDaoThuy')}
                 </Link>
               </li>
               <li>
                 <Link href="/#danh-sach-spa" className="hover:text-white transition-colors">
-                  Spa Vũ Phạm Hàm (Yên Hòa)
+                  {t('wardVuPhamHam')}
                 </Link>
               </li>
               <li>
                 <Link href="/#danh-sach-spa" className="hover:text-white transition-colors">
-                  Spa Tô Hiệu (Nghĩa Tân)
+                  {t('wardToHieu')}
                 </Link>
               </li>
             </ul>
@@ -127,24 +126,24 @@ export function Footer() {
           {/* Col 3: Cam kết & Hỗ trợ */}
           <div className="space-y-3 col-span-2 sm:col-span-1">
             <h4 className="font-extrabold text-[12px] uppercase tracking-wider text-white">
-              Cam Kết Thương Hiệu
+              {t('colCommitment')}
             </h4>
             <ul className="space-y-2 text-emerald-100/90">
               <li className="flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>100% Đúng giá niêm yết</span>
+                <span>{t('commitNoExtra')}</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>Quy trình SOP kiểm định</span>
+                <span>{t('commitSop')}</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <Heart className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>Không chèo kéo mua gói</span>
+                <span>{t('commitNoUpsell')}</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <MessageCircle className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>Xác nhận Zalo trong 5 phút</span>
+                <span>{t('commitZalo5min')}</span>
               </li>
             </ul>
 
@@ -156,7 +155,7 @@ export function Footer() {
                 className="inline-flex items-center gap-1.5 text-xs font-black text-amber-200 hover:text-white transition-colors bg-black/15 px-3 py-1.5 rounded-full border border-white/20"
               >
                 <Phone className="w-3.5 h-3.5" />
-                <span>Hotline Zalo: 0988 888 888</span>
+                <span>{t('hotlineZaloLabel')}</span>
               </a>
             </div>
           </div>
@@ -165,14 +164,14 @@ export function Footer() {
         {/* BOTTOM COPYRIGHT & ECOSYSTEM NOTE */}
         <div className="pt-6 border-t border-white/20 text-[11px] text-emerald-50/75 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p>
-            © 2026 Glow Vietnam. Nền tảng thành viên thuộc hệ sinh thái Glow (Glow Explore).
+            {t('copyright')}
           </p>
           <div className="flex items-center gap-4 text-emerald-50/80">
-            <span>Tiêu chuẩn SOP</span>
+            <span>{t('sopBadge')}</span>
             <span>•</span>
-            <span>Bảo mật dữ liệu</span>
+            <span>{t('privacyBadge')}</span>
             <span>•</span>
-            <span>Cầu Giấy, Hà Nội</span>
+            <span>{t('locationBadge')}</span>
           </div>
         </div>
       </div>

@@ -1,0 +1,201 @@
+{
+  "Common": {
+    "appName": "Glow Beauty Pass",
+    "districtPilot": "하노이 꼬우저이 엄선 네트워크",
+    "openHours": "09:00 - 21:30",
+    "hotline": "Zalo / 상담 핫라인",
+    "bookViaZalo": "Zalo 간편 예약하기",
+    "viewMap": "지도에서 보기",
+    "directions": "길찾기",
+    "distance": "km",
+    "rating": "평점",
+    "reviews": "개 리뷰",
+    "standard": "STANDARD",
+    "verified": "VERIFIED",
+    "certified": "CERTIFIED",
+    "cancel": "취소",
+    "close": "닫기",
+    "back": "뒤로가기",
+    "minutes": "분",
+    "duration": "소요 시간:",
+    "hotBadge": "인기 최고",
+    "priceFrom49k": "정찰제 49,000동부터",
+    "noSurcharge": "정찰제 • 추가 요금 없음",
+    "sopCommitment": "표준 SOP 안심 보장",
+    "bookNow": "예약하기",
+    "bookZalo": "Zalo 예약",
+    "viewDetails": "상세보기",
+    "nearYou": "내 주변",
+    "searchResultsFor": "검색 결과:",
+    "clear": "지우기",
+    "loadingSpas": "엄선된 스파 목록 불러오는 중...",
+    "noSpasFound": "일치하는 스파를 찾을 수 없습니다:"
+  },
+  "Navbar": {
+    "searchPlaceholder": "주변 스파 검색: 주이떤, 또히에우, 쭝화...",
+    "supportBadge": "정찰제 49,000동부터 (~2,700원) • 바가지 요금 일체 없음",
+    "callHotline": "예약 상담 핫라인",
+    "language": "언어 (Language)"
+  },
+  "Hero": {
+    "slide1": {
+      "tag": "15개 스파 동일 정찰제",
+      "title": "힐링 허브 헤드스파",
+      "highlight": "49,000동부터 (~2,700원)",
+      "description": "따뜻한 베트남 전통 허브물로 하루의 피로와 두피 스트레스를 시원하게 케어합니다.",
+      "cta": "49K 헤드스파 예약하기"
+    },
+    "slide2": {
+      "tag": "엄격한 SOP 표준 관리",
+      "title": "목·어깨 집중 테라피",
+      "highlight": "전문 코스 149,000동 (~8,200원)",
+      "description": "숙련된 테라피스트의 손길로 뭉친 어깨와 목의 피로를 깊숙이 풀어드립니다.",
+      "cta": "149K 테라피 예약하기"
+    },
+    "slide3": {
+      "tag": "100% 투명성 보장",
+      "title": "청결 안심 인증 스파",
+      "highlight": "추가 요금 절대 없음",
+      "description": "미스터리 쇼퍼가 사전 검증한 15개 스파. 회원권 강요 시 100% 전액 환불 보장.",
+      "cta": "가까운 스파 찾기"
+    }
+  },
+  "TrustBadges": {
+    "badge1": {
+      "title": "100% 정찰제",
+      "desc": "현장 추가 요금 일체 없음"
+    },
+    "badge2": {
+      "title": "표준 SOP 준수",
+      "desc": "회원권 강매나 권유 금지"
+    },
+    "badge3": {
+      "title": "5분 내 신속 응대",
+      "desc": "대기 없이 바로 이용 가능"
+    }
+  },
+  "Services": {
+    "heading": "3가지 공인 표준 코스",
+    "priceTag": "49,000동부터",
+    "subheading": "하노이 꼬우저이(Cau Giay) 15개 제휴 스파 어디서나 동일한 가격과 순서로 제공됩니다",
+    "fixedBadge": "15개 스파 동일가",
+    "pkg1": {
+      "name": "릴랙스 허브 헤드스파",
+      "duration": "45분",
+      "price": "49,000동",
+      "originalPrice": "59,000동",
+      "discount": "-17%",
+      "badge": "가성비 최고",
+      "desc": "점심시간이나 퇴근 후 가볍고 상쾌하게 즐기는 두피 힐링 세정.",
+      "f1": "부드러운 클렌징 및 거품 세안",
+      "f2": "베트남 전통 조협(보켓) 진액 허브 샴푸 2회",
+      "f3": "혈액순환 촉진 두피 지압 마사지",
+      "f4": "드라이 및 천연 자몽 에센셜 오일 케어",
+      "cta": "예약하기 • 49,000동"
+    },
+    "pkg2": {
+      "name": "두피 스케일링 & 모발 토탈케어",
+      "duration": "60분",
+      "price": "69,000동",
+      "originalPrice": "85,000동",
+      "discount": "-19%",
+      "badge": "가장 인기",
+      "desc": "두피 딥클렌징과 공인 정품 영양 케어로 찰랑이는 머릿결을 선사합니다.",
+      "f1": "전통 한방 허브 두피 힐링 스파 풀코스",
+      "f2": "콜라겐 헤어팩으로 수분 보습 및 윤기 케어",
+      "f3": "두피 및 관자놀이 경혈 릴랙싱 지압",
+      "f4": "따뜻한 이너뷰티 허브티 제공",
+      "cta": "예약하기 • 69,000동"
+    },
+    "pkg3": {
+      "name": "목·어깨 림프 순환 집중 테라피",
+      "duration": "75분",
+      "price": "149,000동",
+      "originalPrice": "179,000동",
+      "discount": "-17%",
+      "badge": "스페셜 집중",
+      "desc": "오랜 컴퓨터 작업과 여행 피로로 뭉친 어깨와 목을 집중적으로 케어합니다.",
+      "f1": "60분 허브 힐링 샴푸 전체 코스 포함",
+      "f2": "천연 쑥 에센셜 오일 목·어깨 집중 테라피",
+      "f3": "승모근 및 견갑골 뭉침 해소 지압",
+      "f4": "따뜻한 쑥 찜질 팩으로 혈액 순환 촉진",
+      "cta": "예약하기 • 149,000동"
+    },
+    "disclaimer": "정찰제 • 추가 요금 없음"
+  },
+  "SpaNetwork": {
+    "heading": "내 주변 스파 찾기",
+    "subheading": "하노이 꼬우저이구 엄선 검증 스파 15곳",
+    "allWards": "전체 구역",
+    "sortByGps": "가까운 순 (GPS)",
+    "filterPlaceholder": "스파 이름 또는 도로명 검색...",
+    "spasFoundCauGiay": "하노이 꼬우저이 검증 완료된 스파 {count}곳",
+    "exclusiveOffer": "스페셜 혜택:",
+    "bookSlot": "Zalo 예약하기",
+    "viewDetails": "상세보기",
+    "gpsActive": "GPS 정밀 위치",
+    "enableLocation": "위치 켜기",
+    "standardBadge": "STANDARD",
+    "verifiedBadge": "VERIFIED",
+    "certifiedBadge": "CERTIFIED"
+  },
+  "Wards": {
+    "ALL": "전체 구역",
+    "Dịch Vọng": "직봉 (Dich Vong)",
+    "Dịch Vọng Hậu": "주이떤 IT거리 (Duy Tan)",
+    "Trung Hòa": "호앙다오투이 (Trung Hoa)",
+    "Yên Hòa": "부팜함 (Yen Hoa)",
+    "Nghĩa Tân": "또히에우 (Nghia Tan)"
+  },
+  "SpaDetail": {
+    "loading": "스파 정보를 불러오는 중...",
+    "notFound": "스파 정보를 찾을 수 없습니다.",
+    "backToList": "스파 목록으로 돌아가기",
+    "exclusiveOffer": "스페셜 혜택:",
+    "address": "위치 / 주소",
+    "hotline": "안내 핫라인",
+    "openHours": "영업 시간",
+    "distanceFromYou": "현재 위치에서의 거리",
+    "servicesTitle": "3가지 공인 표준 코스",
+    "reviewsTitle": "고객 리얼 후기",
+    "noReviews": "아직 등록된 후기가 없습니다.",
+    "guarantee100": "100% 정찰제 보장",
+    "bookThisPackage": "이 코스 예약하기",
+    "bookZalo": "Zalo 예약",
+    "bookZaloQuick": "Zalo 예약하기 (< 5분 소요)",
+    "sopGuaranteed": "표준 SOP 안심 보장"
+  },
+  "LocationPrompt": {
+    "title": "가까운 스파를 찾기 위해 위치 정보를 켜주세요",
+    "desc": "위치 접근을 허용하시면 현재 계신 곳에서 가장 가까운 정찰제 스파를 도보 거리순으로 안내해 드립니다.",
+    "enableButton": "지금 위치 켜기",
+    "dismissButton": "건너뛰기",
+    "locating": "위치 확인 중..."
+  },
+  "Footer": {
+    "tagline": "하노이 꼬우저이 독립 인증 허브 두피스파 & 힐링 테라피 네트워크. 투명한 정찰제, 추가 요금 일체 없음, 고객 권익 100% 보호.",
+    "downloadApp": "Glow 앱 다운로드",
+    "colPackages": "공인 정찰제 코스",
+    "colCoverage": "서비스 지역",
+    "colCommitment": "Glow 안심 약속",
+    "colContact": "예약 및 고객센터",
+    "pkg1": "릴랙스 허브 헤드스파 (49,000동)",
+    "pkg2": "두피 스케일링 토탈케어 (69,000동)",
+    "pkg3": "목·어깨 집중 테라피 (149,000동)",
+    "pkg4": "전통 혈자리 경락 지압",
+    "wardDichVong": "직봉 (Dich Vong) 제휴 스파",
+    "wardDuyTan": "주이떤 (Duy Tan) 테크존 스파",
+    "wardHoangDaoThuy": "호앙다오투이 (쭝화) 스파",
+    "wardVuPhamHam": "부팜함 (옌화) 스파",
+    "wardToHieu": "또히에우 (응이어떤) 스파",
+    "commitNoExtra": "100% 현장 정찰제 보장",
+    "commitSop": "미스터리 쇼퍼 사전 검증",
+    "commitNoUpsell": "회원권 강매 일체 없음",
+    "commitZalo5min": "5분 이내 신속 예약 확정",
+    "hotlineZaloLabel": "Zalo 핫라인: 0988 888 888",
+    "copyright": "© 2026 Glow Vietnam. Glow 생태계 공식 멤버십 플랫폼.",
+    "sopBadge": "표준 SOP 인증",
+    "privacyBadge": "안심 개인정보 보호",
+    "locationBadge": "하노이 꼬우저이"
+  }
+}

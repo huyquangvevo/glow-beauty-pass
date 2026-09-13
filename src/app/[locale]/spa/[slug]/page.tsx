@@ -9,13 +9,17 @@ import {
   Star,
   ShieldCheck,
   Gift,
-  ArrowLeft,
   MessageCircle,
   Phone,
   CheckCircle2,
 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export default function SpaDetailPage() {
+  const tSpaDetail = useTranslations('SpaDetail')
+  const tServices = useTranslations('Services')
+  const tCommon = useTranslations('Common')
+
   const params = useParams()
   const slug = params.slug as string
   const [spa, setSpa] = useState<any>(null)
@@ -45,7 +49,7 @@ export default function SpaDetailPage() {
     return (
       <div className="p-12 text-center text-sm text-[#5B6B58] flex flex-col items-center gap-2">
         <div className="w-6 h-6 border-2 border-[#236B38] border-t-transparent rounded-full animate-spin" />
-        <span>Đang tải thông tin spa</span>
+        <span>{tSpaDetail('loading')}</span>
       </div>
     )
   }
@@ -53,9 +57,9 @@ export default function SpaDetailPage() {
   if (!spa) {
     return (
       <div className="p-12 text-center space-y-3">
-        <p className="text-[#5B6B58] text-sm">Không tìm thấy thông tin spa này.</p>
+        <p className="text-[#5B6B58] text-sm">{tSpaDetail('notFound')}</p>
         <Link href="/" className="text-[#236B38] font-bold text-sm underline">
-          Quay lại danh sách
+          {tSpaDetail('backToList')}
         </Link>
       </div>
     )
@@ -74,7 +78,7 @@ export default function SpaDetailPage() {
             </span>
             <span className="text-xs sm:text-sm text-[#236B38] font-bold flex items-center gap-1">
               <ShieldCheck className="w-4 h-4" />
-              <span>Đúng giá 100%</span>
+              <span>{tSpaDetail('guarantee100')}</span>
             </span>
           </div>
 
@@ -91,7 +95,9 @@ export default function SpaDetailPage() {
             <div className="flex items-center gap-1 text-amber-600 font-bold">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
               <span className="text-[#093E06] font-extrabold">{spa.rating}</span>
-              <span className="text-[#5B6B58] font-normal text-xs">({spa.reviewCount} đánh giá)</span>
+              <span className="text-[#5B6B58] font-normal text-xs">
+                ({spa.reviewCount} {tCommon('reviews')})
+              </span>
             </div>
             <span className="text-stone-300">•</span>
             <div className="flex items-center gap-1 text-xs">
@@ -106,7 +112,7 @@ export default function SpaDetailPage() {
           <div className="p-3.5 rounded-2xl bg-amber-50 text-xs sm:text-sm text-amber-900 border border-amber-200/80 flex items-start gap-2.5">
             <Gift className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="font-bold">Ưu đãi điểm: </strong>
+              <strong className="font-bold">{tSpaDetail('exclusiveOffer')} </strong>
               {spa.exclusiveOffer}
             </p>
           </div>
@@ -121,7 +127,7 @@ export default function SpaDetailPage() {
             className="flex-1 py-3 px-4 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-98 transition-all shadow-xs"
           >
             <MessageCircle className="w-4 h-4 text-emerald-200" />
-            <span>Đặt lịch Zalo</span>
+            <span>{tSpaDetail('bookZalo')}</span>
           </a>
 
           <a
@@ -129,7 +135,7 @@ export default function SpaDetailPage() {
             className="py-3 px-4 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 font-semibold text-xs sm:text-sm flex items-center gap-1.5"
           >
             <Phone className="w-4 h-4 text-stone-600" />
-            <span>Hotline</span>
+            <span>{tSpaDetail('hotline')}</span>
           </a>
         </div>
       </div>
@@ -137,11 +143,15 @@ export default function SpaDetailPage() {
       {/* 3 SKU MENU */}
       <div className="space-y-3">
         <h2 className="text-base font-extrabold uppercase tracking-wider text-[#093E06] px-1">
-          3 Gói Dịch Vụ Niêm Yết
+          {tSpaDetail('servicesTitle')}
         </h2>
 
         <div className="space-y-3.5">
-          {skus.map((sku) => {
+          {skus.map((sku, index) => {
+            const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
+            const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
+            const localizedDesc = tServices.has(`${pkgKey}.desc` as any) ? tServices(`${pkgKey}.desc` as any) : sku.description
+
             const discountPercent = sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
               ? Math.round(((sku.pricePhase2 - sku.pricePhase1) / sku.pricePhase2) * 100)
               : null
@@ -154,11 +164,16 @@ export default function SpaDetailPage() {
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1.5 flex-1 min-w-0">
                     <h3 className="font-black text-base sm:text-[17px] text-[#234E21] leading-snug">
-                      {sku.name}
+                      {localizedName}
                     </h3>
                     <div className="flex items-center gap-1.5 text-xs text-[#5B6B58] font-medium">
                       <Clock className="w-3.5 h-3.5 text-[#40813D]" />
-                      <span>Thời lượng: <strong className="text-[#234E21]">{sku.durationMinutes} phút</strong></span>
+                      <span>
+                        {tCommon('duration')}{' '}
+                        <strong className="text-[#234E21]">
+                          {sku.durationMinutes} {tCommon('minutes')}
+                        </strong>
+                      </span>
                     </div>
                   </div>
 
@@ -185,18 +200,18 @@ export default function SpaDetailPage() {
                       </div>
                     </div>
                     <span className="text-[10px] font-extrabold text-[#40813D] mt-1">
-                      Đồng giá • Không phụ thu
+                      {tCommon('noSurcharge')}
                     </span>
                   </div>
                 </div>
 
                 <p className="text-xs sm:text-[13px] text-[#4E5C4C] leading-relaxed bg-[#F9FCF9] p-3 rounded-xl border border-[#E8F2E8]">
-                  {sku.description}
+                  {localizedDesc}
                 </p>
 
                 <div className="pt-2 flex items-center justify-between border-t border-stone-100 gap-2">
                   <span className="text-xs text-[#40813D] font-bold">
-                    ✓ Cam kết chuẩn SOP
+                    ✓ {tSpaDetail('sopGuaranteed')}
                   </span>
                   <a
                     href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}%20tại%20${encodeURIComponent(spa.name)}`}
@@ -204,7 +219,7 @@ export default function SpaDetailPage() {
                     rel="noopener noreferrer"
                     className="px-4.5 py-2.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white font-bold text-xs sm:text-sm shadow-sm shadow-[#40813D]/25 active:scale-95 transition-all flex items-center gap-1.5"
                   >
-                    <span>Đặt gói này</span>
+                    <span>{tSpaDetail('bookThisPackage')}</span>
                     <span className="opacity-90 font-extrabold">• {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
                   </a>
                 </div>
@@ -219,7 +234,7 @@ export default function SpaDetailPage() {
         <div className="flex items-center justify-between">
           <h3 className="font-extrabold text-sm uppercase tracking-wider text-[#093E06] flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-[#236B38]" />
-            <span>Đánh Giá Khách Hàng</span>
+            <span>{tSpaDetail('reviewsTitle')}</span>
           </h3>
         </div>
 
@@ -240,7 +255,7 @@ export default function SpaDetailPage() {
             ))}
           </div>
         ) : (
-          <p className="text-xs text-[#5B6B58]">Chưa có đánh giá nào cho điểm spa này.</p>
+          <p className="text-xs text-[#5B6B58]">{tSpaDetail('noReviews')}</p>
         )}
       </div>
 
@@ -261,7 +276,7 @@ export default function SpaDetailPage() {
             className="flex-1 py-3 px-4 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98"
           >
             <MessageCircle className="w-4 h-4" />
-            <span>Đặt chỗ qua Zalo (&lt; 5p)</span>
+            <span>{tSpaDetail('bookZaloQuick')}</span>
           </a>
         </div>
       </div>

@@ -1,0 +1,201 @@
+{
+  "Common": {
+    "appName": "Glow Beauty Pass",
+    "districtPilot": "Cau Giay Pilot Network",
+    "openHours": "09:00 AM - 09:30 PM",
+    "hotline": "Zalo / WhatsApp Hotline",
+    "bookViaZalo": "Book via Zalo / Chat",
+    "viewMap": "View on Map",
+    "directions": "Directions",
+    "distance": "km",
+    "rating": "Rating",
+    "reviews": "reviews",
+    "standard": "STANDARD",
+    "verified": "VERIFIED",
+    "certified": "CERTIFIED",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "minutes": "mins",
+    "duration": "Duration:",
+    "hotBadge": "MOST POPULAR",
+    "priceFrom49k": "Fixed from 49K VND",
+    "noSurcharge": "Fixed Price • Zero Hidden Fees",
+    "sopCommitment": "Verified SOP Standard",
+    "bookNow": "Book Now",
+    "bookZalo": "Book Zalo",
+    "viewDetails": "Details",
+    "nearYou": "Near you",
+    "searchResultsFor": "Search results for:",
+    "clear": "Clear",
+    "loadingSpas": "Loading verified spas...",
+    "noSpasFound": "No spas found matching keyword"
+  },
+  "Navbar": {
+    "searchPlaceholder": "Find nearby spas: Duy Tan, To Hieu, Trung Hoa...",
+    "supportBadge": "Fixed Price from 49K VND (~$2) • No Hidden Fees",
+    "callHotline": "Zalo Hub Hotline",
+    "language": "Language"
+  },
+  "Hero": {
+    "slide1": {
+      "tag": "FIXED PRICES ACROSS 15 SPAS",
+      "title": "Herbal Hair Wash",
+      "highlight": "From 49,000 VND (~$2)",
+      "description": "Warm herbal water soothes stress and deeply cleanses scalp after a long working day.",
+      "cta": "Book 49K Wash on Zalo"
+    },
+    "slide2": {
+      "tag": "VERIFIED SOP PROTOCOL",
+      "title": "Neck & Shoulder Therapy",
+      "highlight": "Intensive 149,000 VND (~$6)",
+      "description": "Unblock meridians and release stiffness with certified, skilled spa therapists.",
+      "cta": "Book Therapy 149K"
+    },
+    "slide3": {
+      "tag": "100% TRANSPARENCY GUARANTEE",
+      "title": "Clean Certified Spas",
+      "highlight": "Zero Surcharge Policy",
+      "description": "15 mystery-shopper inspected spas. 100% refund guarantee if coerced into memberships.",
+      "cta": "Find Closest Spa"
+    }
+  },
+  "TrustBadges": {
+    "badge1": {
+      "title": "100% Transparent Price",
+      "desc": "Never any unexpected surcharges"
+    },
+    "badge2": {
+      "title": "Standardized SOP",
+      "desc": "No hard-selling or upsells"
+    },
+    "badge3": {
+      "title": "5-Min Response",
+      "desc": "Immediate slot booking via Zalo"
+    }
+  },
+  "Services": {
+    "heading": "3 Standardized Spa Packages",
+    "priceTag": "From 49,000 VND",
+    "subheading": "Fixed uniform price across all 15 partner spas • 100% no hidden fees guaranteed",
+    "fixedBadge": "Fixed across 15 spas",
+    "pkg1": {
+      "name": "Relaxing Herbal Wash",
+      "duration": "45 mins",
+      "price": "49,000 VND",
+      "originalPrice": "59,000 VND",
+      "discount": "-17%",
+      "badge": "BEST VALUE",
+      "desc": "Quick lunch or after-work relaxing wash tailored for busy professionals and travelers.",
+      "f1": "Gentle makeup removal & foaming facial cleansing",
+      "f2": "Double wash with natural honey locust (bo ket) herbal water",
+      "f3": "Scalp acupressure massage promoting blood flow",
+      "f4": "Hair blow-dry & organic grapefruit oil conditioning",
+      "cta": "Book now • 49,000 VND"
+    },
+    "pkg2": {
+      "name": "Comprehensive Clean Scalp",
+      "duration": "60 mins",
+      "price": "69,000 VND",
+      "originalPrice": "85,000 VND",
+      "discount": "-19%",
+      "badge": "MOST POPULAR",
+      "desc": "Intensive scalp detox using 100% genuine certified hair & skin products.",
+      "f1": "Deep herbal nourishment & traditional head wash ritual",
+      "f2": "Collagen hydration hair mask for silky softness",
+      "f3": "Pressure point massage on head, temples & neck",
+      "f4": "Complimentary soothing herbal tea service",
+      "cta": "Book now • 69,000 VND"
+    },
+    "pkg3": {
+      "name": "Neck & Shoulder Therapy",
+      "duration": "75 mins",
+      "price": "149,000 VND",
+      "originalPrice": "179,000 VND",
+      "discount": "-17%",
+      "badge": "INTENSIVE",
+      "desc": "Release neck and shoulder stiffness caused by desk work and travel fatigue.",
+      "f1": "Full 60-minute oriental herbal hair wash protocol",
+      "f2": "Deep tissue therapy with wormwood herbal oil",
+      "f3": "Acupressure routine relieving back & shoulder knots",
+      "f4": "Hot wormwood herbal pillow application",
+      "cta": "Book now • 149,000 VND"
+    },
+    "disclaimer": "Fixed Price • Zero Hidden Fees"
+  },
+  "SpaNetwork": {
+    "heading": "Spas Near You",
+    "subheading": "15 verified and quality-audited spas in Cau Giay district",
+    "allWards": "All Wards",
+    "sortByGps": "Closest to you (GPS)",
+    "filterPlaceholder": "Search by spa name or street...",
+    "spasFoundCauGiay": "{count} verified spas in Cau Giay",
+    "exclusiveOffer": "Special offer:",
+    "bookSlot": "Book via Zalo",
+    "viewDetails": "Details",
+    "gpsActive": "GPS Active",
+    "enableLocation": "Enable GPS",
+    "standardBadge": "STANDARD",
+    "verifiedBadge": "VERIFIED",
+    "certifiedBadge": "CERTIFIED"
+  },
+  "Wards": {
+    "ALL": "All Wards",
+    "Dịch Vọng": "Dich Vong",
+    "Dịch Vọng Hậu": "Duy Tan",
+    "Trung Hòa": "Hoang Dao Thuy",
+    "Yên Hòa": "Vu Pham Ham",
+    "Nghĩa Tân": "To Hieu"
+  },
+  "SpaDetail": {
+    "loading": "Loading spa details...",
+    "notFound": "Spa details not found.",
+    "backToList": "Back to list",
+    "exclusiveOffer": "Special offer:",
+    "address": "Address",
+    "hotline": "Hotline",
+    "openHours": "Opening Hours",
+    "distanceFromYou": "Distance from you",
+    "servicesTitle": "3 Standardized Spa Packages",
+    "reviewsTitle": "Customer Reviews",
+    "noReviews": "No customer reviews yet for this spa location.",
+    "guarantee100": "100% Price Guarantee",
+    "bookThisPackage": "Book this package",
+    "bookZalo": "Book Zalo",
+    "bookZaloQuick": "Book via Zalo (< 5 min)",
+    "sopGuaranteed": "Verified SOP Standard"
+  },
+  "LocationPrompt": {
+    "title": "Enable location to find spas closest to you",
+    "desc": "Allow location access to calculate exact walking distances to nearby fixed-price spas.",
+    "enableButton": "Enable location",
+    "dismissButton": "Dismiss",
+    "locating": "Finding location..."
+  },
+  "Footer": {
+    "tagline": "Independent certified herbal head spa & therapy network in Cau Giay, Hanoi. Uniform fixed prices, zero surcharges, 100% customer protection.",
+    "downloadApp": "Download Glow App",
+    "colPackages": "Standard Packages",
+    "colCoverage": "Coverage Area",
+    "colCommitment": "Our Guarantees",
+    "colContact": "Support & Booking",
+    "pkg1": "Relaxing Herbal Wash (49,000 VND)",
+    "pkg2": "Clean Scalp SOP (69,000 VND)",
+    "pkg3": "Neck & Shoulder Therapy (149,000 VND)",
+    "pkg4": "Acupressure Meridian Treatment",
+    "wardDichVong": "Dich Vong Ward Spas",
+    "wardDuyTan": "Duy Tan Tech Hub Spas",
+    "wardHoangDaoThuy": "Hoang Dao Thuy Spas",
+    "wardVuPhamHam": "Vu Pham Ham Spas",
+    "wardToHieu": "To Hieu Spas",
+    "commitNoExtra": "100% Transparent fixed price",
+    "commitSop": "Mystery Shopper verified SOP",
+    "commitNoUpsell": "Zero membership pressure",
+    "commitZalo5min": "5-minute fast confirmation",
+    "hotlineZaloLabel": "Zalo Hotline: 0988 888 888",
+    "copyright": "© 2026 Glow Vietnam. Part of Glow Ecosystem (Glow Explore).",
+    "sopBadge": "SOP Standard",
+    "privacyBadge": "Data Privacy",
+    "locationBadge": "Cau Giay, Hanoi"
+  }
+}

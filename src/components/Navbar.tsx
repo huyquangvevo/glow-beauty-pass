@@ -11,8 +11,10 @@ import {
 } from 'lucide-react'
 import { BrandWordmark } from './BrandLogo'
 import { ZaloIcon } from './ZaloIcon'
+import { LanguageSwitcher } from './LanguageSwitcher'
 import { useSearch } from '@/context/SearchContext'
 import { useLocation } from '@/context/LocationContext'
+import { useTranslations } from 'next-intl'
 
 export function Navbar() {
   const pathname = usePathname()
@@ -22,6 +24,8 @@ export function Navbar() {
 
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
   const isSpaDetail = pathname.startsWith('/spa/')
+
+  const t = useTranslations('Navbar')
 
   const handleSearchChange = (val: string) => {
     setSearchQuery(val)
@@ -62,7 +66,7 @@ export function Navbar() {
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
-              placeholder="Tìm kiếm spa, dịch vụ..."
+              placeholder={t('searchPlaceholder')}
               className="w-full h-8.5 bg-white text-stone-900 placeholder:text-stone-400 text-xs sm:text-[13px] pl-8 pr-7 rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-amber-300 font-medium transition-all"
             />
             {searchQuery && (
@@ -76,34 +80,37 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Quick Location Badge / Button (Click to share/refresh location) */}
-          <button
-            onClick={openPrompt}
-            title={
-              isLocating
-                ? 'Đang xác định vị trí...'
-                : userCoords
-                ? `Vị trí hiện tại: ${locationLabel}. Bấm để làm mới.`
-                : 'Bấm để bật vị trí tìm spa gần bạn nhất'
-            }
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold shrink-0 border shadow-2xs transition-all cursor-pointer active:scale-95 ${
-              userCoords
-                ? 'bg-black/20 hover:bg-black/30 border-emerald-300/40 text-emerald-100'
-                : 'bg-black/15 hover:bg-black/25 border-amber-300/30 text-white'
-            }`}
-          >
-            {isLocating ? (
-              <div className="w-3 h-3 border-1.5 border-white border-t-transparent rounded-full animate-spin shrink-0" />
-            ) : (
-              <MapPin
-                className={`w-3.5 h-3.5 shrink-0 ${
-                  userCoords ? 'text-emerald-300 fill-emerald-300' : 'text-amber-300'
-                }`}
-              />
-            )}
-            <span className="max-w-[90px] sm:max-w-none truncate">{locationLabel}</span>
-          </button>
-        </div>
+            {/* Quick Location Badge / Button (Click to share/refresh location) */}
+            <button
+              onClick={openPrompt}
+              title={
+                isLocating
+                  ? 'Đang xác định vị trí...'
+                  : userCoords
+                  ? `Vị trí hiện tại: ${locationLabel}. Bấm để làm mới.`
+                  : 'Bấm để bật vị trí tìm spa gần bạn nhất'
+              }
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold shrink-0 border shadow-2xs transition-all cursor-pointer active:scale-95 ${
+                userCoords
+                  ? 'bg-black/20 hover:bg-black/30 border-emerald-300/40 text-emerald-100'
+                  : 'bg-black/15 hover:bg-black/25 border-amber-300/30 text-white'
+              }`}
+            >
+              {isLocating ? (
+                <div className="w-3 h-3 border-1.5 border-white border-t-transparent rounded-full animate-spin shrink-0" />
+              ) : (
+                <MapPin
+                  className={`w-3.5 h-3.5 shrink-0 ${
+                    userCoords ? 'text-emerald-300 fill-emerald-300' : 'text-amber-300'
+                  }`}
+                />
+              )}
+              <span className="max-w-[80px] sm:max-w-none truncate">{locationLabel}</span>
+            </button>
+
+            {/* Language Switcher Dropdown (VI • EN • KO) */}
+            <LanguageSwitcher />
+          </div>
       </header>
 
       {/* FLOATING SUPPORT ZALO FAB (Logo Only, High-Impact Radar Waves & Online Beacon) */}

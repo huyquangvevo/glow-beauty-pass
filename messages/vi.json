@@ -1,0 +1,201 @@
+{
+  "Common": {
+    "appName": "Glow Beauty Pass",
+    "districtPilot": "Thí điểm Cầu Giấy",
+    "openHours": "09:00 - 21:30",
+    "hotline": "Hotline Zalo Tiếp Nhận",
+    "bookViaZalo": "Nhắn Zalo Đặt Chỗ Ngay",
+    "viewMap": "Xem Bản Đồ",
+    "directions": "Chỉ đường",
+    "distance": "km",
+    "rating": "Đánh giá",
+    "reviews": "đánh giá",
+    "standard": "STANDARD",
+    "verified": "VERIFIED",
+    "certified": "CERTIFIED",
+    "cancel": "Hủy",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "minutes": "phút",
+    "duration": "Thời lượng:",
+    "hotBadge": "HOT NHẤT",
+    "priceFrom49k": "Đồng giá từ 49K",
+    "noSurcharge": "Đồng giá • Không phụ thu",
+    "sopCommitment": "Cam kết chuẩn SOP",
+    "bookNow": "Đặt lịch",
+    "bookZalo": "Đặt Zalo",
+    "viewDetails": "Chi tiết",
+    "nearYou": "Gần bạn",
+    "searchResultsFor": "Kết quả tìm kiếm cho:",
+    "clear": "Xoá",
+    "loadingSpas": "Đang tải danh sách spa...",
+    "noSpasFound": "Không tìm thấy spa phù hợp với từ khóa"
+  },
+  "Navbar": {
+    "searchPlaceholder": "Tìm spa gần bạn: Duy Tân, Tô Hiệu, Trung Hòa...",
+    "supportBadge": "Đồng giá từ 49K • Cam kết không phụ thu",
+    "callHotline": "Hotline Zalo Hub",
+    "language": "Ngôn ngữ"
+  },
+  "Hero": {
+    "slide1": {
+      "tag": "ĐỒNG GIÁ 15 SPA CẦU GIẤY",
+      "title": "Gội Thư Giãn",
+      "highlight": "Chỉ Từ 49.000đ",
+      "description": "Làn nước thảo dược ấm xoa dịu căng thẳng, sạch sâu da đầu sau ngày dài công sở.",
+      "cta": "Nhắn Zalo Đặt Chỗ 49K"
+    },
+    "slide2": {
+      "tag": "CHUẨN QUY TRÌNH SOP",
+      "title": "Trị Liệu Cổ Vai Gáy",
+      "highlight": "Chuyên Sâu 149.000đ",
+      "description": "Đả thông kinh lạc, giải phóng cơn đau nhức cổ vai gáy với kỹ thuật viên tay nghề cao.",
+      "cta": "Đặt Lịch Trị Liệu 149K"
+    },
+    "slide3": {
+      "tag": "CAM KẾT MINH BẠCH 100%",
+      "title": "Không Gian Chuẩn Sạch",
+      "highlight": "Tuyệt Đối Không Phụ Thu",
+      "description": "Mạng lưới 15 spa kiểm định nghiêm ngặt. Cam kết hoàn tiền nếu bị ép mua thẻ gói.",
+      "cta": "Chọn Spa Gần Bạn Nhất"
+    }
+  },
+  "TrustBadges": {
+    "badge1": {
+      "title": "Đúng Giá 100%",
+      "desc": "Không bao giờ có phụ thu"
+    },
+    "badge2": {
+      "title": "Quy Trình Chuẩn",
+      "desc": "Không ép mua thẻ liệu trình"
+    },
+    "badge3": {
+      "title": "Phản Hồi 5 Phút",
+      "desc": "Điều phối slot lịch qua Zalo"
+    }
+  },
+  "Services": {
+    "heading": "3 Gói Dịch Vụ Niêm Yết",
+    "priceTag": "Chỉ từ 49K",
+    "subheading": "Đồng giá tại tất cả 15 spa đối tác • Cam kết 100% không phụ thu",
+    "fixedBadge": "Đồng giá 15 spa",
+    "pkg1": {
+      "name": "Gói Gội Thư Giãn",
+      "duration": "45 phút",
+      "price": "49.000đ",
+      "originalPrice": "59.000đ",
+      "discount": "-17%",
+      "badge": "TIẾT KIỆM NHẤT",
+      "desc": "Giải pháp thư giãn trưa & tan tầm nhanh gọn cho dân văn phòng.",
+      "f1": "Tẩy trang mặt & rửa mặt bọt dịu nhẹ",
+      "f2": "Gội đầu 2 lần bằng thảo mộc bồ kết cô đặc",
+      "f3": "Massage da đầu kích thích tuần hoàn máu",
+      "f4": "Sấy tóc khô & thoa tinh dầu dưỡng bưởi",
+      "cta": "Đặt lịch • 49.000đ"
+    },
+    "pkg2": {
+      "name": "Gói Toàn Diện Chuẩn Sạch",
+      "duration": "60 phút",
+      "price": "69.000đ",
+      "originalPrice": "85.000đ",
+      "discount": "-19%",
+      "badge": "HOT NHẤT",
+      "desc": "Chăm sóc da đầu chuyên sâu, sử dụng 100% mỹ phẩm chuẩn công khai.",
+      "f1": "Quy trình gội đầu thảo dược dưỡng sinh chuyên sâu",
+      "f2": "Ủ tóc kem xả collagen cấp ẩm bóng mượt",
+      "f3": "Massage bấm huyệt vùng đầu & thái dương",
+      "f4": "Thưởng trà thảo mộc dưỡng nhan thư giãn",
+      "cta": "Đặt lịch • 69.000đ"
+    },
+    "pkg3": {
+      "name": "Gói Trị Liệu Cổ Vai Gáy",
+      "duration": "75 phút",
+      "price": "149.000đ",
+      "originalPrice": "179.000đ",
+      "discount": "-17%",
+      "badge": "CHUYÊN SÂU",
+      "desc": "Giải phóng cơn đau nhức cổ vai gáy do ngồi máy tính nhiều.",
+      "f1": "Đầy đủ quy trình gội đầu thảo dược 60 phút",
+      "f2": "Massage trị liệu cổ vai gáy bằng tinh dầu ngải cứu",
+      "f3": "Bài bấm huyệt giải tỏa căng cơ thắt lưng vai",
+      "f4": "Đắp gối ngải cứu nóng lưu thông khí huyết",
+      "cta": "Đặt lịch • 149.000đ"
+    },
+    "disclaimer": "Đồng giá • Không phụ thu"
+  },
+  "SpaNetwork": {
+    "heading": "Điểm Spa Gần Bạn",
+    "subheading": "15 spa đạt tiêu chuẩn kiểm định tại Cầu Giấy",
+    "allWards": "Tất cả",
+    "sortByGps": "Gần bạn nhất (GPS)",
+    "filterPlaceholder": "Tìm tên spa hoặc tên đường...",
+    "spasFoundCauGiay": "{count} spa đạt tiêu chuẩn kiểm định tại Cầu Giấy",
+    "exclusiveOffer": "Ưu đãi:",
+    "bookSlot": "Đặt Chỗ Zalo",
+    "viewDetails": "Chi tiết",
+    "gpsActive": "GPS chính xác",
+    "enableLocation": "Bật vị trí",
+    "standardBadge": "STANDARD",
+    "verifiedBadge": "VERIFIED",
+    "certifiedBadge": "CERTIFIED"
+  },
+  "Wards": {
+    "ALL": "Tất cả",
+    "Dịch Vọng": "Dịch Vọng",
+    "Dịch Vọng Hậu": "Duy Tân",
+    "Trung Hòa": "Hoàng Đạo Thúy",
+    "Yên Hòa": "Vũ Phạm Hàm",
+    "Nghĩa Tân": "Tô Hiệu"
+  },
+  "SpaDetail": {
+    "loading": "Đang tải thông tin spa...",
+    "notFound": "Không tìm thấy thông tin spa này.",
+    "backToList": "Quay lại danh sách",
+    "exclusiveOffer": "Ưu đãi điểm:",
+    "address": "Địa chỉ",
+    "hotline": "Hotline tiếp nhận",
+    "openHours": "Giờ mở cửa",
+    "distanceFromYou": "Khoảng cách từ bạn",
+    "servicesTitle": "3 Gói Dịch Vụ Niêm Yết",
+    "reviewsTitle": "Đánh Giá Khách Hàng",
+    "noReviews": "Chưa có đánh giá nào cho điểm spa này.",
+    "guarantee100": "Đúng giá 100%",
+    "bookThisPackage": "Đặt gói này",
+    "bookZalo": "Đặt lịch Zalo",
+    "bookZaloQuick": "Đặt chỗ qua Zalo (< 5p)",
+    "sopGuaranteed": "Cam kết chuẩn SOP"
+  },
+  "LocationPrompt": {
+    "title": "Bật vị trí để tìm spa gần bạn nhất",
+    "desc": "Cho phép truy cập vị trí để hệ thống gợi ý và tính khoảng cách đến các spa đồng giá gần bạn nhất.",
+    "enableButton": "Bật vị trí ngay",
+    "dismissButton": "Bỏ qua",
+    "locating": "Đang lấy vị trí..."
+  },
+  "Footer": {
+    "tagline": "Mạng lưới spa gội đầu dưỡng sinh & trị liệu chuẩn hoá độc lập tại Quận Cầu Giấy. Đồng giá niêm yết, không phụ thu, bảo vệ quyền lợi khách hàng tuyệt đối.",
+    "downloadApp": "Tải Ứng Dụng Glow",
+    "colPackages": "Gói Dịch Vụ Đồng Giá",
+    "colCoverage": "Khu Vực Phủ Sóng",
+    "colCommitment": "Cam Kết Thương Hiệu",
+    "colContact": "Tổng Đài Hỗ Trợ",
+    "pkg1": "Gội Thư Giãn (49.000đ)",
+    "pkg2": "Gội Dưỡng Sinh SOP (69.000đ)",
+    "pkg3": "Trị Liệu Cổ Vai Gáy (149.000đ)",
+    "pkg4": "Bấm Huyệt Khai Thông Kinh Lạc",
+    "wardDichVong": "Spa Phường Dịch Vọng",
+    "wardDuyTan": "Spa Cụm Duy Tân (Dịch Vọng Hậu)",
+    "wardHoangDaoThuy": "Spa Hoàng Đạo Thúy (Trung Hòa)",
+    "wardVuPhamHam": "Spa Vũ Phạm Hàm (Yên Hòa)",
+    "wardToHieu": "Spa Tô Hiệu (Nghĩa Tân)",
+    "commitNoExtra": "100% Đúng giá niêm yết",
+    "commitSop": "Quy trình SOP kiểm định",
+    "commitNoUpsell": "Không chèo kéo mua gói",
+    "commitZalo5min": "Xác nhận Zalo trong 5 phút",
+    "hotlineZaloLabel": "Hotline Zalo: 0988 888 888",
+    "copyright": "© 2026 Glow Vietnam. Nền tảng thành viên thuộc hệ sinh thái Glow (Glow Explore).",
+    "sopBadge": "Tiêu chuẩn SOP",
+    "privacyBadge": "Bảo mật dữ liệu",
+    "locationBadge": "Cầu Giấy, Hà Nội"
+  }
+}

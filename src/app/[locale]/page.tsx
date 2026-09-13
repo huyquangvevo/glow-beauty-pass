@@ -7,16 +7,14 @@ import {
   MapPin,
   Clock,
   Star,
-  MessageCircle,
   Sparkles,
-  Search,
   X,
   Tag,
 } from 'lucide-react'
-import { BrandLogo } from '@/components/BrandLogo'
 import { HeroBannerCarousel } from '@/components/HeroBannerCarousel'
 import { useSearch } from '@/context/SearchContext'
 import { useLocation } from '@/context/LocationContext'
+import { useTranslations } from 'next-intl'
 
 interface SpaItem {
   id: string
@@ -46,6 +44,11 @@ interface SkuItem {
 }
 
 export default function HomePage() {
+  const tCommon = useTranslations('Common')
+  const tServices = useTranslations('Services')
+  const tSpaNetwork = useTranslations('SpaNetwork')
+  const tWards = useTranslations('Wards')
+
   const [spas, setSpas] = useState<SpaItem[]>([])
   const [skus, setSkus] = useState<SkuItem[]>([])
   const [selectedWard, setSelectedWard] = useState<string>('ALL')
@@ -53,13 +56,13 @@ export default function HomePage() {
   const { userCoords, openPrompt } = useLocation()
   const [isLoading, setIsLoading] = useState(true)
 
-  const wards = [
-    { id: 'ALL', name: 'Tất cả' },
-    { id: 'Dịch Vọng', name: 'Dịch Vọng' },
-    { id: 'Dịch Vọng Hậu', name: 'Duy Tân' },
-    { id: 'Trung Hòa', name: 'Hoàng Đạo Thúy' },
-    { id: 'Yên Hòa', name: 'Vũ Phạm Hàm' },
-    { id: 'Nghĩa Tân', name: 'Tô Hiệu' },
+  const wardKeys = [
+    'ALL',
+    'Dịch Vọng',
+    'Dịch Vọng Hậu',
+    'Trung Hòa',
+    'Yên Hòa',
+    'Nghĩa Tân',
   ]
 
   useEffect(() => {
@@ -104,24 +107,29 @@ export default function HomePage() {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base font-black uppercase tracking-wide text-[#234E21]">
-                3 Gói Dịch Vụ Niêm Yết
+                {tServices('heading')}
               </h2>
               <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-[#40813D] text-white shadow-2xs">
-                Chỉ từ 49K
+                {tServices('priceTag')}
               </span>
             </div>
             <p className="text-xs text-[#5B6B58] mt-0.5">
-              Đồng giá tại tất cả 15 spa đối tác • Cam kết 100% không phụ thu
+              {tServices('subheading')}
             </p>
           </div>
           <span className="text-xs font-bold text-[#40813D] bg-[#EBF4EA] px-2.5 py-1 rounded-full border border-[#B7DDB5] shrink-0">
-            Đồng giá 15 spa
+            {tServices('fixedBadge')}
           </span>
         </div>
 
         <div className="space-y-3.5">
           {skus.map((sku, index) => {
-            const isPopular = index === 0 // Gói gội thư giãn 49k
+            const isPopular = index === 0
+            const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
+            const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
+            const localizedDesc = tServices.has(`${pkgKey}.desc` as any) ? tServices(`${pkgKey}.desc` as any) : sku.description
+            const localizedBadge = tServices.has(`${pkgKey}.badge` as any) ? tServices(`${pkgKey}.badge` as any) : null
+
             const discountPercent = sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
               ? Math.round(((sku.pricePhase2 - sku.pricePhase1) / sku.pricePhase2) * 100)
               : null
@@ -140,17 +148,22 @@ export default function HomePage() {
                   <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="font-black text-base sm:text-[17px] text-[#234E21] leading-snug">
-                        {sku.name}
+                        {localizedName}
                       </h3>
-                      {isPopular && (
+                      {localizedBadge && (
                         <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500 text-white shadow-2xs shrink-0 tracking-wider">
-                          HOT NHẤT
+                          {localizedBadge}
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-[#5B6B58] font-medium">
                       <Clock className="w-3.5 h-3.5 text-[#40813D]" />
-                      <span>Thời lượng: <strong className="text-[#234E21]">{sku.durationMinutes} phút</strong></span>
+                      <span>
+                        {tCommon('duration')}{' '}
+                        <strong className="text-[#234E21]">
+                          {sku.durationMinutes} {tCommon('minutes')}
+                        </strong>
+                      </span>
                     </div>
                   </div>
 
@@ -178,21 +191,21 @@ export default function HomePage() {
                     </div>
                     <span className="text-[10px] font-extrabold text-[#40813D] mt-1 flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#40813D] animate-pulse"></span>
-                      Đồng giá • Không phụ thu
+                      {tCommon('noSurcharge')}
                     </span>
                   </div>
                 </div>
 
                 {/* Description */}
                 <p className="text-xs sm:text-[13px] text-[#4E5C4C] leading-relaxed bg-[#F9FCF9] p-3 rounded-xl border border-[#E8F2E8]">
-                  {sku.description}
+                  {localizedDesc}
                 </p>
 
                 {/* Action Row with Clear Price on CTA Button */}
                 <div className="flex items-center justify-between pt-1 border-t border-stone-100 gap-2">
                   <span className="text-xs font-bold text-[#40813D] flex items-center gap-1">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Cam kết chuẩn SOP</span>
+                    <span>{tCommon('sopCommitment')}</span>
                   </span>
                   <a
                     href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}`}
@@ -200,7 +213,7 @@ export default function HomePage() {
                     rel="noopener noreferrer"
                     className="px-4.5 py-2.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-sm shadow-[#40813D]/25 flex items-center gap-1.5"
                   >
-                    <span>Đặt lịch</span>
+                    <span>{tCommon('bookNow')}</span>
                     <span className="opacity-90 font-extrabold">• {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
                   </a>
                 </div>
@@ -216,16 +229,16 @@ export default function HomePage() {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base font-extrabold uppercase tracking-wider text-[#234E21]">
-                Điểm Spa Gần Bạn
+                {tSpaNetwork('heading')}
               </h2>
               {userCoords ? (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-[#236B38] border border-emerald-200 shadow-2xs">
-                  GPS chính xác
+                  {tSpaNetwork('gpsActive')}
                 </span>
               ) : null}
             </div>
             <p className="text-xs text-[#5B6B58] mt-0.5">
-              {spas.length} spa đạt tiêu chuẩn kiểm định tại Cầu Giấy
+              {tSpaNetwork('spasFoundCauGiay', { count: spas.length })}
             </p>
           </div>
 
@@ -235,7 +248,7 @@ export default function HomePage() {
               className="flex items-center gap-1 text-xs font-bold text-[#40813D] bg-[#EBF4EA] hover:bg-[#DCF0DA] px-2.5 py-1 rounded-full border border-[#B7DDB5] transition-all shrink-0 cursor-pointer shadow-2xs active:scale-95"
             >
               <MapPin className="w-3.5 h-3.5 text-amber-600" />
-              <span>Bật vị trí</span>
+              <span>{tSpaNetwork('enableLocation')}</span>
             </button>
           )}
         </div>
@@ -244,14 +257,14 @@ export default function HomePage() {
         {searchQuery && (
           <div className="flex items-center justify-between px-3.5 py-2 rounded-2xl bg-[#EBF4EA] border border-[#B7DDB5] text-xs text-[#234E21] shadow-2xs">
             <span>
-              Kết quả tìm kiếm cho: &ldquo;<strong className="font-bold text-[#40813D]">{searchQuery}</strong>&rdquo;
+              {tCommon('searchResultsFor')} &ldquo;<strong className="font-bold text-[#40813D]">{searchQuery}</strong>&rdquo;
             </span>
             <button
               onClick={() => setSearchQuery('')}
               className="text-xs font-bold text-[#40813D] hover:text-[#356F32] flex items-center gap-1 bg-white px-2.5 py-0.5 rounded-full border border-[#B7DDB5] shadow-2xs"
-              aria-label="Xoá tìm kiếm"
+              aria-label={tCommon('clear')}
             >
-              <span>Xoá</span>
+              <span>{tCommon('clear')}</span>
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -259,25 +272,28 @@ export default function HomePage() {
 
         {/* Filter Chips: Clean wrapping grid without horizontal scrolling */}
         <div className="flex flex-wrap gap-2 pt-0.5">
-          {wards.map((w) => (
-            <button
-              key={w.id}
-              onClick={() => setSelectedWard(w.id)}
-              className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all border ${
-                selectedWard === w.id
-                  ? 'bg-[#40813D] text-white border-[#40813D] shadow-xs'
-                  : 'bg-white text-[#4E5C4C] hover:bg-[#F7FAF7] border-[#D5E7D8]'
-              }`}
-            >
-              {w.name}
-            </button>
-          ))}
+          {wardKeys.map((wardKey) => {
+            const label = tWards.has(wardKey as any) ? tWards(wardKey as any) : wardKey
+            return (
+              <button
+                key={wardKey}
+                onClick={() => setSelectedWard(wardKey)}
+                className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all border ${
+                  selectedWard === wardKey
+                    ? 'bg-[#40813D] text-white border-[#40813D] shadow-xs'
+                    : 'bg-white text-[#4E5C4C] hover:bg-[#F7FAF7] border-[#D5E7D8]'
+                }`}
+              >
+                {label}
+              </button>
+            )
+          })}
         </div>
 
         {/* Spa List */}
         {isLoading ? (
           <div className="py-10 text-center text-sm text-[#5B6B58]">
-            Đang tải danh sách spa
+            {tCommon('loadingSpas')}
           </div>
         ) : (() => {
           const displaySpas = spas.filter((spa) => {
@@ -293,7 +309,7 @@ export default function HomePage() {
           if (displaySpas.length === 0) {
             return (
               <div className="py-10 text-center bg-white rounded-2xl border border-[#DCE8DE] text-sm text-[#5B6B58]">
-                Không tìm thấy spa phù hợp với từ khóa &ldquo;{searchQuery}&rdquo;.
+                {tCommon('noSpasFound')} &ldquo;{searchQuery}&rdquo;.
               </div>
             )
           }
@@ -338,7 +354,7 @@ export default function HomePage() {
                           </h3>
                         </Link>
                         <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#EBF4EA] text-[#40813D] shrink-0 border border-[#B7DDB5]">
-                          {spa.formattedDistance || 'Gần bạn'}
+                          {spa.formattedDistance || tCommon('nearYou')}
                         </span>
                       </div>
 
@@ -352,7 +368,7 @@ export default function HomePage() {
                           <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                           <span className="text-[#093E06] font-extrabold text-xs">{spa.rating}</span>
                           <span className="text-[#5B6B58] font-normal text-[11px]">
-                            ({spa.reviewCount} đánh giá)
+                            ({spa.reviewCount} {tCommon('reviews')})
                           </span>
                         </div>
                       </div>
@@ -362,7 +378,7 @@ export default function HomePage() {
                   {/* Exclusive Offer without truncation */}
                   {spa.exclusiveOffer && (
                     <div className="text-xs text-amber-950 bg-amber-50 border border-amber-200/70 px-3 py-2 rounded-xl font-medium leading-snug flex items-start gap-1.5">
-                      <span className="text-amber-600 font-bold shrink-0">Ưu đãi:</span>
+                      <span className="text-amber-600 font-bold shrink-0">{tSpaNetwork('exclusiveOffer')}</span>
                       <span>{spa.exclusiveOffer}</span>
                     </div>
                   )}
@@ -371,7 +387,7 @@ export default function HomePage() {
                   <div className="flex items-center justify-between gap-2.5 pt-2 border-t border-stone-100">
                     <div className="flex items-center gap-1.5 text-xs text-[#2E682A]">
                       <Tag className="w-3.5 h-3.5 text-[#40813D] shrink-0" />
-                      <span className="font-bold">Đồng giá từ <strong className="text-sm font-black text-[#1E5C23]">49K</strong></span>
+                      <span className="font-bold">{tCommon('priceFrom49k')}</span>
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
@@ -379,7 +395,7 @@ export default function HomePage() {
                         href={`/spa/${spa.slug}`}
                         className="py-2 px-3 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold transition-all"
                       >
-                        Chi tiết
+                        {tCommon('viewDetails')}
                       </Link>
                       <a
                         href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
@@ -387,7 +403,7 @@ export default function HomePage() {
                         rel="noopener noreferrer"
                         className="py-2 px-3.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs font-bold text-center transition-all active:scale-95 shadow-xs"
                       >
-                        Đặt Zalo
+                        {tCommon('bookZalo')}
                       </a>
                     </div>
                   </div>
