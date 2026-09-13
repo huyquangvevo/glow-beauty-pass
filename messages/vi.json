@@ -62,16 +62,16 @@
   },
   "TrustBadges": {
     "badge1": {
-      "title": "Đúng Giá 100%",
-      "desc": "Không bao giờ có phụ thu"
+      "title": "100% Đúng Giá",
+      "desc": "Đồng giá niêm yết • Không phụ thu"
     },
     "badge2": {
-      "title": "Quy Trình Chuẩn",
-      "desc": "Không ép mua thẻ liệu trình"
+      "title": "Quy Trình Chuẩn SOP",
+      "desc": "Kiểm định nghiêm ngặt • Không ép mua"
     },
     "badge3": {
-      "title": "Phản Hồi 5 Phút",
-      "desc": "Điều phối slot lịch qua Zalo"
+      "title": "Hỗ Trợ < 5 Phút",
+      "desc": "Đặt chỗ tức thì qua Zalo"
     }
   },
   "Services": {

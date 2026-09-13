@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import {
-  ChevronLeft,
-  ChevronRight,
   MessageCircle,
   Sparkles,
   ShieldCheck,
@@ -68,6 +66,7 @@ export function HeroBannerCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const touchStartX = useRef<number | null>(null)
 
   // Auto advance slide every 5.5s
   useEffect(() => {
@@ -89,13 +88,31 @@ export function HeroBannerCarousel() {
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length)
   }
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsPaused(true)
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    setIsPaused(false)
+    if (touchStartX.current === null) return
+    const touchEndX = e.changedTouches[0].clientX
+    const diff = touchStartX.current - touchEndX
+    if (diff > 40) {
+      nextSlide()
+    } else if (diff < -40) {
+      prevSlide()
+    }
+    touchStartX.current = null
+  }
+
   return (
     <div
       className="space-y-3.5"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      onTouchStart={() => setIsPaused(true)}
-      onTouchEnd={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {/* MAIN CAROUSEL BANNER */}
       <div className="relative w-full rounded-3xl overflow-hidden shadow-md border border-stone-200/80 bg-stone-900 group aspect-[16/10] sm:aspect-[16/8] min-h-[280px]">
@@ -124,41 +141,19 @@ export function HeroBannerCarousel() {
 
               {/* Slide Content Overlay */}
               <div className="absolute inset-0 p-5 sm:p-7 flex flex-col justify-between z-20 text-white">
-                {/* Top Row: Category Tag & Integrated Header Nav Pill */}
+                {/* Top Row: Category Tag & Clean Counter (No arrows!) */}
                 <div className="flex items-center justify-between gap-2">
                   <span
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider backdrop-blur-md border shadow-2xs ${slide.badgeColor}`}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-black uppercase tracking-wider backdrop-blur-md border shadow-2xs ${slide.badgeColor}`}
                   >
                     <Sparkles className="w-3 h-3 text-amber-300 shrink-0" />
                     <span>{slide.tag}</span>
                   </span>
 
-                  {/* Top-Right Control Pill */}
-                  <div className="flex items-center gap-0.5 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded-full border border-white/20 text-white shadow-sm">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        prevSlide()
-                      }}
-                      className="p-1 hover:text-amber-300 hover:bg-white/10 active:scale-90 transition-all rounded-full cursor-pointer"
-                      aria-label="Banner trước"
-                    >
-                      <ChevronLeft className="w-3.5 h-3.5" />
-                    </button>
-                    <span className="text-[11px] font-extrabold text-white/90 px-1 tracking-wider">
-                      {currentIndex + 1}/{slides.length}
-                    </span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        nextSlide()
-                      }}
-                      className="p-1 hover:text-amber-300 hover:bg-white/10 active:scale-90 transition-all rounded-full cursor-pointer"
-                      aria-label="Banner kế tiếp"
-                    >
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                  {/* Clean Slide Counter */}
+                  <span className="text-[11px] font-extrabold text-white/90 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20 tracking-wider shadow-xs">
+                    {currentIndex + 1}/{slides.length}
+                  </span>
                 </div>
 
                 {/* Bottom Text & CTA Row */}
@@ -193,67 +188,62 @@ export function HeroBannerCarousel() {
           )
         })}
 
-        {/* Bottom-Right Navigation & Pagination Pill (No overlapping with text!) */}
-        <div className="absolute bottom-3.5 right-3.5 sm:right-5 z-30 flex items-center gap-1.5 bg-black/45 backdrop-blur-md px-2 py-1 rounded-full border border-white/20 shadow-md">
-          <button
-            onClick={prevSlide}
-            className="p-1 text-white/80 hover:text-white active:scale-90 transition-all cursor-pointer rounded-full hover:bg-white/10"
-            aria-label="Banner trước"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" />
-          </button>
-
-          <div className="flex items-center gap-1 px-0.5">
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentIndex(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  i === currentIndex
-                    ? 'w-5 bg-white shadow-xs'
-                    : 'w-1.5 bg-white/40 hover:bg-white/70'
-                }`}
-                aria-label={`Chuyển đến banner ${i + 1}`}
-              />
-            ))}
-          </div>
-
-          <button
-            onClick={nextSlide}
-            className="p-1 text-white/80 hover:text-white active:scale-90 transition-all cursor-pointer rounded-full hover:bg-white/10"
-            aria-label="Banner kế tiếp"
-          >
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
+        {/* Bottom-Right Minimalist Pagination Indicators (No arrows!) */}
+        <div className="absolute bottom-3.5 right-3.5 sm:right-5 z-30 flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-white/20 shadow-md">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+              className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                i === currentIndex
+                  ? 'w-6 bg-white shadow-xs'
+                  : 'w-1.5 bg-white/45 hover:bg-white/80'
+              }`}
+              aria-label={`Banner ${i + 1}`}
+            />
+          ))}
         </div>
       </div>
 
-      {/* 3 CORE TRUST PILLARS (Below Visual Banner) */}
-      <div className="grid grid-cols-3 gap-2 text-center">
-        <div className="py-2.5 px-2 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
-          <div className="flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#40813D]" />
-            <span className="text-xs font-bold leading-tight">{tTrust('badge1.title')}</span>
+      {/* 3 CORE TRUST PILLARS (Centered icons, bold prominent typography, balanced spacing) */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-3.5">
+        <div className="p-3 sm:p-4 rounded-2xl bg-white border border-[#D5E7D8] shadow-2xs hover:shadow-md hover:border-[#356F32]/40 transition-all flex flex-col items-center justify-start text-center group">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-50 text-[#356F32] flex items-center justify-center mb-2 sm:mb-2.5 shadow-2xs group-hover:scale-105 group-hover:bg-[#EAF5E9] transition-all">
+            <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#356F32]" />
           </div>
-          <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">{tTrust('badge1.desc')}</span>
+          <h4 className="text-[13px] sm:text-[15px] md:text-base font-black text-[#0A3C08] tracking-tight leading-snug">
+            {tTrust('badge1.title')}
+          </h4>
+          <p className="text-[11px] sm:text-xs text-[#5B6B58] font-medium leading-snug mt-1">
+            {tTrust('badge1.desc')}
+          </p>
         </div>
 
-        <div className="py-2.5 px-2 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
-          <div className="flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5 text-[#40813D]" />
-            <span className="text-xs font-bold leading-tight">{tTrust('badge2.title')}</span>
+        <div className="p-3 sm:p-4 rounded-2xl bg-white border border-[#D5E7D8] shadow-2xs hover:shadow-md hover:border-[#356F32]/40 transition-all flex flex-col items-center justify-start text-center group">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-50 text-[#356F32] flex items-center justify-center mb-2 sm:mb-2.5 shadow-2xs group-hover:scale-105 group-hover:bg-[#EAF5E9] transition-all">
+            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-[#356F32]" />
           </div>
-          <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">{tTrust('badge2.desc')}</span>
+          <h4 className="text-[13px] sm:text-[15px] md:text-base font-black text-[#0A3C08] tracking-tight leading-snug">
+            {tTrust('badge2.title')}
+          </h4>
+          <p className="text-[11px] sm:text-xs text-[#5B6B58] font-medium leading-snug mt-1">
+            {tTrust('badge2.desc')}
+          </p>
         </div>
 
-        <div className="py-2.5 px-2 rounded-2xl bg-white border border-[#D5E7D8] text-[#234E21] shadow-2xs flex flex-col items-center justify-center">
-          <div className="flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5 text-[#40813D]" />
-            <span className="text-xs font-bold leading-tight">{tTrust('badge3.title')}</span>
+        <div className="p-3 sm:p-4 rounded-2xl bg-white border border-[#D5E7D8] shadow-2xs hover:shadow-md hover:border-[#356F32]/40 transition-all flex flex-col items-center justify-start text-center group">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-50 text-[#356F32] flex items-center justify-center mb-2 sm:mb-2.5 shadow-2xs group-hover:scale-105 group-hover:bg-[#EAF5E9] transition-all">
+            <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-[#356F32]" />
           </div>
-          <span className="text-[10px] text-[#5B6B58] mt-0.5 font-medium">{tTrust('badge3.desc')}</span>
+          <h4 className="text-[13px] sm:text-[15px] md:text-base font-black text-[#0A3C08] tracking-tight leading-snug">
+            {tTrust('badge3.title')}
+          </h4>
+          <p className="text-[11px] sm:text-xs text-[#5B6B58] font-medium leading-snug mt-1">
+            {tTrust('badge3.desc')}
+          </p>
         </div>
       </div>
     </div>
   )
 }
+

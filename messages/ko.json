@@ -62,16 +62,16 @@
   },
   "TrustBadges": {
     "badge1": {
-      "title": "100% 정찰제",
-      "desc": "현장 추가 요금 일체 없음"
+      "title": "100% 투명 정찰제",
+      "desc": "현장 추가금 절대 없음"
     },
     "badge2": {
       "title": "표준 SOP 준수",
-      "desc": "회원권 강매나 권유 금지"
+      "desc": "엄격한 관리 • 강매 금지"
     },
     "badge3": {
       "title": "5분 내 신속 응대",
-      "desc": "대기 없이 바로 이용 가능"
+      "desc": "Zalo 채팅 빠른 슬롯 예약"
     }
   },
   "Services": {
