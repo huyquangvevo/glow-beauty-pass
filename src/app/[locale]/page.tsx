@@ -267,7 +267,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
           {skus.map((sku, index) => {
             const isPopular = index === 1
             const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
@@ -280,51 +280,67 @@ export default function HomePage() {
             const bullet3 = tServices.has(`${pkgKey}.f3` as any) ? tServices(`${pkgKey}.f3` as any) : ''
             const highlights = [bullet1, bullet2, bullet3].filter(Boolean)
 
+            const discountPercent = sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
+              ? Math.round(((sku.pricePhase2 - sku.pricePhase1) / sku.pricePhase2) * 100)
+              : (index === 0 ? 17 : index === 1 ? 19 : 17)
+
             return (
               <div
                 key={sku.id}
-                className={`p-4.5 sm:p-5 rounded-2xl bg-white border transition-all flex flex-col justify-between ${
+                className={`p-4.5 sm:p-5 rounded-2xl transition-all flex flex-col justify-between ${
                   isPopular
-                    ? 'border-stone-900 shadow-xs'
-                    : 'border-stone-200/80 hover:border-stone-400'
+                    ? 'border-2 border-[#40813D] bg-gradient-to-b from-[#F4FAF2] via-white to-white shadow-[0_6px_20px_rgba(64,129,61,0.12)]'
+                    : 'border border-[#E5E9E4] bg-white hover:border-[#B7DDB5] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)]'
                 }`}
               >
                 <div className="space-y-3">
+                  {/* Package Header: Title, Badge, Duration & Vibrant Green Price */}
                   <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1 flex-1 min-w-0">
+                    <div className="space-y-1.5 flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <h3 className="font-bold text-base text-stone-900 leading-snug">
+                        <h3 className="font-extrabold text-[16px] sm:text-[17px] text-[#093E06] leading-snug">
                           {localizedName}
                         </h3>
-                        {isPopular && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider bg-stone-900 text-white px-2 py-0.5 rounded-md">
+                        {isPopular ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-wider bg-[#40813D] text-white px-2.5 py-0.5 rounded-full shadow-2xs">
+                            ★ {badgeLabel}
+                          </span>
+                        ) : (
+                          <span className="text-[10px] sm:text-[10.5px] font-bold bg-[#EBF4EA] text-[#234E21] border border-[#B7DDB5] px-2 py-0.5 rounded-full">
                             {badgeLabel}
                           </span>
                         )}
                       </div>
-                      <div className="inline-flex items-center gap-1 text-xs text-stone-500 font-medium">
-                        <Clock className="w-3.5 h-3.5 text-stone-400" />
+                      <div className="inline-flex items-center gap-1 text-xs text-[#5B6B58] font-semibold">
+                        <Clock className="w-3.5 h-3.5 text-[#40813D]" />
                         <span>{sku.durationMinutes} {tServices('durationUnit')}</span>
                       </div>
                     </div>
 
-                    <div className="text-right shrink-0">
-                      <div className="text-xl font-bold text-stone-900 leading-none tracking-tight">
+                    {/* Prominent Vibrant Price Block */}
+                    <div className="text-right shrink-0 flex flex-col items-end">
+                      <div className="text-2xl sm:text-[26px] font-black text-[#236B38] leading-none tracking-tight">
                         {sku.pricePhase1.toLocaleString('vi-VN')}đ
                       </div>
-                      {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
-                        <div className="text-[11px] text-stone-400 line-through mt-1">
-                          {sku.pricePhase2.toLocaleString('vi-VN')}đ
-                        </div>
-                      )}
+                      <div className="flex items-center gap-1.5 mt-1.5">
+                        {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
+                          <span className="text-[11.5px] text-[#9BA898] line-through font-medium">
+                            {sku.pricePhase2.toLocaleString('vi-VN')}đ
+                          </span>
+                        )}
+                        <span className="rounded-md bg-[#FCEDEA] px-1.5 py-0.5 text-[10.5px] font-extrabold text-[#C0392B] leading-none">
+                          -{discountPercent}%
+                        </span>
+                      </div>
                     </div>
                   </div>
 
+                  {/* Highlights Bullet List */}
                   {highlights.length > 0 && (
-                    <div className="space-y-1 pt-2 border-t border-stone-100">
+                    <div className="space-y-1.5 pt-2.5 border-t border-stone-100">
                       {highlights.map((h: string, idx: number) => (
-                        <div key={idx} className="text-xs text-stone-600 flex items-start gap-1.5 leading-snug">
-                          <span className="text-stone-400 font-bold">•</span>
+                        <div key={idx} className="text-xs sm:text-[12.5px] text-[#4A5747] flex items-start gap-2 leading-snug">
+                          <span className="text-[#40813D] font-black shrink-0">•</span>
                           <span>{h}</span>
                         </div>
                       ))}
@@ -332,24 +348,32 @@ export default function HomePage() {
                   )}
                 </div>
 
-                <div className="pt-3 mt-3 border-t border-stone-100 flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-stone-400 font-medium">
-                    {tServices('noExtraFee')}
-                  </span>
+                {/* Bottom Action Area: Guarantee line & Prominent Large Zalo Button */}
+                <div className="pt-3 mt-3.5 border-t border-stone-100 space-y-2">
+                  <div className="flex items-center justify-between text-[11.5px] text-[#5B6B58] font-medium px-0.5">
+                    <span className="inline-flex items-center gap-1 text-[#234E21]">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#40813D] shrink-0" />
+                      <span>{tServices('noExtraFee')}</span>
+                    </span>
+                    <span className="text-[#9BA898] text-[11px]">
+                      Giữ chỗ 30s
+                    </span>
+                  </div>
+
                   <a
                     href={zaloHubLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs font-bold active:scale-95 transition-all shadow-xs"
+                    className="w-full py-2.5 sm:py-3 px-4 rounded-xl sm:rounded-2xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#2A5A28] text-white text-[13.5px] sm:text-[14px] font-extrabold flex items-center justify-center gap-2 shadow-[0_3px_12px_rgba(64,129,61,0.25)] hover:shadow-[0_6px_18px_rgba(64,129,61,0.35)] transition-all active:scale-[0.98] cursor-pointer"
                   >
                     <Image
                       src="/brand/Logo-Zalo-App-Rec.webp"
                       alt="Zalo"
-                      width={14}
-                      height={14}
-                      className="w-3.5 h-3.5 rounded-xs shrink-0 object-contain"
+                      width={18}
+                      height={18}
+                      className="w-4.5 h-4.5 rounded-xs shrink-0 object-contain shadow-2xs"
                     />
-                    <span>{tServices('bookPrice', { price: sku.pricePhase1.toLocaleString('vi-VN') })}</span>
+                    <span>{tServices('bookButton')}</span>
                   </a>
                 </div>
               </div>

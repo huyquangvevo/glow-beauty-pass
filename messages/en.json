@@ -127,7 +127,8 @@
     "pkg3Badge": "Deep Care",
     "noExtraFee": "No extra fees",
     "durationUnit": "mins",
-    "bookPrice": "Book {price}đ"
+    "bookPrice": "Book {price}đ",
+    "bookButton": "Book via Zalo"
   },
   "SpaNetwork": {
     "heading": "Spas Near You",

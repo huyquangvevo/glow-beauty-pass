@@ -158,10 +158,10 @@ export function NearbySpaCard({
         </div>
 
         {/* 4. Action Row: View Details & Quick Book */}
-        <div className="flex items-center justify-between gap-2 pt-1">
+        <div className="flex items-center justify-between gap-2 pt-1.5">
           <Link
             href={href}
-            className="flex-1 py-2 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold text-center transition-colors"
+            className="flex-1 py-2.5 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold text-center transition-colors"
           >
             {tSpaNetwork('viewDetails')}
           </Link>
@@ -169,14 +169,14 @@ export function NearbySpaCard({
             href={zaloHubLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 py-2 px-3 rounded-xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#2E602C] text-white text-xs font-bold text-center transition-all shadow-xs flex items-center justify-center gap-1.5"
+            className="flex-1 py-2.5 px-3 rounded-xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#2E602C] text-white text-[12.5px] font-extrabold text-center transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <Image
               src="/brand/Logo-Zalo-App-Rec.webp"
               alt="Zalo"
-              width={16}
-              height={16}
-              className="w-4 h-4 rounded-xs shrink-0 object-contain"
+              width={18}
+              height={18}
+              className="w-4.5 h-4.5 rounded-xs shrink-0 object-contain shadow-2xs"
             />
             <span>{tSpaNetwork('bookSlot')}</span>
           </a>

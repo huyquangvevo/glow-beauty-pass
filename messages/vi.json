@@ -127,7 +127,8 @@
     "pkg3Badge": "Chuyên sâu",
     "noExtraFee": "Không thu thêm phụ phí",
     "durationUnit": "phút",
-    "bookPrice": "Đặt lịch {price}đ"
+    "bookPrice": "Đặt lịch {price}đ",
+    "bookButton": "Đặt lịch Zalo"
   },
   "SpaNetwork": {
     "heading": "Điểm Spa Gần Bạn",

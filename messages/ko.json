@@ -127,7 +127,8 @@
     "pkg3Badge": "집중 케어",
     "noExtraFee": "추가 요금 없음",
     "durationUnit": "분",
-    "bookPrice": "예약하기 {price}동"
+    "bookPrice": "예약하기 {price}동",
+    "bookButton": "Zalo 예약하기"
   },
   "SpaNetwork": {
     "heading": "내 주변 스파 찾기",
