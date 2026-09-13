@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { getCachedSpasAndSkus } from '@/lib/spas-service'
 
 // Tính khoảng cách theo công thức Haversine (km)
 function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -20,26 +20,17 @@ export async function GET(request: Request) {
     const userLon = searchParams.get('lon') ? parseFloat(searchParams.get('lon')!) : 105.7925
     const ward = searchParams.get('ward')
 
-    const whereCondition: any = { isActive: true }
+    const { spas, skus } = await getCachedSpasAndSkus()
+
+    let filteredSpas = spas
     if (ward) {
-      whereCondition.ward = ward
+      filteredSpas = filteredSpas.filter(
+        (s) => s.ward && s.ward.toLowerCase().includes(ward.toLowerCase())
+      )
     }
 
-    const [spas, skus] = await Promise.all([
-      prisma.spa.findMany({
-        where: whereCondition,
-        include: {
-          reviews: {
-            take: 2,
-            orderBy: { createdAt: 'desc' },
-          },
-        },
-      }),
-      prisma.serviceSku.findMany(),
-    ])
-
     // Gắn thêm khoảng cách tính toán đến người dùng
-    const spasWithDistance = spas.map((spa) => {
+    const spasWithDistance = filteredSpas.map((spa) => {
       const distanceKm = calculateDistanceKm(userLat, userLon, spa.latitude, spa.longitude)
       return {
         ...spa,
@@ -51,14 +42,22 @@ export async function GET(request: Request) {
     // Sắp xếp theo thứ tự: Spa gần nhất lên đầu
     spasWithDistance.sort((a, b) => a.distanceKm - b.distanceKm)
 
-    return NextResponse.json({
-      spas: spasWithDistance,
-      skus,
-      totalCount: spas.length,
-      pilotDistrict: 'Cầu Giấy',
-    })
+    return NextResponse.json(
+      {
+        spas: spasWithDistance,
+        skus,
+        totalCount: spasWithDistance.length,
+        pilotDistrict: 'Cầu Giấy',
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=86400',
+        },
+      }
+    )
   } catch (error) {
     console.error('Error fetching spas:', error)
     return NextResponse.json({ error: 'Failed to fetch spas' }, { status: 500 })
   }
 }
+

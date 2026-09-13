@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import snapshotData from '@/lib/spas-snapshot.json'
 import {
   MapPin,
   Clock,
@@ -121,20 +122,37 @@ export default function SpaDetailPage() {
   const tCommon = useTranslations('Common')
 
   const params = useParams()
-  const slug = params.slug as string
-  const [spa, setSpa] = useState<any>(null)
-  const [skus, setSkus] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+  const slug = params?.slug as string
+
+  const initialSpa = useMemo(() => {
+    if (!slug) return null
+    return (snapshotData.spas as any[]).find((s) => s.slug === slug) || null
+  }, [slug])
+
+  const [spa, setSpa] = useState<any>(() => initialSpa)
+  const [skus, setSkus] = useState<any[]>(() => (snapshotData.skus as any[]) || [])
+  const [loading, setLoading] = useState(() => !initialSpa)
+
+  useEffect(() => {
+    if (initialSpa && (!spa || spa.slug !== slug)) {
+      setSpa(initialSpa)
+      setLoading(false)
+    }
+  }, [slug, initialSpa])
 
   useEffect(() => {
     async function loadSpa() {
       try {
-        setLoading(true)
+        if (!spa) {
+          setLoading(true)
+        }
         const res = await fetch(`/api/spas/${slug}`)
         const data = await res.json()
         if (data.spa) {
           setSpa(data.spa)
-          setSkus(data.skus || [])
+          if (data.skus && data.skus.length > 0) {
+            setSkus(data.skus)
+          }
         }
       } catch (err) {
         console.error(err)

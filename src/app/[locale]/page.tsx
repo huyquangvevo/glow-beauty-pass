@@ -23,6 +23,7 @@ import { NearbySpaCard, type SpaCardData } from '@/components/NearbySpaCard'
 import { NearbySpaMobileCard } from '@/components/NearbySpaMobileCard'
 import { PaginationControls } from '@/components/PaginationControls'
 import { getOpeningStatus } from '@/lib/formatters'
+import snapshotData from '@/lib/spas-snapshot.json'
 
 interface SkuItem {
   id: string
@@ -50,8 +51,32 @@ export default function HomePage() {
   const tSpaNetwork = useTranslations('SpaNetwork')
   const tWards = useTranslations('Wards')
 
-  const [spas, setSpas] = useState<SpaCardData[]>([])
-  const [skus, setSkus] = useState<SkuItem[]>([])
+  const [spas, setSpas] = useState<SpaCardData[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = sessionStorage.getItem('glow_spas_cache')
+        if (cached) {
+          const parsed = JSON.parse(cached)
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed
+        }
+      } catch {}
+    }
+    return (snapshotData.spas as any[]) || []
+  })
+
+  const [skus, setSkus] = useState<SkuItem[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = sessionStorage.getItem('glow_skus_cache')
+        if (cached) {
+          const parsed = JSON.parse(cached)
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed
+        }
+      } catch {}
+    }
+    return (snapshotData.skus as any[]) || []
+  })
+
   const [selectedWard, setSelectedWard] = useState<string>('ALL')
   const [openNowOnly, setOpenNowOnly] = useState<boolean>(false)
   const [topRatedOnly, setTopRatedOnly] = useState<boolean>(false)
@@ -63,7 +88,7 @@ export default function HomePage() {
 
   const { searchQuery, setSearchQuery } = useSearch()
   const { userCoords, openPrompt, locationLabel } = useLocation()
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Calculate spa counts per ward / hot area
   const wardCounts = useMemo(() => {
@@ -121,7 +146,9 @@ export default function HomePage() {
   useEffect(() => {
     async function loadData() {
       try {
-        setIsLoading(true)
+        if (spas.length === 0) {
+          setIsLoading(true)
+        }
         const params = new URLSearchParams()
         if (userCoords) {
           params.append('lat', userCoords.lat.toString())
@@ -129,9 +156,17 @@ export default function HomePage() {
         }
         const res = await fetch(`/api/spas?${params.toString()}`)
         const data = await res.json()
-        if (data.spas) {
+        if (data.spas && data.spas.length > 0) {
           setSpas(data.spas)
-          setSkus(data.skus || [])
+          if (data.skus && data.skus.length > 0) {
+            setSkus(data.skus)
+          }
+          try {
+            sessionStorage.setItem('glow_spas_cache', JSON.stringify(data.spas))
+            if (data.skus) {
+              sessionStorage.setItem('glow_skus_cache', JSON.stringify(data.skus))
+            }
+          } catch {}
         }
       } catch (err) {
         console.error('Failed to load spas:', err)
