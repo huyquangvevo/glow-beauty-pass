@@ -111,6 +111,12 @@ export async function POST(request: Request) {
       imageUrl,
       isActive = true,
       initSlots = true,
+      reviewSectionTitle = 'Khách hàng nói gì về chúng tôi',
+      reviewSectionSubtitle = 'Đánh giá từ trải nghiệm dịch vụ thực tế',
+      reviewBreakdown,
+      reviewTags,
+      curatedReviews,
+      faqs,
     } = body
 
     // Validation
@@ -139,6 +145,23 @@ export async function POST(request: Request) {
       counter++
     }
 
+    let computedRating: number | undefined = undefined
+    let computedReviewCount: number | undefined = undefined
+
+    if (reviewBreakdown && typeof reviewBreakdown === 'object') {
+      const s5 = Number(reviewBreakdown.stars5) || 0
+      const s4 = Number(reviewBreakdown.stars4) || 0
+      const s3 = Number(reviewBreakdown.stars3) || 0
+      const s2 = Number(reviewBreakdown.stars2) || 0
+      const s1 = Number(reviewBreakdown.stars1) || 0
+      const totalCount = s5 + s4 + s3 + s2 + s1
+      if (totalCount > 0) {
+        const totalScore = s5 * 5 + s4 * 4 + s3 * 3 + s2 * 2 + s1 * 1
+        computedRating = Math.round((totalScore / totalCount) * 10) / 10
+        computedReviewCount = totalCount
+      }
+    }
+
     // Tạo Spa trong Database
     const newSpa = await prisma.spa.create({
       data: {
@@ -155,6 +178,14 @@ export async function POST(request: Request) {
         exclusiveOffer: exclusiveOffer?.trim() || null,
         imageUrl: imageUrl?.trim() || null,
         isActive: Boolean(isActive),
+        reviewSectionTitle: reviewSectionTitle?.trim() || 'Khách hàng nói gì về chúng tôi',
+        reviewSectionSubtitle: reviewSectionSubtitle?.trim() || 'Đánh giá từ trải nghiệm dịch vụ thực tế',
+        reviewBreakdown: reviewBreakdown || undefined,
+        reviewTags: reviewTags || undefined,
+        curatedReviews: curatedReviews || undefined,
+        faqs: faqs || undefined,
+        rating: computedRating !== undefined ? computedRating : (body.rating ? Number(body.rating) : 4.8),
+        reviewCount: computedReviewCount !== undefined ? computedReviewCount : (body.reviewCount ? Number(body.reviewCount) : 0),
       },
     })
 

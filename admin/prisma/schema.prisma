@@ -27,8 +27,15 @@ model Spa {
   exclusiveOffer  String?      // Ưu đãi riêng: "Tặng 10p massage vai gáy"
   imageUrl        String?
   isActive        Boolean      @default(true)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  // Review Breakdown, Tags, Curated Reviews & FAQs (matching luggage-storage)
+  reviewSectionTitle    String?   @default("Khách hàng nói gì về chúng tôi")
+  reviewSectionSubtitle String?   @default("Đánh giá từ trải nghiệm dịch vụ thực tế")
+  reviewBreakdown       Json?
+  reviewTags            Json?
+  curatedReviews        Json?
+  faqs                  Json?
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
 
   slots           Slot[]
   bookings        Booking[]
