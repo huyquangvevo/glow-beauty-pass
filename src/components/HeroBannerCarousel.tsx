@@ -8,7 +8,6 @@ import {
   MessageCircle,
   Sparkles,
   ShieldCheck,
-  MapPin,
   Clock,
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -125,8 +124,8 @@ export function HeroBannerCarousel() {
 
               {/* Slide Content Overlay */}
               <div className="absolute inset-0 p-5 sm:p-7 flex flex-col justify-between z-20 text-white">
-                {/* Top Badge */}
-                <div className="flex items-center justify-between">
+                {/* Top Row: Category Tag & Integrated Header Nav Pill */}
+                <div className="flex items-center justify-between gap-2">
                   <span
                     className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider backdrop-blur-md border shadow-2xs ${slide.badgeColor}`}
                   >
@@ -134,13 +133,36 @@ export function HeroBannerCarousel() {
                     <span>{slide.tag}</span>
                   </span>
 
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-md text-white/80 border border-white/10">
-                    {index + 1}/{slides.length}
-                  </span>
+                  {/* Top-Right Control Pill */}
+                  <div className="flex items-center gap-0.5 bg-black/50 backdrop-blur-md px-1.5 py-0.5 rounded-full border border-white/20 text-white shadow-sm">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        prevSlide()
+                      }}
+                      className="p-1 hover:text-amber-300 hover:bg-white/10 active:scale-90 transition-all rounded-full cursor-pointer"
+                      aria-label="Banner trước"
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="text-[11px] font-extrabold text-white/90 px-1 tracking-wider">
+                      {currentIndex + 1}/{slides.length}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        nextSlide()
+                      }}
+                      className="p-1 hover:text-amber-300 hover:bg-white/10 active:scale-90 transition-all rounded-full cursor-pointer"
+                      aria-label="Banner kế tiếp"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
 
-                {/* Bottom Text & CTA */}
-                <div className="space-y-2.5 max-w-sm sm:max-w-md">
+                {/* Bottom Text & CTA Row */}
+                <div className="space-y-2.5 max-w-sm sm:max-w-md pr-4 sm:pr-8">
                   <div className="space-y-0.5">
                     <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight leading-tight drop-shadow-md">
                       {slide.title}
@@ -171,36 +193,38 @@ export function HeroBannerCarousel() {
           )
         })}
 
-        {/* Navigation Arrows */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-2.5 top-1/2 -translate-y-1/2 z-30 p-1.5 rounded-full bg-black/35 hover:bg-black/60 backdrop-blur-md text-white border border-white/15 opacity-80 hover:opacity-100 active:scale-90 transition-all cursor-pointer"
-          aria-label="Banner trước"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 z-30 p-1.5 rounded-full bg-black/35 hover:bg-black/60 backdrop-blur-md text-white border border-white/15 opacity-80 hover:opacity-100 active:scale-90 transition-all cursor-pointer"
-          aria-label="Banner kế tiếp"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
+        {/* Bottom-Right Navigation & Pagination Pill (No overlapping with text!) */}
+        <div className="absolute bottom-3.5 right-3.5 sm:right-5 z-30 flex items-center gap-1.5 bg-black/45 backdrop-blur-md px-2 py-1 rounded-full border border-white/20 shadow-md">
+          <button
+            onClick={prevSlide}
+            className="p-1 text-white/80 hover:text-white active:scale-90 transition-all cursor-pointer rounded-full hover:bg-white/10"
+            aria-label="Banner trước"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+          </button>
 
-        {/* Pagination Dots */}
-        <div className="absolute bottom-3 right-4 z-30 flex items-center gap-1.5">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentIndex(i)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === currentIndex
-                  ? 'w-6 bg-white shadow-xs'
-                  : 'w-1.5 bg-white/40 hover:bg-white/70'
-              }`}
-              aria-label={`Chuyển đến banner ${i + 1}`}
-            />
-          ))}
+          <div className="flex items-center gap-1 px-0.5">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentIndex(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  i === currentIndex
+                    ? 'w-5 bg-white shadow-xs'
+                    : 'w-1.5 bg-white/40 hover:bg-white/70'
+                }`}
+                aria-label={`Chuyển đến banner ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={nextSlide}
+            className="p-1 text-white/80 hover:text-white active:scale-90 transition-all cursor-pointer rounded-full hover:bg-white/10"
+            aria-label="Banner kế tiếp"
+          >
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
 
