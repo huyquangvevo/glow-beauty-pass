@@ -7,6 +7,7 @@ import {
   Sparkles,
   ShieldCheck,
   Clock,
+  ChevronRight,
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
@@ -141,18 +142,13 @@ export function HeroBannerCarousel() {
 
               {/* Slide Content Overlay */}
               <div className="absolute inset-0 p-5 sm:p-7 flex flex-col justify-between z-20 text-white">
-                {/* Top Row: Category Tag & Clean Counter (No arrows!) */}
+                {/* Top Row: Category Tag */}
                 <div className="flex items-center justify-between gap-2">
                   <span
                     className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-black uppercase tracking-wider backdrop-blur-md border shadow-2xs ${slide.badgeColor}`}
                   >
                     <Sparkles className="w-3 h-3 text-amber-300 shrink-0" />
                     <span>{slide.tag}</span>
-                  </span>
-
-                  {/* Clean Slide Counter */}
-                  <span className="text-[11px] font-extrabold text-white/90 bg-black/40 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20 tracking-wider shadow-xs">
-                    {currentIndex + 1}/{slides.length}
                   </span>
                 </div>
 
@@ -188,7 +184,20 @@ export function HeroBannerCarousel() {
           )
         })}
 
-        {/* Bottom-Right Minimalist Pagination Indicators (No arrows!) */}
+        {/* Next Slide Arrow Button (Right edge, completely clear of text) */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            nextSlide()
+          }}
+          className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/40 hover:bg-black/65 active:scale-90 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-md transition-all cursor-pointer group/btn"
+          aria-label="Chuyển sang banner tiếp theo"
+          title="Banner tiếp theo"
+        >
+          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white/95 group-hover/btn:text-amber-300 transition-colors" />
+        </button>
+
+        {/* Bottom-Right Minimalist Pagination Indicators */}
         <div className="absolute bottom-3.5 right-3.5 sm:right-5 z-30 flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-white/20 shadow-md">
           {slides.map((_, i) => (
             <button

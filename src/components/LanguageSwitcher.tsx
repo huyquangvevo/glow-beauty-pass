@@ -37,8 +37,9 @@ export function LanguageSwitcher() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 text-white font-bold transition-all active:scale-95 cursor-pointer shadow-xs"
+        className="flex items-center gap-1.5 px-2 py-1.5 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 text-white font-bold transition-all active:scale-95 cursor-pointer shadow-xs"
         aria-label={`Ngôn ngữ: ${currentLang.name}`}
+        title={`Ngôn ngữ: ${currentLang.name}`}
       >
         <div className="relative w-5 h-3.5 rounded-xs overflow-hidden shrink-0 shadow-xs">
           <Image
@@ -49,9 +50,6 @@ export function LanguageSwitcher() {
             className="object-cover"
           />
         </div>
-        <span className="text-[11px] font-extrabold tracking-wide uppercase">
-          {currentLang.label}
-        </span>
         <ChevronDown
           className={`w-3 h-3 text-white/80 transition-transform duration-200 ${
             open ? 'rotate-180' : ''
