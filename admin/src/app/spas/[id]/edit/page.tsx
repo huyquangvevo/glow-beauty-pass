@@ -18,6 +18,7 @@ import {
   Save,
 } from 'lucide-react'
 import { ImageUploader } from '@/components/ImageUploader'
+import { GoogleMapPicker } from '@/components/GoogleMapPicker'
 
 const STOCK_PHOTOS = [
   { url: '/spas/spa_thumb_1.jpg', label: 'Bồn gội thảo dược' },
@@ -209,8 +210,28 @@ export default function EditSpaPage() {
               />
             </div>
 
+            {/* Google Map Picker */}
+            <div className="space-y-2 sm:col-span-2 pt-2 border-t border-stone-100">
+              <label className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-[#40813D]" />
+                <span>Định Vị Tọa Độ & Bản Đồ Google Maps</span>
+              </label>
+              <GoogleMapPicker
+                latitude={parseFloat(latitude) || 0}
+                longitude={parseFloat(longitude) || 0}
+                address={address}
+                onLocationChange={(loc) => {
+                  setLatitude(loc.lat.toString())
+                  setLongitude(loc.lng.toString())
+                  if (loc.address) setAddress(loc.address)
+                  if (loc.district) setDistrict(loc.district)
+                  if (loc.ward) setWard(loc.ward)
+                }}
+              />
+            </div>
+
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-xs font-bold text-stone-700">Địa Chỉ</label>
+              <label className="text-xs font-bold text-stone-700">Địa Chỉ Chi Tiết</label>
               <input
                 type="text"
                 value={address}

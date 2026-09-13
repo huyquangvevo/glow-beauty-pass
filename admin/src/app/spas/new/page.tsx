@@ -18,6 +18,7 @@ import {
   Layers,
 } from 'lucide-react'
 import { ImageUploader } from '@/components/ImageUploader'
+import { GoogleMapPicker } from '@/components/GoogleMapPicker'
 
 // Tọa độ gợi ý trung tâm các phường Cầu Giấy để hỗ trợ nhập nhanh
 const WARD_PRESETS: Record<string, { lat: number; lon: number; addressHint: string }> = {
@@ -308,6 +309,30 @@ export default function OnboardSpaPage() {
                 placeholder="VD: Số 18 Ngõ 165 Cầu Giấy, P. Dịch Vọng, Cầu Giấy, Hà Nội"
                 required
                 className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
+              />
+            </div>
+
+            {/* Google Map Picker */}
+            <div className="sm:col-span-2 space-y-2 pt-2 border-t border-stone-100">
+              <label className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-[#40813D]" />
+                <span>Chọn & Ghim Tọa Độ Trên Bản Đồ Google Maps</span>
+              </label>
+              <GoogleMapPicker
+                latitude={parseFloat(latitude) || 21.0345}
+                longitude={parseFloat(longitude) || 105.7930}
+                address={address}
+                onLocationChange={(loc) => {
+                  setLatitude(loc.lat.toString())
+                  setLongitude(loc.lng.toString())
+                  if (loc.address) setAddress(loc.address)
+                  if (loc.ward && Object.keys(WARD_PRESETS).includes(loc.ward)) {
+                    setWard(loc.ward)
+                  }
+                  if (loc.district) {
+                    setDistrict(loc.district)
+                  }
+                }}
               />
             </div>
 
