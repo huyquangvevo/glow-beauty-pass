@@ -153,7 +153,7 @@ export async function getGooglePlaceDetails(
           lat,
           lng,
           address: results[0].formatted_address || fallbackDescription,
-          name: results[0].address_components?.[0]?.long_name || fallbackDescription,
+          name: fallbackDescription || results[0].formatted_address || 'Địa điểm đã chọn',
         })
         return
       }

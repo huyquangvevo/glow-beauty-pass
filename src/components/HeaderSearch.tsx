@@ -11,7 +11,6 @@ import {
   Clock,
   ArrowLeft,
   Navigation,
-  Sparkles,
   ChevronRight,
   Star,
   Tag,
@@ -75,7 +74,7 @@ export function HeaderSearch() {
   const router = useRouter()
   const pathname = usePathname()
   const { searchQuery, setSearchQuery } = useSearch()
-  const { openPrompt, requestLocation, setCustomLocation, isLocating, userCoords, locationLabel } = useLocation()
+  const { requestLocation, setCustomLocation, isLocating, userCoords, locationLabel } = useLocation()
 
   const [isOpen, setIsOpen] = useState(false)
   const [localInput, setLocalInput] = useState(searchQuery)
@@ -250,11 +249,11 @@ export function HeaderSearch() {
       saveRecentSearch(prediction.mainText)
       setIsOpen(false)
       setLocalInput(prediction.mainText)
-      setSearchQuery('') // Clear search filter so user sees all 15 spas sorted by distance to this place!
+      setSearchQuery('') // Clear text search filter so all partner spas are shown sorted by distance
 
       const details = await getGooglePlaceDetails(prediction.placeId, prediction.description)
       if (details) {
-        setCustomLocation({ lat: details.lat, lon: details.lng }, details.name)
+        setCustomLocation({ lat: details.lat, lon: details.lng }, prediction.mainText)
       }
 
       navigateToSpasList()
@@ -292,16 +291,16 @@ export function HeaderSearch() {
       {/* DESKTOP / INLINE SEARCH PILL */}
       <div
         data-header-search-pill
-        className="flex items-center h-9 sm:h-9.5 bg-white text-stone-900 rounded-full pl-3 pr-1.5 shadow-sm border border-emerald-800/20 hover:border-emerald-700/40 focus-within:ring-2 focus-within:ring-amber-300 focus-within:border-amber-400 transition-all cursor-text"
+        className="flex items-center h-10 bg-white text-stone-900 rounded-full pl-3.5 pr-2 shadow-sm border border-stone-200/90 hover:border-stone-300 focus-within:ring-2 focus-within:ring-[#40813D]/25 focus-within:border-[#40813D] transition-all cursor-text"
         onClick={() => {
           setIsOpen(true)
           inputRef.current?.focus()
         }}
       >
         {isSearchingGoogle ? (
-          <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#40813D] animate-spin shrink-0 mr-2" />
+          <Loader2 className="w-4 h-4 text-[#40813D] animate-spin shrink-0 mr-2.5" />
         ) : (
-          <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-800 shrink-0 mr-2" />
+          <Search className="w-4 h-4 text-stone-400 shrink-0 mr-2.5" />
         )}
 
         <input
@@ -320,7 +319,7 @@ export function HeaderSearch() {
             }
           }}
           placeholder={tNav('searchPlaceholder')}
-          className="w-full bg-transparent text-xs sm:text-[13px] text-stone-900 placeholder:text-stone-400 font-medium outline-none"
+          className="w-full bg-transparent text-[14px] text-stone-900 placeholder:text-stone-400 font-normal outline-none"
         />
 
         {localInput && (
@@ -330,7 +329,7 @@ export function HeaderSearch() {
               e.stopPropagation()
               handleClear()
             }}
-            className="p-1 text-stone-400 hover:text-stone-700 active:scale-90 transition-transform"
+            className="p-1 text-stone-400 hover:text-stone-700 active:scale-90 transition-transform cursor-pointer"
             aria-label={tCommon('clear')}
           >
             <X className="w-3.5 h-3.5" />
@@ -340,9 +339,9 @@ export function HeaderSearch() {
 
       {/* DESKTOP AUTOCOMPLETE & RECENT SEARCHES DROPDOWN */}
       {isOpen && (
-        <div className="hidden md:block absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl shadow-xl border border-stone-200/90 py-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 max-h-[75vh] overflow-y-auto">
+        <div className="hidden md:block absolute left-1/2 -translate-x-1/2 top-full mt-2.5 w-[460px] max-w-[calc(100vw-32px)] bg-white rounded-2xl shadow-2xl shadow-stone-900/12 border border-stone-200/90 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150 max-h-[75vh] overflow-y-auto">
           {/* Near Me Quick Action Row */}
-          <div className="px-3 pb-2 border-b border-stone-100">
+          <div className="p-1 pb-2 border-b border-stone-100">
             <button
               type="button"
               onClick={() => {
@@ -350,19 +349,26 @@ export function HeaderSearch() {
                 requestLocation()
               }}
               disabled={isLocating}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-emerald-50/80 hover:bg-emerald-100/70 text-[#234E21] font-bold text-xs transition-colors cursor-pointer"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors cursor-pointer group text-left"
             >
-              <div className="flex items-center gap-2">
-                <Navigation className={`w-3.5 h-3.5 text-[#40813D] ${isLocating ? 'animate-spin' : ''}`} />
-                <span>
-                  {isLocating
-                    ? 'Đang lấy vị trí...'
-                    : userCoords
-                    ? `Vị trí: ${locationLabel} (Ưu tiên spa gần nhất)`
-                    : 'Tìm spa gần vị trí của bạn nhất'}
-                </span>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-emerald-50 text-[#40813D] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <Navigation className={`w-4 h-4 ${isLocating ? 'animate-spin' : ''}`} />
+                </div>
+                <div>
+                  <div className="text-[14px] font-semibold text-stone-800 group-hover:text-[#40813D] transition-colors">
+                    {isLocating
+                      ? 'Đang xác định vị trí của bạn...'
+                      : userCoords
+                      ? `Vị trí đã chọn: ${locationLabel}`
+                      : 'Sử dụng vị trí hiện tại'}
+                  </div>
+                  <div className="text-xs text-stone-500">
+                    {userCoords ? 'Bấm để cập nhật lại GPS' : 'Xem các spa đối tác gần bạn nhất'}
+                  </div>
+                </div>
               </div>
-              <ChevronRight className="w-3.5 h-3.5 text-stone-400" />
+              <ChevronRight className="w-4 h-4 text-stone-300 group-hover:text-stone-500 transition-colors shrink-0" />
             </button>
           </div>
 
@@ -371,32 +377,32 @@ export function HeaderSearch() {
             <div className="space-y-2 py-1">
               {/* 1. GOOGLE PLACES PREDICTIONS */}
               {googlePredictions.length > 0 && (
-                <div className="px-1 border-b border-stone-100 pb-2">
-                  <div className="text-[11px] font-black uppercase tracking-wider text-rose-700 px-3 py-1 flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-rose-600" />
-                    <span>Gợi ý địa điểm Google Maps</span>
+                <div className="border-b border-stone-100 pb-2">
+                  <div className="px-3.5 pt-2 pb-1.5 text-xs font-semibold text-stone-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-stone-400" />
+                    <span>Địa điểm gợi ý</span>
                   </div>
                   {googlePredictions.map((pred) => (
                     <button
                       key={pred.placeId}
                       type="button"
                       onClick={() => handleSelectGooglePlace(pred)}
-                      className="w-full flex items-start gap-2.5 px-3 py-2 text-left hover:bg-rose-50/50 transition-colors group cursor-pointer rounded-xl"
+                      className="w-full flex items-center gap-3.5 px-3.5 py-2.5 text-left rounded-xl hover:bg-stone-50 active:bg-stone-100 transition-colors group cursor-pointer"
                     >
-                      <div className="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 mt-0.5">
-                        <MapPin className="w-3.5 h-3.5" />
+                      <div className="w-9 h-9 rounded-full bg-stone-100 text-stone-500 group-hover:bg-emerald-50 group-hover:text-[#40813D] flex items-center justify-center shrink-0 transition-colors">
+                        <MapPin className="w-4 h-4" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-xs font-bold text-stone-900 group-hover:text-rose-700 transition-colors truncate">
+                        <div className="text-[14px] sm:text-[15px] font-medium text-stone-900 group-hover:text-[#234E21] transition-colors truncate">
                           {pred.mainText}
                         </div>
-                        <div className="text-[11px] text-stone-500 truncate">
-                          {pred.secondaryText}
-                        </div>
+                        {pred.secondaryText && (
+                          <div className="text-xs text-stone-500 truncate mt-0.5">
+                            {pred.secondaryText}
+                          </div>
+                        )}
                       </div>
-                      <span className="text-[10px] font-bold text-[#40813D] bg-[#EBF4EA] px-2 py-0.5 rounded-full border border-[#B7DDB5] shrink-0 mt-0.5">
-                        Tính khoảng cách
-                      </span>
+                      <ChevronRight className="w-4 h-4 text-stone-300 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -404,8 +410,8 @@ export function HeaderSearch() {
 
               {/* 2. MATCHING WARDS */}
               {matchingWards.length > 0 && (
-                <div className="px-3">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-1.5">
+                <div className="px-3.5 py-1">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2">
                     Khu vực phù hợp
                   </div>
                   <div className="flex flex-wrap gap-1.5">
@@ -414,7 +420,7 @@ export function HeaderSearch() {
                         key={w.value}
                         type="button"
                         onClick={() => executeSearch(w.value)}
-                        className="px-2.5 py-1 rounded-full bg-stone-100 hover:bg-emerald-100 text-stone-800 text-xs font-semibold transition-colors flex items-center gap-1"
+                        className="px-3 py-1.5 rounded-full bg-stone-100 hover:bg-emerald-50 text-stone-700 hover:text-[#234E21] text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
                         <MapPin className="w-3 h-3 text-[#40813D]" />
                         <span>{w.label}</span>
@@ -426,8 +432,8 @@ export function HeaderSearch() {
 
               {/* 3. MATCHING SPAS */}
               {matchingSpas.length > 0 && (
-                <div className="px-1 pt-1">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-stone-400 px-3 py-1">
+                <div className="pt-1">
+                  <div className="px-3.5 pt-2 pb-1.5 text-xs font-semibold text-stone-400 uppercase tracking-wider">
                     Spa đối tác phù hợp ({matchingSpas.length})
                   </div>
                   {matchingSpas.map((spa) => (
@@ -438,30 +444,30 @@ export function HeaderSearch() {
                         saveRecentSearch(spa.name)
                         setIsOpen(false)
                       }}
-                      className="flex items-center gap-2.5 px-3 py-2 hover:bg-stone-50 transition-colors group cursor-pointer rounded-xl"
+                      className="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors group cursor-pointer"
                     >
-                      <div className="w-8 h-8 rounded-xl bg-stone-100 relative overflow-hidden shrink-0 border border-stone-200">
+                      <div className="w-10 h-10 rounded-xl bg-stone-100 relative overflow-hidden shrink-0 border border-stone-200">
                         {spa.imageUrl ? (
                           <Image
                             src={spa.imageUrl}
                             alt={spa.name}
                             fill
-                            sizes="32px"
-                            className="object-cover"
+                            sizes="40px"
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-stone-400 text-[10px] font-bold">
+                          <div className="w-full h-full flex items-center justify-center text-stone-400 text-xs font-bold">
                             SPA
                           </div>
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h4 className="text-xs font-bold text-[#234E21] group-hover:text-[#40813D] transition-colors truncate">
+                        <h4 className="text-[14px] sm:text-[15px] font-semibold text-stone-900 group-hover:text-[#40813D] transition-colors truncate">
                           {spa.name}
                         </h4>
-                        <p className="text-[11px] text-stone-500 truncate">{spa.address}</p>
+                        <p className="text-xs text-stone-500 truncate mt-0.5">{spa.address}</p>
                       </div>
-                      <div className="flex items-center gap-0.5 text-amber-500 text-[11px] font-bold shrink-0">
+                      <div className="flex items-center gap-1 text-amber-500 text-xs font-bold shrink-0 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/60">
                         <Star className="w-3 h-3 fill-amber-400" />
                         <span>{spa.rating}</span>
                       </div>
@@ -474,7 +480,7 @@ export function HeaderSearch() {
                 matchingSpas.length === 0 &&
                 matchingWards.length === 0 &&
                 !isSearchingGoogle && (
-                  <div className="py-6 text-center text-xs text-stone-500">
+                  <div className="py-8 text-center text-sm text-stone-500">
                     Không tìm thấy địa điểm hoặc spa nào với từ khóa &ldquo;{localInput}&rdquo;.
                   </div>
                 )}
@@ -483,13 +489,13 @@ export function HeaderSearch() {
             /* When empty: Show Recent Searches & Popular Chips */
             <div className="space-y-3 py-1">
               {recentList.length > 0 && (
-                <div className="px-3 border-b border-stone-100 pb-2">
-                  <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-1">
+                <div className="px-1 border-b border-stone-100 pb-2">
+                  <div className="flex items-center justify-between px-3 text-xs font-semibold uppercase tracking-wider text-stone-400 mb-1">
                     <span>Tìm kiếm gần đây</span>
                     <button
                       type="button"
                       onClick={handleClearAllRecent}
-                      className="text-[10px] font-medium text-stone-400 hover:text-stone-700 transition-colors"
+                      className="text-xs font-medium text-stone-400 hover:text-stone-700 transition-colors cursor-pointer"
                     >
                       Xoá lịch sử
                     </button>
@@ -499,19 +505,19 @@ export function HeaderSearch() {
                       <div
                         key={item}
                         onClick={() => executeSearch(item)}
-                        className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-stone-50 text-xs text-stone-700 cursor-pointer group"
+                        className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-stone-50 text-[14px] text-stone-700 cursor-pointer group"
                       >
-                        <div className="flex items-center gap-2 truncate">
-                          <Clock className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+                        <div className="flex items-center gap-2.5 truncate">
+                          <Clock className="w-4 h-4 text-stone-400 shrink-0" />
                           <span className="truncate">{item}</span>
                         </div>
                         <button
                           type="button"
                           onClick={(e) => handleRemoveRecent(item, e)}
-                          className="p-1 text-stone-300 hover:text-stone-600 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                          className="p-1 text-stone-300 hover:text-stone-600 rounded-full transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
                           aria-label="Xoá mục này"
                         >
-                          <X className="w-3 h-3" />
+                          <X className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     ))}
@@ -520,9 +526,9 @@ export function HeaderSearch() {
               )}
 
               {/* Popular Area Chips */}
-              <div className="px-3">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-1.5 flex items-center gap-1">
-                  <MapPin className="w-3 h-3 text-[#40813D]" />
+              <div className="px-3 pt-1">
+                <div className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-stone-400" />
                   <span>Khu vực Cầu Giấy phổ biến</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
@@ -531,7 +537,7 @@ export function HeaderSearch() {
                       key={w.value}
                       type="button"
                       onClick={() => executeSearch(w.value)}
-                      className="px-2.5 py-1 rounded-full bg-stone-100 hover:bg-emerald-100 text-stone-800 text-xs font-medium transition-colors"
+                      className="px-3 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200/80 text-stone-700 text-xs font-medium transition-colors cursor-pointer"
                     >
                       {w.label}
                     </button>
@@ -540,9 +546,9 @@ export function HeaderSearch() {
               </div>
 
               {/* Popular Services */}
-              <div className="px-3 pt-1">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-1.5 flex items-center gap-1">
-                  <Tag className="w-3 h-3 text-amber-600" />
+              <div className="px-3 pt-1 pb-1">
+                <div className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2 flex items-center gap-1.5">
+                  <Tag className="w-3.5 h-3.5 text-stone-400" />
                   <span>Gói dịch vụ hot</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
@@ -551,7 +557,7 @@ export function HeaderSearch() {
                       key={s.value}
                       type="button"
                       onClick={() => executeSearch(s.value)}
-                      className="px-2.5 py-1 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/70 text-xs font-medium transition-colors"
+                      className="px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100/80 text-amber-900 border border-amber-200/70 text-xs font-medium transition-colors cursor-pointer"
                     >
                       {s.label}
                     </button>
@@ -570,21 +576,21 @@ export function HeaderSearch() {
         }`}
       >
         {/* Modal Top Bar */}
-        <div className="flex items-center gap-2 bg-[#40813D] px-3 py-2.5 shadow-md">
+        <div className="flex items-center gap-2.5 bg-[#40813D] px-3.5 py-2.5 shadow-md">
           <button
             type="button"
             onClick={() => setIsOpen(false)}
-            className="p-1.5 text-white hover:bg-white/15 rounded-full transition-colors active:scale-90"
+            className="p-1.5 text-white hover:bg-white/15 rounded-full transition-colors active:scale-90 cursor-pointer"
             aria-label="Đóng tìm kiếm"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
 
-          <div className="flex flex-1 items-center h-10 rounded-full bg-white px-3 shadow-inner">
+          <div className="flex flex-1 items-center h-11 rounded-full bg-white px-3.5 shadow-inner">
             {isSearchingGoogle ? (
-              <Loader2 className="mr-2 w-4 h-4 text-[#40813D] animate-spin shrink-0" />
+              <Loader2 className="mr-2.5 w-4 h-4 text-[#40813D] animate-spin shrink-0" />
             ) : (
-              <Search className="mr-2 w-4 h-4 text-stone-400 shrink-0" />
+              <Search className="mr-2.5 w-4 h-4 text-stone-400 shrink-0" />
             )}
             <input
               ref={mobileInputRef}
@@ -604,13 +610,13 @@ export function HeaderSearch() {
                   executeSearch(localInput)
                 }
               }}
-              className="min-w-0 flex-1 bg-transparent text-sm text-stone-900 font-medium outline-none placeholder:text-stone-400"
+              className="min-w-0 flex-1 bg-transparent text-[15px] text-stone-900 font-normal outline-none placeholder:text-stone-400"
             />
             {localInput && (
               <button
                 type="button"
                 onClick={handleClear}
-                className="p-1 text-stone-400 hover:text-stone-600 rounded-full"
+                className="p-1 text-stone-400 hover:text-stone-600 rounded-full cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -621,7 +627,7 @@ export function HeaderSearch() {
             <button
               type="button"
               onClick={() => executeSearch(localInput)}
-              className="shrink-0 rounded-full bg-amber-400 hover:bg-amber-500 text-stone-900 px-3.5 py-2 text-xs font-black shadow-xs active:scale-95 transition-all"
+              className="shrink-0 rounded-full bg-amber-400 hover:bg-amber-500 text-stone-900 px-4 py-2 text-xs font-bold shadow-xs active:scale-95 transition-all cursor-pointer"
             >
               Tìm
             </button>
@@ -638,17 +644,21 @@ export function HeaderSearch() {
               requestLocation()
             }}
             disabled={isLocating}
-            className="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-[#D5E7D8] shadow-xs text-[#234E21] font-bold text-sm active:scale-98 transition-all"
+            className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl bg-white border border-stone-200/90 shadow-sm text-[#234E21] active:scale-98 transition-all cursor-pointer"
           >
-            <div className="w-9 h-9 rounded-xl bg-emerald-100 text-[#40813D] flex items-center justify-center shrink-0">
-              <Navigation className={`w-4.5 h-4.5 ${isLocating ? 'animate-spin' : ''}`} />
+            <div className="w-9 h-9 rounded-full bg-emerald-50 text-[#40813D] flex items-center justify-center shrink-0">
+              <Navigation className={`w-4 h-4 ${isLocating ? 'animate-spin' : ''}`} />
             </div>
             <div className="text-left flex-1 min-w-0">
-              <div className="font-extrabold text-xs sm:text-sm">
-                {isLocating ? 'Đang xác định GPS...' : 'Tìm spa gần vị trí của bạn'}
+              <div className="font-semibold text-sm text-stone-900">
+                {isLocating
+                  ? 'Đang xác định vị trí của bạn...'
+                  : userCoords
+                  ? `Vị trí đã chọn: ${locationLabel}`
+                  : 'Sử dụng vị trí hiện tại'}
               </div>
-              <div className="text-[11px] text-stone-500 font-normal">
-                {userCoords ? `Vị trí hiện tại: ${locationLabel}` : 'Tính khoảng cách chính xác theo mét'}
+              <div className="text-xs text-stone-500 mt-0.5">
+                {userCoords ? 'Bấm để cập nhật lại GPS' : 'Xem các spa đối tác gần bạn nhất'}
               </div>
             </div>
             <ChevronRight className="w-4 h-4 text-stone-400 shrink-0" />
@@ -659,32 +669,32 @@ export function HeaderSearch() {
             <div className="space-y-3">
               {/* 1. GOOGLE PLACES PREDICTIONS IN MOBILE MODAL */}
               {googlePredictions.length > 0 && (
-                <div className="bg-white rounded-2xl border border-[#D5E7D8] shadow-xs divide-y divide-stone-100 overflow-hidden">
-                  <div className="px-4 py-2.5 bg-rose-50 text-xs font-black uppercase tracking-wider text-rose-700 flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-rose-600" />
-                    <span>Gợi ý Google Maps ({googlePredictions.length})</span>
+                <div className="bg-white rounded-2xl border border-stone-200/90 shadow-sm divide-y divide-stone-100 overflow-hidden">
+                  <div className="px-4 py-2.5 bg-stone-50 text-xs font-semibold uppercase tracking-wider text-stone-400 flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-stone-400" />
+                    <span>Địa điểm gợi ý ({googlePredictions.length})</span>
                   </div>
                   {googlePredictions.map((pred) => (
                     <button
                       key={pred.placeId}
                       type="button"
                       onClick={() => handleSelectGooglePlace(pred)}
-                      className="w-full flex items-start gap-3 p-3.5 text-left hover:bg-rose-50/50 transition-colors"
+                      className="w-full flex items-center gap-3.5 p-3.5 text-left hover:bg-stone-50 active:bg-stone-100 transition-colors cursor-pointer"
                     >
-                      <div className="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 mt-0.5">
+                      <div className="w-9 h-9 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center shrink-0">
                         <MapPin className="w-4 h-4" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-xs sm:text-sm font-extrabold text-stone-900">
+                        <div className="text-[15px] font-medium text-stone-900">
                           {pred.mainText}
                         </div>
-                        <div className="text-[11px] text-stone-500 line-clamp-1">
-                          {pred.secondaryText}
-                        </div>
+                        {pred.secondaryText && (
+                          <div className="text-xs text-stone-500 line-clamp-1 mt-0.5">
+                            {pred.secondaryText}
+                          </div>
+                        )}
                       </div>
-                      <span className="text-[10px] font-bold text-[#40813D] bg-[#EBF4EA] px-2 py-0.5 rounded-full border border-[#B7DDB5] shrink-0 mt-0.5">
-                        Đo khoảng cách
-                      </span>
+                      <ChevronRight className="w-4 h-4 text-stone-300 shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -692,8 +702,8 @@ export function HeaderSearch() {
 
               {/* 2. MATCHING WARDS */}
               {matchingWards.length > 0 && (
-                <div className="bg-white p-3.5 rounded-2xl border border-[#D5E7D8] shadow-xs space-y-2">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-stone-400">
+                <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-sm space-y-2.5">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-400">
                     Khu vực phù hợp
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -702,7 +712,7 @@ export function HeaderSearch() {
                         key={w.value}
                         type="button"
                         onClick={() => executeSearch(w.value)}
-                        className="px-3 py-1.5 rounded-full bg-[#EBF4EA] text-[#234E21] text-xs font-bold border border-[#B7DDB5] flex items-center gap-1.5"
+                        className="px-3 py-1.5 rounded-full bg-stone-100 text-stone-700 text-xs font-medium flex items-center gap-1.5 active:bg-stone-200 transition-colors cursor-pointer"
                       >
                         <MapPin className="w-3 h-3 text-[#40813D]" />
                         <span>{w.label}</span>
@@ -714,8 +724,8 @@ export function HeaderSearch() {
 
               {/* 3. MATCHING SPAS */}
               {matchingSpas.length > 0 && (
-                <div className="bg-white rounded-2xl border border-[#D5E7D8] shadow-xs divide-y divide-stone-100 overflow-hidden">
-                  <div className="px-4 py-2.5 bg-stone-50 text-xs font-black uppercase tracking-wider text-stone-500">
+                <div className="bg-white rounded-2xl border border-stone-200/90 shadow-sm divide-y divide-stone-100 overflow-hidden">
+                  <div className="px-4 py-2.5 bg-stone-50 text-xs font-semibold uppercase tracking-wider text-stone-400">
                     Spa đối tác phù hợp ({matchingSpas.length})
                   </div>
                   {matchingSpas.map((spa) => (
@@ -726,7 +736,7 @@ export function HeaderSearch() {
                         saveRecentSearch(spa.name)
                         setIsOpen(false)
                       }}
-                      className="flex items-center gap-3 p-3.5 hover:bg-stone-50 transition-colors"
+                      className="flex items-center gap-3.5 p-3.5 hover:bg-stone-50 active:bg-stone-100 transition-colors"
                     >
                       <div className="w-11 h-11 rounded-xl bg-stone-100 relative overflow-hidden shrink-0 border border-stone-200">
                         {spa.imageUrl ? (
@@ -744,12 +754,12 @@ export function HeaderSearch() {
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h4 className="text-xs sm:text-sm font-extrabold text-[#234E21] truncate">
+                        <h4 className="text-[15px] font-semibold text-stone-900 truncate">
                           {spa.name}
                         </h4>
-                        <p className="text-[11px] text-stone-500 line-clamp-1">{spa.address}</p>
+                        <p className="text-xs text-stone-500 line-clamp-1 mt-0.5">{spa.address}</p>
                         {spa.exclusiveOffer && (
-                          <span className="text-[10px] font-bold text-amber-700 bg-amber-100/70 px-1.5 py-0.2 rounded mt-0.5 inline-block">
+                          <span className="text-[11px] font-medium text-amber-800 bg-amber-50 border border-amber-200/60 px-2 py-0.5 rounded-full mt-1 inline-block">
                             {spa.exclusiveOffer}
                           </span>
                         )}
@@ -764,7 +774,7 @@ export function HeaderSearch() {
                 matchingSpas.length === 0 &&
                 matchingWards.length === 0 &&
                 !isSearchingGoogle && (
-                  <div className="p-8 text-center bg-white rounded-2xl border border-stone-200 text-xs text-stone-500">
+                  <div className="p-8 text-center bg-white rounded-2xl border border-stone-200 text-sm text-stone-500">
                     Không tìm thấy địa điểm hoặc spa nào với từ khóa &ldquo;{localInput}&rdquo;.
                   </div>
                 )}
@@ -773,13 +783,13 @@ export function HeaderSearch() {
             /* When empty: Recent searches & Categories */
             <div className="space-y-4">
               {recentList.length > 0 && (
-                <div className="bg-white rounded-2xl p-3.5 border border-[#D5E7D8] shadow-xs space-y-2">
-                  <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-stone-400">
+                <div className="bg-white rounded-2xl p-4 border border-stone-200/90 shadow-sm space-y-2.5">
+                  <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-stone-400">
                     <span>Tìm kiếm gần đây</span>
                     <button
                       type="button"
                       onClick={handleClearAllRecent}
-                      className="text-[11px] font-semibold text-stone-400 hover:text-stone-700"
+                      className="text-xs font-medium text-stone-400 hover:text-stone-700 cursor-pointer"
                     >
                       Xoá tất cả
                     </button>
@@ -789,18 +799,18 @@ export function HeaderSearch() {
                       <div
                         key={item}
                         onClick={() => executeSearch(item)}
-                        className="flex items-center justify-between py-2 px-1 text-xs text-stone-800 border-b border-stone-50 last:border-0"
+                        className="flex items-center justify-between py-2.5 px-1 text-sm text-stone-800 border-b border-stone-50 last:border-0 cursor-pointer"
                       >
-                        <div className="flex items-center gap-2.5 truncate">
+                        <div className="flex items-center gap-3 truncate">
                           <Clock className="w-4 h-4 text-stone-400 shrink-0" />
-                          <span className="font-medium truncate">{item}</span>
+                          <span className="font-normal truncate">{item}</span>
                         </div>
                         <button
                           type="button"
                           onClick={(e) => handleRemoveRecent(item, e)}
-                          className="p-1 text-stone-400 hover:text-stone-700"
+                          className="p-1 text-stone-400 hover:text-stone-700 cursor-pointer"
                         >
-                          <X className="w-3.5 h-3.5" />
+                          <X className="w-4 h-4" />
                         </button>
                       </div>
                     ))}
@@ -809,8 +819,8 @@ export function HeaderSearch() {
               )}
 
               {/* Popular Area Chips */}
-              <div className="bg-white rounded-2xl p-3.5 border border-[#D5E7D8] shadow-xs space-y-2.5">
-                <h3 className="text-xs font-black uppercase tracking-wider text-[#234E21] flex items-center gap-1.5">
+              <div className="bg-white rounded-2xl p-4 border border-stone-200/90 shadow-sm space-y-3">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-500 flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-[#40813D]" />
                   <span>Khu vực Cầu Giấy phổ biến</span>
                 </h3>
@@ -820,7 +830,7 @@ export function HeaderSearch() {
                       key={w.value}
                       type="button"
                       onClick={() => executeSearch(w.value)}
-                      className="px-3 py-1.5 rounded-full bg-stone-100 hover:bg-emerald-100 text-stone-800 text-xs font-semibold active:bg-emerald-200 transition-colors"
+                      className="px-3.5 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200/70 text-stone-700 text-xs font-medium active:bg-stone-200 transition-colors cursor-pointer"
                     >
                       {w.label}
                     </button>
@@ -829,8 +839,8 @@ export function HeaderSearch() {
               </div>
 
               {/* Popular Service Chips */}
-              <div className="bg-white rounded-2xl p-3.5 border border-[#D5E7D8] shadow-xs space-y-2.5">
-                <h3 className="text-xs font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+              <div className="bg-white rounded-2xl p-4 border border-stone-200/90 shadow-sm space-y-3">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-500 flex items-center gap-1.5">
                   <Tag className="w-3.5 h-3.5 text-amber-600" />
                   <span>Gói dịch vụ hot</span>
                 </h3>
@@ -840,7 +850,7 @@ export function HeaderSearch() {
                       key={s.value}
                       type="button"
                       onClick={() => executeSearch(s.value)}
-                      className="px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-semibold active:bg-amber-200 transition-colors"
+                      className="px-3.5 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/70 text-xs font-medium active:bg-amber-200 transition-colors cursor-pointer"
                     >
                       {s.label}
                     </button>
