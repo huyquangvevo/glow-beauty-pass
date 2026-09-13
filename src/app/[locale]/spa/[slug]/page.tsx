@@ -730,21 +730,17 @@ export default function SpaDetailPage() {
       {/* PROMINENT STICKY BOTTOM BAR (MOBILE & DESKTOP) */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#DDE7DF] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] py-2.5 sm:py-3 px-4">
         <div className="max-w-xl sm:max-w-2xl mx-auto flex items-center justify-between gap-3">
-          {/* Price Teaser */}
-          <div className="flex flex-col min-w-0 pr-1">
-            <span className="text-[10px] sm:text-[11px] font-medium text-stone-500 uppercase tracking-wider leading-none">
+          {/* Price Minimalist Teaser */}
+          <div className="flex flex-col shrink-0 min-w-0">
+            <span className="text-[10px] sm:text-[11px] font-semibold text-stone-400 uppercase tracking-wider leading-none">
               {tSpaDetail('fromPrice')}
             </span>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-xl sm:text-2xl font-black text-[#1B522B] tracking-tight leading-none">
+            <div className="flex items-baseline gap-0.5 mt-1 leading-none">
+              <span className="text-xl sm:text-2xl font-black text-[#1B522B] tracking-tight">
                 {minPrice.toLocaleString('vi-VN')}
               </span>
-              <span className="text-xs font-bold text-[#1B522B]">đ</span>
+              <span className="text-xs font-black text-[#1B522B]">đ</span>
             </div>
-            <span className="text-[10px] font-bold text-emerald-700 flex items-center gap-0.5 mt-0.5 leading-none truncate">
-              <CheckCircle2 className="w-2.5 h-2.5 shrink-0" />
-              <span>{tSpaDetail('noDeposit')}</span>
-            </span>
           </div>
 
           {/* Action Buttons */}
@@ -752,28 +748,23 @@ export default function SpaDetailPage() {
             {/* Hotline Icon Button */}
             <a
               href={`tel:${spa.phone}`}
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center border border-stone-200 transition-all active:scale-95 shrink-0"
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center border border-stone-200/80 transition-all active:scale-95 shrink-0"
               title={tSpaDetail('hotline')}
             >
               <Phone className="w-5 h-5 text-stone-700" />
             </a>
 
-            {/* Big High-Impact Zalo Button with Official Zalo Icon */}
+            {/* Clean, High-Impact Zalo Button with Prominent Zalo Icon */}
             <a
               href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 max-w-xs sm:max-w-sm h-12 sm:h-13 px-4 rounded-2xl bg-gradient-to-r from-[#0068FF] to-[#0052CC] hover:from-[#005FE8] hover:to-[#0047B3] text-white flex items-center justify-center gap-2.5 shadow-md shadow-blue-500/25 transition-all active:scale-[0.98] group"
+              className="flex-1 max-w-xs sm:max-w-sm h-12 sm:h-12.5 px-4 sm:px-5 rounded-2xl bg-[#0068FF] hover:bg-[#0052CC] text-white flex items-center justify-center gap-2.5 shadow-md shadow-blue-500/25 transition-all active:scale-[0.98] group"
             >
-              <ZaloIcon className="w-7 h-7 shrink-0 drop-shadow-xs" />
-              <div className="flex flex-col text-left leading-tight min-w-0">
-                <span className="font-black text-xs sm:text-sm tracking-tight truncate">
-                  {tSpaDetail('bookZaloMain')}
-                </span>
-                <span className="text-[10px] sm:text-[11px] text-blue-100 font-medium truncate">
-                  {tSpaDetail('bookZaloSub')}
-                </span>
-              </div>
+              <ZaloIcon className="w-6 h-6 sm:w-6.5 sm:h-6.5 shrink-0 drop-shadow-xs" />
+              <span className="font-black text-sm sm:text-base tracking-tight truncate">
+                {tSpaDetail('bookViaZalo')}
+              </span>
             </a>
           </div>
         </div>
