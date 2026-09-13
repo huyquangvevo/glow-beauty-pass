@@ -62,16 +62,16 @@
   },
   "TrustBadges": {
     "badge1": {
-      "title": "100% Transparent Price",
-      "desc": "Fixed price • Zero hidden fees"
+      "title": "100% Fixed Price",
+      "desc": "Zero hidden fees"
     },
     "badge2": {
       "title": "Standardized SOP",
-      "desc": "Strict protocol • No pushy upselling"
+      "desc": "No pushy upselling"
     },
     "badge3": {
       "title": "< 5-Min Response",
-      "desc": "Instant slot booking via Zalo"
+      "desc": "Instant slot booking"
     }
   },
   "Services": {

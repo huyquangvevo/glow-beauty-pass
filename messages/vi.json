@@ -63,15 +63,15 @@
   "TrustBadges": {
     "badge1": {
       "title": "100% Đúng Giá",
-      "desc": "Đồng giá niêm yết • Không phụ thu"
+      "desc": "Không phụ thu"
     },
     "badge2": {
-      "title": "Quy Trình Chuẩn SOP",
-      "desc": "Kiểm định nghiêm ngặt • Không ép mua"
+      "title": "Chuẩn Hóa SOP",
+      "desc": "Không ép mua thẻ"
     },
     "badge3": {
       "title": "Hỗ Trợ < 5 Phút",
-      "desc": "Đặt chỗ tức thì qua Zalo"
+      "desc": "Giữ chỗ tức thì"
     }
   },
   "Services": {
