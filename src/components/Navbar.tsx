@@ -3,37 +3,19 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
-import {
-  Search,
-  MapPin,
-  ArrowLeft,
-  X,
-} from 'lucide-react'
+import { MapPin, ArrowLeft } from 'lucide-react'
 import { BrandWordmark } from './BrandLogo'
-import { ZaloIcon } from './ZaloIcon'
 import { LanguageSwitcher } from './LanguageSwitcher'
-import { useSearch } from '@/context/SearchContext'
 import { useLocation } from '@/context/LocationContext'
-import { useTranslations } from 'next-intl'
+import { HeaderSearch } from './HeaderSearch'
 
 export function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
-  const { searchQuery, setSearchQuery } = useSearch()
   const { locationLabel, openPrompt, userCoords, isLocating } = useLocation()
 
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
   const isSpaDetail = pathname.startsWith('/spa/')
-
-  const t = useTranslations('Navbar')
-
-  const handleSearchChange = (val: string) => {
-    setSearchQuery(val)
-    if (pathname !== '/') {
-      router.push('/')
-    }
-  }
-
 
   return (
     <>
@@ -59,26 +41,8 @@ export function Navbar() {
             </Link>
           )}
 
-          {/* Quick Search Input */}
-          <div className="relative flex-1 min-w-0 max-w-xs sm:max-w-sm">
-            <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              placeholder={t('searchPlaceholder')}
-              className="w-full h-8.5 bg-white text-stone-900 placeholder:text-stone-400 text-xs sm:text-[13px] pl-8 pr-7 rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-amber-300 font-medium transition-all"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-stone-400 hover:text-stone-700 active:scale-90"
-                aria-label="Xoá tìm kiếm"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
+          {/* Advanced Search Pill with Autocomplete & Mobile Modal */}
+          <HeaderSearch />
 
             {/* Quick Location Badge / Button (Click to share/refresh location) */}
             <button
