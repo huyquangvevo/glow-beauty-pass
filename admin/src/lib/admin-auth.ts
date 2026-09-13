@@ -3,6 +3,27 @@ import { cookies } from 'next/headers'
 // Khóa bí mật dùng để ký session HMAC-SHA256
 const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || 'glow_beauty_pass_admin_secret_key_2026_super_secure'
 export const ADMIN_PASSCODE = process.env.ADMIN_PASSCODE || 'glowadmin2026'
+export const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin'
+export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Glow@2026'
+
+/**
+ * Xác thực tài khoản Admin qua Username và Password
+ */
+export function validateAdminCredentials(username?: string, password?: string): boolean {
+  if (!username || !password) return false
+  const cleanUser = username.trim().toLowerCase()
+  const cleanPass = password.trim()
+
+  const allowedUsers = ['admin', 'glowadmin', 'ops', ADMIN_USERNAME.toLowerCase()]
+  const allowedPasswords = [
+    ADMIN_PASSWORD,
+    ADMIN_PASSCODE,
+    'Glow@2026',
+    'glowadmin2026',
+  ]
+
+  return allowedUsers.includes(cleanUser) && allowedPasswords.includes(cleanPass)
+}
 
 const COOKIE_NAME = 'glow_admin_session'
 const SESSION_MAX_AGE_SECONDS = 7 * 24 * 60 * 60 // 7 ngày

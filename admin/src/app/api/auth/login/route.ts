@@ -1,36 +1,44 @@
 import { NextResponse } from 'next/server'
 import {
-  ADMIN_PASSCODE,
   createAdminSessionToken,
   setAdminSessionCookie,
+  validateAdminCredentials,
 } from '@/lib/admin-auth'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { passcode, username } = body
+    const { username, password, passcode } = body
+    const pwd = password || passcode
 
-    if (!passcode) {
+    if (!username?.trim()) {
       return NextResponse.json(
-        { success: false, error: 'Vui lòng nhập mật khẩu quản trị.' },
+        { success: false, error: 'Vui lòng nhập tên đăng nhập.' },
         { status: 400 }
       )
     }
 
-    if (passcode !== ADMIN_PASSCODE) {
+    if (!pwd?.trim()) {
       return NextResponse.json(
-        { success: false, error: 'Mật khẩu quản trị không chính xác.' },
+        { success: false, error: 'Vui lòng nhập mật khẩu.' },
+        { status: 400 }
+      )
+    }
+
+    if (!validateAdminCredentials(username, pwd)) {
+      return NextResponse.json(
+        { success: false, error: 'Tên đăng nhập hoặc mật khẩu không chính xác.' },
         { status: 401 }
       )
     }
 
-    const token = await createAdminSessionToken(username || 'Admin Glow')
+    const token = await createAdminSessionToken(username.trim())
     await setAdminSessionCookie(token)
 
     return NextResponse.json({
       success: true,
       message: 'Đăng nhập thành công.',
-      username: username || 'Admin Glow',
+      username: username.trim(),
     })
   } catch (error) {
     console.error('Admin login error:', error)
