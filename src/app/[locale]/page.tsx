@@ -1,37 +1,26 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   MapPin,
   Clock,
-  Star,
   Sparkles,
   X,
-  Tag,
+  SlidersHorizontal,
+  ArrowUpDown,
+  LayoutGrid,
+  List,
+  Check,
 } from 'lucide-react'
 import { HeroBannerCarousel } from '@/components/HeroBannerCarousel'
 import { useSearch } from '@/context/SearchContext'
 import { useLocation } from '@/context/LocationContext'
 import { useTranslations } from 'next-intl'
-
-interface SpaItem {
-  id: string
-  name: string
-  slug: string
-  address: string
-  ward: string
-  phone: string
-  openHours: string
-  rating: number
-  reviewCount: number
-  tier: string
-  imageUrl?: string
-  exclusiveOffer?: string
-  formattedDistance?: string
-  distanceKm?: number
-}
+import { NearbySpaCard, type SpaCardData } from '@/components/NearbySpaCard'
+import { NearbySpaMobileCard } from '@/components/NearbySpaMobileCard'
+import { PaginationControls } from '@/components/PaginationControls'
+import { getOpeningStatus } from '@/lib/formatters'
 
 interface SkuItem {
   id: string
@@ -43,23 +32,15 @@ interface SkuItem {
   description: string
 }
 
-function SpaThumbnail({ src, fallback, alt }: { src?: string; fallback: string; alt: string }) {
-  const [imgSrc, setImgSrc] = useState(src || fallback)
-  useEffect(() => {
-    setImgSrc(src || fallback)
-  }, [src, fallback])
+const ITEMS_PER_PAGE = 6
 
-  return (
-    <Image
-      src={imgSrc}
-      alt={alt}
-      fill
-      sizes="88px"
-      className="object-cover group-hover:scale-105 transition-transform duration-300"
-      onError={() => setImgSrc(fallback)}
-    />
-  )
-}
+const SPA_THUMBNAILS = [
+  '/spas/spa_thumb_1.jpg',
+  '/spas/spa_thumb_2.jpg',
+  '/spas/spa_thumb_3.jpg',
+  '/spas/spa_thumb_4.jpg',
+  '/spas/spa_thumb_5.jpg',
+]
 
 export default function HomePage() {
   const tCommon = useTranslations('Common')
@@ -67,11 +48,19 @@ export default function HomePage() {
   const tSpaNetwork = useTranslations('SpaNetwork')
   const tWards = useTranslations('Wards')
 
-  const [spas, setSpas] = useState<SpaItem[]>([])
+  const [spas, setSpas] = useState<SpaCardData[]>([])
   const [skus, setSkus] = useState<SkuItem[]>([])
   const [selectedWard, setSelectedWard] = useState<string>('ALL')
+  const [openNowOnly, setOpenNowOnly] = useState<boolean>(false)
+  const [topRatedOnly, setTopRatedOnly] = useState<boolean>(false)
+  const [deal49kOnly, setDeal49kOnly] = useState<boolean>(false)
+  const [sortBy, setSortBy] = useState<'nearest' | 'rating' | 'reviews'>('nearest')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [showAll, setShowAll] = useState<boolean>(false)
+
   const { searchQuery, setSearchQuery } = useSearch()
-  const { userCoords, openPrompt } = useLocation()
+  const { userCoords, openPrompt, locationLabel } = useLocation()
   const [isLoading, setIsLoading] = useState(true)
 
   const wardKeys = [
@@ -110,37 +99,106 @@ export default function HomePage() {
     loadData()
   }, [selectedWard, userCoords])
 
+  // Reset page when filter changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedWard, openNowOnly, topRatedOnly, deal49kOnly, sortBy, searchQuery])
+
+  // Filter and sort spas (Tuoi-fe style)
+  const filteredAndSortedSpas = useMemo(() => {
+    let list = [...spas]
+
+    // 1. Text Search Query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase()
+      list = list.filter(
+        (s) =>
+          s.name.toLowerCase().includes(q) ||
+          s.address.toLowerCase().includes(q) ||
+          s.ward.toLowerCase().includes(q)
+      )
+    }
+
+    // 2. Ward Filter
+    if (selectedWard !== 'ALL') {
+      list = list.filter((s) => s.ward.toLowerCase().includes(selectedWard.toLowerCase()))
+    }
+
+    // 3. Open Now Filter
+    if (openNowOnly) {
+      list = list.filter((s) => getOpeningStatus(s.openHours).isOpen)
+    }
+
+    // 4. Top Rated Filter (>= 4.8)
+    if (topRatedOnly) {
+      list = list.filter((s) => s.rating >= 4.8)
+    }
+
+    // 5. Deal 49K Filter
+    if (deal49kOnly) {
+      list = list.filter(() => true) // All 15 partner spas support standardized 49K packages
+    }
+
+    // 6. Sort
+    if (sortBy === 'rating') {
+      list.sort((a, b) => b.rating - a.rating)
+    } else if (sortBy === 'reviews') {
+      list.sort((a, b) => b.reviewCount - a.reviewCount)
+    } else {
+      // Default: Nearest (distanceKm)
+      list.sort((a, b) => (a.distanceKm ?? 999) - (b.distanceKm ?? 999))
+    }
+
+    return list
+  }, [spas, searchQuery, selectedWard, openNowOnly, topRatedOnly, deal49kOnly, sortBy])
+
+  // Pagination calculation
+  const totalPages = Math.max(1, Math.ceil(filteredAndSortedSpas.length / ITEMS_PER_PAGE))
+  const paginatedSpas = useMemo(() => {
+    if (showAll) return filteredAndSortedSpas
+    const start = (currentPage - 1) * ITEMS_PER_PAGE
+    return filteredAndSortedSpas.slice(start, start + ITEMS_PER_PAGE)
+  }, [filteredAndSortedSpas, currentPage, showAll])
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage)
+    const el = document.getElementById('danh-sach-spa')
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
 
   return (
-    <div className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto px-4 py-5 space-y-7 pb-12">
-      {/* 1. VISUAL HERO BANNER CAROUSEL (Lifestyle Photography & Promo) */}
+    <div className="max-w-md sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto px-4 py-5 sm:py-6 space-y-8 sm:space-y-10 pb-16">
+      {/* 1. VISUAL HERO BANNER CAROUSEL */}
       <section className="w-full">
         <HeroBannerCarousel />
       </section>
 
       {/* 2. 3 GÓI DỊCH VỤ NIÊM YẾT (Đồng Giá Toàn Hệ Thống) */}
-      <section id="goi-dich-vu" className="space-y-3.5 scroll-mt-20">
+      <section id="goi-dich-vu" className="space-y-4 scroll-mt-20">
         <div className="flex items-center justify-between px-1">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-black uppercase tracking-wide text-[#234E21]">
+              <h2 className="text-base sm:text-lg font-black uppercase tracking-wide text-[#234E21]">
                 {tServices('heading')}
               </h2>
               <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-[#40813D] text-white shadow-2xs">
                 {tServices('priceTag')}
               </span>
             </div>
-            <p className="text-xs text-[#5B6B58] mt-0.5">
+            <p className="text-xs sm:text-sm text-[#5B6B58] mt-0.5">
               {tServices('subheading')}
             </p>
           </div>
-          <span className="text-xs font-bold text-[#40813D] bg-[#EBF4EA] px-2.5 py-1 rounded-full border border-[#B7DDB5] shrink-0">
+          <span className="text-xs font-bold text-[#40813D] bg-[#EBF4EA] px-3 py-1 rounded-full border border-[#B7DDB5] shrink-0">
             {tServices('fixedBadge')}
           </span>
         </div>
 
-        <div className="space-y-3.5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
           {skus.map((sku, index) => {
             const isPopular = index === 0
             const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
@@ -155,84 +213,76 @@ export default function HomePage() {
             return (
               <div
                 key={sku.id}
-                className={`p-4.5 sm:p-5 rounded-2xl bg-white border transition-all space-y-3.5 relative ${
+                className={`p-4.5 sm:p-5 rounded-2xl bg-white border transition-all flex flex-col justify-between relative ${
                   isPopular
                     ? 'border-[#40813D] ring-2 ring-[#40813D]/20 shadow-md shadow-[#40813D]/5'
                     : 'border-[#D5E7D8] shadow-xs hover:border-[#40813D]/60'
                 }`}
               >
-                {/* Package Header with Ultra-Prominent Price Block */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-black text-base sm:text-[17px] text-[#234E21] leading-snug">
-                        {localizedName}
-                      </h3>
-                      {localizedBadge && (
-                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500 text-white shadow-2xs shrink-0 tracking-wider">
-                          {localizedBadge}
+                <div className="space-y-3">
+                  {/* Package Header */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <h3 className="font-extrabold text-[15px] sm:text-[16px] text-[#234E21] leading-snug">
+                          {localizedName}
+                        </h3>
+                        {localizedBadge && (
+                          <span className="text-[9.5px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500 text-white shadow-2xs shrink-0 tracking-wider">
+                            {localizedBadge}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-[#5B6B58] font-medium">
+                        <Clock className="w-3.5 h-3.5 text-[#40813D]" />
+                        <span>
+                          {tCommon('duration')}{' '}
+                          <strong className="text-[#234E21]">
+                            {sku.durationMinutes} {tCommon('minutes')}
+                          </strong>
                         </span>
-                      )}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs text-[#5B6B58] font-medium">
-                      <Clock className="w-3.5 h-3.5 text-[#40813D]" />
-                      <span>
-                        {tCommon('duration')}{' '}
-                        <strong className="text-[#234E21]">
-                          {sku.durationMinutes} {tCommon('minutes')}
-                        </strong>
-                      </span>
-                    </div>
-                  </div>
 
-                  {/* HIGH-IMPACT PROMINENT PRICE BADGE */}
-                  <div className="shrink-0 flex flex-col items-end">
-                    <div className="bg-gradient-to-br from-[#EBF6EA] to-[#DCF0DA] px-3.5 py-2 rounded-2xl border border-[#A4D5A1] shadow-2xs flex flex-col items-end text-right">
+                    {/* Price Tag */}
+                    <div className="bg-gradient-to-br from-[#EBF6EA] to-[#DCF0DA] px-2.5 py-1.5 rounded-xl border border-[#A4D5A1] text-right shrink-0">
                       {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
-                        <div className="flex items-center gap-1 leading-none mb-1">
-                          <span className="text-[11px] font-semibold text-stone-400 line-through">
+                        <div className="flex items-center justify-end gap-1 leading-none mb-0.5">
+                          <span className="text-[10px] text-stone-400 line-through">
                             {sku.pricePhase2.toLocaleString('vi-VN')}đ
                           </span>
                           {discountPercent && (
-                            <span className="text-[10px] font-extrabold text-amber-700 bg-amber-200/80 px-1.5 py-0.2 rounded-md">
+                            <span className="text-[9px] font-extrabold text-amber-700 bg-amber-200/80 px-1 py-0.2 rounded">
                               -{discountPercent}%
                             </span>
                           )}
                         </div>
                       )}
-                      <div className="flex items-baseline leading-none">
-                        <span className="font-black text-2xl sm:text-[27px] text-[#1E5C23] tracking-tight">
-                          {sku.pricePhase1.toLocaleString('vi-VN')}
-                        </span>
-                        <span className="text-sm font-black text-[#2E7234] ml-0.5">đ</span>
+                      <div className="text-[17px] sm:text-[19px] font-black text-[#1E5C23] leading-none">
+                        {sku.pricePhase1.toLocaleString('vi-VN')}đ
                       </div>
                     </div>
-                    <span className="text-[10px] font-extrabold text-[#40813D] mt-1 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#40813D] animate-pulse"></span>
-                      {tCommon('noSurcharge')}
-                    </span>
                   </div>
+
+                  {/* Description */}
+                  <p className="text-xs text-[#4E5C4C] leading-relaxed bg-[#F9FCF9] p-2.5 rounded-xl border border-[#E8F2E8]">
+                    {localizedDesc}
+                  </p>
                 </div>
 
-                {/* Description */}
-                <p className="text-xs sm:text-[13px] text-[#4E5C4C] leading-relaxed bg-[#F9FCF9] p-3 rounded-xl border border-[#E8F2E8]">
-                  {localizedDesc}
-                </p>
-
-                {/* Action Row with Clear Price on CTA Button */}
-                <div className="flex items-center justify-between pt-1 border-t border-stone-100 gap-2">
-                  <span className="text-xs font-bold text-[#40813D] flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                    <span>{tCommon('sopCommitment')}</span>
+                {/* CTA Button */}
+                <div className="pt-3.5 mt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                  <span className="text-[11px] font-bold text-[#40813D] flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                    <span>SOP Chuẩn</span>
                   </span>
                   <a
                     href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4.5 py-2.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-sm shadow-[#40813D]/25 flex items-center gap-1.5"
+                    className="px-3.5 py-2 rounded-xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#2E602C] text-white text-xs font-bold transition-all shadow-xs"
                   >
-                    <span>{tCommon('bookNow')}</span>
-                    <span className="opacity-90 font-extrabold">• {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
+                    Đặt ngay
                   </a>
                 </div>
               </div>
@@ -241,45 +291,79 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. MẠNG LƯỚI 15 SPA (To rõ, thoáng đãng) */}
-      <section id="danh-sach-spa" className="space-y-3.5 scroll-mt-20">
-        <div className="flex items-center justify-between px-1">
+      {/* 3. SPAS NEAR YOU (TUOI-FE STYLE LISTING & FILTERS) */}
+      <section id="danh-sach-spa" className="space-y-4 scroll-mt-20">
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-extrabold uppercase tracking-wider text-[#234E21]">
+              <h2 className="text-[17px] sm:text-[20px] font-bold tracking-tight text-[#093E06]">
                 {tSpaNetwork('heading')}
               </h2>
               {userCoords ? (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-[#236B38] border border-emerald-200 shadow-2xs">
+                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#236B38] border border-emerald-200">
                   {tSpaNetwork('gpsActive')}
                 </span>
               ) : null}
             </div>
-            <p className="text-xs text-[#5B6B58] mt-0.5">
-              {tSpaNetwork('spasFoundCauGiay', { count: spas.length })}
+            <p className="text-xs sm:text-[13px] text-[#5B6B58] mt-0.5">
+              {filteredAndSortedSpas.length} {tSpaNetwork('spasFoundCauGiay', { count: filteredAndSortedSpas.length })}
+              {locationLabel && locationLabel !== 'Bật vị trí' && ` · Gần ${locationLabel}`}
             </p>
           </div>
 
-          {!userCoords && (
-            <button
-              onClick={openPrompt}
-              className="flex items-center gap-1 text-xs font-bold text-[#40813D] bg-[#EBF4EA] hover:bg-[#DCF0DA] px-2.5 py-1 rounded-full border border-[#B7DDB5] transition-all shrink-0 cursor-pointer shadow-2xs active:scale-95"
-            >
-              <MapPin className="w-3.5 h-3.5 text-amber-600" />
-              <span>{tSpaNetwork('enableLocation')}</span>
-            </button>
-          )}
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            {/* View Mode Switcher (Grid vs Compact List) */}
+            <div className="flex items-center bg-white rounded-xl border border-[#DDE4D9] p-0.5 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => setViewMode('grid')}
+                className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+                  viewMode === 'grid'
+                    ? 'bg-[#40813D] text-white font-bold'
+                    : 'text-stone-500 hover:text-stone-800'
+                }`}
+                title="Dạng thẻ lớn"
+                aria-label="Xem dạng thẻ lớn"
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('list')}
+                className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+                  viewMode === 'list'
+                    ? 'bg-[#40813D] text-white font-bold'
+                    : 'text-stone-500 hover:text-stone-800'
+                }`}
+                title="Dạng danh sách gọn"
+                aria-label="Xem dạng danh sách gọn"
+              >
+                <List className="w-4 h-4" />
+              </button>
+            </div>
+
+            {!userCoords && (
+              <button
+                onClick={openPrompt}
+                className="flex items-center gap-1.5 text-xs font-bold text-[#40813D] bg-[#EBF4EA] hover:bg-[#DCF0DA] px-3 py-1.5 rounded-full border border-[#B7DDB5] transition-all cursor-pointer shadow-2xs active:scale-95"
+              >
+                <MapPin className="w-3.5 h-3.5 text-amber-600" />
+                <span>{tSpaNetwork('enableLocation')}</span>
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Active search filter badge (if user typed in header search) */}
+        {/* Active search filter badge */}
         {searchQuery && (
-          <div className="flex items-center justify-between px-3.5 py-2 rounded-2xl bg-[#EBF4EA] border border-[#B7DDB5] text-xs text-[#234E21] shadow-2xs">
+          <div className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-[#EBF4EA] border border-[#B7DDB5] text-xs text-[#234E21] shadow-2xs">
             <span>
               {tCommon('searchResultsFor')} &ldquo;<strong className="font-bold text-[#40813D]">{searchQuery}</strong>&rdquo;
             </span>
             <button
               onClick={() => setSearchQuery('')}
-              className="text-xs font-bold text-[#40813D] hover:text-[#356F32] flex items-center gap-1 bg-white px-2.5 py-0.5 rounded-full border border-[#B7DDB5] shadow-2xs"
+              className="text-xs font-bold text-[#40813D] hover:text-[#356F32] flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-[#B7DDB5] shadow-2xs cursor-pointer"
               aria-label={tCommon('clear')}
             >
               <span>{tCommon('clear')}</span>
@@ -288,146 +372,167 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Filter Chips: Clean wrapping grid without horizontal scrolling */}
-        <div className="flex flex-wrap gap-2 pt-0.5">
-          {wardKeys.map((wardKey) => {
-            const label = tWards.has(wardKey as any) ? tWards(wardKey as any) : wardKey
-            return (
+        {/* TUOI-FE FILTER BAR */}
+        <div className="space-y-2.5 pt-1">
+          {/* Row 1: Ward Filter Chips (Horizontal Scrollable / Wrapping) */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+            {wardKeys.map((wardKey) => {
+              const label = tWards.has(wardKey as any) ? tWards(wardKey as any) : wardKey
+              const isSelected = selectedWard === wardKey
+              return (
+                <button
+                  key={wardKey}
+                  type="button"
+                  onClick={() => setSelectedWard(wardKey)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold transition-all border shrink-0 cursor-pointer ${
+                    isSelected
+                      ? 'bg-[#40813D] text-white border-[#40813D] shadow-xs'
+                      : 'bg-white text-[#5B6B58] hover:bg-[#F5F7F4] border-[#DDE4D9]'
+                  }`}
+                >
+                  {label}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Row 2: Quick Attribute Filters & Sorting */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5">
+            {/* Quick Toggle Chips */}
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <button
-                key={wardKey}
-                onClick={() => setSelectedWard(wardKey)}
-                className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all border ${
-                  selectedWard === wardKey
-                    ? 'bg-[#40813D] text-white border-[#40813D] shadow-xs'
-                    : 'bg-white text-[#4E5C4C] hover:bg-[#F7FAF7] border-[#D5E7D8]'
+                type="button"
+                onClick={() => setOpenNowOnly(!openNowOnly)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+                  openNowOnly
+                    ? 'bg-emerald-50 text-[#234E21] border-[#40813D]'
+                    : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
                 }`}
               >
-                {label}
+                <span className={`w-2 h-2 rounded-full ${openNowOnly ? 'bg-[#40813D]' : 'bg-stone-300'}`} />
+                <span>Đang mở cửa</span>
+                {openNowOnly && <Check className="w-3 h-3 text-[#40813D]" />}
               </button>
-            )
-          })}
+
+              <button
+                type="button"
+                onClick={() => setTopRatedOnly(!topRatedOnly)}
+                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+                  topRatedOnly
+                    ? 'bg-amber-50 text-amber-900 border-amber-400'
+                    : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
+                }`}
+              >
+                <span>★ 4.8+ sao</span>
+                {topRatedOnly && <Check className="w-3 h-3 text-amber-600" />}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setDeal49kOnly(!deal49kOnly)}
+                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+                  deal49kOnly
+                    ? 'bg-emerald-50 text-[#234E21] border-[#40813D]'
+                    : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
+                }`}
+              >
+                <span>Gói 49K</span>
+                {deal49kOnly && <Check className="w-3 h-3 text-[#40813D]" />}
+              </button>
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="flex items-center gap-1.5 text-xs text-stone-500 shrink-0">
+              <ArrowUpDown className="w-3.5 h-3.5 text-stone-400" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="bg-white border border-stone-200 rounded-xl px-2.5 py-1 text-xs font-semibold text-stone-700 outline-none focus:ring-2 focus:ring-[#40813D]/25 focus:border-[#40813D] cursor-pointer"
+              >
+                <option value="nearest">Gần nhất (Khoảng cách)</option>
+                <option value="rating">Đánh giá cao nhất</option>
+                <option value="reviews">Nhiều đánh giá nhất</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        {/* Spa List */}
+        {/* Spa List Rendering */}
         {isLoading ? (
-          <div className="py-10 text-center text-sm text-[#5B6B58]">
+          <div className="py-16 text-center text-sm text-[#5B6B58]">
             {tCommon('loadingSpas')}
           </div>
-        ) : (() => {
-          const displaySpas = spas.filter((spa) => {
-            if (!searchQuery.trim()) return true
-            const q = searchQuery.toLowerCase()
-            return (
-              spa.name.toLowerCase().includes(q) ||
-              spa.address.toLowerCase().includes(q) ||
-              spa.ward.toLowerCase().includes(q)
-            )
-          })
-
-          if (displaySpas.length === 0) {
-            return (
-              <div className="py-10 text-center bg-white rounded-2xl border border-[#DCE8DE] text-sm text-[#5B6B58]">
-                {tCommon('noSpasFound')} &ldquo;{searchQuery}&rdquo;.
+        ) : paginatedSpas.length === 0 ? (
+          <div className="py-12 px-4 text-center bg-white rounded-2xl border border-[#DDE4D9] text-sm text-[#5B6B58] space-y-2">
+            <div>Không tìm thấy spa nào phù hợp với bộ lọc đã chọn.</div>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedWard('ALL')
+                setOpenNowOnly(false)
+                setTopRatedOnly(false)
+                setDeal49kOnly(false)
+                setSearchQuery('')
+              }}
+              className="text-xs font-bold text-[#40813D] hover:underline"
+            >
+              Đặt lại tất cả bộ lọc
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* View Mode: Grid (Desktop Cards) vs List (Mobile Cards) */}
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4.5 sm:gap-5">
+                {paginatedSpas.map((spa, index) => (
+                  <NearbySpaCard
+                    key={spa.id}
+                    spa={spa}
+                    fallbackImage={SPA_THUMBNAILS[index % SPA_THUMBNAILS.length]}
+                    zaloHubLink={zaloHubLink}
+                  />
+                ))}
               </div>
-            )
-          }
+            ) : (
+              <div className="flex flex-col gap-3">
+                {paginatedSpas.map((spa, index) => (
+                  <NearbySpaMobileCard
+                    key={spa.id}
+                    spa={spa}
+                    fallbackImage={SPA_THUMBNAILS[index % SPA_THUMBNAILS.length]}
+                  />
+                ))}
+              </div>
+            )}
 
-          const spaThumbnails = [
-            '/spas/spa_thumb_1.jpg',
-            '/spas/spa_thumb_2.jpg',
-            '/spas/spa_thumb_3.jpg',
-            '/spas/spa_thumb_4.jpg',
-            '/spas/spa_thumb_5.jpg',
-          ]
+            {/* Pagination Controls & Show All Toggle (Tuoi-fe style) */}
+            <div className="pt-2 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="text-xs text-[#5B6B58] order-2 sm:order-1">
+                Hiển thị <strong className="text-[#093E06]">{paginatedSpas.length}</strong> / {filteredAndSortedSpas.length} spa đối tác tại Cầu Giấy
+              </div>
 
-          return (
-            <div className="space-y-3">
-              {displaySpas.map((spa, index) => (
-                <div
-                  key={spa.id}
-                  className="p-4 sm:p-5 rounded-2xl bg-white border border-[#DCE8DE] hover:border-[#40813D]/60 shadow-xs space-y-3 transition-all"
-                >
-                  {/* Upper: Thumbnail + Info */}
-                  <div className="flex items-start gap-3">
-                    {/* Thumbnail */}
-                    <Link
-                      href={`/spa/${spa.slug}`}
-                      className="relative w-20 h-20 sm:w-22 sm:h-22 rounded-2xl overflow-hidden shrink-0 bg-stone-100 border border-stone-200/80 shadow-2xs group"
-                    >
-                      <SpaThumbnail
-                        src={spa.imageUrl}
-                        fallback={spaThumbnails[index % spaThumbnails.length]}
-                        alt={spa.name}
-                      />
-                    </Link>
+              <div className="flex items-center gap-3 order-1 sm:order-2">
+                {!showAll && totalPages > 1 && (
+                  <PaginationControls
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                )}
 
-                    {/* Header: Name + Distance Badge */}
-                    <div className="min-w-0 flex-1 space-y-1">
-                      <div className="flex items-start justify-between gap-1.5">
-                        <Link href={`/spa/${spa.slug}`} className="flex-1 min-w-0">
-                          <h3 className="font-extrabold text-[15px] sm:text-[16px] leading-snug tracking-tight text-[#234E21] hover:text-[#40813D] transition-colors truncate">
-                            {spa.name}
-                          </h3>
-                        </Link>
-                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#EBF4EA] text-[#40813D] shrink-0 border border-[#B7DDB5]">
-                          {spa.formattedDistance || tCommon('nearYou')}
-                        </span>
-                      </div>
-
-                      <p className="text-xs text-[#5B6B58] line-clamp-1 leading-normal">
-                        {spa.address}
-                      </p>
-
-                      {/* Rating */}
-                      <div className="flex items-center gap-1.5 text-xs pt-0.5">
-                        <div className="flex items-center gap-1 text-amber-600 font-bold">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                          <span className="text-[#093E06] font-extrabold text-xs">{spa.rating}</span>
-                          <span className="text-[#5B6B58] font-normal text-[11px]">
-                            ({spa.reviewCount} {tCommon('reviews')})
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Exclusive Offer without truncation */}
-                  {spa.exclusiveOffer && (
-                    <div className="text-xs text-amber-950 bg-amber-50 border border-amber-200/70 px-3 py-2 rounded-xl font-medium leading-snug flex items-start gap-1.5">
-                      <span className="text-amber-600 font-bold shrink-0">{tSpaNetwork('exclusiveOffer')}</span>
-                      <span>{spa.exclusiveOffer}</span>
-                    </div>
-                  )}
-
-                  {/* Price Guarantee & Action Row */}
-                  <div className="flex items-center justify-between gap-2.5 pt-2 border-t border-stone-100">
-                    <div className="flex items-center gap-1.5 text-xs text-[#2E682A]">
-                      <Tag className="w-3.5 h-3.5 text-[#40813D] shrink-0" />
-                      <span className="font-bold">{tCommon('priceFrom49k')}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 shrink-0">
-                      <Link
-                        href={`/spa/${spa.slug}`}
-                        className="py-2 px-3 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold transition-all"
-                      >
-                        {tCommon('viewDetails')}
-                      </Link>
-                      <a
-                        href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="py-2 px-3.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white text-xs font-bold text-center transition-all active:scale-95 shadow-xs"
-                      >
-                        {tCommon('bookZalo')}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                {filteredAndSortedSpas.length > ITEMS_PER_PAGE && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAll(!showAll)}
+                    className="text-xs font-bold text-[#40813D] hover:text-[#356F32] bg-[#EBF4EA] px-3.5 py-2 rounded-xl border border-[#B7DDB5] transition-colors cursor-pointer shrink-0"
+                  >
+                    {showAll ? 'Thu gọn phân trang' : `Xem tất cả ${filteredAndSortedSpas.length} spa`}
+                  </button>
+                )}
+              </div>
             </div>
-          )
-        })()}
+          </div>
+        )}
       </section>
     </div>
   )
