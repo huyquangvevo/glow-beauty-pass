@@ -14,6 +14,7 @@ import {
   X,
 } from 'lucide-react'
 import { BrandWordmark } from '@/components/BrandLogo'
+import { PORTAL_BASE_URL } from '@/lib/config'
 import './globals.css'
 
 export default function RootLayout({
@@ -139,7 +140,7 @@ export default function RootLayout({
                 {/* Right User Bar */}
                 <div className="flex items-center gap-2.5 sm:gap-3">
                   <a
-                    href="http://localhost:3000"
+                    href={PORTAL_BASE_URL}
                     target="_blank"
                     rel="noreferrer"
                     title="Xem giao diện người dùng trên web/app"
@@ -202,7 +203,7 @@ export default function RootLayout({
                   })}
                   <div className="pt-2 border-t border-white/10">
                     <a
-                      href="http://localhost:3000"
+                      href={PORTAL_BASE_URL}
                       target="_blank"
                       rel="noreferrer"
                       className="flex items-center justify-between px-3.5 py-2 text-xs text-stone-300 hover:text-white"

@@ -22,6 +22,7 @@ import {
   ShieldCheck,
   Power,
 } from 'lucide-react'
+import { PORTAL_BASE_URL } from '@/lib/config'
 
 interface SpaItem {
   id: string
@@ -474,7 +475,7 @@ export default function AdminSpasPage() {
                           </Link>
 
                           <a
-                            href={`http://localhost:3000/spa/${spa.slug}`}
+                            href={`${PORTAL_BASE_URL}/spa/${spa.slug}`}
                             target="_blank"
                             rel="noreferrer"
                             title="Xem trang web khách hàng"
