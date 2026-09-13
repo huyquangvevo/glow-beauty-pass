@@ -247,12 +247,111 @@ export default function SpaDetailPage() {
     return filteredReviews.slice(start, start + REVIEWS_PER_PAGE)
   }, [filteredReviews, reviewPage])
 
-  useEffect(() => {
-    setReviewPage(1)
-  }, [reviewFilter, slug])
+  // Generate JSON-LD for LocalBusiness / HealthAndBeautyBusiness + FAQPage + Breadcrumbs
+  const spaJsonLd = useMemo(() => {
+    if (!spa) return null
+    const baseUrl = 'https://glowbeautypass.com'
+    const fullUrl = `${baseUrl}/vi/spa/${spa.slug}`
+
+    const businessSchema: any = {
+      '@context': 'https://schema.org',
+      '@type': ['HealthAndBeautyBusiness', 'DaySpa'],
+      name: spa.name,
+      description: `${spa.name} - Đối tác kiểm định mạng lưới Glow Beauty Pass Cầu Giấy, Hà Nội. Gói gội đầu dưỡng sinh, massage trị liệu tiêu chuẩn SOP.`,
+      url: fullUrl,
+      telephone: spa.phone || '+84-988-888-888',
+      image: spa.imageUrl ? `${baseUrl}${spa.imageUrl}` : `${baseUrl}/brand/banner-meta.webp`,
+      priceRange: '49.000đ - 149.000đ',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: spa.address,
+        addressLocality: spa.ward || 'Cầu Giấy',
+        addressRegion: 'Hà Nội',
+        addressCountry: 'VN',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: spa.latitude || 21.0336,
+        longitude: spa.longitude || 105.7942,
+      },
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+          opens: '09:00',
+          closes: '21:30',
+        },
+      ],
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: spa.rating || 4.9,
+        reviewCount: spa.reviewCount || 20,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }
+
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Trang Chủ',
+          item: baseUrl,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Spa Cầu Giấy',
+          item: `${baseUrl}/#danh-sach-spa`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: spa.name,
+          item: fullUrl,
+        },
+      ],
+    }
+
+    const faqSchema = spa.faqs && spa.faqs.length > 0 ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: spa.faqs.map((f: any) => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: f.answer,
+        },
+      })),
+    } : null
+
+    return { businessSchema, breadcrumbSchema, faqSchema }
+  }, [spa])
 
   return (
     <div className="max-w-xl sm:max-w-2xl mx-auto px-4 py-5 space-y-6 pb-28 sm:pb-32">
+      {spaJsonLd && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(spaJsonLd.businessSchema) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(spaJsonLd.breadcrumbSchema) }}
+          />
+          {spaJsonLd.faqSchema && (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(spaJsonLd.faqSchema) }}
+            />
+          )}
+        </>
+      )}
       {/* SPA HEADER CARD */}
       <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2EBE2] shadow-xs space-y-4">
         <div className="space-y-3">

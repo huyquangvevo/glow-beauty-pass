@@ -1,9 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link, useRouter, usePathname } from '@/i18n/routing'
 import {
   Search,
   MapPin,

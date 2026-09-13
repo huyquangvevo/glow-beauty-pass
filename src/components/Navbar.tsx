@@ -1,8 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname, useRouter } from 'next/navigation'
+import { Link, useRouter, usePathname } from '@/i18n/routing'
 import { ArrowLeft } from 'lucide-react'
 import { BrandWordmark } from './BrandLogo'
 import { LanguageSwitcher } from './LanguageSwitcher'
