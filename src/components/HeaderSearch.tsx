@@ -15,11 +15,16 @@ import {
   ChevronRight,
   Star,
   Tag,
-  Trash2,
+  Loader2,
 } from 'lucide-react'
 import { useSearch } from '@/context/SearchContext'
 import { useLocation } from '@/context/LocationContext'
 import { useTranslations } from 'next-intl'
+import {
+  fetchGooglePlacePredictions,
+  getGooglePlaceDetails,
+  type GooglePlacePrediction,
+} from '@/lib/googlePlaces'
 
 interface AutocompleteSpa {
   id: string
@@ -70,12 +75,16 @@ export function HeaderSearch() {
   const router = useRouter()
   const pathname = usePathname()
   const { searchQuery, setSearchQuery } = useSearch()
-  const { openPrompt, requestLocation, isLocating, userCoords, locationLabel } = useLocation()
+  const { openPrompt, requestLocation, setCustomLocation, isLocating, userCoords, locationLabel } = useLocation()
 
   const [isOpen, setIsOpen] = useState(false)
   const [localInput, setLocalInput] = useState(searchQuery)
   const [recentList, setRecentList] = useState<string[]>([])
   const [spas, setSpas] = useState<AutocompleteSpa[]>([])
+
+  // Google Maps Places state
+  const [googlePredictions, setGooglePredictions] = useState<GooglePlacePrediction[]>([])
+  const [isSearchingGoogle, setIsSearchingGoogle] = useState(false)
 
   const desktopContainerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -108,6 +117,36 @@ export function HeaderSearch() {
       setRecentList(getRecentSearches())
     }
   }, [isOpen])
+
+  // Google Maps autocomplete with debounce
+  useEffect(() => {
+    const q = localInput.trim()
+    if (q.length < 2) {
+      setGooglePredictions([])
+      return
+    }
+
+    let active = true
+    setIsSearchingGoogle(true)
+
+    const timer = setTimeout(async () => {
+      try {
+        const preds = await fetchGooglePlacePredictions(q)
+        if (active) {
+          setGooglePredictions(preds)
+        }
+      } catch (e) {
+        console.warn('Google predictions error:', e)
+      } finally {
+        if (active) setIsSearchingGoogle(false)
+      }
+    }, 250)
+
+    return () => {
+      active = false
+      clearTimeout(timer)
+    }
+  }, [localInput])
 
   // Close desktop dropdown on outside click
   useEffect(() => {
@@ -173,6 +212,23 @@ export function HeaderSearch() {
     )
   }, [localInput, wardChips])
 
+  const navigateToSpasList = useCallback(() => {
+    const isHome = pathname === '/' || pathname === '/en' || pathname === '/ko'
+    if (!isHome) {
+      const localePrefix = pathname.startsWith('/en')
+        ? '/en'
+        : pathname.startsWith('/ko')
+        ? '/ko'
+        : ''
+      router.push(`${localePrefix}/#danh-sach-spa`)
+    } else {
+      const el = document.getElementById('danh-sach-spa')
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }
+  }, [pathname, router])
+
   const executeSearch = useCallback(
     (term: string) => {
       const q = term.trim()
@@ -183,29 +239,35 @@ export function HeaderSearch() {
         setSearchQuery('')
       }
       setIsOpen(false)
-
-      // Navigate to home and scroll to spa list if not already there
-      const isHome = pathname === '/' || pathname === '/en' || pathname === '/ko'
-      if (!isHome) {
-        const localePrefix = pathname.startsWith('/en')
-          ? '/en'
-          : pathname.startsWith('/ko')
-          ? '/ko'
-          : ''
-        router.push(`${localePrefix}/#danh-sach-spa`)
-      } else {
-        const el = document.getElementById('danh-sach-spa')
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        }
-      }
+      navigateToSpasList()
     },
-    [pathname, router, setSearchQuery]
+    [navigateToSpasList, setSearchQuery]
   )
+
+  // When user selects a place from Google Maps
+  const handleSelectGooglePlace = async (prediction: GooglePlacePrediction) => {
+    try {
+      saveRecentSearch(prediction.mainText)
+      setIsOpen(false)
+      setLocalInput(prediction.mainText)
+      setSearchQuery('') // Clear search filter so user sees all 15 spas sorted by distance to this place!
+
+      const details = await getGooglePlaceDetails(prediction.placeId, prediction.description)
+      if (details) {
+        setCustomLocation({ lat: details.lat, lon: details.lng }, details.name)
+      }
+
+      navigateToSpasList()
+    } catch (err) {
+      console.error('Failed to select Google Place:', err)
+      executeSearch(prediction.mainText)
+    }
+  }
 
   const handleClear = () => {
     setLocalInput('')
     setSearchQuery('')
+    setGooglePredictions([])
     if (inputRef.current) inputRef.current.focus()
     if (mobileInputRef.current) mobileInputRef.current.focus()
   }
@@ -236,7 +298,11 @@ export function HeaderSearch() {
           inputRef.current?.focus()
         }}
       >
-        <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-800 shrink-0 mr-2" />
+        {isSearchingGoogle ? (
+          <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#40813D] animate-spin shrink-0 mr-2" />
+        ) : (
+          <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-800 shrink-0 mr-2" />
+        )}
 
         <input
           ref={inputRef}
@@ -288,15 +354,55 @@ export function HeaderSearch() {
             >
               <div className="flex items-center gap-2">
                 <Navigation className={`w-3.5 h-3.5 text-[#40813D] ${isLocating ? 'animate-spin' : ''}`} />
-                <span>{isLocating ? 'Đang lấy vị trí...' : userCoords ? `Vị trí: ${locationLabel} (Ưu tiên spa gần nhất)` : 'Tìm spa gần vị trí của bạn nhất'}</span>
+                <span>
+                  {isLocating
+                    ? 'Đang lấy vị trí...'
+                    : userCoords
+                    ? `Vị trí: ${locationLabel} (Ưu tiên spa gần nhất)`
+                    : 'Tìm spa gần vị trí của bạn nhất'}
+                </span>
               </div>
               <ChevronRight className="w-3.5 h-3.5 text-stone-400" />
             </button>
           </div>
 
-          {/* If typing: Show instant matching spas and wards */}
+          {/* If typing: Show instant matching Google Places, Spas, and Wards */}
           {localInput.trim() ? (
-            <div className="space-y-3 py-1">
+            <div className="space-y-2 py-1">
+              {/* 1. GOOGLE PLACES PREDICTIONS */}
+              {googlePredictions.length > 0 && (
+                <div className="px-1 border-b border-stone-100 pb-2">
+                  <div className="text-[11px] font-black uppercase tracking-wider text-rose-700 px-3 py-1 flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-rose-600" />
+                    <span>Gợi ý địa điểm Google Maps</span>
+                  </div>
+                  {googlePredictions.map((pred) => (
+                    <button
+                      key={pred.placeId}
+                      type="button"
+                      onClick={() => handleSelectGooglePlace(pred)}
+                      className="w-full flex items-start gap-2.5 px-3 py-2 text-left hover:bg-rose-50/50 transition-colors group cursor-pointer rounded-xl"
+                    >
+                      <div className="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 mt-0.5">
+                        <MapPin className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs font-bold text-stone-900 group-hover:text-rose-700 transition-colors truncate">
+                          {pred.mainText}
+                        </div>
+                        <div className="text-[11px] text-stone-500 truncate">
+                          {pred.secondaryText}
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-bold text-[#40813D] bg-[#EBF4EA] px-2 py-0.5 rounded-full border border-[#B7DDB5] shrink-0 mt-0.5">
+                        Tính khoảng cách
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* 2. MATCHING WARDS */}
               {matchingWards.length > 0 && (
                 <div className="px-3">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-1.5">
@@ -318,10 +424,11 @@ export function HeaderSearch() {
                 </div>
               )}
 
-              {matchingSpas.length > 0 ? (
-                <div className="px-1">
+              {/* 3. MATCHING SPAS */}
+              {matchingSpas.length > 0 && (
+                <div className="px-1 pt-1">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-stone-400 px-3 py-1">
-                    Spa phù hợp ({matchingSpas.length})
+                    Spa đối tác phù hợp ({matchingSpas.length})
                   </div>
                   {matchingSpas.map((spa) => (
                     <Link
@@ -331,7 +438,7 @@ export function HeaderSearch() {
                         saveRecentSearch(spa.name)
                         setIsOpen(false)
                       }}
-                      className="flex items-center gap-2.5 px-3 py-2 hover:bg-stone-50 transition-colors group cursor-pointer"
+                      className="flex items-center gap-2.5 px-3 py-2 hover:bg-stone-50 transition-colors group cursor-pointer rounded-xl"
                     >
                       <div className="w-8 h-8 rounded-xl bg-stone-100 relative overflow-hidden shrink-0 border border-stone-200">
                         {spa.imageUrl ? (
@@ -361,11 +468,16 @@ export function HeaderSearch() {
                     </Link>
                   ))}
                 </div>
-              ) : matchingWards.length === 0 ? (
-                <div className="py-4 text-center text-xs text-stone-500">
-                  Không tìm thấy spa nào với từ khóa &ldquo;{localInput}&rdquo;.
-                </div>
-              ) : null}
+              )}
+
+              {googlePredictions.length === 0 &&
+                matchingSpas.length === 0 &&
+                matchingWards.length === 0 &&
+                !isSearchingGoogle && (
+                  <div className="py-6 text-center text-xs text-stone-500">
+                    Không tìm thấy địa điểm hoặc spa nào với từ khóa &ldquo;{localInput}&rdquo;.
+                  </div>
+                )}
             </div>
           ) : (
             /* When empty: Show Recent Searches & Popular Chips */
@@ -451,7 +563,7 @@ export function HeaderSearch() {
         </div>
       )}
 
-      {/* MOBILE FULL-SCREEN SEARCH MODAL (Identical to luggage-storage experience) */}
+      {/* MOBILE FULL-SCREEN SEARCH MODAL */}
       <div
         className={`fixed inset-0 z-[99999] flex-col bg-[#FAF8F5] md:hidden ${
           isOpen ? 'flex' : 'hidden'
@@ -469,7 +581,11 @@ export function HeaderSearch() {
           </button>
 
           <div className="flex flex-1 items-center h-10 rounded-full bg-white px-3 shadow-inner">
-            <Search className="mr-2 w-4 h-4 text-stone-400 shrink-0" />
+            {isSearchingGoogle ? (
+              <Loader2 className="mr-2 w-4 h-4 text-[#40813D] animate-spin shrink-0" />
+            ) : (
+              <Search className="mr-2 w-4 h-4 text-stone-400 shrink-0" />
+            )}
             <input
               ref={mobileInputRef}
               type="text"
@@ -541,6 +657,40 @@ export function HeaderSearch() {
           {/* Autocomplete Results when typing */}
           {localInput.trim() ? (
             <div className="space-y-3">
+              {/* 1. GOOGLE PLACES PREDICTIONS IN MOBILE MODAL */}
+              {googlePredictions.length > 0 && (
+                <div className="bg-white rounded-2xl border border-[#D5E7D8] shadow-xs divide-y divide-stone-100 overflow-hidden">
+                  <div className="px-4 py-2.5 bg-rose-50 text-xs font-black uppercase tracking-wider text-rose-700 flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-rose-600" />
+                    <span>Gợi ý Google Maps ({googlePredictions.length})</span>
+                  </div>
+                  {googlePredictions.map((pred) => (
+                    <button
+                      key={pred.placeId}
+                      type="button"
+                      onClick={() => handleSelectGooglePlace(pred)}
+                      className="w-full flex items-start gap-3 p-3.5 text-left hover:bg-rose-50/50 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 mt-0.5">
+                        <MapPin className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs sm:text-sm font-extrabold text-stone-900">
+                          {pred.mainText}
+                        </div>
+                        <div className="text-[11px] text-stone-500 line-clamp-1">
+                          {pred.secondaryText}
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-bold text-[#40813D] bg-[#EBF4EA] px-2 py-0.5 rounded-full border border-[#B7DDB5] shrink-0 mt-0.5">
+                        Đo khoảng cách
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* 2. MATCHING WARDS */}
               {matchingWards.length > 0 && (
                 <div className="bg-white p-3.5 rounded-2xl border border-[#D5E7D8] shadow-xs space-y-2">
                   <h3 className="text-xs font-black uppercase tracking-wider text-stone-400">
@@ -562,10 +712,11 @@ export function HeaderSearch() {
                 </div>
               )}
 
-              {matchingSpas.length > 0 ? (
+              {/* 3. MATCHING SPAS */}
+              {matchingSpas.length > 0 && (
                 <div className="bg-white rounded-2xl border border-[#D5E7D8] shadow-xs divide-y divide-stone-100 overflow-hidden">
                   <div className="px-4 py-2.5 bg-stone-50 text-xs font-black uppercase tracking-wider text-stone-500">
-                    Spa phù hợp ({matchingSpas.length})
+                    Spa đối tác phù hợp ({matchingSpas.length})
                   </div>
                   {matchingSpas.map((spa) => (
                     <Link
@@ -607,11 +758,16 @@ export function HeaderSearch() {
                     </Link>
                   ))}
                 </div>
-              ) : matchingWards.length === 0 ? (
-                <div className="p-8 text-center bg-white rounded-2xl border border-stone-200 text-xs text-stone-500">
-                  Không tìm thấy spa nào với từ khóa &ldquo;{localInput}&rdquo;.
-                </div>
-              ) : null}
+              )}
+
+              {googlePredictions.length === 0 &&
+                matchingSpas.length === 0 &&
+                matchingWards.length === 0 &&
+                !isSearchingGoogle && (
+                  <div className="p-8 text-center bg-white rounded-2xl border border-stone-200 text-xs text-stone-500">
+                    Không tìm thấy địa điểm hoặc spa nào với từ khóa &ldquo;{localInput}&rdquo;.
+                  </div>
+                )}
             </div>
           ) : (
             /* When empty: Recent searches & Categories */

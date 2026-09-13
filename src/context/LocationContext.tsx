@@ -13,6 +13,7 @@ interface LocationContextType {
   isLocating: boolean
   isPromptOpen: boolean
   requestLocation: () => Promise<void>
+  setCustomLocation: (coords: Coords, label: string) => void
   dismissPrompt: () => void
   openPrompt: () => void
 }
@@ -121,6 +122,12 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('glow_location_permission', 'dismissed')
   }
 
+  const setCustomLocation = (coords: Coords, label: string) => {
+    setUserCoords(coords)
+    setLocationLabel(label)
+    localStorage.setItem('glow_location_permission', 'granted')
+  }
+
   const openPrompt = () => {
     setIsPromptOpen(true)
   }
@@ -133,6 +140,7 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
         isLocating,
         isPromptOpen,
         requestLocation,
+        setCustomLocation,
         dismissPrompt,
         openPrompt,
       }}
