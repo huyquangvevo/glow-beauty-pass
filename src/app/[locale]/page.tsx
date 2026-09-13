@@ -422,7 +422,10 @@ export default function HomePage() {
         {/* MOBILE-FIRST STREAMLINED FILTER BAR */}
         <div className="space-y-2 pt-0.5">
           {/* Row 1: Ward Filter Chips (Horizontal Scroll with Counts & Distance) */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          <div
+            className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
             {/* ALL Chip */}
             <button
               type="button"
@@ -461,7 +464,10 @@ export default function HomePage() {
           </div>
 
           {/* Row 2: Sort Dropdown & Quick Toggle Chips on single horizontal scroll row */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          <div
+            className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
             {/* Sort Dropdown */}
             <div className="flex items-center gap-1 bg-white border border-[#DDE4D9] rounded-full px-2.5 py-1 text-xs shrink-0 shadow-2xs">
               <ArrowUpDown className="w-3 h-3 text-stone-400" />
