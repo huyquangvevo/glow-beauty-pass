@@ -287,7 +287,7 @@ export function HeaderSearch() {
   }
 
   return (
-    <div ref={desktopContainerRef} className="relative flex-1 min-w-0 max-w-xs sm:max-w-sm md:max-w-md">
+    <div ref={desktopContainerRef} className="relative flex-1 min-w-0 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl">
       {/* DESKTOP / INLINE SEARCH PILL */}
       <div
         data-header-search-pill
