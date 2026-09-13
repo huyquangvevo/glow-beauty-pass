@@ -192,7 +192,11 @@
     "pkg2Badge": "MOST POPULAR CHOICE",
     "pkg3Badge": "VIP FULL RELAXATION",
     "freeCancel": "Free Cancellation",
-    "bookViaZalo": "Book via Zalo"
+    "bookViaZalo": "Book via Zalo",
+    "allReviews": "All",
+    "filter5Star": "★ 5 stars",
+    "filterWithPhotos": "With photo",
+    "showingReviews": "Showing {from} - {to} of {total} reviews"
   },
   "LocationPrompt": {
     "title": "Enable location to find spas closest to you",

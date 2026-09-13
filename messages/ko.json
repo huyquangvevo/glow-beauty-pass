@@ -192,7 +192,11 @@
     "pkg2Badge": "가장 인기 있는 패키지",
     "pkg3Badge": "VIP 전신 힐링 테라피",
     "freeCancel": "언제든 무료 취소",
-    "bookViaZalo": "Zalo로 예약"
+    "bookViaZalo": "Zalo로 예약",
+    "allReviews": "전체",
+    "filter5Star": "★ 5점",
+    "filterWithPhotos": "사진 리뷰",
+    "showingReviews": "{total}개의 인증 리뷰 중 {from} - {to}개 표시"
   },
   "LocationPrompt": {
     "title": "가까운 스파를 찾기 위해 위치 정보를 켜주세요",

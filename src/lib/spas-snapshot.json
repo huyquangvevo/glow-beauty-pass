@@ -441,7 +441,7 @@
       "longitude": 105.8021,
       "openHours": "09:00 - 21:30",
       "rating": 4.9,
-      "reviewCount": 63,
+      "reviewCount": 68,
       "tier": "CERTIFIED",
       "yellowCards": 0,
       "redCards": 0,
@@ -505,6 +505,86 @@
           "authorName": "David Lee (Expat Hanoi)",
           "googleMapUrl": "https://maps.google.com/?cid=123456789",
           "authorInitials": "DL"
+        },
+        {
+          "id": "rev-ak-5",
+          "body": "Đặt lịch qua Zalo 5 phút trước khi đến mà quán chuẩn bị phòng và nước ấm chu đáo lắm. Kỹ thuật viên rửa mặt và gội thảo mộc rất kỹ, tóc mượt thơm mùi bưởi cả ngày. Rất ưng ý với cam kết không phụ thu của Glow!",
+          "stars": 5,
+          "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+          "authorMeta": "Đã trải nghiệm Gói Đồng Giá 49k",
+          "authorName": "Phương Linh (Nguyễn Thị Thập)",
+          "googleMapUrl": "https://maps.google.com/?cid=123456789",
+          "authorInitials": "PL"
+        },
+        {
+          "id": "rev-ak-6",
+          "body": "Điểm cộng lớn là tay nghề massage cổ vai gáy rất chắc, bấm đúng điểm căng cơ. Mình đi buổi trưa tranh thủ nghỉ ngơi, phòng thơm mùi tinh dầu sả chanh dễ chịu. Giá 49k gói thử nghiệm quá hời so với chất lượng.",
+          "stars": 5,
+          "avatarUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80",
+          "authorMeta": "Đã trải nghiệm Gói Dưỡng Sinh 149k",
+          "authorName": "Nguyễn Tuấn Dũng (Thanh Xuân)",
+          "googleMapUrl": "https://maps.google.com/?cid=123456789",
+          "authorInitials": "TD"
+        },
+        {
+          "id": "rev-ak-7",
+          "body": "Mình là người kỹ tính về vệ sinh khăn và lược nhưng ở An Khang khử trùng rất sạch sẽ, có dán tem tiêu chuẩn Glow. Gội xong sấy dưỡng cẩn thận không hề làm rối tóc. Sẽ giới thiệu cho đồng nghiệp cùng phòng.",
+          "stars": 5,
+          "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
+          "authorMeta": "Verified Customer • SOP Check",
+          "authorName": "Hải Yến (Cầu Giấy)",
+          "googleMapUrl": "https://maps.google.com/?cid=123456789",
+          "authorInitials": "HY"
+        },
+        {
+          "id": "rev-ak-8",
+          "body": "Rất thích phong cách phục vụ ở đây, nhẹ nhàng lịch sự không hề chèo kéo hay ép mua thêm dịch vụ như các bên khác. Đúng giá niêm yết 69k cho gói toàn diện, làm đủ 60 phút không bớt xén.",
+          "stars": 5,
+          "avatarUrl": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80",
+          "authorMeta": "Đã trải nghiệm Gói Toàn Diện 69k",
+          "authorName": "Bảo Châu (Trần Duy Hưng)",
+          "googleMapUrl": "",
+          "authorInitials": "BC"
+        },
+        {
+          "id": "rev-ak-9",
+          "body": "Very relaxing atmosphere and professional therapists. The head massage was gentle yet effective in relieving stress. Clean salon, fair price and smooth booking via Zalo without hassle.",
+          "stars": 5,
+          "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
+          "authorMeta": "International Guest Review",
+          "authorName": "Kenji Tanaka (Japanese Resident)",
+          "googleMapUrl": "https://maps.google.com/?cid=123456789",
+          "authorInitials": "KT"
+        },
+        {
+          "id": "rev-ak-10",
+          "body": "Điểm spa ruột của mình mỗi tuần. Sau những ngày chạy deadline căng thẳng thì 70 phút ở đây giúp cơ thể hồi phục năng lượng hoàn toàn. Nước trà thảo mộc gừng ấm sau khi làm xong rất thơm ngon.",
+          "stars": 5,
+          "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80",
+          "authorMeta": "Khách hàng VIP Glow Pass",
+          "authorName": "Thanh Mai (KĐT Trung Hòa)",
+          "googleMapUrl": "https://maps.google.com/?cid=123456789",
+          "authorInitials": "TM"
+        },
+        {
+          "id": "rev-ak-11",
+          "body": "Nhà ngay gần tòa 17T4, tiện qua gội đầu buổi tối. Nhân viên gội đầu bằng bồ kết nấu tươi chuẩn bài, da đầu sạch gàu và nhẹ nhõm hẳn. Đánh giá 5 sao cho chất lượng dịch vụ chuẩn hóa!",
+          "stars": 5,
+          "avatarUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150&auto=format&fit=crop&q=80",
+          "authorMeta": "Cư dân 17T4 Hoàng Đạo Thúy",
+          "authorName": "Đức Trọng (Lê Văn Lương)",
+          "googleMapUrl": "",
+          "authorInitials": "DT"
+        },
+        {
+          "id": "rev-ak-12",
+          "body": "Lần đầu dùng thử nền tảng Glow Beauty Pass đặt spa gần nhà, trải nghiệm mượt mà từ lúc nhận tin nhắn xác nhận Zalo đến khi thanh toán tại quầy. Kỹ thuật viên thân thiện, tay nghề đồng đều.",
+          "stars": 5,
+          "avatarUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80",
+          "authorMeta": "Đã trải nghiệm Gói Đồng Giá 49k",
+          "authorName": "Quỳnh Nga (Hoàng Ngân)",
+          "googleMapUrl": "https://maps.google.com/?cid=123456789",
+          "authorInitials": "QN"
         }
       ],
       "faqs": [

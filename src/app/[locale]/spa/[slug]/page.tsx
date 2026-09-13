@@ -19,6 +19,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { ZaloIcon } from '@/components/ZaloIcon'
+import { PaginationControls } from '@/components/PaginationControls'
 import { useTranslations } from 'next-intl'
 
 function ReviewBreakdownBoard({
@@ -214,6 +215,41 @@ export default function SpaDetailPage() {
           googleMapUrl: undefined,
         }))
       : []
+
+  // Customer Reviews Filtering & Pagination
+  const [reviewPage, setReviewPage] = useState<number>(1)
+  const [reviewFilter, setReviewFilter] = useState<'ALL' | '5_STARS' | 'WITH_PHOTOS'>('ALL')
+  const REVIEWS_PER_PAGE = 3
+
+  const fiveStarCount = useMemo(() => {
+    return reviewsList.filter((r: any) => (r.stars || 5) === 5).length
+  }, [reviewsList])
+
+  const photoCount = useMemo(() => {
+    return reviewsList.filter((r: any) => Boolean(r.avatarUrl?.trim())).length
+  }, [reviewsList])
+
+  const filteredReviews = useMemo(() => {
+    if (!reviewsList || reviewsList.length === 0) return []
+    let list = [...reviewsList]
+    if (reviewFilter === '5_STARS') {
+      list = list.filter((r: any) => (r.stars || 5) === 5)
+    } else if (reviewFilter === 'WITH_PHOTOS') {
+      list = list.filter((r: any) => Boolean(r.avatarUrl?.trim()))
+    }
+    return list
+  }, [reviewsList, reviewFilter])
+
+  const totalReviewPages = Math.ceil(filteredReviews.length / REVIEWS_PER_PAGE) || 1
+
+  const currentReviews = useMemo(() => {
+    const start = (reviewPage - 1) * REVIEWS_PER_PAGE
+    return filteredReviews.slice(start, start + REVIEWS_PER_PAGE)
+  }, [filteredReviews, reviewPage])
+
+  useEffect(() => {
+    setReviewPage(1)
+  }, [reviewFilter, slug])
 
   return (
     <div className="max-w-xl sm:max-w-2xl mx-auto px-4 py-5 space-y-6 pb-28 sm:pb-32">
@@ -457,14 +493,19 @@ export default function SpaDetailPage() {
         </div>
       </div>
 
-      {/* WHAT OUR CUSTOMERS SAY & REVIEWS (Matching luggage-storage) */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2EBE2] shadow-xs space-y-4">
+      {/* WHAT OUR CUSTOMERS SAY & REVIEWS (Matching luggage-storage with Pagination) */}
+      <div id="customer-reviews" className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2EBE2] shadow-xs space-y-4 scroll-mt-24">
         <div>
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-[#236B38]" />
-            <h2 className="text-base font-black uppercase tracking-wide text-[#093E06]">
-              {spa.reviewSectionTitle || tSpaDetail('reviewsTitle')}
-            </h2>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-[#236B38]" />
+              <h2 className="text-base font-black uppercase tracking-wide text-[#093E06]">
+                {spa.reviewSectionTitle || tSpaDetail('reviewsTitle')}
+              </h2>
+            </div>
+            <span className="text-xs font-bold text-[#236B38] bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+              {reviewsList.length} {tCommon('reviews')}
+            </span>
           </div>
           <p className="text-xs text-[#5B6B58] mt-1">
             {spa.reviewSectionSubtitle || 'Đánh giá từ trải nghiệm dịch vụ thực tế của khách hàng'}
@@ -478,10 +519,53 @@ export default function SpaDetailPage() {
           reviewsCountLabel={tCommon('reviews')}
         />
 
-        {/* Customer Reviews Cards */}
-        {reviewsList.length > 0 ? (
-          <div className="space-y-3 pt-2">
-            {reviewsList.map((r: any) => (
+        {/* Review Filter Tabs */}
+        {reviewsList.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5 pt-1">
+            <button
+              type="button"
+              onClick={() => setReviewFilter('ALL')}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                reviewFilter === 'ALL'
+                  ? 'bg-[#236B38] text-white shadow-xs'
+                  : 'bg-stone-100 hover:bg-stone-200/80 text-stone-700'
+              }`}
+            >
+              {tSpaDetail('allReviews')} ({reviewsList.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setReviewFilter('5_STARS')}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                reviewFilter === '5_STARS'
+                  ? 'bg-[#236B38] text-white shadow-xs'
+                  : 'bg-stone-100 hover:bg-stone-200/80 text-stone-700'
+              }`}
+            >
+              <span>{tSpaDetail('filter5Star')}</span>
+              <span>({fiveStarCount})</span>
+            </button>
+            {photoCount > 0 && (
+              <button
+                type="button"
+                onClick={() => setReviewFilter('WITH_PHOTOS')}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                  reviewFilter === 'WITH_PHOTOS'
+                    ? 'bg-[#236B38] text-white shadow-xs'
+                    : 'bg-stone-100 hover:bg-stone-200/80 text-stone-700'
+                }`}
+              >
+                <span>{tSpaDetail('filterWithPhotos')}</span>
+                <span>({photoCount})</span>
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Customer Reviews Cards (Paginated) */}
+        {currentReviews.length > 0 ? (
+          <div className="space-y-3 pt-1">
+            {currentReviews.map((r: any) => (
               <article
                 key={r.id}
                 className="rounded-2xl border border-[#E5E9E4] bg-[#FDFEFC] p-4 shadow-2xs space-y-2.5 hover:border-[#236B38]/40 transition-all"
@@ -541,6 +625,29 @@ export default function SpaDetailPage() {
                 </p>
               </article>
             ))}
+
+            {/* Pagination Controls */}
+            {totalReviewPages > 1 && (
+              <div className="pt-3 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span className="text-xs text-[#5B6B58] font-medium order-2 sm:order-1">
+                  {tSpaDetail('showingReviews', {
+                    from: (reviewPage - 1) * REVIEWS_PER_PAGE + 1,
+                    to: Math.min(reviewPage * REVIEWS_PER_PAGE, filteredReviews.length),
+                    total: filteredReviews.length,
+                  })}
+                </span>
+                <div className="order-1 sm:order-2">
+                  <PaginationControls
+                    currentPage={reviewPage}
+                    totalPages={totalReviewPages}
+                    onPageChange={(p) => {
+                      setReviewPage(p)
+                      document.getElementById('customer-reviews')?.scrollIntoView({ behavior: 'smooth' })
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <p className="text-xs text-[#5B6B58] italic py-2">{tSpaDetail('noReviews')}</p>
