@@ -12,6 +12,8 @@ import {
   LayoutGrid,
   List,
   Check,
+  ShieldCheck,
+  MessageCircle,
 } from 'lucide-react'
 import { HeroBannerCarousel } from '@/components/HeroBannerCarousel'
 import { useSearch } from '@/context/SearchContext'
@@ -171,36 +173,34 @@ export default function HomePage() {
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
 
   return (
-    <div className="max-w-md sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto px-4 py-5 sm:py-6 space-y-8 sm:space-y-10 pb-16">
+    <div className="w-full max-w-5xl mx-auto px-3.5 sm:px-6 py-4 sm:py-6 space-y-7 sm:space-y-10 pb-16">
       {/* 1. VISUAL HERO BANNER CAROUSEL */}
       <section className="w-full">
         <HeroBannerCarousel />
       </section>
 
-      {/* 2. 3 GÓI DỊCH VỤ NIÊM YẾT (Đồng Giá Toàn Hệ Thống) */}
-      <section id="goi-dich-vu" className="space-y-4 scroll-mt-20">
-        <div className="flex items-center justify-between px-1">
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-base sm:text-lg font-black uppercase tracking-wide text-[#234E21]">
+      {/* 2. 3 GÓI DỊCH VỤ NIÊM YẾT (Đồng Giá Toàn Hệ Thống - Taste Design Upgrade) */}
+      <section id="goi-dich-vu" className="space-y-3.5 sm:space-y-4 scroll-mt-20">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 px-1">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-black text-[#0B3A08] tracking-tight">
                 {tServices('heading')}
               </h2>
-              <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-[#40813D] text-white shadow-2xs">
-                {tServices('priceTag')}
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1D541B] bg-[#EAF5E9] px-2.5 py-0.5 rounded-full border border-[#B7DDB5]/70 shadow-2xs">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#356F32]" />
+                {tServices('fixedBadge')}
               </span>
             </div>
-            <p className="text-xs sm:text-sm text-[#5B6B58] mt-0.5">
+            <p className="text-xs sm:text-sm text-[#5B6B58] font-medium leading-normal">
               {tServices('subheading')}
             </p>
           </div>
-          <span className="text-xs font-bold text-[#40813D] bg-[#EBF4EA] px-3 py-1 rounded-full border border-[#B7DDB5] shrink-0">
-            {tServices('fixedBadge')}
-          </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
           {skus.map((sku, index) => {
-            const isPopular = index === 0
+            const isPopular = index === 1 // Gói 2: Gội Toàn Diện Chuẩn Sạch là Hot Nhất
             const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
             const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
             const localizedDesc = tServices.has(`${pkgKey}.desc` as any) ? tServices(`${pkgKey}.desc` as any) : sku.description
@@ -213,66 +213,79 @@ export default function HomePage() {
             return (
               <div
                 key={sku.id}
-                className={`p-4.5 sm:p-5 rounded-2xl bg-white border transition-all flex flex-col justify-between relative ${
+                className={`p-4.5 sm:p-5 rounded-2xl bg-white border transition-all flex flex-col justify-between relative group ${
                   isPopular
-                    ? 'border-[#40813D] ring-2 ring-[#40813D]/20 shadow-md shadow-[#40813D]/5'
-                    : 'border-[#D5E7D8] shadow-xs hover:border-[#40813D]/60'
+                    ? 'border-[#356F32] shadow-md shadow-[#356F32]/10 ring-1 ring-[#356F32]/20'
+                    : 'border-[#DDE5DC] shadow-xs hover:border-[#356F32]/50 hover:shadow-md'
                 }`}
               >
-                <div className="space-y-3">
-                  {/* Package Header */}
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="space-y-1 min-w-0">
+                <div className="space-y-3.5">
+                  {/* Package Header: Title, Badge & Price */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1.5 flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <h3 className="font-extrabold text-[15px] sm:text-[16px] text-[#234E21] leading-snug">
+                        <h3 className="font-black text-base sm:text-[17px] text-[#0A3C08] tracking-tight leading-snug">
                           {localizedName}
                         </h3>
                         {localizedBadge && (
-                          <span className="text-[9.5px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500 text-white shadow-2xs shrink-0 tracking-wider">
+                          <span className={`text-[9.5px] font-black uppercase px-2 py-0.5 rounded-full text-white shadow-2xs shrink-0 tracking-wider ${
+                            index === 1 ? 'bg-emerald-600' : 'bg-amber-600'
+                          }`}>
                             {localizedBadge}
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-[#5B6B58] font-medium">
-                        <Clock className="w-3.5 h-3.5 text-[#40813D]" />
+                      <div className="inline-flex items-center gap-1.5 text-xs text-[#5B6B58] font-medium bg-[#F4F8F3] px-2.5 py-0.5 rounded-full border border-[#E0EBE0]">
+                        <Clock className="w-3.5 h-3.5 text-[#356F32]" />
                         <span>
-                          {tCommon('duration')}{' '}
-                          <strong className="text-[#234E21]">
-                            {sku.durationMinutes} {tCommon('minutes')}
-                          </strong>
+                          {sku.durationMinutes} {tCommon('minutes')}
                         </span>
                       </div>
                     </div>
 
-                    {/* Price Tag */}
-                    <div className="bg-gradient-to-br from-[#EBF6EA] to-[#DCF0DA] px-2.5 py-1.5 rounded-xl border border-[#A4D5A1] text-right shrink-0">
+                    {/* Clean Price Display */}
+                    <div className="text-right shrink-0">
+                      <div className="text-xl sm:text-2xl font-black text-[#1B5E20] leading-none tracking-tight">
+                        {sku.pricePhase1.toLocaleString('vi-VN')}đ
+                      </div>
                       {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
-                        <div className="flex items-center justify-end gap-1 leading-none mb-0.5">
-                          <span className="text-[10px] text-stone-400 line-through">
+                        <div className="flex items-center justify-end gap-1 mt-1 leading-none">
+                          <span className="text-[11px] text-stone-400 line-through font-medium">
                             {sku.pricePhase2.toLocaleString('vi-VN')}đ
                           </span>
                           {discountPercent && (
-                            <span className="text-[9px] font-extrabold text-amber-700 bg-amber-200/80 px-1 py-0.2 rounded">
+                            <span className="text-[10px] font-extrabold text-amber-800 bg-amber-100 px-1 py-0.2 rounded-xs">
                               -{discountPercent}%
                             </span>
                           )}
                         </div>
                       )}
-                      <div className="text-[17px] sm:text-[19px] font-black text-[#1E5C23] leading-none">
-                        {sku.pricePhase1.toLocaleString('vi-VN')}đ
-                      </div>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p className="text-xs text-[#4E5C4C] leading-relaxed bg-[#F9FCF9] p-2.5 rounded-xl border border-[#E8F2E8]">
+                  <p className="text-xs sm:text-[13px] text-[#4A5E47] leading-relaxed font-normal">
                     {localizedDesc}
                   </p>
+
+                  {/* Feature Highlights (Micro-bullets for real value!) */}
+                  <div className="space-y-1.5 pt-1.5 border-t border-stone-100">
+                    {[1, 2, 3].map((fNum) => {
+                      const fKey = `${pkgKey}.f${fNum}` as any
+                      if (!tServices.has(fKey)) return null
+                      return (
+                        <div key={fNum} className="flex items-start gap-2 text-xs text-[#3E4F3B] leading-snug">
+                          <Check className="w-3.5 h-3.5 text-[#356F32] shrink-0 mt-0.5" />
+                          <span>{tServices(fKey)}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
 
-                {/* CTA Button */}
-                <div className="pt-3.5 mt-3 border-t border-stone-100 flex items-center justify-between gap-2">
-                  <span className="text-[11px] font-bold text-[#40813D] flex items-center gap-1">
+                {/* CTA Button Row */}
+                <div className="pt-3.5 mt-3.5 border-t border-stone-100 flex items-center justify-between gap-2.5">
+                  <span className="text-[11px] font-bold text-[#356F32] flex items-center gap-1 shrink-0">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                     <span>SOP Chuẩn</span>
                   </span>
@@ -280,9 +293,10 @@ export default function HomePage() {
                     href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3.5 py-2 rounded-xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#2E602C] text-white text-xs font-bold transition-all shadow-xs"
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#356F32] to-[#40813D] hover:from-[#2E602C] hover:to-[#356F32] active:scale-95 text-white text-xs sm:text-[13px] font-bold transition-all shadow-xs"
                   >
-                    Đặt ngay
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>Đặt lịch • {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
                   </a>
                 </div>
               </div>
@@ -307,7 +321,7 @@ export default function HomePage() {
               ) : null}
             </div>
             <p className="text-xs sm:text-[13px] text-[#5B6B58] mt-0.5">
-              {filteredAndSortedSpas.length} {tSpaNetwork('spasFoundCauGiay', { count: filteredAndSortedSpas.length })}
+              {tSpaNetwork('spasFoundCauGiay', { count: filteredAndSortedSpas.length })}
               {locationLabel && locationLabel !== 'Bật vị trí' && ` · Gần ${locationLabel}`}
             </p>
           </div>
