@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Star, MapPin } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { formatDistanceKm, getOpeningStatus } from '@/lib/formatters'
 import type { SpaCardData } from './NearbySpaCard'
 
@@ -14,6 +15,9 @@ export function NearbySpaMobileCard({
   spa: SpaCardData
   fallbackImage: string
 }) {
+  const tSpaNetwork = useTranslations('SpaNetwork')
+  const tCommon = useTranslations('Common')
+
   const [imgSrc, setImgSrc] = useState(spa.imageUrl || fallbackImage)
   const openingStatus = getOpeningStatus(spa.openHours)
   const distanceText = formatDistanceKm(spa.distanceKm)
@@ -56,7 +60,7 @@ export function NearbySpaMobileCard({
 
           {/* Reviews */}
           <span className="text-[#5B6B58] shrink-0">
-            ({spa.reviewCount || 128})
+            ({spa.reviewCount || 128} {tCommon('reviews')})
           </span>
 
           {/* Distance */}
@@ -77,14 +81,14 @@ export function NearbySpaMobileCard({
               openingStatus.isOpen ? 'text-[#40813D]' : 'text-amber-600'
             }`}
           >
-            {openingStatus.isOpen ? 'Mở cửa' : 'Đóng cửa'}
+            {openingStatus.isOpen ? tSpaNetwork('filterOpenNow') : tSpaNetwork('filterClosed')}
           </span>
         </div>
 
         {/* Dòng Giá: Hiện trực tiếp 1 dòng súc tích */}
         <div className="flex items-baseline flex-wrap gap-1.5 min-w-0">
           <span className="text-[14px] leading-[18px] font-extrabold text-[#093E06]">
-            từ 49.000 đ
+            {tSpaNetwork('priceFrom', { price: '49.000' })}
           </span>
           <span className="text-[11.5px] font-medium text-[#9BA898] line-through shrink-0">
             179.000 đ

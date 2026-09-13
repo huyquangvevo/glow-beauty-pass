@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Star, MapPin, Sparkles, ChevronRight } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { formatDistanceKm, getOpeningStatus } from '@/lib/formatters'
 
 export interface SpaCardData {
@@ -32,6 +33,10 @@ export function NearbySpaCard({
   fallbackImage: string
   zaloHubLink: string
 }) {
+  const tSpaNetwork = useTranslations('SpaNetwork')
+  const tServices = useTranslations('Services')
+  const tCommon = useTranslations('Common')
+
   const [imgSrc, setImgSrc] = useState(spa.imageUrl || fallbackImage)
   const openingStatus = getOpeningStatus(spa.openHours)
   const distanceText = formatDistanceKm(spa.distanceKm)
@@ -58,7 +63,7 @@ export function NearbySpaCard({
         <div className="absolute left-3 top-3 z-10">
           <span className="inline-flex items-center gap-1 rounded-full bg-white/95 backdrop-blur-xs px-2.5 py-0.5 text-[11px] font-bold text-[#234E21] shadow-xs border border-white/60">
             <Sparkles className="w-3 h-3 text-[#40813D]" />
-            <span>SOP Chuẩn</span>
+            <span>{tSpaNetwork('sopStandard')}</span>
           </span>
         </div>
 
@@ -93,7 +98,7 @@ export function NearbySpaCard({
             <span className="text-[#9BA898] font-normal shrink-0">|</span>
 
             <span className="text-[#5B6B58] shrink-0">
-              ({spa.reviewCount || 128} đánh giá)
+              ({spa.reviewCount || 128} {tCommon('reviews')})
             </span>
 
             <span className="text-[#9BA898] font-normal shrink-0">·</span>
@@ -110,7 +115,7 @@ export function NearbySpaCard({
                   openingStatus.isOpen ? 'text-[#40813D]' : 'text-amber-600'
                 }`}
               >
-                {openingStatus.text}
+                {openingStatus.isOpen ? tSpaNetwork('filterOpenNow') : tSpaNetwork('filterClosed')}
               </span>
             </div>
           </div>
@@ -136,7 +141,7 @@ export function NearbySpaCard({
             className="flex flex-col justify-center rounded-xl bg-[#DDE4D9]/80 p-2.5 sm:p-3 transition-all duration-200 hover:bg-[#DDE4D9] group/deal"
           >
             <div className="text-[12.5px] font-semibold text-[#093E06] line-clamp-1 group-hover/deal:text-[#184515]">
-              Gói Gội Đầu Dưỡng Sinh SOP Chuẩn Hóa (45&apos;)
+              {tServices('pkg1.name')}
             </div>
             <div className="flex items-baseline flex-wrap gap-2 mt-1">
               <span className="text-[15px] sm:text-[16px] font-extrabold text-[#093E06]">
@@ -158,7 +163,7 @@ export function NearbySpaCard({
             href={href}
             className="flex-1 py-2 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold text-center transition-colors"
           >
-            Chi tiết
+            {tSpaNetwork('viewDetails')}
           </Link>
           <a
             href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(
@@ -168,7 +173,7 @@ export function NearbySpaCard({
             rel="noopener noreferrer"
             className="flex-1 py-2 px-3 rounded-xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#2E602C] text-white text-xs font-bold text-center transition-all shadow-xs"
           >
-            Đặt Zalo
+            {tSpaNetwork('bookSlot')}
           </a>
         </div>
       </div>

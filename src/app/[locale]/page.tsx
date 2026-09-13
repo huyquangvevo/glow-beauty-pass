@@ -356,7 +356,7 @@ export default function HomePage() {
             </h2>
             <p className="text-xs text-[#5B6B58] mt-0.5 truncate">
               {tSpaNetwork('spasFoundCauGiay', { count: filteredAndSortedSpas.length })}
-              {locationLabel && locationLabel !== 'Bật vị trí' && ` · Gần ${locationLabel}`}
+              {locationLabel && locationLabel !== 'Bật vị trí' && ` · ${tSpaNetwork('nearLocation', { location: locationLabel })}`}
             </p>
           </div>
 
@@ -476,9 +476,9 @@ export default function HomePage() {
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="bg-transparent text-xs font-semibold text-stone-700 outline-none cursor-pointer pr-1"
               >
-                <option value="nearest">Gần nhất</option>
-                <option value="rating">Điểm cao nhất</option>
-                <option value="reviews">Nhiều review nhất</option>
+                <option value="nearest">{tSpaNetwork('sortNearest')}</option>
+                <option value="rating">{tSpaNetwork('sortRating')}</option>
+                <option value="reviews">{tSpaNetwork('sortReviews')}</option>
               </select>
             </div>
 
@@ -493,7 +493,7 @@ export default function HomePage() {
               }`}
             >
               <span className={`w-2 h-2 rounded-full ${openNowOnly ? 'bg-[#40813D]' : 'bg-stone-300'}`} />
-              <span>Đang mở cửa</span>
+              <span>{tSpaNetwork('filterOpenNow')}</span>
               {openNowOnly && <Check className="w-3 h-3 text-[#40813D]" />}
             </button>
 
@@ -506,7 +506,7 @@ export default function HomePage() {
                   : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
               }`}
             >
-              <span>★ 4.8+ sao</span>
+              <span>{tSpaNetwork('filterTopRated')}</span>
               {topRatedOnly && <Check className="w-3 h-3 text-amber-600" />}
             </button>
 
@@ -519,7 +519,7 @@ export default function HomePage() {
                   : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
               }`}
             >
-              <span>Gói 49K</span>
+              <span>{tSpaNetwork('filterDeal49k')}</span>
               {deal49kOnly && <Check className="w-3 h-3 text-[#40813D]" />}
             </button>
           </div>
@@ -532,7 +532,7 @@ export default function HomePage() {
           </div>
         ) : paginatedSpas.length === 0 ? (
           <div className="py-12 px-4 text-center bg-white rounded-2xl border border-[#DDE4D9] text-sm text-[#5B6B58] space-y-2">
-            <div>Không tìm thấy spa nào phù hợp với bộ lọc đã chọn.</div>
+            <div>{tSpaNetwork('noSpasFilterMatch')}</div>
             <button
               type="button"
               onClick={() => {
@@ -542,9 +542,9 @@ export default function HomePage() {
                 setDeal49kOnly(false)
                 setSearchQuery('')
               }}
-              className="text-xs font-bold text-[#40813D] hover:underline"
+              className="text-xs font-bold text-[#40813D] hover:underline cursor-pointer"
             >
-              Đặt lại tất cả bộ lọc
+              {tSpaNetwork('resetFilters')}
             </button>
           </div>
         ) : (
@@ -576,7 +576,7 @@ export default function HomePage() {
             {/* Pagination Controls & Show All Toggle (Tuoi-fe style) */}
             <div className="pt-2 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="text-xs text-[#5B6B58] order-2 sm:order-1">
-                Hiển thị <strong className="text-[#093E06]">{paginatedSpas.length}</strong> / {filteredAndSortedSpas.length} spa đối tác tại Cầu Giấy
+                {tSpaNetwork('showingCount', { current: paginatedSpas.length, total: filteredAndSortedSpas.length })}
               </div>
 
               <div className="flex items-center gap-3 order-1 sm:order-2">

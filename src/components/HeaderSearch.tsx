@@ -71,6 +71,7 @@ export function HeaderSearch() {
   const tNav = useTranslations('Navbar')
   const tCommon = useTranslations('Common')
   const tWards = useTranslations('Wards')
+  const tSpaNetwork = useTranslations('SpaNetwork')
   const router = useRouter()
   const pathname = usePathname()
   const { searchQuery, setSearchQuery } = useSearch()
@@ -212,10 +213,13 @@ export function HeaderSearch() {
           formattedDistance = distanceKm < 1 ? `${Math.round(distanceKm * 1000)}m` : `${distanceKm}km`
         }
 
+        const localizedName = tWards.has(h.name as any) ? tWards(h.name as any) : h.name
+        const spasCountStr = tSpaNetwork('spasCount', { count })
+
         return {
           label: userCoords && formattedDistance
-            ? `${h.name} (${count} spa • ${formattedDistance})`
-            : `${h.name} (${count} spa)`,
+            ? `${localizedName} (${spasCountStr} • ${formattedDistance})`
+            : `${localizedName} (${spasCountStr})`,
           value: h.name,
           count,
           distanceKm,
@@ -579,8 +583,8 @@ export function HeaderSearch() {
                   <MapPin className={`w-3.5 h-3.5 ${userCoords ? 'text-[#236B38]' : 'text-stone-400'}`} />
                   <span>
                     {userCoords
-                      ? 'Gợi ý theo vị trí của bạn (gần nhất)'
-                      : 'Điểm & Phố nổi bật (nhiều spa nhất)'}
+                      ? tSpaNetwork('suggestNearYou')
+                      : tSpaNetwork('suggestPopular')}
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
@@ -876,8 +880,8 @@ export function HeaderSearch() {
                   <MapPin className={`w-3.5 h-3.5 ${userCoords ? 'text-[#40813D]' : 'text-stone-500'}`} />
                   <span>
                     {userCoords
-                      ? 'Gợi ý theo vị trí của bạn (gần nhất)'
-                      : 'Điểm & Phố nổi bật (nhiều spa nhất)'}
+                      ? tSpaNetwork('suggestNearYou')
+                      : tSpaNetwork('suggestPopular')}
                   </span>
                 </h3>
                 <div className="flex flex-wrap gap-2">
