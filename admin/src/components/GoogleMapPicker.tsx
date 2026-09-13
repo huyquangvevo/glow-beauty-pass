@@ -28,7 +28,7 @@ const DEFAULT_LNG = 105.7930
 
 const GOOGLE_MAPS_API_KEY =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY?.trim() ||
-  'AIzaSyAPIBP4yEJQLTp58U3uQp4FdldaDPong4w'
+  'AIzaSyD3YIsbyA_4gb6LM5ydwfIYnktrGrIYxsQ'
 
 export function GoogleMapPicker({
   latitude,
