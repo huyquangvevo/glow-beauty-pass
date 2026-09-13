@@ -22,6 +22,18 @@ export const metadata: Metadata = {
   title: 'Glow Beauty Pass - Mạng Lưới Spa Chuẩn Hóa Cầu Giấy',
   description:
     'Nền tảng đặt lịch làm đẹp chuẩn hóa đầu tiên tại Cầu Giấy, Hà Nội. 15 spa tuyển chọn, 3 gói gội cố định, 1 quy trình SOP kiểm định nghiêm ngặt. 1 Đầu mối đặt lịch Zalo.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192x192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon-512x512.png', type: 'image/png', sizes: '512x512' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 }
 
 export const viewport: Viewport = {

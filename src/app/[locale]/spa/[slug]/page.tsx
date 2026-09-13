@@ -190,8 +190,9 @@ export default function SpaDetailPage() {
       <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E5E9E4] shadow-xs space-y-4">
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase px-3 py-1 rounded-full bg-[#E8F5E9] text-[#093E06] border border-emerald-200">
-              glow beauty pass • {spa.tier}
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-[#E8F5E9] text-[#093E06] border border-emerald-200 shadow-2xs">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#236B38]" />
+              <span>{tSpaDetail('verifiedPartner')}</span>
             </span>
             <span className="text-xs sm:text-sm text-[#236B38] font-bold flex items-center gap-1">
               <ShieldCheck className="w-4 h-4" />
@@ -348,10 +349,9 @@ export default function SpaDetailPage() {
                     href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}%20tại%20${encodeURIComponent(spa.name)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4.5 py-2.5 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white font-bold text-xs sm:text-sm shadow-sm shadow-[#40813D]/25 active:scale-95 transition-all flex items-center gap-1.5"
+                    className="px-4 py-2 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white font-bold text-xs sm:text-sm shadow-xs active:scale-95 transition-all flex items-center gap-1"
                   >
                     <span>{tSpaDetail('bookThisPackage')}</span>
-                    <span className="opacity-90 font-extrabold">• {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
                   </a>
                 </div>
               </div>
@@ -377,7 +377,7 @@ export default function SpaDetailPage() {
         {/* Review Breakdown Board */}
         <ReviewBreakdownBoard
           spa={spa}
-          travelersChoiceLabel="★ GỢI Ý ĐÁNH GIÁ CAO • TOP RATED"
+          travelersChoiceLabel="★ TOP RATED • ĐÁNH GIÁ CAO"
           reviewsCountLabel={tCommon('reviews')}
         />
 
@@ -456,7 +456,7 @@ export default function SpaDetailPage() {
           <div className="flex items-center gap-2 pb-1 border-b border-stone-100">
             <HelpCircle className="w-4 h-4 text-[#236B38]" />
             <h3 className="font-black text-sm uppercase tracking-wider text-[#093E06]">
-              Câu Hỏi Thường Gặp (FAQ)
+              {tSpaDetail('faqTitle')}
             </h3>
           </div>
           <div className="space-y-2.5">

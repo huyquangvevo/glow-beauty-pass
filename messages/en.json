@@ -156,14 +156,16 @@
     "hotline": "Hotline",
     "openHours": "Opening Hours",
     "distanceFromYou": "Distance from you",
-    "servicesTitle": "3 Standardized Spa Packages",
+    "servicesTitle": "Service Packages",
     "reviewsTitle": "Customer Reviews",
     "noReviews": "No customer reviews yet for this spa location.",
     "guarantee100": "100% Price Guarantee",
-    "bookThisPackage": "Book this package",
-    "bookZalo": "Book Zalo",
-    "bookZaloQuick": "Book via Zalo (< 5 min)",
-    "sopGuaranteed": "Verified SOP Standard"
+    "bookThisPackage": "Book now",
+    "bookZalo": "Book via Zalo",
+    "bookZaloQuick": "Book via Zalo",
+    "sopGuaranteed": "SOP Standard",
+    "verifiedPartner": "Verified Partner",
+    "faqTitle": "Frequently Asked Questions (FAQ)"
   },
   "LocationPrompt": {
     "title": "Enable location to find spas closest to you",

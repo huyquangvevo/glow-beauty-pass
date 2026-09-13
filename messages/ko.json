@@ -156,14 +156,16 @@
     "hotline": "안내 핫라인",
     "openHours": "영업 시간",
     "distanceFromYou": "현재 위치에서의 거리",
-    "servicesTitle": "3가지 공인 표준 코스",
+    "servicesTitle": "서비스 코스",
     "reviewsTitle": "고객 리얼 후기",
     "noReviews": "아직 등록된 후기가 없습니다.",
     "guarantee100": "100% 정찰제 보장",
-    "bookThisPackage": "이 코스 예약하기",
+    "bookThisPackage": "예약하기",
     "bookZalo": "Zalo 예약",
-    "bookZaloQuick": "Zalo 예약하기 (< 5분 소요)",
-    "sopGuaranteed": "표준 SOP 안심 보장"
+    "bookZaloQuick": "Zalo 예약",
+    "sopGuaranteed": "표준 SOP 보장",
+    "verifiedPartner": "공식 인증 파트너",
+    "faqTitle": "자주 묻는 질문 (FAQ)"
   },
   "LocationPrompt": {
     "title": "가까운 스파를 찾기 위해 위치 정보를 켜주세요",

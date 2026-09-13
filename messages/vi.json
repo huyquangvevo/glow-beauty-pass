@@ -156,14 +156,16 @@
     "hotline": "Hotline tiếp nhận",
     "openHours": "Giờ mở cửa",
     "distanceFromYou": "Khoảng cách từ bạn",
-    "servicesTitle": "3 Gói Dịch Vụ Niêm Yết",
+    "servicesTitle": "Gói Dịch Vụ Niêm Yết",
     "reviewsTitle": "Đánh Giá Khách Hàng",
     "noReviews": "Chưa có đánh giá nào cho điểm spa này.",
     "guarantee100": "Đúng giá 100%",
-    "bookThisPackage": "Đặt gói này",
+    "bookThisPackage": "Đặt ngay",
     "bookZalo": "Đặt lịch Zalo",
-    "bookZaloQuick": "Đặt chỗ qua Zalo (< 5p)",
-    "sopGuaranteed": "Cam kết chuẩn SOP"
+    "bookZaloQuick": "Đặt lịch Zalo",
+    "sopGuaranteed": "Chuẩn SOP",
+    "verifiedPartner": "Đối tác xác thực",
+    "faqTitle": "Câu hỏi thường gặp (FAQ)"
   },
   "LocationPrompt": {
     "title": "Bật vị trí để tìm spa gần bạn nhất",
