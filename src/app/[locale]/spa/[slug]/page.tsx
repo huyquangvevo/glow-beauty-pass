@@ -11,13 +11,14 @@ import {
   Star,
   ShieldCheck,
   Gift,
-  MessageCircle,
   Phone,
   CheckCircle2,
   ChevronDown,
   Award,
   HelpCircle,
+  Sparkles,
 } from 'lucide-react'
+import { ZaloIcon } from '@/components/ZaloIcon'
 import { useTranslations } from 'next-intl'
 
 function ReviewBreakdownBoard({
@@ -183,6 +184,18 @@ export default function SpaDetailPage() {
     )
   }
 
+  const [openFaqs, setOpenFaqs] = useState<Record<number, boolean>>({ 0: true })
+  const toggleFaq = (idx: number) => {
+    setOpenFaqs((prev) => ({ ...prev, [idx]: !prev[idx] }))
+  }
+
+  const minPrice = useMemo(() => {
+    if (skus && skus.length > 0) {
+      return Math.min(...skus.map((s) => s.pricePhase1))
+    }
+    return 49000
+  }, [skus])
+
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0988888888'
 
   // Build reviews list: priority for curatedReviews, fallback to reviews relation
@@ -203,10 +216,10 @@ export default function SpaDetailPage() {
       : []
 
   return (
-    <div className="max-w-md mx-auto px-4 py-4 space-y-5 pb-20">
+    <div className="max-w-xl sm:max-w-2xl mx-auto px-4 py-5 space-y-6 pb-28 sm:pb-32">
       {/* SPA HEADER CARD */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E5E9E4] shadow-xs space-y-4">
-        <div className="space-y-2.5">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2EBE2] shadow-xs space-y-4">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-[#E8F5E9] text-[#093E06] border border-emerald-200 shadow-2xs">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#236B38]" />
@@ -219,12 +232,12 @@ export default function SpaDetailPage() {
           </div>
 
           {spa.imageUrl && (
-            <div className="relative w-full h-48 sm:h-56 rounded-2xl overflow-hidden border border-stone-200/80 shadow-2xs">
+            <div className="relative w-full h-52 sm:h-64 rounded-2xl overflow-hidden border border-stone-200/80 shadow-2xs">
               <Image
                 src={spa.imageUrl}
                 alt={spa.name}
                 fill
-                sizes="(max-width: 640px) 100vw, 448px"
+                sizes="(max-width: 640px) 100vw, 672px"
                 className="object-cover"
                 priority
               />
@@ -240,7 +253,7 @@ export default function SpaDetailPage() {
             <span>{spa.address}</span>
           </p>
 
-          <div className="flex items-center gap-4 text-xs sm:text-sm text-[#5B6B58] pt-1">
+          <div className="flex items-center gap-4 text-xs sm:text-sm text-[#5B6B58] pt-0.5">
             <div className="flex items-center gap-1 text-amber-600 font-bold">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
               <span className="text-[#093E06] font-extrabold">{spa.rating}</span>
@@ -273,104 +286,170 @@ export default function SpaDetailPage() {
             href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 py-3 px-4 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-98 transition-all shadow-xs"
+            className="flex-1 py-3 px-4 rounded-2xl bg-[#0068FF] hover:bg-[#0052CC] text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-98 transition-all shadow-md shadow-blue-500/20"
           >
-            <MessageCircle className="w-4 h-4 text-emerald-200" />
+            <ZaloIcon className="w-5 h-5 text-white" />
             <span>{tSpaDetail('bookZalo')}</span>
           </a>
 
           <a
             href={`tel:${spa.phone}`}
-            className="py-3 px-4 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 font-semibold text-xs sm:text-sm flex items-center gap-1.5"
+            className="py-3 px-4 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs sm:text-sm flex items-center gap-1.5 border border-stone-200/80 active:scale-98 transition-all"
           >
-            <Phone className="w-4 h-4 text-stone-600" />
+            <Phone className="w-4 h-4 text-stone-700" />
             <span>{tSpaDetail('hotline')}</span>
           </a>
         </div>
       </div>
 
-      {/* 3 SKU MENU */}
-      <div className="space-y-3">
-        <h2 className="text-base font-extrabold uppercase tracking-wider text-[#093E06] px-1">
-          {tServices('heading')}
-        </h2>
+      {/* 3 SKU MENU - HIGH-IMPACT PROMINENT DISPLAY */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between px-1">
+          <div>
+            <h2 className="text-base sm:text-lg font-black uppercase tracking-wider text-[#093E06]">
+              {tServices('heading')}
+            </h2>
+            <p className="text-xs text-[#5B6B58] mt-0.5">
+              Đồng giá niêm yết toàn mạng lưới • Không phụ thu • Đúng chuẩn quy trình SOP
+            </p>
+          </div>
+          <span className="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-[#236B38] bg-[#E8F5E9] px-3 py-1 rounded-full border border-emerald-200">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            3 Gói Chuẩn Hoá
+          </span>
+        </div>
 
-        <div className="space-y-3.5">
+        <div className="space-y-4">
           {skus.map((sku, index) => {
             const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
             const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
             const localizedDesc = tServices.has(`${pkgKey}.desc` as any) ? tServices(`${pkgKey}.desc` as any) : sku.description
+
+            const isBestSeller = index === 1
+            const isEntryDeal = index === 0
+
+            const badgeText = isEntryDeal
+              ? tSpaDetail('pkg1Badge')
+              : isBestSeller
+              ? tSpaDetail('pkg2Badge')
+              : tSpaDetail('pkg3Badge')
 
             const discountPercent =
               sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
                 ? Math.round(((sku.pricePhase2 - sku.pricePhase1) / sku.pricePhase2) * 100)
                 : null
 
+            // Steps/features from messages
+            const features = [
+              tServices.has(`${pkgKey}.f1` as any) ? tServices(`${pkgKey}.f1` as any) : null,
+              tServices.has(`${pkgKey}.f2` as any) ? tServices(`${pkgKey}.f2` as any) : null,
+              tServices.has(`${pkgKey}.f3` as any) ? tServices(`${pkgKey}.f3` as any) : null,
+              tServices.has(`${pkgKey}.f4` as any) ? tServices(`${pkgKey}.f4` as any) : null,
+            ].filter(Boolean)
+
             return (
               <div
                 key={sku.id}
-                className="p-4.5 sm:p-5 rounded-2xl bg-white border border-[#D5E7D8] shadow-xs space-y-3 hover:border-[#40813D]/60 transition-all"
+                className={`relative rounded-3xl transition-all duration-200 overflow-hidden ${
+                  isBestSeller
+                    ? 'bg-gradient-to-b from-[#F2F9F3] via-white to-white border-2 border-[#236B38] shadow-md'
+                    : 'bg-white border border-[#D5E7D8] shadow-xs hover:border-[#236B38]/60 hover:shadow-sm'
+                }`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <h3 className="font-black text-base sm:text-[17px] text-[#234E21] leading-snug">
-                      {localizedName}
-                    </h3>
-                    <div className="flex items-center gap-1.5 text-xs text-[#5B6B58] font-medium">
-                      <Clock className="w-3.5 h-3.5 text-[#40813D]" />
-                      <span>
-                        {tCommon('duration')}{' '}
-                        <strong className="text-[#234E21]">
-                          {sku.durationMinutes} {tCommon('minutes')}
-                        </strong>
-                      </span>
-                    </div>
-                  </div>
+                {/* Highlight Badge Ribbon */}
+                <div
+                  className={`py-1.5 px-4 text-[11px] sm:text-xs font-black uppercase tracking-wider flex items-center justify-between ${
+                    isBestSeller
+                      ? 'bg-[#236B38] text-white'
+                      : isEntryDeal
+                      ? 'bg-amber-100 text-amber-900 border-b border-amber-200'
+                      : 'bg-stone-100 text-stone-700 border-b border-stone-200'
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5">
+                    {isBestSeller && <Sparkles className="w-3.5 h-3.5 text-amber-300" />}
+                    {isEntryDeal && <span>🔥</span>}
+                    {!isBestSeller && !isEntryDeal && <span>👑</span>}
+                    {badgeText}
+                  </span>
+                  <span className="text-[10px] font-bold opacity-90">
+                    {tCommon('noSurcharge')}
+                  </span>
+                </div>
 
-                  {/* High-Impact Prominent Price Badge */}
-                  <div className="shrink-0 flex flex-col items-end">
-                    <div className="bg-gradient-to-br from-[#EBF6EA] to-[#DCF0DA] px-3.5 py-2 rounded-2xl border border-[#A4D5A1] shadow-2xs flex flex-col items-end text-right">
+                <div className="p-4 sm:p-5 space-y-3.5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1.5 flex-1 min-w-0">
+                      <h3 className="font-black text-base sm:text-lg text-[#0B3B0F] leading-snug">
+                        {localizedName}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200/60">
+                          <Clock className="w-3.5 h-3.5 text-emerald-700" />
+                          {sku.durationMinutes} {tCommon('minutes')}
+                        </span>
+                        <span className="text-[11px] text-stone-500 font-medium">
+                          • {tSpaDetail('sopGuaranteed')}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Price Block */}
+                    <div className="shrink-0 flex flex-col items-end text-right">
                       {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
-                        <div className="flex items-center gap-1 leading-none mb-1">
-                          <span className="text-[11px] font-semibold text-stone-400 line-through">
+                        <div className="flex items-center gap-1.5 leading-none mb-1">
+                          <span className="text-xs font-semibold text-stone-400 line-through">
                             {sku.pricePhase2.toLocaleString('vi-VN')}đ
                           </span>
                           {discountPercent && (
-                            <span className="text-[10px] font-extrabold text-amber-700 bg-amber-200/80 px-1.5 py-0.2 rounded-md">
+                            <span className="text-[10px] font-black text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-md border border-amber-200">
                               -{discountPercent}%
                             </span>
                           )}
                         </div>
                       )}
                       <div className="flex items-baseline leading-none">
-                        <span className="font-black text-2xl sm:text-[27px] text-[#1E5C23] tracking-tight">
+                        <span className="font-black text-2xl sm:text-3xl text-[#1E5C23] tracking-tight">
                           {sku.pricePhase1.toLocaleString('vi-VN')}
                         </span>
-                        <span className="text-sm font-black text-[#2E7234] ml-0.5">đ</span>
+                        <span className="text-sm sm:text-base font-black text-[#1E5C23] ml-0.5">đ</span>
                       </div>
+                      <span className="text-[10px] font-bold text-emerald-700 mt-1">
+                        ✓ {tSpaDetail('guarantee100')}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-extrabold text-[#40813D] mt-1">
-                      {tCommon('noSurcharge')}
-                    </span>
                   </div>
-                </div>
 
-                <p className="text-xs sm:text-[13px] text-[#4E5C4C] leading-relaxed bg-[#F9FCF9] p-3 rounded-xl border border-[#E8F2E8]">
-                  {localizedDesc}
-                </p>
+                  {/* Features steps */}
+                  {features.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
+                      {features.map((f: any, idx: number) => (
+                        <div key={idx} className="flex items-center gap-1.5 text-xs text-[#2F4431]">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#236B38] shrink-0" />
+                          <span className="truncate">{f}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-                <div className="pt-2 flex items-center justify-between border-t border-stone-100 gap-2">
-                  <span className="text-xs text-[#40813D] font-bold">
-                    ✓ {tSpaDetail('sopGuaranteed')}
-                  </span>
-                  <a
-                    href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}%20tại%20${encodeURIComponent(spa.name)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white font-bold text-xs sm:text-sm shadow-xs active:scale-95 transition-all flex items-center gap-1"
-                  >
-                    <span>{tSpaDetail('bookThisPackage')}</span>
-                  </a>
+                  <p className="text-xs sm:text-[13px] text-[#4E5C4C] leading-relaxed bg-[#F8FAF8] p-3 rounded-xl border border-[#E5EFE5]">
+                    {localizedDesc}
+                  </p>
+
+                  <div className="pt-2 flex items-center justify-between border-t border-stone-100 gap-3">
+                    <span className="text-xs text-stone-500 font-medium">
+                      {tSpaDetail('freeCancel')}
+                    </span>
+                    <a
+                      href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20${encodeURIComponent(sku.name)}%20tại%20${encodeURIComponent(spa.name)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2.5 rounded-full bg-[#0068FF] hover:bg-[#0052CC] text-white font-black text-xs sm:text-[13px] shadow-xs active:scale-95 transition-all flex items-center gap-2"
+                    >
+                      <ZaloIcon className="w-4 h-4 text-white" />
+                      <span>{tSpaDetail('bookViaZalo')} • {sku.pricePhase1.toLocaleString('vi-VN')}đ</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             )
@@ -379,7 +458,7 @@ export default function SpaDetailPage() {
       </div>
 
       {/* WHAT OUR CUSTOMERS SAY & REVIEWS (Matching luggage-storage) */}
-      <div className="bg-white rounded-3xl p-5 border border-[#E5E9E4] shadow-xs space-y-4">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2EBE2] shadow-xs space-y-4">
         <div>
           <div className="flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-[#236B38]" />
@@ -468,53 +547,128 @@ export default function SpaDetailPage() {
         )}
       </div>
 
-      {/* FAQ SECTION (Matching luggage-storage) */}
+      {/* REDESIGNED BEAUTIFUL FAQ ACCORDION */}
       {spa.faqs && Array.isArray(spa.faqs) && spa.faqs.length > 0 && (
-        <div className="bg-white rounded-3xl p-5 border border-[#E5E9E4] shadow-xs space-y-3.5">
-          <div className="flex items-center gap-2 pb-1 border-b border-stone-100">
-            <HelpCircle className="w-4 h-4 text-[#236B38]" />
-            <h3 className="font-black text-sm uppercase tracking-wider text-[#093E06]">
-              {tSpaDetail('faqTitle')}
-            </h3>
+        <div className="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2EBE2] shadow-xs space-y-4">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-100/70 border border-emerald-200/80 flex items-center justify-center shrink-0 text-[#236B38]">
+              <HelpCircle className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-black text-base sm:text-lg text-[#093E06] tracking-tight">
+                {tSpaDetail('faqTitle')}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#5B6B58] mt-0.5">
+                {tSpaDetail('faqSubtitle')}
+              </p>
+            </div>
           </div>
-          <div className="space-y-2.5">
-            {spa.faqs.map((faq: any, i: number) => (
-              <details
-                key={i}
-                className="group rounded-2xl border border-[#E5E9E4] bg-[#FDFEFC] p-3.5 open:bg-[#F4F8F4] transition-all"
-              >
-                <summary className="font-bold text-xs sm:text-sm text-[#093E06] cursor-pointer list-none flex items-center justify-between gap-2">
-                  <span>{faq.question}</span>
-                  <ChevronDown className="w-4 h-4 text-stone-400 group-open:rotate-180 transition-transform shrink-0" />
-                </summary>
-                <p className="mt-2 text-xs sm:text-[13px] text-[#4E5C4C] leading-relaxed pt-2 border-t border-[#E5E9E4]">
-                  {faq.answer}
-                </p>
-              </details>
-            ))}
+
+          <div className="space-y-3 pt-1">
+            {spa.faqs.map((faq: any, i: number) => {
+              const isOpen = !!openFaqs[i]
+              return (
+                <div
+                  key={i}
+                  className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+                    isOpen
+                      ? 'bg-[#F4F9F4] border-[#A3D6A9] shadow-xs'
+                      : 'bg-[#FCFDFC] border-[#E5ECE5] hover:border-[#236B38]/40 hover:bg-white'
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleFaq(i)}
+                    className="w-full text-left p-4 flex items-center justify-between gap-3 cursor-pointer select-none"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span
+                        className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 transition-colors ${
+                          isOpen ? 'bg-[#236B38] text-white' : 'bg-emerald-100/60 text-[#236B38]'
+                        }`}
+                      >
+                        Q{i + 1}
+                      </span>
+                      <span className="font-bold text-xs sm:text-sm text-[#093E06] leading-snug">
+                        {faq.question}
+                      </span>
+                    </div>
+                    <div
+                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                        isOpen ? 'bg-[#236B38] text-white rotate-180' : 'bg-stone-100 text-stone-500'
+                      }`}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-4 pb-4 pt-1 border-t border-[#DDE7DF]/80">
+                      <p className="text-xs sm:text-[13.5px] text-[#344433] leading-relaxed">
+                        {faq.answer}
+                      </p>
+                      <div className="mt-2.5 flex items-center gap-1.5 text-[11px] font-bold text-[#236B38]">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>Cam kết kiểm định Glow Beauty Pass</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       )}
 
-      {/* STICKY BOTTOM BAR FOR MOBILE */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-stone-200 p-2.5 sm:hidden shadow-xs">
-        <div className="max-w-md mx-auto flex items-center gap-2">
-          <a
-            href={`tel:${spa.phone}`}
-            className="p-2.5 rounded-full bg-stone-100 text-stone-700 flex items-center justify-center shrink-0"
-          >
-            <Phone className="w-4.5 h-4.5" />
-          </a>
+      {/* PROMINENT STICKY BOTTOM BAR (MOBILE & DESKTOP) */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#DDE7DF] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] py-2.5 sm:py-3 px-4">
+        <div className="max-w-xl sm:max-w-2xl mx-auto flex items-center justify-between gap-3">
+          {/* Price Teaser */}
+          <div className="flex flex-col min-w-0 pr-1">
+            <span className="text-[10px] sm:text-[11px] font-medium text-stone-500 uppercase tracking-wider leading-none">
+              {tSpaDetail('fromPrice')}
+            </span>
+            <div className="flex items-baseline gap-1 mt-0.5">
+              <span className="text-xl sm:text-2xl font-black text-[#1B522B] tracking-tight leading-none">
+                {minPrice.toLocaleString('vi-VN')}
+              </span>
+              <span className="text-xs font-bold text-[#1B522B]">đ</span>
+            </div>
+            <span className="text-[10px] font-bold text-emerald-700 flex items-center gap-0.5 mt-0.5 leading-none truncate">
+              <CheckCircle2 className="w-2.5 h-2.5 shrink-0" />
+              <span>{tSpaDetail('noDeposit')}</span>
+            </span>
+          </div>
 
-          <a
-            href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 py-3 px-4 rounded-full bg-[#40813D] hover:bg-[#356F32] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98"
-          >
-            <MessageCircle className="w-4 h-4" />
-            <span>{tSpaDetail('bookZaloQuick')}</span>
-          </a>
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 flex-1 justify-end">
+            {/* Hotline Icon Button */}
+            <a
+              href={`tel:${spa.phone}`}
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center border border-stone-200 transition-all active:scale-95 shrink-0"
+              title={tSpaDetail('hotline')}
+            >
+              <Phone className="w-5 h-5 text-stone-700" />
+            </a>
+
+            {/* Big High-Impact Zalo Button with Official Zalo Icon */}
+            <a
+              href={`${zaloHubLink}?text=Tôi%20muốn%20đặt%20lịch%20tại%20${encodeURIComponent(spa.name)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 max-w-xs sm:max-w-sm h-12 sm:h-13 px-4 rounded-2xl bg-gradient-to-r from-[#0068FF] to-[#0052CC] hover:from-[#005FE8] hover:to-[#0047B3] text-white flex items-center justify-center gap-2.5 shadow-md shadow-blue-500/25 transition-all active:scale-[0.98] group"
+            >
+              <ZaloIcon className="w-7 h-7 shrink-0 drop-shadow-xs" />
+              <div className="flex flex-col text-left leading-tight min-w-0">
+                <span className="font-black text-xs sm:text-sm tracking-tight truncate">
+                  {tSpaDetail('bookZaloMain')}
+                </span>
+                <span className="text-[10px] sm:text-[11px] text-blue-100 font-medium truncate">
+                  {tSpaDetail('bookZaloSub')}
+                </span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </div>

@@ -182,7 +182,17 @@
     "bookZaloQuick": "Đặt lịch Zalo",
     "sopGuaranteed": "Chuẩn SOP",
     "verifiedPartner": "Đối tác xác thực",
-    "faqTitle": "Câu hỏi thường gặp (FAQ)"
+    "faqTitle": "Câu hỏi thường gặp (FAQ)",
+    "faqSubtitle": "Giải đáp nhanh về quy trình, giá vé niêm yết và bảo vệ quyền lợi",
+    "bookZaloMain": "Đặt lịch Zalo (Giữ chỗ 0đ)",
+    "bookZaloSub": "Xác nhận sau 30 giây • Chuẩn SOP",
+    "fromPrice": "Giá từ",
+    "noDeposit": "Không cọc • Giữ chỗ 30s",
+    "pkg1Badge": "TRẢI NGHIỆM ĐỒNG GIÁ 49K",
+    "pkg2Badge": "GÓI ĐƯỢC CHỌN NHIỀU NHẤT",
+    "pkg3Badge": "VIP TRỊ LIỆU TOÀN DIỆN",
+    "freeCancel": "Hủy miễn phí",
+    "bookViaZalo": "Đặt qua Zalo"
   },
   "LocationPrompt": {
     "title": "Bật vị trí để tìm spa gần bạn nhất",

@@ -182,7 +182,17 @@
     "bookZaloQuick": "Book via Zalo",
     "sopGuaranteed": "SOP Standard",
     "verifiedPartner": "Verified Partner",
-    "faqTitle": "Frequently Asked Questions (FAQ)"
+    "faqTitle": "Frequently Asked Questions (FAQ)",
+    "faqSubtitle": "Quick answers regarding service protocols, standard pricing, and customer guarantees",
+    "bookZaloMain": "Book via Zalo (0đ Deposit)",
+    "bookZaloSub": "Confirmed within 30s • Certified SOP",
+    "fromPrice": "From",
+    "noDeposit": "No deposit • Instant 30s confirmation",
+    "pkg1Badge": "TRIAL PACKAGE 49K",
+    "pkg2Badge": "MOST POPULAR CHOICE",
+    "pkg3Badge": "VIP FULL RELAXATION",
+    "freeCancel": "Free Cancellation",
+    "bookViaZalo": "Book via Zalo"
   },
   "LocationPrompt": {
     "title": "Enable location to find spas closest to you",

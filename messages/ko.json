@@ -182,7 +182,17 @@
     "bookZaloQuick": "Zalo 예약",
     "sopGuaranteed": "표준 SOP 보장",
     "verifiedPartner": "공식 인증 파트너",
-    "faqTitle": "자주 묻는 질문 (FAQ)"
+    "faqTitle": "자주 묻는 질문 (FAQ)",
+    "faqSubtitle": "서비스 절차, 정찰제 요금 및 고객 권익 보호에 관한 빠른 안내",
+    "bookZaloMain": "Zalo 예약하기 (보증금 0đ)",
+    "bookZaloSub": "30초 내 즉시 확정 • 공인 SOP",
+    "fromPrice": "시작가",
+    "noDeposit": "예약금 없음 • 30초 내 확정",
+    "pkg1Badge": "49K 체험 특가",
+    "pkg2Badge": "가장 인기 있는 패키지",
+    "pkg3Badge": "VIP 전신 힐링 테라피",
+    "freeCancel": "언제든 무료 취소",
+    "bookViaZalo": "Zalo로 예약"
   },
   "LocationPrompt": {
     "title": "가까운 스파를 찾기 위해 위치 정보를 켜주세요",
