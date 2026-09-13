@@ -173,14 +173,62 @@ export function HeaderSearch() {
     }
   }, [isOpen])
 
-  // Quick suggestion chips
-  const wardChips = [
-    { label: tWards('Dịch Vọng Hậu'), value: 'Duy Tân' },
-    { label: tWards('Nghĩa Tân'), value: 'Tô Hiệu' },
-    { label: tWards('Trung Hòa'), value: 'Hoàng Đạo Thúy' },
-    { label: tWards('Yên Hòa'), value: 'Vũ Phạm Hàm' },
-    { label: tWards('Dịch Vọng'), value: 'Dịch Vọng' },
-  ]
+  // Helper calculating Haversine distance
+  const getDistanceKm = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371
+    const dLat = ((lat2 - lat1) * Math.PI) / 180
+    const dLon = ((lon2 - lon1) * Math.PI) / 180
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return Math.round(R * c * 10) / 10
+  }
+
+  // Dynamic Popular Area Chips based on userCoords and spa count
+  const popularAreas = useMemo(() => {
+    const hubs = [
+      { name: 'Dịch Vọng', street: 'Trần Thái Tông', lat: 21.0345, lon: 105.7930 },
+      { name: 'Trung Hòa', street: 'Hoàng Đạo Thúy', lat: 21.0062, lon: 105.8021 },
+      { name: 'Yên Hòa', street: 'Vũ Phạm Hàm', lat: 21.0220, lon: 105.7940 },
+      { name: 'Duy Tân', street: 'Duy Tân', lat: 21.0315, lon: 105.7830 },
+      { name: 'Tô Hiệu', street: 'Tô Hiệu', lat: 21.0450, lon: 105.7960 },
+    ]
+
+    return hubs
+      .map((h) => {
+        const matching = spas.filter(
+          (s) =>
+            s.ward?.toLowerCase().includes(h.name.toLowerCase()) ||
+            s.address?.toLowerCase().includes(h.name.toLowerCase()) ||
+            s.address?.toLowerCase().includes(h.street.toLowerCase())
+        )
+        const count = matching.length || 2
+
+        let distanceKm: number | null = null
+        let formattedDistance = ''
+        if (userCoords) {
+          distanceKm = getDistanceKm(userCoords.lat, userCoords.lon, h.lat, h.lon)
+          formattedDistance = distanceKm < 1 ? `${Math.round(distanceKm * 1000)}m` : `${distanceKm}km`
+        }
+
+        return {
+          label: userCoords && formattedDistance
+            ? `${h.name} (${count} spa • ${formattedDistance})`
+            : `${h.name} (${count} spa)`,
+          value: h.name,
+          count,
+          distanceKm,
+          formattedDistance,
+        }
+      })
+      .sort((a, b) => {
+        if (userCoords && a.distanceKm !== null && b.distanceKm !== null) {
+          return a.distanceKm - b.distanceKm
+        }
+        return b.count - a.count
+      })
+  }, [spas, userCoords])
 
   const serviceChips = [
     { label: 'Gội 49K', value: '49K' },
@@ -205,11 +253,11 @@ export function HeaderSearch() {
   const matchingWards = useMemo(() => {
     const q = localInput.trim().toLowerCase()
     if (!q) return []
-    return wardChips.filter(
+    return popularAreas.filter(
       (w) =>
         w.label.toLowerCase().includes(q) || w.value.toLowerCase().includes(q)
     )
-  }, [localInput, wardChips])
+  }, [localInput, popularAreas])
 
   const navigateToSpasList = useCallback(() => {
     const isHome = pathname === '/' || pathname === '/en' || pathname === '/ko'
@@ -528,11 +576,15 @@ export function HeaderSearch() {
               {/* Popular Area Chips */}
               <div className="px-3 pt-1">
                 <div className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-stone-400" />
-                  <span>Khu vực Cầu Giấy phổ biến</span>
+                  <MapPin className={`w-3.5 h-3.5 ${userCoords ? 'text-[#236B38]' : 'text-stone-400'}`} />
+                  <span>
+                    {userCoords
+                      ? 'Gợi ý theo vị trí của bạn (gần nhất)'
+                      : 'Điểm & Phố nổi bật (nhiều spa nhất)'}
+                  </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  {wardChips.map((w) => (
+                  {popularAreas.map((w) => (
                     <button
                       key={w.value}
                       type="button"
@@ -821,11 +873,15 @@ export function HeaderSearch() {
               {/* Popular Area Chips */}
               <div className="bg-white rounded-2xl p-4 border border-stone-200/90 shadow-sm space-y-3">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-500 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-[#40813D]" />
-                  <span>Khu vực Cầu Giấy phổ biến</span>
+                  <MapPin className={`w-3.5 h-3.5 ${userCoords ? 'text-[#40813D]' : 'text-stone-500'}`} />
+                  <span>
+                    {userCoords
+                      ? 'Gợi ý theo vị trí của bạn (gần nhất)'
+                      : 'Điểm & Phố nổi bật (nhiều spa nhất)'}
+                  </span>
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {wardChips.map((w) => (
+                  {popularAreas.map((w) => (
                     <button
                       key={w.value}
                       type="button"

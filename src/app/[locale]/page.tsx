@@ -65,23 +65,64 @@ export default function HomePage() {
   const { userCoords, openPrompt, locationLabel } = useLocation()
   const [isLoading, setIsLoading] = useState(true)
 
-  const wardKeys = [
-    'ALL',
-    'Dịch Vọng',
-    'Dịch Vọng Hậu',
-    'Trung Hòa',
-    'Yên Hòa',
-    'Nghĩa Tân',
-  ]
+  // Calculate spa counts per ward / hot area
+  const wardCounts = useMemo(() => {
+    const counts: Record<string, number> = { ALL: spas.length }
+    for (const s of spas) {
+      const w = s.ward || 'Dịch Vọng'
+      counts[w] = (counts[w] || 0) + 1
+    }
+    return counts
+  }, [spas])
+
+  // Sort wards dynamically based on userCoords or spa count
+  const sortedWards = useMemo(() => {
+    const baseWards = [
+      { key: 'Dịch Vọng', street: 'Trần Thái Tông' },
+      { key: 'Trung Hòa', street: 'Hoàng Đạo Thúy' },
+      { key: 'Yên Hòa', street: 'Vũ Phạm Hàm' },
+      { key: 'Dịch Vọng Hậu', street: 'Duy Tân' },
+      { key: 'Nghĩa Tân', street: 'Tô Hiệu' },
+    ]
+
+    const mapped = baseWards.map((item) => {
+      const count = wardCounts[item.key] || 0
+      const wardSpas = spas.filter((s) => s.ward === item.key)
+      let minDistanceKm: number | null = null
+      let formattedDistance = ''
+      if (userCoords && wardSpas.length > 0) {
+        const validDistances = wardSpas
+          .map((s) => s.distanceKm)
+          .filter((d): d is number => typeof d === 'number')
+        if (validDistances.length > 0) {
+          minDistanceKm = Math.min(...validDistances)
+          formattedDistance = minDistanceKm < 1 ? `${Math.round(minDistanceKm * 1000)}m` : `${minDistanceKm}km`
+        }
+      }
+      return {
+        ...item,
+        count,
+        minDistanceKm,
+        formattedDistance,
+      }
+    })
+
+    // If userCoords -> nearest first. If not -> most spas first!
+    mapped.sort((a, b) => {
+      if (userCoords && a.minDistanceKm !== null && b.minDistanceKm !== null) {
+        return a.minDistanceKm - b.minDistanceKm
+      }
+      return b.count - a.count
+    })
+
+    return mapped
+  }, [spas, wardCounts, userCoords])
 
   useEffect(() => {
     async function loadData() {
       try {
         setIsLoading(true)
         const params = new URLSearchParams()
-        if (selectedWard !== 'ALL') {
-          params.append('ward', selectedWard)
-        }
         if (userCoords) {
           params.append('lat', userCoords.lat.toString())
           params.append('lon', userCoords.lon.toString())
@@ -99,7 +140,7 @@ export default function HomePage() {
       }
     }
     loadData()
-  }, [selectedWard, userCoords])
+  }, [userCoords])
 
   // Reset page when filter changes
   useEffect(() => {
@@ -305,29 +346,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. SPAS NEAR YOU (TUOI-FE STYLE LISTING & FILTERS) */}
-      <section id="danh-sach-spa" className="space-y-4 scroll-mt-20">
+      {/* 3. SPAS NEAR YOU (MOBILE FIRST LISTING & FILTERS) */}
+      <section id="danh-sach-spa" className="space-y-3 scroll-mt-20">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-[17px] sm:text-[20px] font-bold tracking-tight text-[#093E06]">
-                {tSpaNetwork('heading')}
-              </h2>
-              {userCoords ? (
-                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#236B38] border border-emerald-200">
-                  {tSpaNetwork('gpsActive')}
-                </span>
-              ) : null}
-            </div>
-            <p className="text-xs sm:text-[13px] text-[#5B6B58] mt-0.5">
+        <div className="flex items-center justify-between gap-2 px-1">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-[17px] sm:text-[21px] font-black tracking-tight text-[#093E06] truncate">
+              {tSpaNetwork('heading')}
+            </h2>
+            <p className="text-xs text-[#5B6B58] mt-0.5 truncate">
               {tSpaNetwork('spasFoundCauGiay', { count: filteredAndSortedSpas.length })}
               {locationLabel && locationLabel !== 'Bật vị trí' && ` · Gần ${locationLabel}`}
             </p>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto">
-            {/* View Mode Switcher (Grid vs Compact List) */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* View Mode Switcher */}
             <div className="flex items-center bg-white rounded-xl border border-[#DDE4D9] p-0.5 shadow-2xs">
               <button
                 type="button"
@@ -360,114 +394,128 @@ export default function HomePage() {
             {!userCoords && (
               <button
                 onClick={openPrompt}
-                className="flex items-center gap-1.5 text-xs font-bold text-[#40813D] bg-[#EBF4EA] hover:bg-[#DCF0DA] px-3 py-1.5 rounded-full border border-[#B7DDB5] transition-all cursor-pointer shadow-2xs active:scale-95"
+                className="flex items-center gap-1 text-[11px] font-bold text-[#40813D] bg-[#EBF4EA] hover:bg-[#DCF0DA] px-2.5 py-1.5 rounded-full border border-[#B7DDB5] transition-all cursor-pointer shadow-2xs active:scale-95"
               >
-                <MapPin className="w-3.5 h-3.5 text-amber-600" />
-                <span>{tSpaNetwork('enableLocation')}</span>
+                <MapPin className="w-3 h-3 text-amber-600" />
+                <span className="hidden xs:inline">{tSpaNetwork('enableLocation')}</span>
               </button>
             )}
           </div>
         </div>
 
-        {/* Active search filter badge */}
+        {/* Active search filter badge (Slim inline pill) */}
         {searchQuery && (
-          <div className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-[#EBF4EA] border border-[#B7DDB5] text-xs text-[#234E21] shadow-2xs">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF4EA] border border-[#B7DDB5] text-xs text-[#234E21] shadow-2xs self-start w-fit">
             <span>
               {tCommon('searchResultsFor')} &ldquo;<strong className="font-bold text-[#40813D]">{searchQuery}</strong>&rdquo;
             </span>
             <button
               onClick={() => setSearchQuery('')}
-              className="text-xs font-bold text-[#40813D] hover:text-[#356F32] flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-[#B7DDB5] shadow-2xs cursor-pointer"
+              className="p-0.5 hover:bg-emerald-200/60 rounded-full cursor-pointer ml-1 text-[#40813D]"
               aria-label={tCommon('clear')}
             >
-              <span>{tCommon('clear')}</span>
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
         )}
 
-        {/* TUOI-FE FILTER BAR */}
-        <div className="space-y-2.5 pt-1">
-          {/* Row 1: Ward Filter Chips (Horizontal Scrollable / Wrapping) */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-            {wardKeys.map((wardKey) => {
-              const label = tWards.has(wardKey as any) ? tWards(wardKey as any) : wardKey
-              const isSelected = selectedWard === wardKey
+        {/* MOBILE-FIRST STREAMLINED FILTER BAR */}
+        <div className="space-y-2 pt-0.5">
+          {/* Row 1: Ward Filter Chips (Horizontal Scroll with Counts & Distance) */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+            {/* ALL Chip */}
+            <button
+              type="button"
+              onClick={() => setSelectedWard('ALL')}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border shrink-0 cursor-pointer ${
+                selectedWard === 'ALL'
+                  ? 'bg-[#40813D] text-white border-[#40813D] shadow-2xs'
+                  : 'bg-white text-[#5B6B58] hover:bg-[#F5F7F4] border-[#DDE4D9]'
+              }`}
+            >
+              {tWards('ALL')} ({spas.length})
+            </button>
+
+            {/* Dynamic Ward & Hot Spot Chips */}
+            {sortedWards.map((w) => {
+              const label = tWards.has(w.key as any) ? tWards(w.key as any) : w.key
+              const isSelected = selectedWard === w.key
               return (
                 <button
-                  key={wardKey}
+                  key={w.key}
                   type="button"
-                  onClick={() => setSelectedWard(wardKey)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold transition-all border shrink-0 cursor-pointer ${
+                  onClick={() => setSelectedWard(w.key)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border shrink-0 cursor-pointer flex items-center gap-1 ${
                     isSelected
-                      ? 'bg-[#40813D] text-white border-[#40813D] shadow-xs'
+                      ? 'bg-[#40813D] text-white border-[#40813D] shadow-2xs'
                       : 'bg-white text-[#5B6B58] hover:bg-[#F5F7F4] border-[#DDE4D9]'
                   }`}
                 >
-                  {label}
+                  <span>{label}</span>
+                  <span className={`text-[11px] ${isSelected ? 'text-emerald-100 font-bold' : 'text-stone-400'}`}>
+                    ({w.count}{w.formattedDistance ? ` • ${w.formattedDistance}` : ''})
+                  </span>
                 </button>
               )
             })}
           </div>
 
-          {/* Row 2: Quick Attribute Filters & Sorting */}
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5">
-            {/* Quick Toggle Chips */}
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <button
-                type="button"
-                onClick={() => setOpenNowOnly(!openNowOnly)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
-                  openNowOnly
-                    ? 'bg-emerald-50 text-[#234E21] border-[#40813D]'
-                    : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
-                }`}
-              >
-                <span className={`w-2 h-2 rounded-full ${openNowOnly ? 'bg-[#40813D]' : 'bg-stone-300'}`} />
-                <span>Đang mở cửa</span>
-                {openNowOnly && <Check className="w-3 h-3 text-[#40813D]" />}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setTopRatedOnly(!topRatedOnly)}
-                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
-                  topRatedOnly
-                    ? 'bg-amber-50 text-amber-900 border-amber-400'
-                    : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
-                }`}
-              >
-                <span>★ 4.8+ sao</span>
-                {topRatedOnly && <Check className="w-3 h-3 text-amber-600" />}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setDeal49kOnly(!deal49kOnly)}
-                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
-                  deal49kOnly
-                    ? 'bg-emerald-50 text-[#234E21] border-[#40813D]'
-                    : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
-                }`}
-              >
-                <span>Gói 49K</span>
-                {deal49kOnly && <Check className="w-3 h-3 text-[#40813D]" />}
-              </button>
-            </div>
-
+          {/* Row 2: Sort Dropdown & Quick Toggle Chips on single horizontal scroll row */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
             {/* Sort Dropdown */}
-            <div className="flex items-center gap-1.5 text-xs text-stone-500 shrink-0">
-              <ArrowUpDown className="w-3.5 h-3.5 text-stone-400" />
+            <div className="flex items-center gap-1 bg-white border border-[#DDE4D9] rounded-full px-2.5 py-1 text-xs shrink-0 shadow-2xs">
+              <ArrowUpDown className="w-3 h-3 text-stone-400" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-white border border-stone-200 rounded-xl px-2.5 py-1 text-xs font-semibold text-stone-700 outline-none focus:ring-2 focus:ring-[#40813D]/25 focus:border-[#40813D] cursor-pointer"
+                className="bg-transparent text-xs font-semibold text-stone-700 outline-none cursor-pointer pr-1"
               >
-                <option value="nearest">Gần nhất (Khoảng cách)</option>
-                <option value="rating">Đánh giá cao nhất</option>
-                <option value="reviews">Nhiều đánh giá nhất</option>
+                <option value="nearest">Gần nhất</option>
+                <option value="rating">Điểm cao nhất</option>
+                <option value="reviews">Nhiều review nhất</option>
               </select>
             </div>
+
+            {/* Quick Toggle Chips */}
+            <button
+              type="button"
+              onClick={() => setOpenNowOnly(!openNowOnly)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border shrink-0 transition-all cursor-pointer shadow-2xs ${
+                openNowOnly
+                  ? 'bg-emerald-50 text-[#234E21] border-[#40813D]'
+                  : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
+              }`}
+            >
+              <span className={`w-2 h-2 rounded-full ${openNowOnly ? 'bg-[#40813D]' : 'bg-stone-300'}`} />
+              <span>Đang mở cửa</span>
+              {openNowOnly && <Check className="w-3 h-3 text-[#40813D]" />}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTopRatedOnly(!topRatedOnly)}
+              className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border shrink-0 transition-all cursor-pointer shadow-2xs ${
+                topRatedOnly
+                  ? 'bg-amber-50 text-amber-900 border-amber-400'
+                  : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
+              }`}
+            >
+              <span>★ 4.8+ sao</span>
+              {topRatedOnly && <Check className="w-3 h-3 text-amber-600" />}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setDeal49kOnly(!deal49kOnly)}
+              className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border shrink-0 transition-all cursor-pointer shadow-2xs ${
+                deal49kOnly
+                  ? 'bg-emerald-50 text-[#234E21] border-[#40813D]'
+                  : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
+              }`}
+            >
+              <span>Gói 49K</span>
+              {deal49kOnly && <Check className="w-3 h-3 text-[#40813D]" />}
+            </button>
           </div>
         </div>
 
