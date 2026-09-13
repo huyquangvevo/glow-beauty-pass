@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   Building2,
   MapPin,
@@ -18,6 +17,7 @@ import {
   LocateFixed,
   Layers,
 } from 'lucide-react'
+import { ImageUploader } from '@/components/ImageUploader'
 
 // Tọa độ gợi ý trung tâm các phường Cầu Giấy để hỗ trợ nhập nhanh
 const WARD_PRESETS: Record<string, { lat: number; lon: number; addressHint: string }> = {
@@ -437,52 +437,11 @@ export default function OnboardSpaPage() {
           </div>
 
           <div className="space-y-4">
-            <div>
-              <label className="text-xs font-bold text-stone-700 block mb-2">
-                Chọn Ảnh Không Gian Spa Đạt Chuẩn
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                {STOCK_PHOTOS.map((photo) => (
-                  <button
-                    type="button"
-                    key={photo.url}
-                    onClick={() => setImageUrl(photo.url)}
-                    className={`relative rounded-2xl overflow-hidden aspect-4/3 border-2 transition-all group ${
-                      imageUrl === photo.url
-                        ? 'border-[#40813D] ring-2 ring-[#40813D]/20 shadow-md scale-102'
-                        : 'border-transparent opacity-75 hover:opacity-100'
-                    }`}
-                  >
-                    <Image
-                      src={photo.url}
-                      alt={photo.label}
-                      fill
-                      sizes="140px"
-                      className="object-cover"
-                    />
-                    {imageUrl === photo.url && (
-                      <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-[#40813D] text-white flex items-center justify-center shadow-xs">
-                        <Check className="w-3 h-3" />
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Custom Image URL */}
-            <div className="space-y-1 pt-2">
-              <label className="text-xs font-bold text-stone-700">
-                Hoặc Nhập URL Hình Ảnh Riêng Của Spa
-              </label>
-              <input
-                type="text"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://..."
-                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
-              />
-            </div>
+            <ImageUploader
+              currentImageUrl={imageUrl}
+              onImageChange={setImageUrl}
+              stockPhotos={STOCK_PHOTOS}
+            />
 
             {/* Toggles */}
             <div className="pt-3 border-t border-stone-100 space-y-3">

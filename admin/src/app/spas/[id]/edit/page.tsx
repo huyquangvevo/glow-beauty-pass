@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   Building2,
   MapPin,
@@ -18,6 +17,7 @@ import {
   Layers,
   Save,
 } from 'lucide-react'
+import { ImageUploader } from '@/components/ImageUploader'
 
 const STOCK_PHOTOS = [
   { url: '/spas/spa_thumb_1.jpg', label: 'Bồn gội thảo dược' },
@@ -316,6 +316,22 @@ export default function EditSpaPage() {
               </span>
             </label>
           </div>
+        </div>
+
+        {/* Section 3: Imagery */}
+        <div className="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-xs space-y-5">
+          <div className="flex items-center gap-2 pb-3 border-b border-stone-100">
+            <Layers className="w-5 h-5 text-[#40813D]" />
+            <h2 className="text-base font-extrabold text-stone-900">
+              3. Ảnh Đại Diện Cơ Sở
+            </h2>
+          </div>
+
+          <ImageUploader
+            currentImageUrl={imageUrl}
+            onImageChange={setImageUrl}
+            stockPhotos={STOCK_PHOTOS}
+          />
         </div>
 
         {/* Submit */}
