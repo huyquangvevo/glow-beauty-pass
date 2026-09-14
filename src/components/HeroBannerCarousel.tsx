@@ -2,13 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import {
-  MessageCircle,
-  Sparkles,
-  ShieldCheck,
-  Clock,
-  ChevronRight,
-} from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 interface BannerSlide {
@@ -142,28 +136,25 @@ export function HeroBannerCarousel() {
 
               {/* Slide Content Overlay */}
               <div className="absolute inset-0 p-5 sm:p-7 flex flex-col justify-between z-20 text-white">
-                {/* Top Row: Category Tag */}
+                {/* Top Row: Subtle Category Tag */}
                 <div className="flex items-center justify-between gap-2">
-                  <span
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-black uppercase tracking-wider backdrop-blur-md border shadow-2xs ${slide.badgeColor}`}
-                  >
-                    <Sparkles className="w-3 h-3 text-amber-300 shrink-0" />
-                    <span>{slide.tag}</span>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold text-white/95 bg-black/40 backdrop-blur-md border border-white/20">
+                    {slide.tag}
                   </span>
                 </div>
 
                 {/* Bottom Text & CTA Row */}
-                <div className="space-y-2.5 max-w-sm sm:max-w-md pr-4 sm:pr-8">
+                <div className="space-y-2 max-w-sm sm:max-w-md pr-4 sm:pr-8">
                   <div className="space-y-0.5">
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight leading-tight drop-shadow-md">
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight drop-shadow-sm">
                       {slide.title}
                     </h2>
-                    <p className="text-sm sm:text-base font-extrabold text-amber-300 drop-shadow-sm">
+                    <p className="text-sm sm:text-base font-semibold text-emerald-200 drop-shadow-xs">
                       {slide.highlight}
                     </p>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-stone-200/90 leading-relaxed line-clamp-2 drop-shadow-sm font-normal">
+                  <p className="text-xs sm:text-sm text-stone-200 leading-relaxed line-clamp-2 font-normal">
                     {slide.description}
                   </p>
 
@@ -172,9 +163,8 @@ export function HeroBannerCarousel() {
                       href={slide.ctaLink}
                       target={slide.ctaLink.startsWith('http') ? '_blank' : '_self'}
                       rel={slide.ctaLink.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-[#356F32] to-[#40813D] hover:from-[#2E602C] hover:to-[#356F32] text-white text-xs sm:text-sm font-extrabold shadow-lg shadow-black/40 border border-white/20 active:scale-95 transition-all"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-[#1B4D20] hover:bg-[#F2F6F0] text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95"
                     >
-                      <MessageCircle className="w-4 h-4 text-emerald-100" />
                       <span>{slide.ctaText}</span>
                     </a>
                   </div>
@@ -214,37 +204,22 @@ export function HeroBannerCarousel() {
         </div>
       </div>
 
-      {/* 3 CORE TRUST PILLARS - CLEAN & MINIMALIST */}
-      <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
-        <div className="p-3 sm:p-4 rounded-2xl bg-white border border-stone-200/80 flex flex-col items-center text-center">
-          <ShieldCheck className="w-5 h-5 text-stone-700 mb-1.5" />
-          <h4 className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight">
-            {tTrust('badge1.title')}
-          </h4>
-          <span className="text-[11px] text-stone-500 mt-0.5">
-            {tTrust('badge1.desc')}
-          </span>
-        </div>
-
-        <div className="p-3 sm:p-4 rounded-2xl bg-white border border-stone-200/80 flex flex-col items-center text-center">
-          <Sparkles className="w-5 h-5 text-stone-700 mb-1.5" />
-          <h4 className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight">
-            {tTrust('badge2.title')}
-          </h4>
-          <span className="text-[11px] text-stone-500 mt-0.5">
-            {tTrust('badge2.desc')}
-          </span>
-        </div>
-
-        <div className="p-3 sm:p-4 rounded-2xl bg-white border border-stone-200/80 flex flex-col items-center text-center">
-          <Clock className="w-5 h-5 text-stone-700 mb-1.5" />
-          <h4 className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight">
-            {tTrust('badge3.title')}
-          </h4>
-          <span className="text-[11px] text-stone-500 mt-0.5">
-            {tTrust('badge3.desc')}
-          </span>
-        </div>
+      {/* SINGLE-LINE SUBTLE REASSURANCE STRIP (No 3-column AI slop cards) */}
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 py-2.5 px-3 bg-[#F5F7F4] rounded-xl border border-[#E5EAE3] text-xs text-[#445642]">
+        <span className="flex items-center gap-1.5 font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#40813D]" />
+          15 spa kiểm định tại Cầu Giấy
+        </span>
+        <span className="hidden sm:inline text-stone-300">•</span>
+        <span className="flex items-center gap-1.5 font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#40813D]" />
+          Đồng giá niêm yết từ 49.000đ
+        </span>
+        <span className="hidden sm:inline text-stone-300">•</span>
+        <span className="flex items-center gap-1.5 font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#40813D]" />
+          Giữ chỗ qua Zalo không cần cọc
+        </span>
       </div>
     </div>
   )

@@ -345,7 +345,7 @@ export default function SpaDetailPage() {
         {spa.imageUrl && (
           <div className="relative w-full h-48 sm:h-64 rounded-xl overflow-hidden bg-stone-100">
             <Image
-              src={spa.imageUrl}
+              src={spa.imageUrl.includes('Screenshot_') ? '/spas/spa_thumb_1.jpg' : spa.imageUrl}
               alt={spa.name}
               fill
               sizes="(max-width: 640px) 100vw, 672px"
@@ -410,81 +410,64 @@ export default function SpaDetailPage() {
           </p>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           {skus.map((sku, index) => {
             const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
             const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
-
             const isPopular = index === 1
-            const badgeLabel = index === 0 ? tSpaDetail('pkg1Badge') : index === 1 ? tSpaDetail('pkg2Badge') : tSpaDetail('pkg3Badge')
 
             // Extract 3 clean bullet points
             const bullet1 = tServices.has(`${pkgKey}.f1` as any) ? tServices(`${pkgKey}.f1` as any) : ''
             const bullet2 = tServices.has(`${pkgKey}.f2` as any) ? tServices(`${pkgKey}.f2` as any) : ''
             const bullet3 = tServices.has(`${pkgKey}.f3` as any) ? tServices(`${pkgKey}.f3` as any) : ''
             const highlights = [bullet1, bullet2, bullet3].filter(Boolean)
-            const discountPercent = sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
-              ? Math.round(((sku.pricePhase2 - sku.pricePhase1) / sku.pricePhase2) * 100)
-              : (index === 0 ? 17 : index === 1 ? 19 : 17)
 
             return (
               <div
                 key={sku.id}
-                className={`p-4.5 sm:p-5 rounded-2xl transition-all flex flex-col justify-between ${
+                className={`p-5 rounded-2xl transition-all flex flex-col justify-between bg-white ${
                   isPopular
-                    ? 'border-2 border-[#40813D] bg-gradient-to-b from-[#F4FAF2] via-white to-white shadow-[0_6px_20px_rgba(64,129,61,0.12)]'
-                    : 'border border-[#E5E9E4] bg-white hover:border-[#B7DDB5] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)]'
+                    ? 'border-2 border-[#387635] shadow-[0_4px_24px_rgba(56,118,53,0.12)]'
+                    : 'border border-[#E2E8E0] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-[#B7D4B4]'
                 }`}
               >
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1.5 flex-1 min-w-0">
+                <div className="space-y-3.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-extrabold text-[16px] sm:text-[17px] text-[#093E06] leading-snug">
+                        <h3 className="font-bold text-[17px] text-stone-900 leading-snug">
                           {localizedName}
                         </h3>
-                        {isPopular ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-wider bg-[#40813D] text-white px-2.5 py-0.5 rounded-full shadow-2xs">
-                            ★ {badgeLabel}
-                          </span>
-                        ) : (
-                          <span className="text-[10px] sm:text-[10.5px] font-bold bg-[#EBF4EA] text-[#234E21] border border-[#B7DDB5] px-2 py-0.5 rounded-full">
-                            {badgeLabel}
+                        {isPopular && (
+                          <span className="text-[11px] font-semibold text-[#235820] bg-[#EAF5E8] border border-[#C5E2C2] px-2.5 py-0.5 rounded-full">
+                            Được chọn nhiều nhất
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-[#5B6B58] font-semibold">
-                        <Clock className="w-3.5 h-3.5 text-[#40813D]" />
-                        <span>{sku.durationMinutes} {tCommon('minutes')}</span>
-                        <span>•</span>
-                        <span>{tSpaDetail('sopProcess')}</span>
-                      </div>
-                    </div>
-
-                    {/* Prominent Vibrant Price Block */}
-                    <div className="text-right shrink-0 flex flex-col items-end">
-                      <div className="text-2xl sm:text-[26px] font-black text-[#236B38] leading-none tracking-tight">
-                        {sku.pricePhase1.toLocaleString('vi-VN')}đ
-                      </div>
-                      <div className="flex items-center gap-1.5 mt-1.5">
-                        {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
-                          <span className="text-[11.5px] text-[#9BA898] line-through font-medium">
-                            {sku.pricePhase2.toLocaleString('vi-VN')}đ
-                          </span>
-                        )}
-                        <span className="rounded-md bg-[#FCEDEA] px-1.5 py-0.5 text-[10.5px] font-extrabold text-[#C0392B] leading-none">
-                          -{discountPercent}%
-                        </span>
+                      <div className="text-xs text-stone-500 font-medium">
+                        Thời lượng {sku.durationMinutes} {tCommon('minutes')} · {tSpaDetail('sopProcess')}
                       </div>
                     </div>
                   </div>
 
-                  {/* Micro Steps (Easy to scan in 3 seconds) */}
+                  {/* Pricing Display */}
+                  <div className="flex items-baseline gap-2 pt-1 border-t border-stone-100">
+                    <span className="text-2xl sm:text-[26px] font-bold text-[#1B5E20] tracking-tight">
+                      {sku.pricePhase1.toLocaleString('vi-VN')}đ
+                    </span>
+                    {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
+                      <span className="text-xs text-stone-400 line-through font-normal">
+                        {sku.pricePhase2.toLocaleString('vi-VN')}đ
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Highlights Bullet List (Scannable in 3 seconds) */}
                   {highlights.length > 0 && (
-                    <div className="space-y-1.5 pt-2.5 border-t border-stone-100">
+                    <div className="space-y-2 pt-1">
                       {highlights.map((h: string, idx: number) => (
-                        <div key={idx} className="text-xs sm:text-[12.5px] text-[#4A5747] flex items-start gap-2 leading-snug">
-                          <span className="text-[#40813D] font-black shrink-0">•</span>
+                        <div key={idx} className="text-xs sm:text-[13px] text-stone-600 flex items-start gap-2 leading-relaxed">
+                          <span className="text-[#387635] font-bold shrink-0 mt-0.5">•</span>
                           <span>{h}</span>
                         </div>
                       ))}
@@ -492,33 +475,27 @@ export default function SpaDetailPage() {
                   )}
                 </div>
 
-                {/* Bottom Action Area: Guarantee line & Prominent Large Zalo Button */}
-                <div className="pt-3 mt-3.5 border-t border-stone-100 space-y-2">
-                  <div className="flex items-center justify-between text-[11.5px] text-[#5B6B58] font-medium px-0.5">
-                    <span className="inline-flex items-center gap-1 text-[#234E21]">
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#40813D] shrink-0" />
-                      <span>{tSpaDetail('noExtraFee')}</span>
-                    </span>
-                    <span className="text-[#9BA898] text-[11px]">
-                      {tSpaDetail('noDeposit')}
-                    </span>
-                  </div>
-
+                {/* Bottom Action Area: Large Zalo CTA Button */}
+                <div className="pt-4 mt-4 border-t border-stone-100 space-y-2">
                   <a
                     href={zaloHubLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2.5 sm:py-3 px-4 rounded-xl sm:rounded-2xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#2A5A28] text-white text-[13.5px] sm:text-[14px] font-extrabold flex items-center justify-center gap-2 shadow-[0_3px_12px_rgba(64,129,61,0.25)] hover:shadow-[0_6px_18px_rgba(64,129,61,0.35)] transition-all active:scale-[0.98] cursor-pointer"
+                    className="w-full py-3 px-4 rounded-xl bg-[#2E6B30] hover:bg-[#255827] active:bg-[#1E4720] text-white text-sm font-bold flex items-center justify-center gap-2.5 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
                   >
                     <Image
                       src="/brand/Logo-Zalo-App-Rec.webp"
                       alt="Zalo"
-                      width={18}
-                      height={18}
-                      className="w-4.5 h-4.5 rounded-xs shrink-0 object-contain shadow-2xs"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 rounded-xs shrink-0 object-contain"
                     />
-                    <span>{tCommon('bookZalo')}</span>
+                    <span>Đặt lịch Zalo</span>
                   </a>
+
+                  <p className="text-center text-[11px] text-stone-400 font-normal">
+                    {tSpaDetail('noExtraFee')} · {tSpaDetail('noDeposit')}
+                  </p>
                 </div>
               </div>
             )
@@ -749,11 +726,17 @@ export default function SpaDetailPage() {
               href={zaloHubLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 max-w-xs sm:max-w-sm h-11 sm:h-12 px-4 sm:px-5 rounded-xl bg-[#0068FF] hover:bg-[#0052CC] text-white flex items-center justify-center gap-2.5 shadow-sm shadow-blue-500/20 transition-all active:scale-[0.98]"
+              className="flex-1 max-w-xs sm:max-w-sm h-12 px-4 sm:px-5 rounded-xl bg-[#0068FF] hover:bg-[#0055D4] text-white flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] cursor-pointer"
             >
-              <ZaloIcon className="w-5.5 h-5.5 shrink-0" />
-              <span className="font-bold text-sm sm:text-base tracking-tight truncate">
-                {tSpaDetail('bookViaZalo')}
+              <Image
+                src="/brand/Logo-Zalo-App-Rec.webp"
+                alt="Zalo"
+                width={22}
+                height={22}
+                className="w-5.5 h-5.5 rounded-xs shrink-0 object-contain shadow-xs"
+              />
+              <span className="font-bold text-sm sm:text-[15px] tracking-tight truncate">
+                Đặt lịch Zalo
               </span>
             </a>
           </div>

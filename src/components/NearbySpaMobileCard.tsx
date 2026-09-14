@@ -44,14 +44,14 @@ export function NearbySpaMobileCard({
       {/* Thông tin bên phải (Cao chuẩn 74px tương xứng với ảnh, gồm 3 dòng tinh gọn) */}
       <div className="flex flex-1 h-[74px] flex-col justify-between min-w-0 py-0.5">
         {/* Tên Spa: 1 dòng ellipsis */}
-        <h3 className="truncate text-[14.5px] leading-[18px] font-bold tracking-tight text-[#093E06] group-hover:text-[#40813D] transition-colors">
+        <h3 className="truncate text-[14.5px] leading-[18px] font-bold tracking-tight text-stone-900 group-hover:text-[#2E6B30] transition-colors">
           {spa.name}
         </h3>
 
         {/* Dòng meta: Rating | Review Count · Distance · Opening */}
-        <div className="flex flex-wrap items-center gap-1 text-[12px] leading-[13px] text-[#5B6B58] truncate">
+        <div className="flex flex-wrap items-center gap-1 text-[12px] leading-[13px] text-stone-500 truncate">
           {/* Rating */}
-          <span className="flex items-center gap-0.5 font-bold text-[#093E06] shrink-0">
+          <span className="flex items-center gap-0.5 font-bold text-stone-900 shrink-0">
             <Star className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0 -mt-0.5" />
             <span>{Number(spa.rating || 4.8).toFixed(1)}</span>
           </span>
@@ -85,16 +85,13 @@ export function NearbySpaMobileCard({
           </span>
         </div>
 
-        {/* Dòng Giá: Hiện trực tiếp 1 dòng súc tích */}
+        {/* Dòng Giá: Tinh tế, thanh lịch */}
         <div className="flex items-baseline flex-wrap gap-1.5 min-w-0">
-          <span className="text-[14px] leading-[18px] font-extrabold text-[#093E06]">
-            {tSpaNetwork('priceFrom', { price: '49.000' })}
+          <span className="text-[14px] leading-[18px] font-bold text-[#1B5E20]">
+            Từ 49.000đ
           </span>
-          <span className="text-[11.5px] font-medium text-[#9BA898] line-through shrink-0">
-            179.000 đ
-          </span>
-          <span className="shrink-0 rounded-[5px] bg-[#FCEDEA] px-1.5 py-[2px] text-[10px] leading-none font-bold text-[#C0392B]">
-            -72%
+          <span className="text-[11.5px] font-normal text-stone-400 line-through shrink-0">
+            179.000đ
           </span>
         </div>
       </div>

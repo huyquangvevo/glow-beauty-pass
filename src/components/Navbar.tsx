@@ -46,42 +46,33 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* FLOATING SUPPORT ZALO FAB (Logo Only, High-Impact Radar Waves & Online Beacon) */}
+      {/* FLOATING SUPPORT ZALO FAB (Clean, Premium, Non-intrusive) */}
       {!isSpaDetail && (
         <aside
           aria-label="Nhắn Zalo tư vấn và đặt lịch"
-          className="fixed bottom-6 right-4.5 z-40 group pointer-events-auto"
+          className="fixed bottom-6 right-4 sm:right-6 z-40 group pointer-events-auto"
         >
-          {/* Layer 1: Outer Radar Wave Ping */}
-          <span className="absolute -inset-2 rounded-full bg-[#0068FF]/35 animate-ping pointer-events-none duration-1000" />
-          {/* Layer 2: Subtle Breathing Glow */}
-          <span className="absolute -inset-1 rounded-full bg-[#0068FF]/20 animate-pulse pointer-events-none" />
-
           <a
             href={zaloHubLink}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Nhắn tin Zalo"
-            title="Nhắn Zalo tư vấn & đặt lịch nhanh (< 5p)"
-            className="relative w-13.5 h-13.5 sm:w-14 sm:h-14 rounded-full bg-white shadow-2xl shadow-[#0068FF]/50 border-2 border-white flex items-center justify-center p-0.5 hover:scale-110 active:scale-95 transition-all duration-300 group-hover:shadow-[#0068FF]/70"
+            title="Nhắn Zalo tư vấn và đặt lịch"
+            className="relative w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-white shadow-[0_4px_20px_rgba(0,104,255,0.25)] border border-[#E5EAE3] flex items-center justify-center p-0.5 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,104,255,0.35)] active:scale-95 transition-all duration-200"
           >
-            {/* Official Zalo Logo from docs/brand/Logo-Zalo-App-Rec.webp */}
             <div className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center">
               <Image
                 src="/brand/zalo-logo.webp"
                 alt="Zalo"
-                width={56}
-                height={56}
+                width={52}
+                height={52}
                 className="w-full h-full object-cover rounded-full"
                 priority
               />
             </div>
 
-            {/* Active Online Green Beacon Dot */}
-            <span className="absolute top-0 right-0 flex h-3.5 w-3.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white shadow-xs"></span>
-            </span>
+            {/* Subtle Online Status Dot (Solid, No Ping) */}
+            <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white shadow-xs" />
           </a>
         </aside>
       )}

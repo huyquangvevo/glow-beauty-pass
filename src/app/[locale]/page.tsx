@@ -267,80 +267,64 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
           {skus.map((sku, index) => {
             const isPopular = index === 1
             const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
             const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
-            const badgeKey = index === 0 ? 'pkg1Badge' : index === 1 ? 'pkg2Badge' : 'pkg3Badge'
-            const badgeLabel = tServices.has(badgeKey as any) ? tServices(badgeKey as any) : (index === 0 ? 'Gói cơ bản' : index === 1 ? 'Phổ biến nhất' : 'Chuyên sâu')
 
             const bullet1 = tServices.has(`${pkgKey}.f1` as any) ? tServices(`${pkgKey}.f1` as any) : ''
             const bullet2 = tServices.has(`${pkgKey}.f2` as any) ? tServices(`${pkgKey}.f2` as any) : ''
             const bullet3 = tServices.has(`${pkgKey}.f3` as any) ? tServices(`${pkgKey}.f3` as any) : ''
             const highlights = [bullet1, bullet2, bullet3].filter(Boolean)
 
-            const discountPercent = sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
-              ? Math.round(((sku.pricePhase2 - sku.pricePhase1) / sku.pricePhase2) * 100)
-              : (index === 0 ? 17 : index === 1 ? 19 : 17)
-
             return (
               <div
                 key={sku.id}
-                className={`p-4.5 sm:p-5 rounded-2xl transition-all flex flex-col justify-between ${
+                className={`p-5 rounded-2xl transition-all flex flex-col justify-between bg-white ${
                   isPopular
-                    ? 'border-2 border-[#40813D] bg-gradient-to-b from-[#F4FAF2] via-white to-white shadow-[0_6px_20px_rgba(64,129,61,0.12)]'
-                    : 'border border-[#E5E9E4] bg-white hover:border-[#B7DDB5] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)]'
+                    ? 'border-2 border-[#387635] shadow-[0_4px_24px_rgba(56,118,53,0.12)]'
+                    : 'border border-[#E2E8E0] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-[#B7D4B4]'
                 }`}
               >
-                <div className="space-y-3">
-                  {/* Package Header: Title, Badge, Duration & Vibrant Green Price */}
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1.5 flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <h3 className="font-extrabold text-[16px] sm:text-[17px] text-[#093E06] leading-snug">
+                <div className="space-y-3.5">
+                  {/* Package Top: Title, Duration & Recommended Tag */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-bold text-[17px] text-stone-900 leading-snug">
                           {localizedName}
                         </h3>
-                        {isPopular ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-wider bg-[#40813D] text-white px-2.5 py-0.5 rounded-full shadow-2xs">
-                            ★ {badgeLabel}
-                          </span>
-                        ) : (
-                          <span className="text-[10px] sm:text-[10.5px] font-bold bg-[#EBF4EA] text-[#234E21] border border-[#B7DDB5] px-2 py-0.5 rounded-full">
-                            {badgeLabel}
+                        {isPopular && (
+                          <span className="text-[11px] font-semibold text-[#235820] bg-[#EAF5E8] border border-[#C5E2C2] px-2.5 py-0.5 rounded-full">
+                            Được chọn nhiều nhất
                           </span>
                         )}
                       </div>
-                      <div className="inline-flex items-center gap-1 text-xs text-[#5B6B58] font-semibold">
-                        <Clock className="w-3.5 h-3.5 text-[#40813D]" />
-                        <span>{sku.durationMinutes} {tServices('durationUnit')}</span>
-                      </div>
-                    </div>
-
-                    {/* Prominent Vibrant Price Block */}
-                    <div className="text-right shrink-0 flex flex-col items-end">
-                      <div className="text-2xl sm:text-[26px] font-black text-[#236B38] leading-none tracking-tight">
-                        {sku.pricePhase1.toLocaleString('vi-VN')}đ
-                      </div>
-                      <div className="flex items-center gap-1.5 mt-1.5">
-                        {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
-                          <span className="text-[11.5px] text-[#9BA898] line-through font-medium">
-                            {sku.pricePhase2.toLocaleString('vi-VN')}đ
-                          </span>
-                        )}
-                        <span className="rounded-md bg-[#FCEDEA] px-1.5 py-0.5 text-[10.5px] font-extrabold text-[#C0392B] leading-none">
-                          -{discountPercent}%
-                        </span>
+                      <div className="text-xs text-stone-500 font-medium">
+                        Thời lượng {sku.durationMinutes} {tServices('durationUnit')}
                       </div>
                     </div>
                   </div>
 
-                  {/* Highlights Bullet List */}
+                  {/* Pricing Display */}
+                  <div className="flex items-baseline gap-2 pt-1 border-t border-stone-100">
+                    <span className="text-2xl sm:text-[26px] font-bold text-[#1B5E20] tracking-tight">
+                      {sku.pricePhase1.toLocaleString('vi-VN')}đ
+                    </span>
+                    {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
+                      <span className="text-xs text-stone-400 line-through font-normal">
+                        {sku.pricePhase2.toLocaleString('vi-VN')}đ
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Highlights Bullet List (3 seconds scannability) */}
                   {highlights.length > 0 && (
-                    <div className="space-y-1.5 pt-2.5 border-t border-stone-100">
+                    <div className="space-y-2 pt-1">
                       {highlights.map((h: string, idx: number) => (
-                        <div key={idx} className="text-xs sm:text-[12.5px] text-[#4A5747] flex items-start gap-2 leading-snug">
-                          <span className="text-[#40813D] font-black shrink-0">•</span>
+                        <div key={idx} className="text-xs sm:text-[13px] text-stone-600 flex items-start gap-2 leading-relaxed">
+                          <span className="text-[#387635] font-bold shrink-0 mt-0.5">•</span>
                           <span>{h}</span>
                         </div>
                       ))}
@@ -348,33 +332,27 @@ export default function HomePage() {
                   )}
                 </div>
 
-                {/* Bottom Action Area: Guarantee line & Prominent Large Zalo Button */}
-                <div className="pt-3 mt-3.5 border-t border-stone-100 space-y-2">
-                  <div className="flex items-center justify-between text-[11.5px] text-[#5B6B58] font-medium px-0.5">
-                    <span className="inline-flex items-center gap-1 text-[#234E21]">
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#40813D] shrink-0" />
-                      <span>{tServices('noExtraFee')}</span>
-                    </span>
-                    <span className="text-[#9BA898] text-[11px]">
-                      Giữ chỗ 30s
-                    </span>
-                  </div>
-
+                {/* Bottom Action Area: Large, High-Touch Zalo CTA Button */}
+                <div className="pt-4 mt-4 border-t border-stone-100 space-y-2">
                   <a
                     href={zaloHubLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2.5 sm:py-3 px-4 rounded-xl sm:rounded-2xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#2A5A28] text-white text-[13.5px] sm:text-[14px] font-extrabold flex items-center justify-center gap-2 shadow-[0_3px_12px_rgba(64,129,61,0.25)] hover:shadow-[0_6px_18px_rgba(64,129,61,0.35)] transition-all active:scale-[0.98] cursor-pointer"
+                    className="w-full py-3 px-4 rounded-xl bg-[#2E6B30] hover:bg-[#255827] active:bg-[#1E4720] text-white text-sm font-bold flex items-center justify-center gap-2.5 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
                   >
                     <Image
                       src="/brand/Logo-Zalo-App-Rec.webp"
                       alt="Zalo"
-                      width={18}
-                      height={18}
-                      className="w-4.5 h-4.5 rounded-xs shrink-0 object-contain shadow-2xs"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 rounded-xs shrink-0 object-contain"
                     />
-                    <span>{tServices('bookButton')}</span>
+                    <span>Đặt lịch Zalo</span>
                   </a>
+
+                  <p className="text-center text-[11px] text-stone-400 font-normal">
+                    Đúng giá niêm yết · Không cần đặt cọc
+                  </p>
                 </div>
               </div>
             )
