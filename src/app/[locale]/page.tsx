@@ -493,51 +493,70 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. VÌ SAO NÊN CHỌN GLOW BEAUTY PASS (Tối giản chuẩn a.SENSE: Không khung thẻ, cực ít chữ, 1 dòng duy nhất) */}
-      <section className="py-7 sm:py-10 border-y border-stone-200/60">
-        <h2 className="text-center text-lg sm:text-xl font-bold text-stone-900 tracking-tight mb-7 sm:mb-9">
-          Vì Sao Nên Chọn Glow Beauty Pass
-        </h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-7 gap-x-4 sm:gap-8 max-w-4xl mx-auto">
-          {/* Item 1 */}
-          <div className="flex flex-col items-center text-center gap-3 px-2 group cursor-default">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-50 text-[#236B38] flex items-center justify-center border border-emerald-200/70 shadow-2xs group-hover:scale-105 transition-transform duration-300">
-              <ShieldCheck className="w-7 h-7 sm:w-8 sm:h-8" />
-            </div>
-            <p className="text-xs sm:text-sm font-semibold text-stone-800 leading-snug max-w-[160px]">
-              15+ Spa kiểm định chuẩn chất lượng
+      {/* 4. VÌ SAO NÊN CHỌN GLOW BEAUTY PASS (Chuẩn Anti-AI / Taste-Skill: Typographic Proof Metrics & Hairline Dividers) */}
+      <section className="py-8 sm:py-12 border-y border-stone-200/70">
+        <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
+          <div className="text-center space-y-1 px-2">
+            <h2 className="text-lg sm:text-2xl font-bold text-stone-900 tracking-tight">
+              Vì Sao Nên Chọn Glow Beauty Pass
+            </h2>
+            <p className="text-xs sm:text-sm text-stone-500">
+              Tiêu chuẩn dịch vụ minh bạch, đồng nhất trên toàn hệ thống 15 spa Cầu Giấy
             </p>
           </div>
 
-          {/* Item 2 */}
-          <div className="flex flex-col items-center text-center gap-3 px-2 group cursor-default">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200/70 shadow-2xs group-hover:scale-105 transition-transform duration-300">
-              <Sparkles className="w-7 h-7 sm:w-8 sm:h-8 text-amber-600" />
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-stone-200/70 pt-2 border-t border-stone-200/50 md:border-t-0">
+            {/* Stat 1 */}
+            <div className="p-4 sm:p-5 flex flex-col items-center sm:items-start text-center sm:text-left group">
+              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#236B38] tracking-tight">
+                15+
+              </span>
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
+                Spa Kiểm Định
+              </h3>
+              <p className="text-[11.5px] text-stone-500 mt-1 leading-relaxed">
+                Thẩm định cơ sở & tay nghề KTV khắt khe
+              </p>
             </div>
-            <p className="text-xs sm:text-sm font-semibold text-stone-800 leading-snug max-w-[160px]">
-              Đồng giá từ 49K không phụ thu
-            </p>
-          </div>
 
-          {/* Item 3 */}
-          <div className="flex flex-col items-center text-center gap-3 px-2 group cursor-default">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-50 text-[#236B38] flex items-center justify-center border border-emerald-200/70 shadow-2xs group-hover:scale-105 transition-transform duration-300">
-              <Leaf className="w-7 h-7 sm:w-8 sm:h-8" />
+            {/* Stat 2 */}
+            <div className="p-4 sm:p-5 flex flex-col items-center sm:items-start text-center sm:text-left group">
+              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#236B38] tracking-tight">
+                49K
+              </span>
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
+                Đồng Giá Chuẩn
+              </h3>
+              <p className="text-[11.5px] text-stone-500 mt-1 leading-relaxed">
+                Cam kết 100% không phát sinh phụ thu
+              </p>
             </div>
-            <p className="text-xs sm:text-sm font-semibold text-stone-800 leading-snug max-w-[160px]">
-              100% thảo dược thiên nhiên nấu tươi
-            </p>
-          </div>
 
-          {/* Item 4 */}
-          <div className="flex flex-col items-center text-center gap-3 px-2 group cursor-default">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-50 text-[#236B38] flex items-center justify-center border border-emerald-200/70 shadow-2xs group-hover:scale-105 transition-transform duration-300">
-              <Clock className="w-7 h-7 sm:w-8 sm:h-8" />
+            {/* Stat 3 */}
+            <div className="p-4 sm:p-5 flex flex-col items-center sm:items-start text-center sm:text-left group">
+              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#236B38] tracking-tight">
+                100%
+              </span>
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
+                Thảo Dược Sạch
+              </h3>
+              <p className="text-[11.5px] text-stone-500 mt-1 leading-relaxed">
+                Bồ kết nấu tươi & tinh dầu chuẩn nguồn gốc
+              </p>
             </div>
-            <p className="text-xs sm:text-sm font-semibold text-stone-800 leading-snug max-w-[160px]">
-              Đặt lịch 0đ cọc, thanh toán tại spa
-            </p>
+
+            {/* Stat 4 */}
+            <div className="p-4 sm:p-5 flex flex-col items-center sm:items-start text-center sm:text-left group">
+              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#236B38] tracking-tight">
+                0đ
+              </span>
+              <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
+                Đặt Lịch Không Cọc
+              </h3>
+              <p className="text-[11.5px] text-stone-500 mt-1 leading-relaxed">
+                Giữ chỗ qua Zalo 30s, dùng xong mới thanh toán
+              </p>
+            </div>
           </div>
         </div>
       </section>
