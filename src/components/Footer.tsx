@@ -1,12 +1,13 @@
 'use client'
 
-import { Link } from '@/i18n/routing'
+import { Link, usePathname } from '@/i18n/routing'
 import Image from 'next/image'
 import { BrandWordmark } from './BrandLogo'
 import { ShieldCheck, Sparkles, MessageCircle, Phone, Heart } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 export function Footer() {
+  const pathname = usePathname()
   const t = useTranslations('Footer')
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342'
 

@@ -1,747 +1,281 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useMemo } from 'react'
-import { useParams } from 'next/navigation'
-import Link from 'next/link'
-import Image from 'next/image'
-import snapshotData from '@/lib/spas-snapshot.json'
+import React, { useState, useRef } from 'react';
+import Image from 'next/image';
+import { useParams } from 'next/navigation';
+import { Link } from '@/i18n/routing';
 import {
-  MapPin,
-  Clock,
+  ArrowLeft,
+  ArrowRight,
   Star,
+  Compass,
   ShieldCheck,
-  Gift,
-  Phone,
-  CheckCircle2,
-  ChevronDown,
-  Award,
-  HelpCircle,
-  Sparkles,
-} from 'lucide-react'
-import { ZaloIcon } from '@/components/ZaloIcon'
-import { PaginationControls } from '@/components/PaginationControls'
-import { useTranslations, useLocale } from 'next-intl'
-
-// Minimalist Clean Rating Summary (Anti-Slop)
-function RatingSummary({
-  rating,
-  summaryText,
-}: {
-  rating: number | string
-  summaryText: string
-}) {
-  return (
-    <div className="flex items-center gap-3 py-2 px-1">
-      <div className="flex items-baseline gap-1.5">
-        <span className="text-3xl font-black text-stone-900 tracking-tight leading-none">
-          {Number(rating || 4.9).toFixed(1)}
-        </span>
-        <div className="flex items-center text-amber-400">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-          ))}
-        </div>
-      </div>
-      <span className="text-stone-300">•</span>
-      <span className="text-xs text-stone-500 font-medium">
-        {summaryText}
-      </span>
-    </div>
-  )
-}
+} from 'lucide-react';
+import {
+  MVP_SERVICES,
+  MVP_SPAS,
+  MVP_REVIEWS,
+  MVPSpa,
+  formatPrice,
+} from '@/lib/mvp-data';
+import BookingBottomSheet from '@/components/BookingBottomSheet';
 
 export default function SpaDetailPage() {
-  const tSpaDetail = useTranslations('SpaDetail')
-  const tServices = useTranslations('Services')
-  const tCommon = useTranslations('Common')
-  const locale = useLocale()
+  const params = useParams();
+  const slug = params?.slug as string;
 
-  const params = useParams()
-  const slug = params?.slug as string
+  // Find matching spa or fallback
+  const spa: MVPSpa =
+    MVP_SPAS.find((s) => s.id === slug) ||
+    MVP_SPAS.find((s) => s.name.toLowerCase().includes(slug?.replace(/-/g, ' '))) ||
+    MVP_SPAS[0];
 
-  const getLocalizedExclusiveOffer = (offer: string) => {
-    if (!offer) return ''
-    if (locale === 'ko') {
-      return '등·목 온석(핫스톤) 마사지 15분 무료 증정'
-    }
-    if (locale === 'en') {
-      return 'Complimentary 15-minute hot stone back & neck massage'
-    }
-    return offer
-  }
+  const [selectedServiceId, setSelectedServiceId] = useState<string>('duong-sinh');
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
+  const miniMapIframeRef = useRef<HTMLIFrameElement>(null);
 
-  const getLocalizedFaq = (faq: any, i: number, spaName: string) => {
-    if (locale === 'ko') {
-      if (i === 0) {
-        return {
-          question: `Glow Beauty Pass를 통해 ${spaName} 예약 시 사전 결제가 필요한가요?`,
-          answer: '사전 결제가 필요 없습니다. 희망 시간을 선택하고 Zalo Hub 또는 핫라인을 통해 예약 확정 후, 스파에 방문하여 예약 코드를 제시하면 즉시 서비스를 받고 현장에서 정찰가로 결제하시면 됩니다.'
-        }
-      }
-      if (i === 1) {
-        return {
-          question: '주말이나 피크 시간대에 추가 요금이 발생하나요?',
-          answer: '전혀 없습니다. 주말이나 공휴일, 피크 시간대에도 100% 정찰제로 운영되며 추가 요금이나 팁을 일체 요구하지 않습니다.'
-        }
-      }
-      if (i === 2) {
-        return {
-          question: '해당 스파 지점에 주차(오토바이 및 자동차)가 가능한가요?',
-          answer: '네, 건물 내에 안전한 오토바이 및 자동차 주차장이 마련되어 있으며 보안 요원의 친절한 안내를 받으실 수 있습니다.'
-        }
-      }
-    }
-    if (locale === 'en') {
-      if (i === 0) {
-        return {
-          question: `Do I need to pay in advance when booking ${spaName} via Glow Beauty Pass?`,
-          answer: 'No advance payment is needed. Simply choose your preferred time slot and confirm your booking via Zalo Hub or Hotline. Upon arrival, present your booking code to receive immediate service and pay the transparent fixed price on-site.'
-        }
-      }
-      if (i === 1) {
-        return {
-          question: 'Are there any extra surcharges for weekends or peak hours?',
-          answer: 'Zero extra fees. All services are strictly transparent and fixed-price at all times, with no weekend, holiday, or peak hour surcharges.'
-        }
-      }
-      if (i === 2) {
-        return {
-          question: 'Is parking available for motorbikes and cars at this location?',
-          answer: 'Yes, secure on-site parking for both motorbikes and cars is available with dedicated building security staff assistance.'
-        }
-      }
-    }
-    return faq
-  }
-
-  const initialSpa = useMemo(() => {
-    if (!slug) return null
-    return (snapshotData.spas as any[]).find((s) => s.slug === slug) || null
-  }, [slug])
-
-  const [spa, setSpa] = useState<any>(() => initialSpa)
-  const [skus, setSkus] = useState<any[]>(() => (snapshotData.skus as any[]) || [])
-  const [loading, setLoading] = useState(() => !initialSpa)
-
-  useEffect(() => {
-    if (initialSpa && (!spa || spa.slug !== slug)) {
-      setSpa(initialSpa)
-      setLoading(false)
-    }
-  }, [slug, initialSpa])
-
-  useEffect(() => {
-    async function loadSpa() {
-      try {
-        if (!spa) {
-          setLoading(true)
-        }
-        const res = await fetch(`/api/spas/${slug}`)
-        const data = await res.json()
-        if (data.spa) {
-          setSpa(data.spa)
-          if (data.skus && data.skus.length > 0) {
-            setSkus(data.skus)
-          }
-        }
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    if (slug) loadSpa()
-  }, [slug])
-
-  if (loading) {
-    return (
-      <div className="p-12 text-center text-sm text-[#5B6B58] flex flex-col items-center gap-2">
-        <div className="w-6 h-6 border-2 border-[#236B38] border-t-transparent rounded-full animate-spin" />
-        <span>{tSpaDetail('loading')}</span>
-      </div>
-    )
-  }
-
-  if (!spa) {
-    return (
-      <div className="p-12 text-center space-y-3">
-        <p className="text-[#5B6B58] text-sm">{tSpaDetail('notFound')}</p>
-        <Link href="/" className="text-[#236B38] font-bold text-sm underline">
-          {tSpaDetail('backToList')}
-        </Link>
-      </div>
-    )
-  }
-
-  const [openFaqs, setOpenFaqs] = useState<Record<number, boolean>>({ 0: true })
-  const toggleFaq = (idx: number) => {
-    setOpenFaqs((prev) => ({ ...prev, [idx]: !prev[idx] }))
-  }
-
-  const minPrice = useMemo(() => {
-    if (skus && skus.length > 0) {
-      return Math.min(...skus.map((s) => s.pricePhase1))
-    }
-    return 49000
-  }, [skus])
-
-  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342'
-
-  // Build reviews list: priority for curatedReviews, fallback to reviews relation
-  const reviewsList =
-    Array.isArray(spa.curatedReviews) && spa.curatedReviews.length > 0
-      ? spa.curatedReviews
-      : Array.isArray(spa.reviews) && spa.reviews.length > 0
-      ? spa.reviews.map((r: any) => ({
-          id: r.id,
-          authorName: r.customerName || r.customerPhone,
-          authorInitials: (r.customerName || 'KH').slice(0, 2).toUpperCase(),
-          authorMeta: 'Khách hàng Glow',
-          body: r.comment,
-          stars: r.rating || 5,
-          avatarUrl: r.photoUrls ? JSON.parse(r.photoUrls)[0] : undefined,
-          googleMapUrl: undefined,
-        }))
-      : []
-
-  // Customer Reviews Filtering & Pagination
-  const [reviewPage, setReviewPage] = useState<number>(1)
-  const [reviewFilter, setReviewFilter] = useState<'ALL' | '5_STARS' | 'WITH_PHOTOS'>('ALL')
-  const REVIEWS_PER_PAGE = 3
-
-  const fiveStarCount = useMemo(() => {
-    return reviewsList.filter((r: any) => (r.stars || 5) === 5).length
-  }, [reviewsList])
-
-  const photoCount = useMemo(() => {
-    return reviewsList.filter((r: any) => Boolean(r.avatarUrl?.trim())).length
-  }, [reviewsList])
-
-  const filteredReviews = useMemo(() => {
-    if (!reviewsList || reviewsList.length === 0) return []
-    let list = [...reviewsList]
-    if (reviewFilter === '5_STARS') {
-      list = list.filter((r: any) => (r.stars || 5) === 5)
-    } else if (reviewFilter === 'WITH_PHOTOS') {
-      list = list.filter((r: any) => Boolean(r.avatarUrl?.trim()))
-    }
-    return list
-  }, [reviewsList, reviewFilter])
-
-  const totalReviewPages = Math.ceil(filteredReviews.length / REVIEWS_PER_PAGE) || 1
-
-  const currentReviews = useMemo(() => {
-    const start = (reviewPage - 1) * REVIEWS_PER_PAGE
-    return filteredReviews.slice(start, start + REVIEWS_PER_PAGE)
-  }, [filteredReviews, reviewPage])
-
-  // Generate JSON-LD for LocalBusiness / HealthAndBeautyBusiness + FAQPage + Breadcrumbs
-  const spaJsonLd = useMemo(() => {
-    if (!spa) return null
-    const baseUrl = 'https://glowbeautypass.com'
-    const fullUrl = `${baseUrl}/vi/spa/${spa.slug}`
-
-    const businessSchema: any = {
-      '@context': 'https://schema.org',
-      '@type': ['HealthAndBeautyBusiness', 'DaySpa'],
-      name: spa.name,
-      description: `${spa.name} - Đối tác kiểm định mạng lưới Glow Beauty Pass Cầu Giấy, Hà Nội. Gói gội đầu dưỡng sinh, massage trị liệu tiêu chuẩn SOP.`,
-      url: fullUrl,
-      telephone: spa.phone || '+84-359-178-342',
-      image: spa.imageUrl ? `${baseUrl}${spa.imageUrl}` : `${baseUrl}/brand/banner-meta.webp`,
-      priceRange: '49.000đ - 149.000đ',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: spa.address,
-        addressLocality: spa.ward || 'Cầu Giấy',
-        addressRegion: 'Hà Nội',
-        addressCountry: 'VN',
-      },
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: spa.latitude || 21.0336,
-        longitude: spa.longitude || 105.7942,
-      },
-      openingHoursSpecification: [
-        {
-          '@type': 'OpeningHoursSpecification',
-          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-          opens: '09:00',
-          closes: '21:30',
-        },
-      ],
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: spa.rating || 4.9,
-        reviewCount: spa.reviewCount || 20,
-        bestRating: 5,
-        worstRating: 1,
-      },
-    }
-
-    const breadcrumbSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: 'Trang Chủ',
-          item: baseUrl,
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: 'Spa Cầu Giấy',
-          item: `${baseUrl}/#danh-sach-spa`,
-        },
-        {
-          '@type': 'ListItem',
-          position: 3,
-          name: spa.name,
-          item: fullUrl,
-        },
-      ],
-    }
-
-    const faqSchema = spa.faqs && spa.faqs.length > 0 ? {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: spa.faqs.map((f: any) => ({
-        '@type': 'Question',
-        name: f.question,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: f.answer,
-        },
-      })),
-    } : null
-
-    return { businessSchema, breadcrumbSchema, faqSchema }
-  }, [spa])
+  const handleOpenBooking = (serviceId?: string) => {
+    if (serviceId) setSelectedServiceId(serviceId);
+    setIsBottomSheetOpen(true);
+  };
 
   return (
-    <div className="max-w-xl sm:max-w-2xl mx-auto px-4 py-5 space-y-6 pb-28 sm:pb-32">
-      {spaJsonLd && (
-        <>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(spaJsonLd.businessSchema) }}
-          />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(spaJsonLd.breadcrumbSchema) }}
-          />
-          {spaJsonLd.faqSchema && (
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(spaJsonLd.faqSchema) }}
-            />
-          )}
-        </>
-      )}
-      {/* SPA HEADER CARD - MINIMALIST & EDITORIAL */}
-      <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/80 space-y-4">
-        {spa.imageUrl && (
-          <div className="relative w-full h-48 sm:h-64 rounded-xl overflow-hidden bg-stone-100">
-            <Image
-              src={spa.imageUrl.includes('Screenshot_') ? '/spas/spa_thumb_1.jpg' : spa.imageUrl}
-              alt={spa.name}
-              fill
-              sizes="(max-width: 640px) 100vw, 672px"
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
-
-        <div className="space-y-2">
-          <div className="flex items-center justify-between gap-2">
-            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-stone-500 bg-stone-100 px-2.5 py-0.5 rounded-full">
-              {tSpaDetail('verifiedPartnerDistrict')}
-            </span>
-            <div className="flex items-center gap-1 text-xs text-stone-600">
-              <Clock className="w-3.5 h-3.5 text-stone-400" />
-              <span>{spa.openHours}</span>
-            </div>
-          </div>
-
-          <h1 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight leading-snug">
-            {spa.name}
-          </h1>
-
-          <p className="text-xs sm:text-sm text-stone-500 flex items-start gap-1.5 leading-relaxed">
-            <MapPin className="w-4 h-4 text-stone-400 shrink-0 mt-0.5" />
-            <span>{spa.address}</span>
-          </p>
-
-          <div className="flex items-center gap-2 pt-1">
-            <div className="flex items-center gap-1 text-amber-500">
-              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-              <span className="text-stone-900 font-bold text-sm">{spa.rating}</span>
-            </div>
-            <span className="text-stone-300">•</span>
-            <span className="text-xs text-stone-500">
-              {spa.reviewCount} {tCommon('reviews')}
-            </span>
-          </div>
-        </div>
-
-        {/* Ưu đãi ngắn gọn (nếu có) */}
-        {spa.exclusiveOffer && (
-          <div className="p-3 rounded-xl bg-amber-50/80 text-xs text-amber-900 border border-amber-200/60 flex items-center gap-2">
-            <Gift className="w-4 h-4 text-amber-600 shrink-0" />
-            <p className="font-medium">
-              <strong className="font-semibold">{tSpaDetail('exclusiveOffer')} </strong>
-              {getLocalizedExclusiveOffer(spa.exclusiveOffer)}
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* 3 SKU MENU - CLEAN SERVICE MENU (SCANNABLE IN 3 SECONDS) */}
-      <div className="space-y-3">
-        <div className="px-1">
-          <h2 className="text-base sm:text-lg font-bold text-stone-900 tracking-tight">
-            {tSpaDetail('servicesTitle')}
-          </h2>
-          <p className="text-xs text-stone-500 mt-0.5">
-            {tSpaDetail('servicesMenuSubtitle')}
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          {skus.map((sku, index) => {
-            const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
-            const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
-            const isPopular = index === 1
-
-            // Extract 3 clean bullet points
-            const bullet1 = tServices.has(`${pkgKey}.f1` as any) ? tServices(`${pkgKey}.f1` as any) : ''
-            const bullet2 = tServices.has(`${pkgKey}.f2` as any) ? tServices(`${pkgKey}.f2` as any) : ''
-            const bullet3 = tServices.has(`${pkgKey}.f3` as any) ? tServices(`${pkgKey}.f3` as any) : ''
-            const highlights = [bullet1, bullet2, bullet3].filter(Boolean)
-
-            return (
-              <div
-                key={sku.id}
-                className={`p-5 rounded-2xl transition-all flex flex-col justify-between bg-white ${
-                  isPopular
-                    ? 'border-2 border-[#387635] shadow-[0_4px_24px_rgba(56,118,53,0.12)]'
-                    : 'border border-[#E2E8E0] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-[#B7D4B4]'
-                }`}
-              >
-                <div className="space-y-3.5">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-bold text-[17px] text-stone-900 leading-snug">
-                          {localizedName}
-                        </h3>
-                        {isPopular && (
-                          <span className="text-[11px] font-semibold text-[#235820] bg-[#EAF5E8] border border-[#C5E2C2] px-2.5 py-0.5 rounded-full">
-                            Được chọn nhiều nhất
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-xs text-stone-500 font-medium">
-                        Thời lượng {sku.durationMinutes} {tCommon('minutes')} · {tSpaDetail('sopProcess')}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Pricing Display */}
-                  <div className="flex items-baseline gap-2 pt-1 border-t border-stone-100">
-                    <span className="text-2xl sm:text-[26px] font-bold text-[#1B5E20] tracking-tight">
-                      {sku.pricePhase1.toLocaleString('vi-VN')}đ
-                    </span>
-                    {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
-                      <span className="text-xs text-stone-400 line-through font-normal">
-                        {sku.pricePhase2.toLocaleString('vi-VN')}đ
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Highlights Bullet List (Scannable in 3 seconds) */}
-                  {highlights.length > 0 && (
-                    <div className="space-y-2 pt-1">
-                      {highlights.map((h: string, idx: number) => (
-                        <div key={idx} className="text-xs sm:text-[13px] text-stone-600 flex items-start gap-2 leading-relaxed">
-                          <span className="text-[#387635] font-bold shrink-0 mt-0.5">•</span>
-                          <span>{h}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Bottom Action Area: Large Zalo CTA Button */}
-                <div className="pt-4 mt-4 border-t border-stone-100 space-y-2">
-                  <a
-                    href={zaloHubLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-3 px-4 rounded-xl bg-[#2E6B30] hover:bg-[#255827] active:bg-[#1E4720] text-white text-sm font-bold flex items-center justify-center gap-2.5 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
-                  >
-                    <Image
-                      src="/brand/Logo-Zalo-App-Rec.webp"
-                      alt="Zalo"
-                      width={20}
-                      height={20}
-                      className="w-5 h-5 rounded-xs shrink-0 object-contain"
-                    />
-                    <span>Đặt lịch Zalo</span>
-                  </a>
-
-                  <p className="text-center text-[11px] text-stone-400 font-normal">
-                    {tSpaDetail('noExtraFee')} · {tSpaDetail('noDeposit')}
-                  </p>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* WHAT OUR CUSTOMERS SAY & REVIEWS */}
-      <div id="customer-reviews" className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/80 space-y-4 scroll-mt-24">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-bold text-stone-900 tracking-tight">
-            {tSpaDetail('reviewsTitle')}
-          </h2>
-          <span className="text-xs text-stone-500 font-medium">
-            {reviewsList.length} {tCommon('reviews')}
-          </span>
-        </div>
-
-        {/* Minimalist Clean Rating Summary */}
-        <RatingSummary
-          rating={spa.rating}
-          summaryText={tSpaDetail('reviewsSummary', { count: spa.reviewCount || reviewsList.length })}
-        />
-
-        {/* Review Filter Tabs */}
-        {reviewsList.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            <button
-              type="button"
-              onClick={() => setReviewFilter('ALL')}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                reviewFilter === 'ALL'
-                  ? 'bg-stone-900 text-white'
-                  : 'bg-stone-100 hover:bg-stone-200 text-stone-600'
-              }`}
-            >
-              {tSpaDetail('allReviews')} ({reviewsList.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setReviewFilter('5_STARS')}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
-                reviewFilter === '5_STARS'
-                  ? 'bg-stone-900 text-white'
-                  : 'bg-stone-100 hover:bg-stone-200 text-stone-600'
-              }`}
-            >
-              <span>5 sao</span>
-              <span>({fiveStarCount})</span>
-            </button>
-            {photoCount > 0 && (
-              <button
-                type="button"
-                onClick={() => setReviewFilter('WITH_PHOTOS')}
-                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
-                  reviewFilter === 'WITH_PHOTOS'
-                    ? 'bg-stone-900 text-white'
-                    : 'bg-stone-100 hover:bg-stone-200 text-stone-600'
-                }`}
-              >
-                <span>Có ảnh</span>
-                <span>({photoCount})</span>
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Customer Reviews Cards (Paginated) */}
-        {currentReviews.length > 0 ? (
-          <div className="space-y-3 pt-1">
-            {currentReviews.map((r: any) => (
-              <article
-                key={r.id}
-                className="rounded-xl border border-stone-100 bg-stone-50/50 p-4 space-y-2"
-              >
-                <div className="flex items-start gap-3">
-                  {r.avatarUrl?.trim() ? (
-                    <img
-                      src={r.avatarUrl}
-                      alt={r.authorName}
-                      className="h-9 w-9 shrink-0 rounded-full object-cover border border-stone-200"
-                    />
-                  ) : (
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-stone-200 text-xs font-bold text-stone-700">
-                      {r.authorInitials?.trim() || (r.authorName ? r.authorName.slice(0, 2).toUpperCase() : 'KH')}
-                    </div>
-                  )}
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <h4 className="text-xs sm:text-sm font-bold text-stone-900 truncate">
-                        {r.authorName}
-                      </h4>
-                      <div className="flex items-center gap-0.5 shrink-0">
-                        {Array.from({ length: r.stars || 5 }).map((_, i) => (
-                          <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 text-[11px] text-stone-500 mt-0.5">
-                      <span>{r.authorMeta || 'Khách hàng Glow'}</span>
-                      {r.googleMapUrl && r.googleMapUrl.trim() !== '' && (
-                        <>
-                          <span className="text-stone-300">•</span>
-                          <a
-                            href={r.googleMapUrl.startsWith('http') ? r.googleMapUrl : `https://${r.googleMapUrl}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-stone-500 hover:text-stone-800 underline font-medium"
-                          >
-                            Google Maps
-                          </a>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-xs sm:text-[13px] text-stone-700 leading-relaxed">
-                  {r.body}
-                </p>
-              </article>
-            ))}
-
-            {/* Pagination Controls */}
-            {totalReviewPages > 1 && (
-              <div className="pt-3 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <span className="text-xs text-stone-500 font-medium order-2 sm:order-1">
-                  {tSpaDetail('showingReviews', {
-                    from: (reviewPage - 1) * REVIEWS_PER_PAGE + 1,
-                    to: Math.min(reviewPage * REVIEWS_PER_PAGE, filteredReviews.length),
-                    total: filteredReviews.length,
-                  })}
-                </span>
-                <div className="order-1 sm:order-2">
-                  <PaginationControls
-                    currentPage={reviewPage}
-                    totalPages={totalReviewPages}
-                    onPageChange={(p) => {
-                      setReviewPage(p)
-                      document.getElementById('customer-reviews')?.scrollIntoView({ behavior: 'smooth' })
-                    }}
+    <div className="w-full bg-[#FAF8F5] flex flex-col items-center justify-start p-0 sm:py-6 font-sans">
+      <div className="w-full max-w-[430px] min-h-screen sm:min-h-[844px] bg-[#F5F7F4] relative overflow-hidden flex flex-col sm:rounded-[36px] sm:shadow-xl sm:border sm:border-stone-200/80 mb-0 sm:mb-6">
+        <div className="flex-1 overflow-y-auto">
+          {/* Photo Gallery with Back Button */}
+          <div className="relative">
+            <div className="flex gap-1 overflow-x-auto bg-[#DDE4D9] no-scrollbar">
+              {spa.photos.map((ph, idx) => (
+                <div
+                  key={idx}
+                  className="shrink-0 w-64 h-52 relative bg-[#E8FDE7]"
+                >
+                  <Image
+                    src={ph}
+                    alt={`${spa.name} photo ${idx + 1}`}
+                    fill
+                    priority={idx === 0}
+                    className="object-cover"
                   />
                 </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <p className="text-xs text-stone-500 italic py-2">{tSpaDetail('noReviews')}</p>
-        )}
-      </div>
+              ))}
+            </div>
 
-      {/* MINIMALIST CLEAN FAQ ACCORDION */}
-      {spa.faqs && Array.isArray(spa.faqs) && spa.faqs.length > 0 && (
-        <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/80 space-y-3">
-          <div>
-            <h3 className="text-base font-bold text-stone-900 tracking-tight">
-              {tSpaDetail('faqTitle')}
-            </h3>
-            <p className="text-xs text-stone-500 mt-0.5">
-              {tSpaDetail('faqSubtitle')}
-            </p>
-          </div>
+            {/* Back Button to Home */}
+            <Link
+              href="/"
+              className="absolute top-4 left-4 w-9 h-9 rounded-full bg-white/95 shadow-md flex items-center justify-center text-[#093E06] transition-transform active:scale-90 cursor-pointer"
+              aria-label="Quay lại"
+            >
+              <ArrowLeft className="w-4 h-4" strokeWidth={2.2} />
+            </Link>
 
-          <div className="divide-y divide-stone-100 pt-1">
-            {spa.faqs.map((rawFaq: any, i: number) => {
-              const faq = getLocalizedFaq(rawFaq, i, spa.name)
-              const isOpen = !!openFaqs[i]
-              return (
-                <div key={i} className="py-3 first:pt-0 last:pb-0">
-                  <button
-                    type="button"
-                    onClick={() => toggleFaq(i)}
-                    className="w-full text-left flex items-center justify-between gap-3 cursor-pointer select-none py-1 group"
-                  >
-                    <span className="font-semibold text-xs sm:text-sm text-stone-800 group-hover:text-stone-950 leading-snug">
-                      {faq.question}
-                    </span>
-                    <ChevronDown
-                      className={`w-4 h-4 text-stone-400 shrink-0 transition-transform duration-200 ${
-                        isOpen ? 'rotate-180 text-stone-800' : ''
-                      }`}
-                    />
-                  </button>
-
-                  {isOpen && (
-                    <div className="pt-2 pb-1 text-xs sm:text-[13px] text-stone-600 leading-relaxed">
-                      {faq.answer}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* PROMINENT STICKY BOTTOM BAR (MINIMALIST & CRISP) */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200/80 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] py-2.5 sm:py-3 px-4">
-        <div className="max-w-xl sm:max-w-2xl mx-auto flex items-center justify-between gap-3">
-          {/* Price Minimalist Teaser */}
-          <div className="flex flex-col shrink-0 min-w-0">
-            <span className="text-[10px] font-medium text-stone-400 uppercase tracking-wider leading-none">
-              {tSpaDetail('fromPrice')}
-            </span>
-            <div className="flex items-baseline gap-0.5 mt-1 leading-none">
-              <span className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">
-                {minPrice.toLocaleString('vi-VN')}
-              </span>
-              <span className="text-xs font-semibold text-stone-900">đ</span>
+            {/* Certified Badge */}
+            <div className="absolute top-4 right-4 bg-[#093E06] text-white text-[10.5px] font-bold tracking-widest px-3 py-1 rounded-full uppercase shadow-md">
+              {spa.tier}
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2 flex-1 justify-end">
-            {/* Hotline Icon Button */}
-            <a
-              href={`tel:${spa.phone || '0359178342'}`}
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center border border-stone-200/80 transition-all active:scale-95 shrink-0"
-              title={tSpaDetail('callHotline')}
-            >
-              <Phone className="w-5 h-5 text-stone-700" />
-            </a>
+          {/* Spa Header Info */}
+          <div className="px-5 pt-4.5">
+            <h1 className="font-serif text-[22px] font-bold text-[#093E06] leading-tight">
+              {spa.name}
+            </h1>
+            <div className="flex items-center gap-1.5 text-[12.5px] text-[#4A5848] mt-1 leading-normal">
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
+              <span>{spa.rating.toFixed(1)} · {spa.reviews} đánh giá · {spa.dist} · {spa.ward}, {spa.cityName}</span>
+            </div>
 
-            {/* Clean, High-Impact Zalo Button with Prominent Zalo Icon */}
-            <a
-              href={zaloHubLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 max-w-xs sm:max-w-sm h-12 px-4 sm:px-5 rounded-xl bg-[#0068FF] hover:bg-[#0055D4] text-white flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] cursor-pointer"
-            >
-              <Image
-                src="/brand/Logo-Zalo-App-Rec.webp"
-                alt="Zalo"
-                width={22}
-                height={22}
-                className="w-5.5 h-5.5 rounded-xs shrink-0 object-contain shadow-xs"
-              />
-              <span className="font-bold text-sm sm:text-[15px] tracking-tight truncate">
-                Đặt lịch Zalo
+            {/* Status pill */}
+            <div className="flex items-center gap-2 mt-3">
+              <span
+                className={`text-[11.5px] font-bold px-2.5 py-0.5 rounded-full ${
+                  spa.open
+                    ? 'bg-[#E8FDE7] text-[#1F5E1B]'
+                    : 'bg-[#FBF1D8] text-[#7A5A12]'
+                }`}
+              >
+                {spa.open ? 'Đang mở' : 'Đã đóng'}
               </span>
-            </a>
+              <span className="text-[12px] text-[#4A5848]">{spa.today}</span>
+            </div>
+
+            {/* Hours Box */}
+            <div className="bg-white border border-[#DDE4D9] rounded-[16px] p-3.5 mt-3 space-y-1.5 shadow-xs">
+              {spa.hours.map((h, i) => (
+                <div
+                  key={i}
+                  className="flex justify-between text-[12.5px] text-[#4A5848]"
+                >
+                  <span>{h.d}</span>
+                  <span className="font-semibold text-[#093E06]">{h.t}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Standardized Price Menu */}
+          <div className="px-5 pt-6">
+            <h2 className="text-[13.5px] font-bold text-[#093E06] mb-2.5">
+              Menu giá niêm yết
+            </h2>
+            <div className="bg-white border border-[#DDE4D9] rounded-[18px] overflow-hidden shadow-xs divide-y divide-[#EFF2EE]">
+              {MVP_SERVICES.map((s) => {
+                const isCurrent = s.id === selectedServiceId;
+                return (
+                  <div
+                    key={s.id}
+                    onClick={() => setSelectedServiceId(s.id)}
+                    className={`flex items-center justify-between p-3.5 cursor-pointer transition-colors ${
+                      isCurrent ? 'bg-[#F3FAF2]' : 'hover:bg-stone-50'
+                    }`}
+                  >
+                    <div className="flex-1 min-w-0 pr-3">
+                      <div className="text-[13.5px] font-semibold text-[#093E06]">
+                        {s.name}
+                      </div>
+                      {s.dur && (
+                        <div className="text-[11px] text-[#6B7869] mt-0.5">
+                          {s.dur}
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-[14px] font-bold text-[#093E06] shrink-0">
+                      {formatPrice(s.price)}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-[11px] text-[#6B7869] mt-2">
+              Chi nhánh Glow Beauty - áp dụng đồng giá toàn hệ thống.
+            </p>
+          </div>
+
+          {/* Location Mini Map */}
+          <div className="px-5 pt-6">
+            <h2 className="text-[13.5px] font-bold text-[#093E06] mb-2.5">
+              Vị trí
+            </h2>
+            <div className="rounded-[18px] overflow-hidden border border-[#DDE4D9] bg-[#EEF1EC] shadow-xs">
+              <div className="relative h-40">
+                <iframe
+                  ref={miniMapIframeRef}
+                  src="/map.html?mini=1"
+                  title="Vị trí spa"
+                  className="absolute inset-0 w-full h-full border-0"
+                />
+              </div>
+              <div className="p-3.5 bg-white flex items-center justify-between gap-3">
+                <div className="text-[12.5px] leading-relaxed text-[#4A5848] flex-1">
+                  {spa.address}
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    window.open(
+                      `https://www.google.com/maps/search/?api=1&query=${spa.lat},${spa.lng}`,
+                      '_blank'
+                    )
+                  }
+                  className="shrink-0 text-[12.5px] font-bold text-[#093E06] bg-[#E8FDE7] hover:bg-[#d8f5d7] rounded-full px-3.5 py-2 transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <Compass className="w-3.5 h-3.5 text-[#093E06]" strokeWidth={2} />
+                  <span>Chỉ đường</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Customer Reviews */}
+          <div className="px-5 pt-6 pb-28">
+            <div className="flex items-baseline justify-between mb-3">
+              <h2 className="text-[13.5px] font-bold text-[#093E06]">
+                Đánh giá có ảnh
+              </h2>
+              <div className="flex items-center gap-1 text-[#40813F] text-[11.5px] font-semibold">
+                <ShieldCheck className="w-3.5 h-3.5" strokeWidth={2} />
+                <span>Xác thực số điện thoại</span>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {MVP_REVIEWS.map((r, i) => (
+                <div
+                  key={i}
+                  className="bg-white border border-[#DDE4D9] rounded-[18px] p-3.5 shadow-xs"
+                >
+                  <div className="flex gap-2.5 items-center mb-2">
+                    <div className="w-8 h-8 rounded-full bg-[#E8FDE7] text-[#40813F] flex items-center justify-center text-xs font-bold shrink-0">
+                      {r.initial}
+                    </div>
+                    <div>
+                      <div className="text-[13px] font-bold text-[#093E06]">
+                        {r.name}
+                      </div>
+                      <div className="flex items-center gap-1 text-[11px] text-[#6B7869]">
+                        <div className="flex text-amber-400">
+                          {Array.from({ length: 5 }).map((_, sIdx) => (
+                            <Star key={sIdx} className="w-3 h-3 fill-amber-400 text-amber-400" />
+                          ))}
+                        </div>
+                        <span>· {r.when}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-[12.5px] leading-relaxed text-[#4A5848]">
+                    {r.text}
+                  </p>
+
+                  <div className="flex gap-2 mt-2.5">
+                    {Array.from({ length: r.photos }).map((_, phIdx) => (
+                      <div
+                        key={phIdx}
+                        className="w-16 h-16 rounded-[12px] bg-[#E8FDE7] overflow-hidden relative"
+                      >
+                        <Image
+                          src={
+                            phIdx === 0
+                              ? '/banners/banner_herbal_wash.jpg'
+                              : '/banners/banner_spa_ambiance.jpg'
+                          }
+                          alt="Review photo"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* Sticky Bottom Booking Button */}
+        <div className="p-3.5 bg-white border-t border-[#DDE4D9] flex-none">
+          <button
+            type="button"
+            onClick={() => handleOpenBooking(selectedServiceId)}
+            className="w-full bg-[#40813F] hover:bg-[#357033] active:scale-[0.99] text-white rounded-full h-14 flex items-center justify-center gap-2 font-bold text-[15.5px] shadow-md transition-all cursor-pointer"
+          >
+            <span>Đặt lịch ưu tiên qua Zalo</span>
+            <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
+          </button>
+        </div>
+
+        {/* Bottom Sheet */}
+        <BookingBottomSheet
+          isOpen={isBottomSheetOpen}
+          onClose={() => setIsBottomSheetOpen(false)}
+          spa={spa}
+          services={MVP_SERVICES}
+          initialServiceId={selectedServiceId}
+          zaloPhone="0359178342"
+        />
       </div>
     </div>
-  )
+  );
 }
