@@ -15,6 +15,8 @@ import {
   Check,
   ShieldCheck,
   MessageCircle,
+  Camera,
+  Info,
 } from 'lucide-react'
 import { HeroBannerCarousel } from '@/components/HeroBannerCarousel'
 import { useSearch } from '@/context/SearchContext'
@@ -44,6 +46,92 @@ const SPA_THUMBNAILS = [
   '/spas/spa_thumb_3.jpg',
   '/spas/spa_thumb_4.jpg',
   '/spas/spa_thumb_5.jpg',
+]
+
+interface SkuPhotoSpec {
+  image: string
+  photoSpec: string
+  photoHint: string
+  shortBenefit: string
+  pills: string[]
+}
+
+const SKU_PHOTO_SPECS: Record<number, SkuPhotoSpec> = {
+  0: {
+    image: '/banners/banner_herbal_wash.jpg',
+    photoSpec: 'Ảnh 4:3 (600x450px)',
+    photoHint: 'Cận cảnh vòi sen xối nước ấm, bọt bồ kết & làn tóc thư giãn',
+    shortBenefit: 'Làn nước thảo dược ấm xoa dịu căng thẳng, sạch sâu da đầu sau ngày làm việc.',
+    pills: ['Bồ kết cô đặc', 'Massage 15p', 'Sấy tạo kiểu'],
+  },
+  1: {
+    image: '/spas/spa_thumb_1.jpg',
+    photoSpec: 'Ảnh 4:3 (600x450px)',
+    photoHint: 'Khách thư giãn ủ kem collagen, kỹ thuật viên bấm huyệt đầu',
+    shortBenefit: 'Chăm sóc da đầu chuyên sâu, 100% mỹ phẩm chuẩn công khai, tóc mềm mượt.',
+    pills: ['Ủ tóc collagen', 'Bấm huyệt thái dương', 'Trà thảo mộc'],
+  },
+  2: {
+    image: '/banners/banner_neck_massage.jpg',
+    photoSpec: 'Ảnh 4:3 (600x450px)',
+    photoHint: 'Chườm đá nóng ngải cứu / massage đả thông kinh lạc cổ vai gáy',
+    shortBenefit: 'Giải phóng cơn đau nhức cổ vai gáy do ngồi máy tính nhiều với tinh dầu ấm.',
+    pills: ['Đá nóng ngải cứu', 'Đả thông kinh lạc', 'Xông thảo dược'],
+  },
+}
+
+const VISUAL_CATEGORIES = [
+  {
+    id: 'cat-1',
+    title: 'Gội Đầu Dưỡng Sinh',
+    image: '/banners/banner_herbal_wash.jpg',
+    anchor: '#goi-dich-vu',
+  },
+  {
+    id: 'cat-2',
+    title: 'Trị Liệu Cổ Vai Gáy',
+    image: '/banners/banner_neck_massage.jpg',
+    anchor: '#goi-dich-vu',
+  },
+  {
+    id: 'cat-3',
+    title: 'Thải Độc & Phục Hồi',
+    image: '/spas/spa_thumb_1.jpg',
+    anchor: '#goi-dich-vu',
+  },
+  {
+    id: 'cat-4',
+    title: 'Không Gian & Combo',
+    image: '/banners/banner_spa_ambiance.jpg',
+    anchor: '#danh-sach-spa',
+  },
+]
+
+const SOP_PROOF_CARDS = [
+  {
+    id: 'sop-1',
+    title: 'Mỹ Phẩm Niêm Yết Công Khai',
+    desc: 'Dầu gội bồ kết & thảo dược có tem kiểm định, 100% không dùng hóa chất trôi nổi.',
+    image: '/spas/spa_thumb_2.jpg',
+    photoSpec: 'Ảnh 4:3 (400x300px)',
+    photoHint: 'Chai dầu gội thảo dược & tinh dầu có nhãn mác niêm yết rõ ràng',
+  },
+  {
+    id: 'sop-2',
+    title: 'Khăn Hấp & Dụng Cụ Tiệt Trùng',
+    desc: 'Mỗi khách 1 bộ khăn tiệt trùng nhiệt độ cao và lược chải riêng biệt 100%.',
+    image: '/spas/spa_thumb_3.jpg',
+    photoSpec: 'Ảnh 4:3 (400x300px)',
+    photoHint: 'Tủ sấy tiệt trùng khăn & bộ lược gội sạch ngăn nắp',
+  },
+  {
+    id: 'sop-3',
+    title: 'Kỹ Thuật Viên Chuẩn SOP',
+    desc: 'Thực hiện đủ thời lượng, đúng quy trình, tuyệt đối không chèo kéo mua thẻ gói.',
+    image: '/spas/spa_thumb_4.jpg',
+    photoSpec: 'Ảnh 4:3 (400x300px)',
+    photoHint: 'Kỹ thuật viên thao tác chuyên nghiệp trong đồng phục spa',
+  },
 ]
 
 export default function HomePage() {
@@ -256,15 +344,67 @@ export default function HomePage() {
         <HeroBannerCarousel />
       </section>
 
-      {/* 2. 3 GÓI DỊCH VỤ NIÊM YẾT (Clean Service Menu) */}
-      <section id="goi-dich-vu" className="space-y-3.5 scroll-mt-20">
+      {/* 2. DỊCH VỤ NỔI BẬT (Visual Category Grid - Phong cách a.SENSE Ảnh 2: Đơn giản, ít chữ, thu hút) */}
+      <section className="space-y-3.5 scroll-mt-20">
+        <div className="flex items-center justify-between px-1">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight">
+              Dịch Vụ Nổi Bật
+            </h2>
+            <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
+              Chọn nhóm liệu trình yêu thích để xem điểm spa gần bạn và đặt chỗ nhanh
+            </p>
+          </div>
+          <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-[#236B38] bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full shadow-2xs">
+            <span>4 Nhóm Dịch Vụ</span>
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          {VISUAL_CATEGORIES.map((cat) => (
+            <a
+              key={cat.id}
+              href={cat.anchor}
+              className="group relative aspect-[4/5] sm:aspect-square rounded-2xl sm:rounded-3xl overflow-hidden border border-stone-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer block bg-stone-900"
+            >
+              <Image
+                src={cat.image}
+                alt={cat.title}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 768px) 50vw, 25vw"
+              />
+              {/* Subtle bottom gradient for clean text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+              {/* Bottom Content: Minimalist, centered title only (Chuẩn a.SENSE) */}
+              <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 z-10 text-center">
+                <h3 className="font-bold text-sm sm:text-base text-white tracking-tight leading-snug group-hover:text-emerald-200 transition-colors drop-shadow-xs">
+                  {cat.title}
+                </h3>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. 3 GÓI DỊCH VỤ NIÊM YẾT (Visual Service Cards - Phong cách a.SENSE Ảnh 1: Thẻ ảnh + Floating Price Pill) */}
+      <section id="goi-dich-vu" className="space-y-4 scroll-mt-20">
         <div className="px-1">
-          <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight">
-            {tServices('heading')}
-          </h2>
-          <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
-            {tServices('subheading')}
-          </p>
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight">
+                {tServices('heading')}
+              </h2>
+              <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
+                {tServices('subheading')}
+              </p>
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1B4D20] bg-emerald-50 border border-emerald-300/80 px-3 py-1 rounded-full">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+              <span>Đồng giá tại 15 Spa Cầu Giấy</span>
+            </span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
@@ -272,11 +412,8 @@ export default function HomePage() {
             const isPopular = index === 1
             const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
             const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
+            const spec = SKU_PHOTO_SPECS[index] || SKU_PHOTO_SPECS[0]
 
-            const bullet1 = tServices.has(`${pkgKey}.f1` as any) ? tServices(`${pkgKey}.f1` as any) : ''
-            const bullet2 = tServices.has(`${pkgKey}.f2` as any) ? tServices(`${pkgKey}.f2` as any) : ''
-            const bullet3 = tServices.has(`${pkgKey}.f3` as any) ? tServices(`${pkgKey}.f3` as any) : ''
-            const highlights = [bullet1, bullet2, bullet3].filter(Boolean)
             const discountPercent =
               sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
                 ? Math.round(((sku.pricePhase2 - sku.pricePhase1) / sku.pricePhase2) * 100)
@@ -285,66 +422,83 @@ export default function HomePage() {
             return (
               <div
                 key={sku.id}
-                className={`relative p-5 sm:p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between bg-white ${
+                className={`relative p-4 sm:p-5 rounded-2xl transition-all duration-300 flex flex-col justify-between bg-white ${
                   isPopular
                     ? 'border-2 border-[#236B38] shadow-[0_8px_30px_rgba(35,107,56,0.12)] ring-1 ring-[#236B38]/20'
                     : 'border border-stone-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-emerald-300 hover:shadow-md'
                 }`}
               >
-                <div className="space-y-4">
-                  {/* Package Top: Title, Duration & Recommended Tag */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2 flex-wrap">
-                      <h3 className="font-bold text-[18px] text-stone-900 tracking-tight leading-snug">
-                        {localizedName}
-                      </h3>
-                      {isPopular && (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1B4D20] bg-emerald-50 border border-emerald-300/80 px-2.5 py-0.5 rounded-full shadow-2xs">
-                          <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
-                          Được chọn nhiều nhất
-                        </span>
-                      )}
-                    </div>
-                    <div className="inline-flex items-center gap-1 text-xs text-stone-500 font-medium bg-stone-100/80 px-2 py-0.5 rounded-md">
-                      <Clock className="w-3 h-3 text-stone-400" />
-                      <span>Thời lượng {sku.durationMinutes} {tServices('durationUnit')}</span>
-                    </div>
-                  </div>
-
-                  {/* Pricing Display */}
-                  <div className="flex items-baseline gap-2 pt-2 border-t border-stone-100">
-                    <span className="text-2xl sm:text-[28px] font-bold text-[#1B4D20] tracking-tight">
-                      {sku.pricePhase1.toLocaleString('vi-VN')}đ
-                    </span>
-                    {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
-                      <span className="text-xs text-stone-400 line-through font-normal">
-                        {sku.pricePhase2.toLocaleString('vi-VN')}đ
+                <div className="space-y-3">
+                  {/* Top: Title & Recommended Tag */}
+                  <div className="flex items-center justify-between gap-2 flex-wrap min-h-[28px]">
+                    <h3 className="font-bold text-[17px] sm:text-[18px] text-stone-900 tracking-tight leading-snug">
+                      {localizedName}
+                    </h3>
+                    {isPopular && (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1B4D20] bg-emerald-50 border border-emerald-300/80 px-2.5 py-0.5 rounded-full shadow-2xs">
+                        <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
+                        Được chọn nhiều nhất
                       </span>
                     )}
+                  </div>
+
+                  {/* VISUAL IMAGE FRAME WITH DUAL-TONE FLOATING PRICE PILL (Chuẩn a.SENSE) */}
+                  <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-stone-100 group/img shadow-inner">
+                    <Image
+                      src={spec.image}
+                      alt={localizedName}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover/img:scale-105"
+                      sizes="(max-width: 768px) 100vw, 320px"
+                    />
+                    {/* Dark gradient scrim at bottom for text contrast */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
+
+
+
+                    {/* Discount chip if any */}
                     {discountPercent > 0 && (
-                      <span className="text-[10.5px] font-bold text-amber-800 bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 rounded-md">
-                        -{discountPercent}%
-                      </span>
+                      <div className="absolute top-2.5 right-2.5 z-20">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-500 text-white shadow-xs">
+                          -{discountPercent}%
+                        </span>
+                      </div>
                     )}
+
+                    {/* DUAL-TONE FLOATING PRICE PILL (Chính xác như a.SENSE) */}
+                    <div className="absolute bottom-3 left-3 z-20 flex items-stretch rounded-full overflow-hidden shadow-lg border border-white/50">
+                      <div className="bg-[#236B38] text-white font-black text-sm sm:text-base px-3.5 py-1.5 flex items-center tracking-tight">
+                        {sku.pricePhase1.toLocaleString('vi-VN')}đ
+                      </div>
+                      <div className="bg-white/95 backdrop-blur-xs text-stone-800 text-xs font-bold px-2.5 py-1.5 flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-stone-500" />
+                        <span>{sku.durationMinutes} {tServices('durationUnit')}</span>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Highlights Bullet List (Clean Checkmarks) */}
-                  {highlights.length > 0 && (
-                    <div className="space-y-2.5 pt-1">
-                      {highlights.map((h: string, idx: number) => (
-                        <div key={idx} className="text-xs sm:text-[13px] text-stone-600 flex items-start gap-2.5 leading-relaxed">
-                          <div className="w-4 h-4 rounded-full bg-emerald-50 border border-emerald-200/80 flex items-center justify-center shrink-0 mt-0.5">
-                            <Check className="w-2.5 h-2.5 text-emerald-700 stroke-[3]" />
-                          </div>
-                          <span>{h}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+
+
+                  {/* Short Emotional Description (Thay cho sớ gạch đầu dòng dài dòng) */}
+                  <p className="text-xs sm:text-[13px] text-stone-600 leading-relaxed font-normal">
+                    {spec.shortBenefit}
+                  </p>
+
+                  {/* Highlight Micro-Pills */}
+                  <div className="flex flex-wrap gap-1.5 pt-0.5">
+                    {spec.pills.map((pill) => (
+                      <span
+                        key={pill}
+                        className="text-[11px] font-semibold text-[#1B4D20] bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md"
+                      >
+                        ✓ {pill}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Bottom Action Area: Large, High-Touch Zalo CTA Button */}
-                <div className="pt-4 mt-5 border-t border-stone-100 space-y-2">
+                <div className="pt-3.5 mt-4 border-t border-stone-100 space-y-2">
                   <a
                     href={zaloHubLink}
                     target="_blank"
@@ -358,7 +512,7 @@ export default function HomePage() {
                       height={20}
                       className="w-5 h-5 rounded-xs shrink-0 object-contain"
                     />
-                    <span>Đặt lịch Zalo</span>
+                    <span>Đặt lịch {sku.pricePhase1.toLocaleString('vi-VN')}đ Zalo</span>
                   </a>
 
                   <p className="text-center text-[11px] text-stone-400 font-normal">
@@ -371,7 +525,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. SPAS NEAR YOU (MOBILE FIRST LISTING & FILTERS) */}
+      {/* 4. QUY TRÌNH KIỂM ĐỊNH THỰC TẾ (Standard SOP Proof Cards - Có ảnh thực tế chứng minh) */}
+      <section className="space-y-3.5">
+        <div className="px-1">
+          <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight">
+            Tiêu Chuẩn Kiểm Định Glow
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
+            Mạng lưới spa đối tác trải qua 3 bước thẩm định gắt gao trước khi phục vụ khách hàng
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
+          {SOP_PROOF_CARDS.map((sop) => (
+            <div
+              key={sop.id}
+              className="rounded-2xl bg-white border border-stone-200/90 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col"
+            >
+              {/* Photo Frame */}
+              <div className="relative aspect-[16/10] w-full bg-stone-100 overflow-hidden">
+                <Image
+                  src={sop.image}
+                  alt={sop.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 320px"
+                />
+              </div>
+
+              {/* Content */}
+              <div className="p-3.5 sm:p-4 space-y-1.5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-bold text-sm sm:text-[15px] text-stone-900 leading-snug">
+                    {sop.title}
+                  </h3>
+                  <p className="text-xs text-stone-600 mt-1 leading-relaxed">
+                    {sop.desc}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. SPAS NEAR YOU (MOBILE FIRST LISTING & FILTERS) */}
       <section id="danh-sach-spa" className="space-y-3 scroll-mt-20">
         {/* Section Header */}
         <div className="flex items-center justify-between gap-2 px-1">

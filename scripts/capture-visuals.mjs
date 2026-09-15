@@ -54,6 +54,20 @@ async function run() {
   })
   console.log('Saved desktop screenshot:', desktopScreenshotPath)
 
+  // 2b. DESKTOP SERVICE PACKAGES (Scrolled to #goi-dich-vu)
+  console.log('Testing Desktop Service Packages (Scrolled)...')
+  await desktopPage.evaluate(() => {
+    const el = document.getElementById('goi-dich-vu')
+    if (el) el.scrollIntoView()
+  })
+  await new Promise(r => setTimeout(r, 1000))
+  const packagesScreenshotPath = path.join(OUTPUT_DIR, 'service_packages_desktop.png')
+  await desktopPage.screenshot({
+    path: packagesScreenshotPath,
+    fullPage: false,
+  })
+  console.log('Saved service packages screenshot:', packagesScreenshotPath)
+
   // 3. DESKTOP SPA LIST SECTION (Scrolled down)
   console.log('Testing Desktop Spa List Section (Scrolled)...')
   await desktopPage.evaluate(() => {

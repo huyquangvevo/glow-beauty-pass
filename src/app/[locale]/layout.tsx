@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans, Playfair_Display } from 'next/font/google'
 import '../globals.css'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
@@ -11,11 +11,18 @@ import { getMessages } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
 import { notFound } from 'next/navigation'
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin', 'vietnamese'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-sans',
   weight: ['300', '400', '500', '600', '700', '800'],
+})
+
+const playfair = Playfair_Display({
+  subsets: ['latin', 'vietnamese'],
+  display: 'swap',
+  variable: '--font-serif',
+  weight: ['400', '500', '600', '700'],
 })
 
 export async function generateMetadata({
@@ -179,7 +186,7 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} className={`scroll-smooth ${inter.variable}`} suppressHydrationWarning>
+    <html lang={locale} className={`scroll-smooth ${plusJakartaSans.variable} ${playfair.variable}`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
