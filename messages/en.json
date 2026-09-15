@@ -39,25 +39,25 @@
   },
   "Hero": {
     "slide1": {
-      "tag": "FIXED PRICES ACROSS 15 SPAS",
-      "title": "Herbal Hair Wash",
-      "highlight": "From 49,000 VND (~$2)",
+      "tag": "Organic Herbal Infusion",
+      "title": "Nourishing Head Spa",
+      "highlight": "45-Min Relaxation • From 49,000 VND",
       "description": "Warm herbal water soothes stress and deeply cleanses scalp after a long working day.",
-      "cta": "Book 49K Wash on Zalo"
+      "cta": "Book 49K Wash"
     },
     "slide2": {
-      "tag": "VERIFIED SOP PROTOCOL",
+      "tag": "Acupressure & Relief",
       "title": "Neck & Shoulder Therapy",
-      "highlight": "Intensive 149,000 VND (~$6)",
+      "highlight": "Certified Master Therapists • 149,000 VND",
       "description": "Unblock meridians and release stiffness with certified, skilled spa therapists.",
-      "cta": "Book Therapy 149K"
+      "cta": "Book 149K Therapy"
     },
     "slide3": {
-      "tag": "100% TRANSPARENCY GUARANTEE",
-      "title": "Clean Certified Spas",
-      "highlight": "Zero Surcharge Policy",
+      "tag": "15 Curated Spas",
+      "title": "Sanctuary of Serenity",
+      "highlight": "Audited Quality • Zero Surcharge Guarantee",
       "description": "15 mystery-shopper inspected spas. 100% refund guarantee if coerced into memberships.",
-      "cta": "Find Closest Spa"
+      "cta": "Explore 15 Spas"
     }
   },
   "TrustBadges": {
@@ -156,7 +156,7 @@
     "filterTopRated": "★ 4.8+ Stars",
     "filterDeal49k": "49K Deal",
     "nearLocation": "Near {location}",
-    "sopStandard": "SOP Standard",
+    "sopStandard": "Verified",
     "reviewsCount": "{count} reviews",
     "priceFrom": "from {price}đ",
     "noSpasFilterMatch": "No spas match your selected filters.",

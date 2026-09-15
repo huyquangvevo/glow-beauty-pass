@@ -133,20 +133,20 @@ export function HeroBannerCarousel() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-transparent to-transparent" />
 
-              {/* Slide Content Overlay */}
-              <div className="absolute inset-0 p-4 sm:p-7 flex flex-col justify-between z-20 text-white">
-                {/* Top Row: Refined Eyebrow Tag (Taste-skill: subtle frosted glass, natural casing) */}
-                <div className="flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium text-emerald-100 bg-emerald-950/35 backdrop-blur-md border border-emerald-400/25 shadow-xs tracking-wide">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
-                    <span>{slide.tag}</span>
-                  </span>
-                </div>
+              {/* Slide Content Overlay - Anchored to bottom, top of photo completely clean & open */}
+              <div className="absolute inset-0 p-5 sm:p-7 flex flex-col justify-end z-20 text-white">
+                {/* Bottom Text & CTA Row - High-End Editorial Typography (Taste-skill: Anti-AI Cliché) */}
+                <div className="space-y-2.5 sm:space-y-3 max-w-sm sm:max-w-md pr-4">
+                  {/* Category Kicker: Unboxed, delicate letter spacing, subtle hairline indicator (No AI pill capsule) */}
+                  <div className="flex items-center gap-2">
+                    <span className="w-3.5 h-px bg-emerald-300/80 shrink-0" />
+                    <span className="text-[11px] sm:text-xs font-semibold tracking-[0.14em] uppercase text-emerald-200 drop-shadow-xs">
+                      {slide.tag}
+                    </span>
+                  </div>
 
-                {/* Bottom Text & CTA Row - Clean, Minimalist (no bulky paragraphs) */}
-                <div className="space-y-2.5 max-w-sm sm:max-w-md pr-4">
                   <div className="space-y-0.5">
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight drop-shadow-sm">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight drop-shadow-sm">
                       {slide.title}
                     </h2>
                     <p className="text-xs sm:text-sm md:text-base font-semibold text-emerald-300 drop-shadow-xs">
@@ -159,7 +159,7 @@ export function HeroBannerCarousel() {
                       href={slide.ctaLink}
                       target={slide.ctaLink.startsWith('http') ? '_blank' : '_self'}
                       rel={slide.ctaLink.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 sm:py-2.5 rounded-full bg-white hover:bg-stone-100 text-[#1B4D20] text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95 cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-4.5 py-2 sm:py-2.5 rounded-full bg-white hover:bg-stone-100 text-[#1B4D20] text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95 cursor-pointer"
                     >
                       <span>{slide.ctaText}</span>
                     </a>

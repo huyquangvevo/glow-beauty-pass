@@ -47,6 +47,19 @@ async function run() {
   })
   console.log('Saved slide2 mobile screenshot:', slide2MobilePath)
 
+  // 1c. Mobile Click Next Slide again to capture Slide 3 (Không Gian An Yên)
+  await mobilePage.evaluate(() => {
+    const btn = document.querySelector('button[title="Banner tiếp theo"]')
+    if (btn) btn.click()
+  })
+  await new Promise(r => setTimeout(r, 800))
+  const slide3MobilePath = path.join(OUTPUT_DIR, 'slide3_mobile.png')
+  await mobilePage.screenshot({
+    path: slide3MobilePath,
+    fullPage: false,
+  })
+  console.log('Saved slide3 mobile screenshot:', slide3MobilePath)
+
   // 1c. Mobile Scrolled to Why Us
   await mobilePage.evaluate(() => {
     const sections = document.querySelectorAll('section')
