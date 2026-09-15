@@ -355,12 +355,10 @@ export default function HomePage() {
           </h2>
           <a
             href="#goi-dich-vu"
-            className="group inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-medium text-stone-700 bg-[#F4F1EA] hover:bg-[#ECE7DC] border border-[#E3DDD1] px-2.5 sm:px-3 py-1 rounded-full transition-all duration-200 active:scale-95 shadow-2xs shrink-0 whitespace-nowrap"
+            className="group inline-flex items-center gap-1 text-xs font-semibold text-[#236B38] hover:text-[#174823] transition-colors shrink-0 whitespace-nowrap"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#236B38] group-hover:scale-125 transition-transform" />
-            <span>04 Liệu trình</span>
-            <span className="hidden sm:inline">tuyển chọn</span>
-            <span className="text-stone-400 group-hover:text-[#236B38] group-hover:translate-x-0.5 transition-all text-[11px]">→</span>
+            <span>04 Liệu trình tuyển chọn</span>
+            <span className="text-stone-400 group-hover:text-[#236B38] group-hover:translate-x-0.5 transition-transform text-xs">→</span>
           </a>
         </div>
 
@@ -398,10 +396,10 @@ export default function HomePage() {
           <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight">
             Dịch Vụ Nổi Bật
           </h2>
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1B4D20] bg-emerald-50 border border-emerald-300/80 px-3 py-1 rounded-full">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+          <div className="inline-flex items-center gap-1.5 text-xs text-stone-500 font-medium shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
             <span>Đồng giá tại 15 Spa Cầu Giấy</span>
-          </span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
@@ -432,7 +430,7 @@ export default function HomePage() {
                       {localizedName}
                     </h3>
                     {isPopular && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1B4D20] bg-emerald-50 border border-emerald-300/80 px-2.5 py-0.5 rounded-full shadow-2xs">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1B4D20] bg-emerald-50 border border-emerald-300/80 px-2 py-0.5 rounded-md shadow-2xs">
                         <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
                         Được chọn nhiều nhất
                       </span>
@@ -452,7 +450,7 @@ export default function HomePage() {
 
                     {discountPercent > 0 && (
                       <div className="absolute top-2.5 right-2.5 z-20">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-white shadow-xs">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-500 text-white shadow-xs">
                           -{discountPercent}%
                         </span>
                       </div>

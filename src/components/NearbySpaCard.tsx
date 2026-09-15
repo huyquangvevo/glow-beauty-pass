@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { Link } from '@/i18n/routing'
-import { Star, MapPin } from 'lucide-react'
+import { Star, MapPin, Sparkles } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { formatDistanceKm, getOpeningStatus } from '@/lib/formatters'
 
@@ -61,7 +61,7 @@ export function NearbySpaCard({
 
         {/* Top-Left SOP Tag */}
         <div className="absolute left-3 top-3 z-10">
-          <span className="inline-flex items-center rounded-full bg-white/95 backdrop-blur-xs px-2.5 py-0.5 text-[11px] font-medium text-stone-700 shadow-xs border border-stone-100">
+          <span className="inline-flex items-center rounded-md bg-white/95 backdrop-blur-xs px-2 py-0.5 text-[11px] font-medium text-stone-700 shadow-xs border border-stone-100/80">
             {tSpaNetwork('sopStandard')}
           </span>
         </div>
@@ -69,7 +69,7 @@ export function NearbySpaCard({
         {/* Top-Right Distance Tag */}
         {distanceText && (
           <div className="absolute right-3 top-3 z-10">
-            <span className="inline-flex items-center gap-1 rounded-full bg-black/60 backdrop-blur-xs text-white px-2.5 py-0.5 text-[11px] font-medium shadow-xs">
+            <span className="inline-flex items-center gap-1 rounded-md bg-black/65 backdrop-blur-xs text-white px-2 py-0.5 text-[11px] font-medium shadow-xs">
               <MapPin className="w-3 h-3" />
               <span>{distanceText}</span>
             </span>
@@ -125,10 +125,11 @@ export function NearbySpaCard({
             <span className="truncate">{spa.address}</span>
           </div>
 
-          {/* Exclusive Offer Badge (if any) */}
+          {/* Exclusive Offer Badge (Crisp modern badge, not a puffy yellow pill) */}
           {spa.exclusiveOffer && (
-            <div className="mt-0.5 text-[11.5px] text-amber-900 bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-lg font-medium leading-snug line-clamp-1">
-              ✨ {spa.exclusiveOffer}
+            <div className="mt-1 flex items-center gap-1.5 text-[11.5px] font-medium text-amber-900 bg-amber-50/70 border border-amber-200/70 px-2 py-0.5 rounded-md line-clamp-1">
+              <Sparkles className="w-3 h-3 text-amber-600 fill-amber-500 shrink-0" />
+              <span className="truncate">{spa.exclusiveOffer}</span>
             </div>
           )}
         </div>
