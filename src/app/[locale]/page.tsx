@@ -20,6 +20,7 @@ import {
   Info,
   Leaf,
   BadgePercent,
+  ArrowRight,
 } from 'lucide-react'
 import { HeroBannerCarousel } from '@/components/HeroBannerCarousel'
 import { useSearch } from '@/context/SearchContext'
@@ -355,10 +356,10 @@ export default function HomePage() {
           </h2>
           <a
             href="#goi-dich-vu"
-            className="group inline-flex items-center gap-1 text-xs font-semibold text-[#236B38] hover:text-[#174823] transition-colors shrink-0 whitespace-nowrap"
+            className="group inline-flex items-center gap-1.5 text-xs font-semibold text-[#236B38] hover:text-[#174823] transition-colors shrink-0 whitespace-nowrap"
           >
             <span>04 Liệu trình tuyển chọn</span>
-            <span className="text-stone-400 group-hover:text-[#236B38] group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+            <ArrowRight className="w-3.5 h-3.5 text-[#236B38] group-hover:translate-x-1 transition-transform duration-200 stroke-[2.2]" />
           </a>
         </div>
 
@@ -508,7 +509,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-stone-200/70 pt-2 border-t border-stone-200/50 md:border-t-0">
             {/* Stat 1 */}
             <div className="p-4 sm:p-5 flex flex-col items-center sm:items-start text-center sm:text-left group">
-              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#236B38] tracking-tight">
+              <span className="font-sans text-3xl sm:text-4xl font-extrabold text-[#236B38] tracking-tight">
                 15+
               </span>
               <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
@@ -521,7 +522,7 @@ export default function HomePage() {
 
             {/* Stat 2 */}
             <div className="p-4 sm:p-5 flex flex-col items-center sm:items-start text-center sm:text-left group">
-              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#236B38] tracking-tight">
+              <span className="font-sans text-3xl sm:text-4xl font-extrabold text-[#236B38] tracking-tight">
                 49K
               </span>
               <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
@@ -534,7 +535,7 @@ export default function HomePage() {
 
             {/* Stat 3 */}
             <div className="p-4 sm:p-5 flex flex-col items-center sm:items-start text-center sm:text-left group">
-              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#236B38] tracking-tight">
+              <span className="font-sans text-3xl sm:text-4xl font-extrabold text-[#236B38] tracking-tight">
                 100%
               </span>
               <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
@@ -547,7 +548,7 @@ export default function HomePage() {
 
             {/* Stat 4 */}
             <div className="p-4 sm:p-5 flex flex-col items-center sm:items-start text-center sm:text-left group">
-              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#236B38] tracking-tight">
+              <span className="font-sans text-3xl sm:text-4xl font-extrabold text-[#236B38] tracking-tight">
                 0đ
               </span>
               <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">

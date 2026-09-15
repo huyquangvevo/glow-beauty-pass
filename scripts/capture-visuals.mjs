@@ -81,6 +81,20 @@ async function run() {
   })
   console.log('Saved service packages screenshot:', packagesScreenshotPath)
 
+  // 2c. DESKTOP WHY US SECTION
+  console.log('Testing Desktop Why Us Section (Scrolled)...')
+  await desktopPage.evaluate(() => {
+    const sections = document.querySelectorAll('section')
+    if (sections[3]) sections[3].scrollIntoView()
+  })
+  await new Promise(r => setTimeout(r, 1000))
+  const whyUsDesktopPath = path.join(OUTPUT_DIR, 'why_us_desktop.png')
+  await desktopPage.screenshot({
+    path: whyUsDesktopPath,
+    fullPage: false,
+  })
+  console.log('Saved why us desktop screenshot:', whyUsDesktopPath)
+
   // 3. DESKTOP SPA LIST SECTION (Scrolled down)
   console.log('Testing Desktop Spa List Section (Scrolled)...')
   await desktopPage.evaluate(() => {
