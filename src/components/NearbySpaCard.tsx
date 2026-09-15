@@ -82,14 +82,14 @@ export function NearbySpaCard({
         <div className="flex flex-col gap-1.5">
           {/* Spa Name */}
           <Link href={href} className="group/title block">
-            <h3 className="truncate text-[16px] font-bold tracking-tight text-stone-900 group-hover/title:text-[#2E6B30] transition-colors">
+            <h3 className="truncate text-[16px] font-semibold tracking-tight text-stone-900 group-hover/title:text-[#40813D] transition-colors">
               {spa.name}
             </h3>
           </Link>
 
           {/* Meta Row: Rating | Review Count · Distance */}
-          <div className="flex flex-wrap items-center gap-1.5 text-[12.5px] leading-tight text-stone-500">
-            <span className="flex items-center gap-1 font-bold text-stone-900 shrink-0">
+          <div className="flex flex-wrap items-center gap-1.5 text-[12.5px] leading-tight text-stone-500 font-normal">
+            <span className="flex items-center gap-1 font-semibold text-stone-900 shrink-0">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
               <span>{Number(spa.rating || 4.8).toFixed(1)}</span>
             </span>
@@ -106,12 +106,12 @@ export function NearbySpaCard({
             <div className="flex items-center gap-1 shrink-0">
               <span
                 className={`inline-block w-1.5 h-1.5 rounded-full ${
-                  openingStatus.isOpen ? 'bg-[#236B38]' : 'bg-amber-500'
+                  openingStatus.isOpen ? 'bg-[#40813D]' : 'bg-amber-500'
                 }`}
               />
               <span
-                className={`font-medium ${
-                  openingStatus.isOpen ? 'text-[#236B38]' : 'text-amber-600'
+                className={`font-normal ${
+                  openingStatus.isOpen ? 'text-[#40813D]' : 'text-amber-600'
                 }`}
               >
                 {openingStatus.isOpen ? tSpaNetwork('filterOpenNow') : tSpaNetwork('filterClosed')}
@@ -120,14 +120,14 @@ export function NearbySpaCard({
           </div>
 
           {/* Address */}
-          <div className="flex items-center gap-1 text-[12px] text-stone-500 truncate">
+          <div className="flex items-center gap-1 text-[12px] font-normal text-stone-500 truncate">
             <MapPin className="w-3 h-3 text-stone-400 shrink-0" />
             <span className="truncate">{spa.address}</span>
           </div>
 
           {/* Exclusive Offer Badge (Crisp modern badge, not a puffy yellow pill) */}
           {spa.exclusiveOffer && (
-            <div className="mt-1 flex items-center gap-1.5 text-[11.5px] font-medium text-amber-900 bg-amber-50/70 border border-amber-200/70 px-2 py-0.5 rounded-md line-clamp-1">
+            <div className="mt-1 flex items-center gap-1.5 text-[11.5px] font-normal text-amber-950 bg-amber-50/70 border border-amber-200/70 px-2 py-0.5 rounded-md line-clamp-1">
               <Sparkles className="w-3 h-3 text-amber-600 fill-amber-500 shrink-0" />
               <span className="truncate">{spa.exclusiveOffer}</span>
             </div>
@@ -138,13 +138,13 @@ export function NearbySpaCard({
         <div className="mt-auto pt-1">
           <Link
             href={href}
-            className="flex flex-col justify-center rounded-xl bg-[#F7F9F6] border border-[#E8ECE6] p-2.5 transition-all duration-200 hover:bg-[#EFF4EE] hover:border-emerald-200 group/deal"
+            className="flex flex-col justify-center rounded-xl bg-[#F5F7F4] border border-[#DDE4D9] p-2.5 transition-all duration-200 hover:bg-[#E8FDE7]/50 hover:border-[#40813D]/40 group/deal"
           >
-            <div className="text-[12px] font-medium text-stone-600 line-clamp-1">
+            <div className="text-[12px] font-normal text-stone-600 line-clamp-1">
               {tServices('pkg1.name')} (45p)
             </div>
             <div className="flex items-baseline flex-wrap gap-2 mt-0.5">
-              <span className="text-[16px] font-bold text-[#1B4D20]">
+              <span className="text-[16px] font-semibold text-[#093E06]">
                 49.000đ
               </span>
               <span className="text-[12px] font-normal text-stone-400 line-through">
@@ -166,7 +166,7 @@ export function NearbySpaCard({
             href={zaloHubLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 py-2.5 px-3 rounded-xl bg-[#236B38] hover:bg-[#1D5A2E] active:bg-[#164723] text-white text-xs font-bold text-center transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+            className="flex-1 py-2.5 px-3 rounded-xl bg-[#40813D] hover:bg-[#356F32] active:bg-[#093E06] text-white text-xs font-semibold text-center transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
           >
             <Image
               src="/brand/Logo-Zalo-App-Rec.webp"

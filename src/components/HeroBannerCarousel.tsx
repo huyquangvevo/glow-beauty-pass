@@ -52,7 +52,7 @@ export function HeroBannerCarousel() {
       highlight: tHero('slide3.highlight'),
       description: tHero('slide3.description'),
       ctaText: tHero('slide3.cta'),
-      ctaLink: '#danh-sach-spa',
+      ctaLink: zaloHubLink,
       badgeColor: 'bg-[#40813D]/90 text-white border-white/30',
     },
   ]
@@ -109,7 +109,7 @@ export function HeroBannerCarousel() {
       onTouchEnd={handleTouchEnd}
     >
       {/* MAIN CAROUSEL BANNER */}
-      <div className="relative w-full rounded-3xl overflow-hidden shadow-md border border-stone-200/80 bg-stone-900 group aspect-[16/10] sm:aspect-[16/8] min-h-[280px]">
+      <div className="relative w-full rounded-3xl overflow-hidden shadow-md border border-[#DDE4D9] bg-stone-900 group aspect-[16/10] sm:aspect-[16/8] min-h-[280px]">
         {/* Slides Images */}
         {slides.map((slide, index) => {
           const isActive = index === currentIndex
@@ -135,21 +135,21 @@ export function HeroBannerCarousel() {
 
               {/* Slide Content Overlay - Anchored to bottom, top of photo completely clean & open */}
               <div className="absolute inset-0 p-5 sm:p-7 flex flex-col justify-end z-20 text-white">
-                {/* Bottom Text & CTA Row - High-End Editorial Typography (Taste-skill: Anti-AI Cliché) */}
+                {/* Bottom Text & CTA Row - High-End Editorial Typography (Semibold headline, regular text) */}
                 <div className="space-y-2.5 sm:space-y-3 max-w-sm sm:max-w-md pr-4">
-                  {/* Category Kicker: Unboxed, delicate letter spacing, subtle hairline indicator (No AI pill capsule) */}
+                  {/* Category Kicker: Unboxed, delicate letter spacing, subtle hairline indicator */}
                   <div className="flex items-center gap-2">
                     <span className="w-3.5 h-px bg-emerald-300/80 shrink-0" />
-                    <span className="text-[11px] sm:text-xs font-semibold tracking-[0.14em] uppercase text-emerald-200 drop-shadow-xs">
+                    <span className="text-[11px] sm:text-xs font-medium tracking-[0.14em] uppercase text-emerald-200 drop-shadow-xs">
                       {slide.tag}
                     </span>
                   </div>
 
                   <div className="space-y-0.5">
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight drop-shadow-sm">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white tracking-tight leading-tight drop-shadow-sm">
                       {slide.title}
                     </h2>
-                    <p className="text-xs sm:text-sm md:text-base font-semibold text-emerald-300 drop-shadow-xs">
+                    <p className="text-xs sm:text-sm md:text-base font-normal text-emerald-200 drop-shadow-xs">
                       {slide.highlight}
                     </p>
                   </div>
@@ -157,9 +157,9 @@ export function HeroBannerCarousel() {
                   <div className="pt-0.5 flex items-center gap-2">
                     <a
                       href={slide.ctaLink}
-                      target={slide.ctaLink.startsWith('http') ? '_blank' : '_self'}
-                      rel={slide.ctaLink.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      className="inline-flex items-center gap-1.5 px-4.5 py-2 sm:py-2.5 rounded-full bg-white hover:bg-stone-100 text-[#1B4D20] text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95 cursor-pointer"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4.5 py-2 sm:py-2.5 rounded-full bg-white hover:bg-[#F5F7F4] text-[#093E06] text-xs sm:text-sm font-semibold shadow-md transition-all active:scale-95 cursor-pointer"
                     >
                       <span>{slide.ctaText}</span>
                     </a>

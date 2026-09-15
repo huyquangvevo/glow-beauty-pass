@@ -4,29 +4,30 @@
   --font-sans: var(--font-sans), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: var(--font-serif), 'Playfair Display', Georgia, serif;
 
-  --color-glow-primary: #236B38;
-  --color-glow-primary-hover: #1D5A2E;
-  --color-glow-primary-subtle: #E8F5E9;
-  --color-glow-primary-border: #A5D6A7;
-  --color-glow-secondary: #2C7A39;
-  --color-glow-accent: #D97706;
-  --color-glow-accent-hover: #B45309;
-  --color-glow-accent-light: #FEF3C7;
-  --color-glow-bg: #FAF8F5;
+  --color-glow-primary: #40813D;
+  --color-glow-primary-hover: #356F32;
+  --color-glow-primary-subtle: #E8FDE7;
+  --color-glow-primary-border: #DDE4D9;
+  --color-glow-secondary: #E8FDE7;
+  --color-glow-accent: #093E06;
+  --color-glow-accent-hover: #062B04;
+  --color-glow-neutral-1: #DDE4D9;
+  --color-glow-neutral-2: #F5F7F4;
+  --color-glow-bg: #F5F7F4;
   --color-glow-surface: #FFFFFF;
-  --color-glow-title: #17231A;
+  --color-glow-title: #093E06;
   --color-glow-body: #3F4941;
   --color-glow-muted: #727D74;
-  --color-glow-border: #E3E8E4;
+  --color-glow-border: #DDE4D9;
 }
 
 :root {
-  --background: #FAF8F5;
-  --foreground: #17231A;
-  --primary: #236B38;
-  --primary-hover: #1D5A2E;
-  --primary-subtle: #E8F5E9;
-  --accent: #D97706;
+  --background: #F5F7F4;
+  --foreground: #093E06;
+  --primary: #40813D;
+  --primary-hover: #356F32;
+  --primary-subtle: #E8FDE7;
+  --accent: #093E06;
 }
 
 * {

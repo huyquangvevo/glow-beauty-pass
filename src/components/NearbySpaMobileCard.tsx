@@ -44,22 +44,22 @@ export function NearbySpaMobileCard({
       {/* Thông tin bên phải (Cao chuẩn 74px tương xứng với ảnh, gồm 3 dòng tinh gọn) */}
       <div className="flex flex-1 h-[74px] flex-col justify-between min-w-0 py-0.5">
         {/* Tên Spa: 1 dòng ellipsis */}
-        <h3 className="truncate text-[14.5px] leading-[18px] font-bold tracking-tight text-stone-900 group-hover:text-[#2E6B30] transition-colors">
+        <h3 className="truncate text-[14.5px] leading-[18px] font-semibold tracking-tight text-stone-900 group-hover:text-[#40813D] transition-colors">
           {spa.name}
         </h3>
 
         {/* Dòng meta: Rating | Review Count · Distance · Opening */}
-        <div className="flex flex-wrap items-center gap-1 text-[12px] leading-[13px] text-stone-500 truncate">
+        <div className="flex flex-wrap items-center gap-1 text-[12px] leading-[13px] text-stone-500 font-normal truncate">
           {/* Rating */}
-          <span className="flex items-center gap-0.5 font-bold text-stone-900 shrink-0">
+          <span className="flex items-center gap-0.5 font-semibold text-stone-900 shrink-0">
             <Star className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0 -mt-0.5" />
             <span>{Number(spa.rating || 4.8).toFixed(1)}</span>
           </span>
 
-          <span className="text-[#9BA898] font-normal shrink-0">|</span>
+          <span className="text-[#DDE4D9] font-normal shrink-0">|</span>
 
           {/* Reviews */}
-          <span className="text-[#5B6B58] shrink-0">
+          <span className="text-stone-500 font-normal shrink-0">
             ({spa.reviewCount || 128} {tCommon('reviews')})
           </span>
 
@@ -67,7 +67,7 @@ export function NearbySpaMobileCard({
           {distanceText && (
             <>
               <span className="text-stone-300 font-normal shrink-0">·</span>
-              <span className="font-medium text-[#236B38] shrink-0 flex items-center gap-0.5">
+              <span className="font-normal text-[#40813D] shrink-0 flex items-center gap-0.5">
                 <MapPin className="w-2.5 h-2.5 shrink-0" />
                 <span>{distanceText}</span>
               </span>
@@ -77,8 +77,8 @@ export function NearbySpaMobileCard({
           {/* Opening Status */}
           <span className="text-stone-300 font-normal shrink-0">·</span>
           <span
-            className={`font-medium shrink-0 ${
-              openingStatus.isOpen ? 'text-[#236B38]' : 'text-amber-600'
+            className={`font-normal shrink-0 ${
+              openingStatus.isOpen ? 'text-[#40813D]' : 'text-amber-600'
             }`}
           >
             {openingStatus.isOpen ? tSpaNetwork('filterOpenNow') : tSpaNetwork('filterClosed')}
@@ -87,7 +87,7 @@ export function NearbySpaMobileCard({
 
         {/* Dòng Giá: Tinh tế, thanh lịch */}
         <div className="flex items-baseline flex-wrap gap-1.5 min-w-0">
-          <span className="text-[14.5px] leading-[18px] font-bold text-[#1B4D20]">
+          <span className="text-[14.5px] leading-[18px] font-semibold text-[#093E06]">
             Từ 49.000đ
           </span>
           <span className="text-[11.5px] font-normal text-stone-400 line-through shrink-0">

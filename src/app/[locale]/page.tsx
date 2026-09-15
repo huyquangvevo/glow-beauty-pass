@@ -87,27 +87,31 @@ const SKU_PHOTO_SPECS: Record<number, SkuPhotoSpec> = {
 const VISUAL_CATEGORIES = [
   {
     id: 'cat-1',
-    title: 'Gội Đầu Dưỡng Sinh',
+    title: 'Gội đầu dưỡng sinh',
     image: '/banners/banner_herbal_wash.jpg',
-    anchor: '#goi-dich-vu',
+    actionType: 'scroll-sku',
+    target: 'sku-goi-dau',
   },
   {
     id: 'cat-2',
-    title: 'Trị Liệu Cổ Vai Gáy',
+    title: 'Massage Body',
     image: '/banners/banner_neck_massage.jpg',
-    anchor: '#goi-dich-vu',
+    actionType: 'scroll-sku',
+    target: 'sku-massage-body',
   },
   {
     id: 'cat-3',
-    title: 'Thải Độc & Phục Hồi',
+    title: 'Chăm sóc da cơ bản',
     image: '/spas/spa_thumb_1.jpg',
-    anchor: '#goi-dich-vu',
+    actionType: 'filter-spa',
+    target: 'chăm sóc da',
   },
   {
     id: 'cat-4',
-    title: 'Không Gian & Combo',
+    title: 'Combo gội + chăm sóc da',
     image: '/banners/banner_spa_ambiance.jpg',
-    anchor: '#danh-sach-spa',
+    actionType: 'filter-spa',
+    target: 'combo',
   },
 ]
 
@@ -348,27 +352,44 @@ export default function HomePage() {
         <HeroBannerCarousel />
       </section>
 
-      {/* 2. DỊCH VỤ NỔI BẬT (Visual Category Grid - Phong cách a.SENSE Ảnh 2: Đơn giản, ít chữ, thu hút) */}
+      {/* 2. DỊCH VỤ CỦA CHÚNG TÔI (4 Danh mục chuẩn hóa theo yêu cầu: Gội đầu dưỡng sinh, Massage Body, Chăm sóc da cơ bản, Combo) */}
       <section className="space-y-3.5 scroll-mt-20">
         <div className="flex items-center justify-between gap-2 px-1">
-          <h2 className="text-base sm:text-xl font-bold text-stone-900 tracking-tight whitespace-nowrap">
+          <h2 className="text-base sm:text-xl font-semibold text-stone-900 tracking-tight whitespace-nowrap">
             Dịch Vụ Của Chúng Tôi
           </h2>
           <a
             href="#goi-dich-vu"
-            className="group inline-flex items-center gap-1.5 text-xs font-semibold text-[#236B38] hover:text-[#174823] transition-colors shrink-0 whitespace-nowrap"
+            className="group inline-flex items-center gap-1.5 text-xs font-normal text-[#40813D] hover:text-[#356F32] transition-colors shrink-0 whitespace-nowrap"
           >
             <span>04 Liệu trình tuyển chọn</span>
-            <ArrowRight className="w-3.5 h-3.5 text-[#236B38] group-hover:translate-x-1 transition-transform duration-200 stroke-[2.2]" />
+            <ArrowRight className="w-3.5 h-3.5 text-[#40813D] group-hover:translate-x-1 transition-transform duration-200 stroke-[2.2]" />
           </a>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {VISUAL_CATEGORIES.map((cat) => (
-            <a
+            <button
               key={cat.id}
-              href={cat.anchor}
-              className="group relative aspect-[4/5] sm:aspect-square rounded-2xl sm:rounded-3xl overflow-hidden border border-stone-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer block bg-stone-900"
+              type="button"
+              onClick={() => {
+                if (cat.actionType === 'scroll-sku') {
+                  const el = document.getElementById(cat.target)
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                  } else {
+                    const parent = document.getElementById('goi-dich-vu')
+                    if (parent) parent.scrollIntoView({ behavior: 'smooth' })
+                  }
+                } else if (cat.actionType === 'filter-spa') {
+                  setSearchQuery(cat.target)
+                  const el = document.getElementById('danh-sach-spa')
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' })
+                  }
+                }
+              }}
+              className="group relative aspect-[4/5] sm:aspect-square rounded-2xl sm:rounded-3xl overflow-hidden border border-[#DDE4D9] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer block bg-stone-900 text-left w-full"
             >
               <Image
                 src={cat.image}
@@ -380,13 +401,13 @@ export default function HomePage() {
               {/* Subtle bottom gradient for clean text readability */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              {/* Bottom Content: Minimalist, centered title only (Chuẩn a.SENSE) */}
+              {/* Bottom Content: Minimalist, centered title only */}
               <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 z-10 text-center">
-                <h3 className="font-bold text-sm sm:text-base text-white tracking-tight leading-snug group-hover:text-emerald-200 transition-colors drop-shadow-xs">
+                <h3 className="font-semibold text-sm sm:text-base text-white tracking-tight leading-snug group-hover:text-emerald-200 transition-colors drop-shadow-xs">
                   {cat.title}
                 </h3>
               </div>
-            </a>
+            </button>
           ))}
         </div>
       </section>
@@ -394,10 +415,10 @@ export default function HomePage() {
       {/* 3. DỊCH VỤ NỔI BẬT (Chuẩn a.SENSE: Tối giản chữ tuyệt đối, chỉ có tên + ảnh + viên giá + nút đặt lịch) */}
       <section id="goi-dich-vu" className="space-y-4 scroll-mt-20">
         <div className="flex items-center justify-between px-1 flex-wrap gap-2">
-          <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight">
+          <h2 className="text-lg sm:text-xl font-semibold text-stone-900 tracking-tight">
             Dịch Vụ Nổi Bật
           </h2>
-          <div className="inline-flex items-center gap-1.5 text-xs text-stone-500 font-medium shrink-0">
+          <div className="inline-flex items-center gap-1.5 text-xs text-stone-500 font-normal shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
             <span>Đồng giá tại 15 Spa Cầu Giấy</span>
           </div>
@@ -409,6 +430,7 @@ export default function HomePage() {
             const pkgKey = index === 0 ? 'pkg1' : index === 1 ? 'pkg2' : 'pkg3'
             const localizedName = tServices.has(`${pkgKey}.name` as any) ? tServices(`${pkgKey}.name` as any) : sku.name
             const spec = SKU_PHOTO_SPECS[index] || SKU_PHOTO_SPECS[0]
+            const skuAnchorId = index === 0 ? 'sku-goi-dau' : index === 1 ? 'sku-premium' : 'sku-massage-body'
 
             const discountPercent =
               sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
@@ -418,28 +440,29 @@ export default function HomePage() {
             return (
               <div
                 key={sku.id}
-                className={`relative p-3.5 sm:p-4 rounded-3xl transition-all duration-300 flex flex-col justify-between bg-white ${
+                id={skuAnchorId}
+                className={`relative p-3.5 sm:p-4 rounded-3xl transition-all duration-300 flex flex-col justify-between bg-white scroll-mt-24 ${
                   isPopular
-                    ? 'border-2 border-[#236B38] shadow-[0_8px_30px_rgba(35,107,56,0.12)] ring-1 ring-[#236B38]/20'
-                    : 'border border-stone-200/90 shadow-[0_2px_14px_rgba(0,0,0,0.03)] hover:shadow-lg'
+                    ? 'border-2 border-[#40813D] shadow-[0_8px_30px_rgba(64,129,61,0.12)] ring-1 ring-[#40813D]/20'
+                    : 'border border-[#DDE4D9] shadow-[0_2px_14px_rgba(0,0,0,0.03)] hover:shadow-lg'
                 }`}
               >
                 <div className="space-y-3">
                   {/* Top: Title & Recommended Tag */}
                   <div className="flex items-center justify-between gap-2 px-1 min-h-[26px]">
-                    <h3 className="font-bold text-base sm:text-lg text-stone-900 tracking-tight leading-snug">
+                    <h3 className="font-semibold text-base sm:text-lg text-stone-900 tracking-tight leading-snug">
                       {localizedName}
                     </h3>
                     {isPopular && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1B4D20] bg-emerald-50 border border-emerald-300/80 px-2 py-0.5 rounded-md shadow-2xs">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#093E06] bg-[#E8FDE7] border border-[#DDE4D9] px-2 py-0.5 rounded-md shadow-2xs">
                         <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
                         Được chọn nhiều nhất
                       </span>
                     )}
                   </div>
 
-                  {/* Visual Image Frame with Dual-tone Floating Price Pill (Chuẩn a.SENSE) */}
-                  <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-stone-100 group/img shadow-inner">
+                  {/* Visual Image Frame with Dual-tone Floating Price Pill */}
+                  <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-[#F5F7F4] group/img shadow-inner">
                     <Image
                       src={spec.image}
                       alt={localizedName}
@@ -451,18 +474,18 @@ export default function HomePage() {
 
                     {discountPercent > 0 && (
                       <div className="absolute top-2.5 right-2.5 z-20">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-500 text-white shadow-xs">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-amber-500 text-white shadow-xs">
                           -{discountPercent}%
                         </span>
                       </div>
                     )}
 
-                    {/* DUAL-TONE FLOATING PRICE PILL (Chính xác như a.SENSE) */}
+                    {/* DUAL-TONE FLOATING PRICE PILL */}
                     <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-stretch rounded-full overflow-hidden shadow-lg border border-white/60 whitespace-nowrap">
-                      <div className="bg-[#236B38] text-white font-black text-sm sm:text-base px-3.5 py-1.5 flex items-center tracking-tight">
+                      <div className="bg-[#40813D] text-white font-semibold text-sm sm:text-base px-3.5 py-1.5 flex items-center tracking-tight">
                         {sku.pricePhase1.toLocaleString('vi-VN')}đ
                       </div>
-                      <div className="bg-white/95 backdrop-blur-xs text-stone-800 text-xs font-bold px-3 py-1.5 flex items-center gap-1">
+                      <div className="bg-white/95 backdrop-blur-xs text-stone-800 text-xs font-normal px-3 py-1.5 flex items-center gap-1">
                         <Clock className="w-3 h-3 text-stone-500" />
                         <span>{sku.durationMinutes} {tServices('durationUnit')}</span>
                       </div>
@@ -470,13 +493,13 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Bottom Action Area: Clean Rounded-Full Button (Chuẩn a.SENSE) */}
+                {/* Bottom Action Area: Clean Rounded-Full Button */}
                 <div className="pt-3 mt-3">
                   <a
                     href={zaloHubLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2.5 sm:py-3 px-4 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:bg-[#164723] text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+                    className="w-full py-2.5 sm:py-3 px-4 rounded-full bg-[#40813D] hover:bg-[#356F32] active:bg-[#093E06] text-white text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
                   >
                     <Image
                       src="/brand/Logo-Zalo-App-Rec.webp"
@@ -498,10 +521,10 @@ export default function HomePage() {
       <section className="py-6 sm:py-10">
         <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
           <div className="text-center space-y-1.5 px-2">
-            <h2 className="text-lg sm:text-2xl font-bold text-stone-900 tracking-tight">
+            <h2 className="text-lg sm:text-2xl font-semibold text-stone-900 tracking-tight">
               Vì Sao Nên Chọn Glow Beauty Pass
             </h2>
-            <p className="text-xs sm:text-sm text-stone-500 max-w-md mx-auto">
+            <p className="text-xs sm:text-sm font-normal text-stone-500 max-w-md mx-auto">
               Tiêu chuẩn dịch vụ minh bạch, đồng nhất trên toàn hệ thống 15 spa Cầu Giấy
             </p>
           </div>
@@ -509,52 +532,52 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {/* Stat 1 */}
             <div className="flex flex-col items-center text-center p-3 sm:p-4">
-              <span className="font-sans text-3xl sm:text-4xl font-extrabold text-[#236B38] tracking-tight">
+              <span className="font-sans text-3xl sm:text-4xl font-semibold text-[#40813D] tracking-tight">
                 15+
               </span>
-              <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
+              <h3 className="font-semibold text-xs sm:text-sm text-stone-900 mt-2">
                 Spa Kiểm Định
               </h3>
-              <p className="text-[11.5px] text-stone-500 mt-1 leading-relaxed">
+              <p className="text-[11.5px] font-normal text-stone-500 mt-1 leading-relaxed">
                 Thẩm định cơ sở & tay nghề KTV khắt khe
               </p>
             </div>
 
             {/* Stat 2 */}
             <div className="flex flex-col items-center text-center p-3 sm:p-4">
-              <span className="font-sans text-3xl sm:text-4xl font-extrabold text-[#236B38] tracking-tight">
+              <span className="font-sans text-3xl sm:text-4xl font-semibold text-[#40813D] tracking-tight">
                 49K
               </span>
-              <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
+              <h3 className="font-semibold text-xs sm:text-sm text-stone-900 mt-2">
                 Đồng Giá Chuẩn
               </h3>
-              <p className="text-[11.5px] text-stone-500 mt-1 leading-relaxed">
+              <p className="text-[11.5px] font-normal text-stone-500 mt-1 leading-relaxed">
                 Cam kết 100% không phát sinh phụ thu
               </p>
             </div>
 
             {/* Stat 3 */}
             <div className="flex flex-col items-center text-center p-3 sm:p-4">
-              <span className="font-sans text-3xl sm:text-4xl font-extrabold text-[#236B38] tracking-tight">
+              <span className="font-sans text-3xl sm:text-4xl font-semibold text-[#40813D] tracking-tight">
                 100%
               </span>
-              <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
+              <h3 className="font-semibold text-xs sm:text-sm text-stone-900 mt-2">
                 Thảo Dược Sạch
               </h3>
-              <p className="text-[11.5px] text-stone-500 mt-1 leading-relaxed">
+              <p className="text-[11.5px] font-normal text-stone-500 mt-1 leading-relaxed">
                 Bồ kết nấu tươi & tinh dầu chuẩn nguồn gốc
               </p>
             </div>
 
             {/* Stat 4 */}
             <div className="flex flex-col items-center text-center p-3 sm:p-4">
-              <span className="font-sans text-3xl sm:text-4xl font-extrabold text-[#236B38] tracking-tight">
+              <span className="font-sans text-3xl sm:text-4xl font-semibold text-[#40813D] tracking-tight">
                 0đ
               </span>
-              <h3 className="font-bold text-xs sm:text-sm text-stone-900 mt-2">
+              <h3 className="font-semibold text-xs sm:text-sm text-stone-900 mt-2">
                 Đặt Lịch Không Cọc
               </h3>
-              <p className="text-[11.5px] text-stone-500 mt-1 leading-relaxed">
+              <p className="text-[11.5px] font-normal text-stone-500 mt-1 leading-relaxed">
                 Giữ chỗ qua Zalo 30s, dùng xong mới thanh toán
               </p>
             </div>
@@ -567,10 +590,10 @@ export default function HomePage() {
         {/* Section Header */}
         <div className="flex items-center justify-between gap-2 px-1">
           <div className="min-w-0 flex-1">
-            <h2 className="text-[18px] sm:text-[22px] font-bold tracking-tight text-[#17231A] truncate">
+            <h2 className="text-[18px] sm:text-[22px] font-semibold tracking-tight text-[#093E06] truncate">
               {tSpaNetwork('heading')}
             </h2>
-            <p className="text-xs text-stone-500 mt-0.5 truncate">
+            <p className="text-xs font-normal text-stone-500 mt-0.5 truncate">
               {tSpaNetwork('spasFoundCauGiay', { count: filteredAndSortedSpas.length })}
               {locationLabel && locationLabel !== 'Bật vị trí' && ` · ${tSpaNetwork('nearLocation', { location: locationLabel })}`}
             </p>
@@ -578,13 +601,13 @@ export default function HomePage() {
 
           <div className="flex items-center gap-1.5 shrink-0">
             {/* View Mode Switcher */}
-            <div className="flex items-center bg-white rounded-xl border border-stone-200 p-0.5 shadow-2xs">
+            <div className="flex items-center bg-white rounded-xl border border-[#DDE4D9] p-0.5 shadow-2xs">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
                 className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                   viewMode === 'grid'
-                    ? 'bg-[#236B38] text-white font-bold shadow-xs'
+                    ? 'bg-[#40813D] text-white font-semibold shadow-xs'
                     : 'text-stone-500 hover:text-stone-800'
                 }`}
                 title="Dạng thẻ lớn"
@@ -597,7 +620,7 @@ export default function HomePage() {
                 onClick={() => setViewMode('list')}
                 className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                   viewMode === 'list'
-                    ? 'bg-[#236B38] text-white font-bold shadow-xs'
+                    ? 'bg-[#40813D] text-white font-semibold shadow-xs'
                     : 'text-stone-500 hover:text-stone-800'
                 }`}
                 title="Dạng danh sách gọn"
@@ -610,7 +633,7 @@ export default function HomePage() {
             {!userCoords && (
               <button
                 onClick={openPrompt}
-                className="flex items-center gap-1 text-[11px] font-bold text-[#236B38] bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1.5 rounded-full border border-emerald-200 transition-all cursor-pointer shadow-2xs active:scale-95"
+                className="flex items-center gap-1 text-[11px] font-semibold text-[#40813D] bg-[#E8FDE7] hover:bg-emerald-100 px-2.5 py-1.5 rounded-full border border-[#DDE4D9] transition-all cursor-pointer shadow-2xs active:scale-95"
               >
                 <MapPin className="w-3 h-3 text-amber-600" />
                 <span className="hidden xs:inline">{tSpaNetwork('enableLocation')}</span>
@@ -621,13 +644,13 @@ export default function HomePage() {
 
         {/* Active search filter badge (Slim inline pill) */}
         {searchQuery && (
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-[#1B4D20] shadow-2xs self-start w-fit">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8FDE7] border border-[#DDE4D9] text-xs text-[#093E06] shadow-2xs self-start w-fit">
             <span>
-              {tCommon('searchResultsFor')} &ldquo;<strong className="font-bold text-[#236B38]">{searchQuery}</strong>&rdquo;
+              {tCommon('searchResultsFor')} &ldquo;<strong className="font-semibold text-[#40813D]">{searchQuery}</strong>&rdquo;
             </span>
             <button
               onClick={() => setSearchQuery('')}
-              className="p-0.5 hover:bg-emerald-200/60 rounded-full cursor-pointer ml-1 text-[#236B38]"
+              className="p-0.5 hover:bg-emerald-200/60 rounded-full cursor-pointer ml-1 text-[#40813D]"
               aria-label={tCommon('clear')}
             >
               <X className="w-3.5 h-3.5" />
@@ -642,7 +665,7 @@ export default function HomePage() {
             className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider shrink-0 mr-1">
+            <span className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider shrink-0 mr-1">
               {tSpaNetwork('areaLabel')}
             </span>
 
@@ -650,10 +673,10 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => setSelectedWard('ALL')}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border shrink-0 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border shrink-0 cursor-pointer ${
                 selectedWard === 'ALL'
-                  ? 'bg-[#236B38] text-white border-[#236B38] shadow-xs'
-                  : 'bg-white text-stone-600 hover:bg-[#F5F7F4] border-stone-200'
+                  ? 'bg-[#40813D] text-white border-[#40813D] shadow-xs'
+                  : 'bg-white text-stone-600 hover:bg-[#F5F7F4] border-[#DDE4D9]'
               }`}
             >
               {tWards('ALL')} ({spas.length})
@@ -670,12 +693,12 @@ export default function HomePage() {
                   onClick={() => setSelectedWard(w.key)}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border shrink-0 cursor-pointer flex items-center gap-1 ${
                     isSelected
-                      ? 'bg-[#236B38] text-white border-[#236B38] shadow-xs'
-                      : 'bg-white text-stone-600 hover:bg-[#F5F7F4] border-stone-200'
+                      ? 'bg-[#40813D] text-white border-[#40813D] shadow-xs'
+                      : 'bg-white text-stone-600 hover:bg-[#F5F7F4] border-[#DDE4D9]'
                   }`}
                 >
                   <span>{label}</span>
-                  <span className={`text-[11px] ${isSelected ? 'text-emerald-100 font-bold' : 'text-stone-400'}`}>
+                  <span className={`text-[11px] ${isSelected ? 'text-[#E8FDE7] font-semibold' : 'text-stone-400'}`}>
                     ({w.count}{w.formattedDistance ? ` • ${w.formattedDistance}` : ''})
                   </span>
                 </button>
@@ -712,13 +735,13 @@ export default function HomePage() {
               onClick={() => setOpenNowOnly(!openNowOnly)}
               className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border shrink-0 transition-all cursor-pointer shadow-2xs ${
                 openNowOnly
-                  ? 'bg-emerald-50 text-[#1B4D20] border-[#236B38]'
-                  : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
+                  ? 'bg-[#E8FDE7] text-[#093E06] border-[#40813D]'
+                  : 'bg-white text-stone-600 hover:bg-[#F5F7F4] border-[#DDE4D9]'
               }`}
             >
-              <span className={`w-2 h-2 rounded-full ${openNowOnly ? 'bg-[#236B38]' : 'bg-stone-300'}`} />
+              <span className={`w-2 h-2 rounded-full ${openNowOnly ? 'bg-[#40813D]' : 'bg-stone-300'}`} />
               <span>{tSpaNetwork('filterOpenNow')}</span>
-              {openNowOnly && <Check className="w-3 h-3 text-[#236B38]" />}
+              {openNowOnly && <Check className="w-3 h-3 text-[#40813D]" />}
             </button>
 
             <button
@@ -727,7 +750,7 @@ export default function HomePage() {
               className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border shrink-0 transition-all cursor-pointer shadow-2xs ${
                 topRatedOnly
                   ? 'bg-amber-50 text-amber-900 border-amber-400'
-                  : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
+                  : 'bg-white text-stone-600 hover:bg-[#F5F7F4] border-[#DDE4D9]'
               }`}
             >
               <span>{tSpaNetwork('filterTopRated')}</span>
@@ -739,12 +762,12 @@ export default function HomePage() {
               onClick={() => setDeal49kOnly(!deal49kOnly)}
               className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border shrink-0 transition-all cursor-pointer shadow-2xs ${
                 deal49kOnly
-                  ? 'bg-emerald-50 text-[#1B4D20] border-[#236B38]'
-                  : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
+                  ? 'bg-[#E8FDE7] text-[#093E06] border-[#40813D]'
+                  : 'bg-white text-stone-600 hover:bg-[#F5F7F4] border-[#DDE4D9]'
               }`}
             >
               <span>{tSpaNetwork('filterDeal49k')}</span>
-              {deal49kOnly && <Check className="w-3 h-3 text-[#236B38]" />}
+              {deal49kOnly && <Check className="w-3 h-3 text-[#40813D]" />}
             </button>
 
             {/* Clear Filters Button if any active */}

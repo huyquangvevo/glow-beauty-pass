@@ -92,13 +92,38 @@ async function run() {
   })
   console.log('Saved desktop screenshot:', desktopScreenshotPath)
 
-  // 2b. DESKTOP SERVICE PACKAGES (Scrolled to #goi-dich-vu)
-  console.log('Testing Desktop Service Packages (Scrolled)...')
+  // 2b. DESKTOP CATEGORIES (Section 2)
+  console.log('Testing Desktop Categories & Service Packages...')
+  const categoriesScreenshotPath = path.join(OUTPUT_DIR, 'categories_desktop.png')
   await desktopPage.evaluate(() => {
-    const el = document.getElementById('goi-dich-vu')
-    if (el) el.scrollIntoView()
+    const section = document.getElementById('nhom-dich-vu')
+    if (section) section.scrollIntoView()
   })
-  await new Promise(r => setTimeout(r, 1000))
+  await new Promise(r => setTimeout(r, 800))
+  await desktopPage.screenshot({
+    path: categoriesScreenshotPath,
+    fullPage: false,
+  })
+  console.log('Saved categories screenshot:', categoriesScreenshotPath)
+
+  // Test Category 2 click: Massage Body -> should scroll to #sku-massage-body
+  console.log('Clicking Massage Body category...')
+  await desktopPage.evaluate(() => {
+    const buttons = Array.from(document.querySelectorAll('#nhom-dich-vu button'))
+    const btn = buttons.find(b => b.textContent.includes('Massage Body'))
+    if (btn) btn.click()
+  })
+  await new Promise(r => setTimeout(r, 800))
+
+  // Test Category 3 click: Chăm sóc da cơ bản -> sets filter query
+  console.log('Clicking Chăm sóc da cơ bản category...')
+  await desktopPage.evaluate(() => {
+    const buttons = Array.from(document.querySelectorAll('#nhom-dich-vu button'))
+    const btn = buttons.find(b => b.textContent.includes('Chăm sóc da'))
+    if (btn) btn.click()
+  })
+  await new Promise(r => setTimeout(r, 800))
+
   const packagesScreenshotPath = path.join(OUTPUT_DIR, 'service_packages_desktop.png')
   await desktopPage.screenshot({
     path: packagesScreenshotPath,
