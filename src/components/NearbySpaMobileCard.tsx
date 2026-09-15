@@ -66,8 +66,8 @@ export function NearbySpaMobileCard({
           {/* Distance */}
           {distanceText && (
             <>
-              <span className="text-[#9BA898] font-normal shrink-0">·</span>
-              <span className="font-medium text-[#40813D] shrink-0 flex items-center gap-0.5">
+              <span className="text-stone-300 font-normal shrink-0">·</span>
+              <span className="font-medium text-[#236B38] shrink-0 flex items-center gap-0.5">
                 <MapPin className="w-2.5 h-2.5 shrink-0" />
                 <span>{distanceText}</span>
               </span>
@@ -75,10 +75,10 @@ export function NearbySpaMobileCard({
           )}
 
           {/* Opening Status */}
-          <span className="text-[#9BA898] font-normal shrink-0">·</span>
+          <span className="text-stone-300 font-normal shrink-0">·</span>
           <span
             className={`font-medium shrink-0 ${
-              openingStatus.isOpen ? 'text-[#40813D]' : 'text-amber-600'
+              openingStatus.isOpen ? 'text-[#236B38]' : 'text-amber-600'
             }`}
           >
             {openingStatus.isOpen ? tSpaNetwork('filterOpenNow') : tSpaNetwork('filterClosed')}
@@ -87,7 +87,7 @@ export function NearbySpaMobileCard({
 
         {/* Dòng Giá: Tinh tế, thanh lịch */}
         <div className="flex items-baseline flex-wrap gap-1.5 min-w-0">
-          <span className="text-[14px] leading-[18px] font-bold text-[#1B5E20]">
+          <span className="text-[14.5px] leading-[18px] font-bold text-[#1B4D20]">
             Từ 49.000đ
           </span>
           <span className="text-[11.5px] font-normal text-stone-400 line-through shrink-0">

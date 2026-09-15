@@ -277,39 +277,43 @@ export default function HomePage() {
             const bullet2 = tServices.has(`${pkgKey}.f2` as any) ? tServices(`${pkgKey}.f2` as any) : ''
             const bullet3 = tServices.has(`${pkgKey}.f3` as any) ? tServices(`${pkgKey}.f3` as any) : ''
             const highlights = [bullet1, bullet2, bullet3].filter(Boolean)
+            const discountPercent =
+              sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1
+                ? Math.round(((sku.pricePhase2 - sku.pricePhase1) / sku.pricePhase2) * 100)
+                : 0
 
             return (
               <div
                 key={sku.id}
-                className={`p-5 rounded-2xl transition-all flex flex-col justify-between bg-white ${
+                className={`relative p-5 sm:p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between bg-white ${
                   isPopular
-                    ? 'border-2 border-[#387635] shadow-[0_4px_24px_rgba(56,118,53,0.12)]'
-                    : 'border border-[#E2E8E0] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-[#B7D4B4]'
+                    ? 'border-2 border-[#236B38] shadow-[0_8px_30px_rgba(35,107,56,0.12)] ring-1 ring-[#236B38]/20'
+                    : 'border border-stone-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-emerald-300 hover:shadow-md'
                 }`}
               >
-                <div className="space-y-3.5">
+                <div className="space-y-4">
                   {/* Package Top: Title, Duration & Recommended Tag */}
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-bold text-[17px] text-stone-900 leading-snug">
-                          {localizedName}
-                        </h3>
-                        {isPopular && (
-                          <span className="text-[11px] font-semibold text-[#235820] bg-[#EAF5E8] border border-[#C5E2C2] px-2.5 py-0.5 rounded-full">
-                            Được chọn nhiều nhất
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-xs text-stone-500 font-medium">
-                        Thời lượng {sku.durationMinutes} {tServices('durationUnit')}
-                      </div>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <h3 className="font-bold text-[18px] text-stone-900 tracking-tight leading-snug">
+                        {localizedName}
+                      </h3>
+                      {isPopular && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1B4D20] bg-emerald-50 border border-emerald-300/80 px-2.5 py-0.5 rounded-full shadow-2xs">
+                          <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
+                          Được chọn nhiều nhất
+                        </span>
+                      )}
+                    </div>
+                    <div className="inline-flex items-center gap-1 text-xs text-stone-500 font-medium bg-stone-100/80 px-2 py-0.5 rounded-md">
+                      <Clock className="w-3 h-3 text-stone-400" />
+                      <span>Thời lượng {sku.durationMinutes} {tServices('durationUnit')}</span>
                     </div>
                   </div>
 
                   {/* Pricing Display */}
-                  <div className="flex items-baseline gap-2 pt-1 border-t border-stone-100">
-                    <span className="text-2xl sm:text-[26px] font-bold text-[#1B5E20] tracking-tight">
+                  <div className="flex items-baseline gap-2 pt-2 border-t border-stone-100">
+                    <span className="text-2xl sm:text-[28px] font-bold text-[#1B4D20] tracking-tight">
                       {sku.pricePhase1.toLocaleString('vi-VN')}đ
                     </span>
                     {sku.pricePhase2 && sku.pricePhase2 > sku.pricePhase1 && (
@@ -317,14 +321,21 @@ export default function HomePage() {
                         {sku.pricePhase2.toLocaleString('vi-VN')}đ
                       </span>
                     )}
+                    {discountPercent > 0 && (
+                      <span className="text-[10.5px] font-bold text-amber-800 bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 rounded-md">
+                        -{discountPercent}%
+                      </span>
+                    )}
                   </div>
 
-                  {/* Highlights Bullet List (3 seconds scannability) */}
+                  {/* Highlights Bullet List (Clean Checkmarks) */}
                   {highlights.length > 0 && (
-                    <div className="space-y-2 pt-1">
+                    <div className="space-y-2.5 pt-1">
                       {highlights.map((h: string, idx: number) => (
-                        <div key={idx} className="text-xs sm:text-[13px] text-stone-600 flex items-start gap-2 leading-relaxed">
-                          <span className="text-[#387635] font-bold shrink-0 mt-0.5">•</span>
+                        <div key={idx} className="text-xs sm:text-[13px] text-stone-600 flex items-start gap-2.5 leading-relaxed">
+                          <div className="w-4 h-4 rounded-full bg-emerald-50 border border-emerald-200/80 flex items-center justify-center shrink-0 mt-0.5">
+                            <Check className="w-2.5 h-2.5 text-emerald-700 stroke-[3]" />
+                          </div>
                           <span>{h}</span>
                         </div>
                       ))}
@@ -333,12 +344,12 @@ export default function HomePage() {
                 </div>
 
                 {/* Bottom Action Area: Large, High-Touch Zalo CTA Button */}
-                <div className="pt-4 mt-4 border-t border-stone-100 space-y-2">
+                <div className="pt-4 mt-5 border-t border-stone-100 space-y-2">
                   <a
                     href={zaloHubLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-3 px-4 rounded-xl bg-[#2E6B30] hover:bg-[#255827] active:bg-[#1E4720] text-white text-sm font-bold flex items-center justify-center gap-2.5 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+                    className="w-full py-3 px-4 rounded-xl bg-[#236B38] hover:bg-[#1D5A2E] active:bg-[#164723] text-white text-sm font-bold flex items-center justify-center gap-2.5 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
                   >
                     <Image
                       src="/brand/Logo-Zalo-App-Rec.webp"
@@ -365,10 +376,10 @@ export default function HomePage() {
         {/* Section Header */}
         <div className="flex items-center justify-between gap-2 px-1">
           <div className="min-w-0 flex-1">
-            <h2 className="text-[17px] sm:text-[21px] font-black tracking-tight text-[#093E06] truncate">
+            <h2 className="text-[18px] sm:text-[22px] font-bold tracking-tight text-[#17231A] truncate">
               {tSpaNetwork('heading')}
             </h2>
-            <p className="text-xs text-[#5B6B58] mt-0.5 truncate">
+            <p className="text-xs text-stone-500 mt-0.5 truncate">
               {tSpaNetwork('spasFoundCauGiay', { count: filteredAndSortedSpas.length })}
               {locationLabel && locationLabel !== 'Bật vị trí' && ` · ${tSpaNetwork('nearLocation', { location: locationLabel })}`}
             </p>
@@ -376,13 +387,13 @@ export default function HomePage() {
 
           <div className="flex items-center gap-1.5 shrink-0">
             {/* View Mode Switcher */}
-            <div className="flex items-center bg-white rounded-xl border border-[#DDE4D9] p-0.5 shadow-2xs">
+            <div className="flex items-center bg-white rounded-xl border border-stone-200 p-0.5 shadow-2xs">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
                 className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                   viewMode === 'grid'
-                    ? 'bg-[#40813D] text-white font-bold'
+                    ? 'bg-[#236B38] text-white font-bold shadow-xs'
                     : 'text-stone-500 hover:text-stone-800'
                 }`}
                 title="Dạng thẻ lớn"
@@ -395,7 +406,7 @@ export default function HomePage() {
                 onClick={() => setViewMode('list')}
                 className={`p-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                   viewMode === 'list'
-                    ? 'bg-[#40813D] text-white font-bold'
+                    ? 'bg-[#236B38] text-white font-bold shadow-xs'
                     : 'text-stone-500 hover:text-stone-800'
                 }`}
                 title="Dạng danh sách gọn"
@@ -408,7 +419,7 @@ export default function HomePage() {
             {!userCoords && (
               <button
                 onClick={openPrompt}
-                className="flex items-center gap-1 text-[11px] font-bold text-[#40813D] bg-[#EBF4EA] hover:bg-[#DCF0DA] px-2.5 py-1.5 rounded-full border border-[#B7DDB5] transition-all cursor-pointer shadow-2xs active:scale-95"
+                className="flex items-center gap-1 text-[11px] font-bold text-[#236B38] bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1.5 rounded-full border border-emerald-200 transition-all cursor-pointer shadow-2xs active:scale-95"
               >
                 <MapPin className="w-3 h-3 text-amber-600" />
                 <span className="hidden xs:inline">{tSpaNetwork('enableLocation')}</span>
@@ -419,13 +430,13 @@ export default function HomePage() {
 
         {/* Active search filter badge (Slim inline pill) */}
         {searchQuery && (
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF4EA] border border-[#B7DDB5] text-xs text-[#234E21] shadow-2xs self-start w-fit">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-[#1B4D20] shadow-2xs self-start w-fit">
             <span>
-              {tCommon('searchResultsFor')} &ldquo;<strong className="font-bold text-[#40813D]">{searchQuery}</strong>&rdquo;
+              {tCommon('searchResultsFor')} &ldquo;<strong className="font-bold text-[#236B38]">{searchQuery}</strong>&rdquo;
             </span>
             <button
               onClick={() => setSearchQuery('')}
-              className="p-0.5 hover:bg-emerald-200/60 rounded-full cursor-pointer ml-1 text-[#40813D]"
+              className="p-0.5 hover:bg-emerald-200/60 rounded-full cursor-pointer ml-1 text-[#236B38]"
               aria-label={tCommon('clear')}
             >
               <X className="w-3.5 h-3.5" />
@@ -440,7 +451,7 @@ export default function HomePage() {
             className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            <span className="text-[11px] font-bold text-[#5B6B58] uppercase tracking-wider shrink-0 mr-1">
+            <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider shrink-0 mr-1">
               {tSpaNetwork('areaLabel')}
             </span>
 
@@ -450,8 +461,8 @@ export default function HomePage() {
               onClick={() => setSelectedWard('ALL')}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border shrink-0 cursor-pointer ${
                 selectedWard === 'ALL'
-                  ? 'bg-[#40813D] text-white border-[#40813D] shadow-2xs'
-                  : 'bg-white text-[#5B6B58] hover:bg-[#F5F7F4] border-[#DDE4D9]'
+                  ? 'bg-[#236B38] text-white border-[#236B38] shadow-xs'
+                  : 'bg-white text-stone-600 hover:bg-[#F5F7F4] border-stone-200'
               }`}
             >
               {tWards('ALL')} ({spas.length})
@@ -468,8 +479,8 @@ export default function HomePage() {
                   onClick={() => setSelectedWard(w.key)}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border shrink-0 cursor-pointer flex items-center gap-1 ${
                     isSelected
-                      ? 'bg-[#40813D] text-white border-[#40813D] shadow-2xs'
-                      : 'bg-white text-[#5B6B58] hover:bg-[#F5F7F4] border-[#DDE4D9]'
+                      ? 'bg-[#236B38] text-white border-[#236B38] shadow-xs'
+                      : 'bg-white text-stone-600 hover:bg-[#F5F7F4] border-stone-200'
                   }`}
                 >
                   <span>{label}</span>
@@ -486,12 +497,12 @@ export default function HomePage() {
             className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            <span className="text-[11px] font-bold text-[#5B6B58] uppercase tracking-wider shrink-0 mr-1">
+            <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider shrink-0 mr-1">
               {tSpaNetwork('filterSortLabel')}
             </span>
 
             {/* Sort Dropdown */}
-            <div className="flex items-center gap-1 bg-white border border-[#DDE4D9] rounded-full px-2.5 py-1 text-xs shrink-0 shadow-2xs">
+            <div className="flex items-center gap-1 bg-white border border-stone-200 rounded-full px-2.5 py-1 text-xs shrink-0 shadow-2xs">
               <ArrowUpDown className="w-3 h-3 text-stone-400" />
               <select
                 value={sortBy}
@@ -510,13 +521,13 @@ export default function HomePage() {
               onClick={() => setOpenNowOnly(!openNowOnly)}
               className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border shrink-0 transition-all cursor-pointer shadow-2xs ${
                 openNowOnly
-                  ? 'bg-emerald-50 text-[#234E21] border-[#40813D]'
+                  ? 'bg-emerald-50 text-[#1B4D20] border-[#236B38]'
                   : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
               }`}
             >
-              <span className={`w-2 h-2 rounded-full ${openNowOnly ? 'bg-[#40813D]' : 'bg-stone-300'}`} />
+              <span className={`w-2 h-2 rounded-full ${openNowOnly ? 'bg-[#236B38]' : 'bg-stone-300'}`} />
               <span>{tSpaNetwork('filterOpenNow')}</span>
-              {openNowOnly && <Check className="w-3 h-3 text-[#40813D]" />}
+              {openNowOnly && <Check className="w-3 h-3 text-[#236B38]" />}
             </button>
 
             <button
@@ -537,12 +548,12 @@ export default function HomePage() {
               onClick={() => setDeal49kOnly(!deal49kOnly)}
               className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border shrink-0 transition-all cursor-pointer shadow-2xs ${
                 deal49kOnly
-                  ? 'bg-emerald-50 text-[#234E21] border-[#40813D]'
+                  ? 'bg-emerald-50 text-[#1B4D20] border-[#236B38]'
                   : 'bg-white text-stone-600 hover:bg-stone-50 border-stone-200'
               }`}
             >
               <span>{tSpaNetwork('filterDeal49k')}</span>
-              {deal49kOnly && <Check className="w-3 h-3 text-[#40813D]" />}
+              {deal49kOnly && <Check className="w-3 h-3 text-[#236B38]" />}
             </button>
 
             {/* Clear Filters Button if any active */}

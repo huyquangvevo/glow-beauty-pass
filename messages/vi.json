@@ -62,16 +62,16 @@
   },
   "TrustBadges": {
     "badge1": {
-      "title": "100% Đúng Giá",
-      "desc": "Không phụ thu"
+      "title": "15 Spa Kiểm Định",
+      "desc": "Khu vực Cầu Giấy"
     },
     "badge2": {
-      "title": "Chuẩn Hóa SOP",
-      "desc": "Không ép mua thẻ"
+      "title": "Đồng Giá Từ 49K",
+      "desc": "Không phụ thu"
     },
     "badge3": {
-      "title": "Phản Hồi Nhanh",
-      "desc": "Trong 5 phút"
+      "title": "Không Cần Cọc",
+      "desc": "Giữ chỗ qua Zalo"
     }
   },
   "Services": {

@@ -62,16 +62,16 @@
   },
   "TrustBadges": {
     "badge1": {
-      "title": "100% 정찰제",
-      "desc": "추가 요금 없음"
+      "title": "검증된 15개 스파",
+      "desc": "하노이 꼬우저이"
     },
     "badge2": {
-      "title": "표준 SOP 준수",
-      "desc": "강매 일체 없음"
+      "title": "49K 균일가",
+      "desc": "100% 추가금 없음"
     },
     "badge3": {
-      "title": "5분 내 신속 응대",
-      "desc": "즉시 슬롯 확정"
+      "title": "예약금 없음",
+      "desc": "Zalo 즉시 예약"
     }
   },
   "Services": {

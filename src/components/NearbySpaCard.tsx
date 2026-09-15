@@ -106,12 +106,12 @@ export function NearbySpaCard({
             <div className="flex items-center gap-1 shrink-0">
               <span
                 className={`inline-block w-1.5 h-1.5 rounded-full ${
-                  openingStatus.isOpen ? 'bg-[#2E6B30]' : 'bg-amber-500'
+                  openingStatus.isOpen ? 'bg-[#236B38]' : 'bg-amber-500'
                 }`}
               />
               <span
                 className={`font-medium ${
-                  openingStatus.isOpen ? 'text-[#2E6B30]' : 'text-amber-600'
+                  openingStatus.isOpen ? 'text-[#236B38]' : 'text-amber-600'
                 }`}
               >
                 {openingStatus.isOpen ? tSpaNetwork('filterOpenNow') : tSpaNetwork('filterClosed')}
@@ -137,13 +137,13 @@ export function NearbySpaCard({
         <div className="mt-auto pt-1">
           <Link
             href={href}
-            className="flex flex-col justify-center rounded-xl bg-[#F7F9F6] border border-[#E8ECE6] p-2.5 transition-all duration-200 hover:bg-[#EFF4EE] group/deal"
+            className="flex flex-col justify-center rounded-xl bg-[#F7F9F6] border border-[#E8ECE6] p-2.5 transition-all duration-200 hover:bg-[#EFF4EE] hover:border-emerald-200 group/deal"
           >
             <div className="text-[12px] font-medium text-stone-600 line-clamp-1">
               {tServices('pkg1.name')} (45p)
             </div>
             <div className="flex items-baseline flex-wrap gap-2 mt-0.5">
-              <span className="text-[16px] font-bold text-[#1B5E20]">
+              <span className="text-[16px] font-bold text-[#1B4D20]">
                 49.000đ
               </span>
               <span className="text-[12px] font-normal text-stone-400 line-through">
@@ -157,7 +157,7 @@ export function NearbySpaCard({
         <div className="flex items-center justify-between gap-2 pt-1">
           <Link
             href={href}
-            className="flex-1 py-2.5 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold text-center transition-colors"
+            className="flex-1 py-2.5 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold text-center transition-colors active:scale-95"
           >
             {tSpaNetwork('viewDetails')}
           </Link>
@@ -165,7 +165,7 @@ export function NearbySpaCard({
             href={zaloHubLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 py-2.5 px-3 rounded-xl bg-[#2E6B30] hover:bg-[#245726] active:bg-[#1E4720] text-white text-xs font-bold text-center transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+            className="flex-1 py-2.5 px-3 rounded-xl bg-[#236B38] hover:bg-[#1D5A2E] active:bg-[#164723] text-white text-xs font-bold text-center transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
           >
             <Image
               src="/brand/Logo-Zalo-App-Rec.webp"

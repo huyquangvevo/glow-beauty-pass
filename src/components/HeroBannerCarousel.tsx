@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 interface BannerSlide {
@@ -204,22 +204,63 @@ export function HeroBannerCarousel() {
         </div>
       </div>
 
-      {/* SINGLE-LINE SUBTLE REASSURANCE STRIP (No 3-column AI slop cards) */}
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 py-2.5 px-3 bg-[#F5F7F4] rounded-xl border border-[#E5EAE3] text-xs text-[#445642]">
-        <span className="flex items-center gap-1.5 font-medium">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#40813D]" />
-          15 spa kiểm định tại Cầu Giấy
-        </span>
-        <span className="hidden sm:inline text-stone-300">•</span>
-        <span className="flex items-center gap-1.5 font-medium">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#40813D]" />
-          Đồng giá niêm yết từ 49.000đ
-        </span>
-        <span className="hidden sm:inline text-stone-300">•</span>
-        <span className="flex items-center gap-1.5 font-medium">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#40813D]" />
-          Giữ chỗ qua Zalo không cần cọc
-        </span>
+      {/* 3 VALUE REASSURANCE PILL-CARDS */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-3.5 pt-0.5">
+        {/* Badge 1: 15 Spa Kiểm Định */}
+        <a
+          href="#danh-sach-spa"
+          className="group relative flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-1.5 sm:gap-3 py-2.5 px-2 sm:p-3.5 rounded-2xl bg-gradient-to-b from-white to-[#F8FAF8] hover:to-white border border-stone-200/90 hover:border-emerald-500/50 shadow-[0_2px_8px_rgba(23,35,26,0.04)] hover:shadow-[0_4px_16px_rgba(35,107,56,0.12)] hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.98] cursor-pointer"
+        >
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 text-[#1B4D20] border border-emerald-200/80 shadow-xs flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-emerald-100/90 transition-all duration-300">
+            <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-700" />
+          </div>
+          <div className="min-w-0 w-full">
+            <div className="text-[11px] sm:text-xs md:text-sm font-bold text-stone-900 leading-tight group-hover:text-[#1B4D20] transition-colors whitespace-nowrap">
+              {tTrust('badge1.title')}
+            </div>
+            <div className="text-[10px] sm:text-[11px] text-stone-500 font-medium leading-tight whitespace-nowrap mt-0.5">
+              {tTrust('badge1.desc')}
+            </div>
+          </div>
+        </a>
+
+        {/* Badge 2: Đồng Giá Từ 49K */}
+        <a
+          href="#goi-dich-vu"
+          className="group relative flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-1.5 sm:gap-3 py-2.5 px-2 sm:p-3.5 rounded-2xl bg-gradient-to-b from-white to-[#FCFBF7] hover:to-white border border-stone-200/90 hover:border-amber-400/70 shadow-[0_2px_8px_rgba(23,35,26,0.04)] hover:shadow-[0_4px_16px_rgba(217,119,6,0.12)] hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.98] cursor-pointer"
+        >
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 text-amber-800 border border-amber-200/80 shadow-xs flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-amber-100/90 transition-all duration-300">
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
+          </div>
+          <div className="min-w-0 w-full">
+            <div className="text-[11px] sm:text-xs md:text-sm font-bold text-stone-900 leading-tight group-hover:text-amber-800 transition-colors whitespace-nowrap">
+              {tTrust('badge2.title')}
+            </div>
+            <div className="text-[10px] sm:text-[11px] text-stone-500 font-medium leading-tight whitespace-nowrap mt-0.5">
+              {tTrust('badge2.desc')}
+            </div>
+          </div>
+        </a>
+
+        {/* Badge 3: Không Cần Cọc */}
+        <a
+          href={zaloHubLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative flex flex-col sm:flex-row items-center sm:items-center text-center sm:text-left gap-1.5 sm:gap-3 py-2.5 px-2 sm:p-3.5 rounded-2xl bg-gradient-to-b from-white to-[#F8FAF8] hover:to-white border border-stone-200/90 hover:border-emerald-500/50 shadow-[0_2px_8px_rgba(23,35,26,0.04)] hover:shadow-[0_4px_16px_rgba(35,107,56,0.12)] hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.98] cursor-pointer"
+        >
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 text-[#1B4D20] border border-emerald-200/80 shadow-xs flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-emerald-100/90 transition-all duration-300">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-700" />
+          </div>
+          <div className="min-w-0 w-full">
+            <div className="text-[11px] sm:text-xs md:text-sm font-bold text-stone-900 leading-tight group-hover:text-[#1B4D20] transition-colors whitespace-nowrap">
+              {tTrust('badge3.title')}
+            </div>
+            <div className="text-[10px] sm:text-[11px] text-stone-500 font-medium leading-tight whitespace-nowrap mt-0.5">
+              {tTrust('badge3.desc')}
+            </div>
+          </div>
+        </a>
       </div>
     </div>
   )

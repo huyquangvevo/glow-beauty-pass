@@ -16,8 +16,8 @@ export function Navbar() {
 
   return (
     <>
-      {/* TOP HEADER: GLOW BEAUTY PASS (Brand Green #40813D, Logo + Search + Language) */}
-      <header className="sticky top-0 z-40 bg-[#40813D] shadow-sm border-b border-[#356F32]">
+      {/* TOP HEADER: GLOW BEAUTY PASS (Brand Forest Green #236B38, Logo + Search + Language) */}
+      <header className="sticky top-0 z-40 bg-[#236B38] shadow-sm border-b border-[#1D5A2E]">
         <div className="w-full max-w-5xl mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-2.5 sm:gap-4">
           {/* Brand Logo or Back Button */}
           {isSpaDetail ? (
