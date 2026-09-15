@@ -25,7 +25,6 @@ async function run() {
   })
 
   await mobilePage.goto('http://localhost:3000/vi', { waitUntil: 'networkidle2', timeout: 30000 })
-  await mobilePage.evaluate(() => window.scrollBy(0, 50))
   await new Promise(r => setTimeout(r, 1000))
 
   const mobileScreenshotPath = path.join(OUTPUT_DIR, 'reassurance_mobile.png')
@@ -35,7 +34,20 @@ async function run() {
   })
   console.log('Saved mobile screenshot:', mobileScreenshotPath)
 
-  // 1b. Mobile Scrolled to Why Us
+  // 1b. Mobile Click Next Slide to capture Slide 2 (Trị Liệu Cổ Vai Gáy)
+  await mobilePage.evaluate(() => {
+    const btn = document.querySelector('button[title="Banner tiếp theo"]')
+    if (btn) btn.click()
+  })
+  await new Promise(r => setTimeout(r, 800))
+  const slide2MobilePath = path.join(OUTPUT_DIR, 'slide2_mobile.png')
+  await mobilePage.screenshot({
+    path: slide2MobilePath,
+    fullPage: false,
+  })
+  console.log('Saved slide2 mobile screenshot:', slide2MobilePath)
+
+  // 1c. Mobile Scrolled to Why Us
   await mobilePage.evaluate(() => {
     const sections = document.querySelectorAll('section')
     if (sections[3]) sections[3].scrollIntoView()

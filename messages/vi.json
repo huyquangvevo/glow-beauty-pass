@@ -39,25 +39,25 @@
   },
   "Hero": {
     "slide1": {
-      "tag": "ĐỒNG GIÁ 15 SPA CẦU GIẤY",
-      "title": "Gội Thư Giãn",
-      "highlight": "Chỉ Từ 49.000đ",
+      "tag": "Thảo Dược Tự Nhiên",
+      "title": "Gội Đầu Dưỡng Sinh",
+      "highlight": "Thư Giãn 45 Phút • Từ 49.000đ",
       "description": "Làn nước thảo dược ấm xoa dịu căng thẳng, sạch sâu da đầu sau ngày dài công sở.",
-      "cta": "Nhắn Zalo Đặt Chỗ 49K"
+      "cta": "Đặt Lịch 49K"
     },
     "slide2": {
-      "tag": "CHUẨN QUY TRÌNH SOP",
+      "tag": "Đả Thông Kinh Lạc",
       "title": "Trị Liệu Cổ Vai Gáy",
-      "highlight": "Chuyên Sâu 149.000đ",
-      "description": "Đả thông kinh lạc, giải phóng cơn đau nhức cổ vai gáy với kỹ thuật viên tay nghề cao.",
-      "cta": "Đặt Lịch Trị Liệu 149K"
+      "highlight": "Kỹ Thuật Viên Tay Nghề Cao • 149.000đ",
+      "description": "Giải phóng cơn đau nhức cổ vai gáy, đả thông khí huyết với kỹ thuật viên được thẩm định.",
+      "cta": "Đặt Lịch 149K"
     },
     "slide3": {
-      "tag": "CAM KẾT MINH BẠCH 100%",
-      "title": "Không Gian Chuẩn Sạch",
-      "highlight": "Tuyệt Đối Không Phụ Thu",
+      "tag": "15 Spa Tuyển Chọn",
+      "title": "Không Gian An Yên",
+      "highlight": "Đã Thẩm Định • Tuyệt Đối Không Phụ Thu",
       "description": "Mạng lưới 15 spa kiểm định nghiêm ngặt. Cam kết hoàn tiền nếu bị ép mua thẻ gói.",
-      "cta": "Chọn Spa Gần Bạn Nhất"
+      "cta": "Chọn Spa Gần Bạn"
     }
   },
   "TrustBadges": {
@@ -156,7 +156,7 @@
     "filterTopRated": "★ 4.8+ sao",
     "filterDeal49k": "Gói 49K",
     "nearLocation": "Gần {location}",
-    "sopStandard": "SOP Chuẩn",
+    "sopStandard": "Đã kiểm định",
     "reviewsCount": "{count} đánh giá",
     "priceFrom": "từ {price}đ",
     "noSpasFilterMatch": "Không tìm thấy spa nào phù hợp với bộ lọc đã chọn.",
@@ -193,7 +193,7 @@
     "bookThisPackage": "Đặt ngay",
     "bookZalo": "Đặt lịch Zalo",
     "bookZaloQuick": "Đặt lịch Zalo",
-    "sopGuaranteed": "Chuẩn SOP",
+    "sopGuaranteed": "Đã kiểm định",
     "sopProcess": "Quy trình chuẩn",
     "noExtraFee": "Không thu thêm phụ phí",
     "verifiedPartner": "Đối tác xác thực",
@@ -201,18 +201,19 @@
     "faqTitle": "Câu hỏi thường gặp (FAQ)",
     "faqSubtitle": "Giải đáp các câu hỏi thường gặp khi đặt dịch vụ",
     "bookZaloMain": "Đặt lịch Zalo (Giữ chỗ 0đ)",
-    "bookZaloSub": "Xác nhận sau 30 giây • Chuẩn SOP",
+    "bookZaloSub": "Xác nhận sau 30 giây • Không cần cọc",
     "fromPrice": "Giá từ",
     "noDeposit": "Không cọc • Giữ chỗ 30s",
     "pkg1Badge": "Gói cơ bản",
     "pkg2Badge": "Phổ biến nhất",
     "pkg3Badge": "Chuyên sâu",
     "freeCancel": "Hủy miễn phí",
-    "bookViaZalo": "Đặt lịch qua Zalo",
-    "allReviews": "Tất cả",
-    "filter5Star": "5 sao",
-    "filterWithPhotos": "Có ảnh",
-    "showingReviews": "Hiển thị {from} - {to} trong số {total} đánh giá"
+    "safetyCommitment": "Cam kết dịch vụ",
+    "safety1": "Đúng kỹ thuật viên & thời lượng liệu trình",
+    "safety2": "100% thảo dược thiên nhiên chuẩn nguồn gốc",
+    "safety3": "Hoàn tiền 100% nếu bị ép mua thẻ gói/chèo kéo",
+    "zaloInstantConfirm": "Xác nhận lịch tức thì qua Zalo",
+    "zaloSubtitle": "Tư vấn viên Glow điều phối giữ chỗ trong 30 giây"
   },
   "LocationPrompt": {
     "title": "Bật vị trí để tìm spa gần bạn nhất",
@@ -228,8 +229,11 @@
     "colCoverage": "Khu Vực Phủ Sóng",
     "colCommitment": "Cam Kết Thương Hiệu",
     "colContact": "Tổng Đài Hỗ Trợ",
+    "colServices": "Dịch Vụ Niêm Yết",
+    "colLocations": "Khu Vực Cầu Giấy",
+    "colPolicies": "Chính Sách & Cam Kết",
     "pkg1": "Gội Thư Giãn (49.000đ)",
-    "pkg2": "Gội Dưỡng Sinh SOP (69.000đ)",
+    "pkg2": "Gội Dưỡng Sinh Chuyên Sâu (69.000đ)",
     "pkg3": "Trị Liệu Cổ Vai Gáy (149.000đ)",
     "pkg4": "Bấm Huyệt Khai Thông Kinh Lạc",
     "wardDichVong": "Spa Phường Dịch Vọng",
@@ -238,14 +242,14 @@
     "wardVuPhamHam": "Spa Vũ Phạm Hàm (Yên Hòa)",
     "wardToHieu": "Spa Tô Hiệu (Nghĩa Tân)",
     "commitNoExtra": "100% Đúng giá niêm yết",
-    "commitSop": "Quy trình SOP kiểm định",
+    "commitSop": "Thẩm định cơ sở khắt khe",
     "commitNoUpsell": "Không chèo kéo mua gói",
     "commitZalo5min": "Xác nhận Zalo trong 5 phút",
     "hotlineZaloLabel": "Hotline Zalo: 0359 178 342",
     "callHotline": "Hotline: 0359 178 342",
     "chatZalo": "Zalo: 0359 178 342",
     "copyright": "© 2026 Glow Vietnam. Nền tảng thành viên thuộc hệ sinh thái Glow (Glow Explore).",
-    "sopBadge": "Tiêu chuẩn SOP",
+    "sopBadge": "Đạt chuẩn Glow",
     "privacyBadge": "Bảo mật dữ liệu",
     "locationBadge": "Cầu Giấy, Hà Nội"
   }

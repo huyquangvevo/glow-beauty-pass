@@ -129,40 +129,37 @@ export function HeroBannerCarousel() {
                 className="object-cover object-center transform scale-100 group-hover:scale-102 transition-transform duration-700"
               />
 
-              {/* Gradient Scrims: Dark gradient on bottom/left for high text contrast */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/15" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
+              {/* Gradient Scrims: Lighter, cleaner gradient so spa photography stays radiant */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-transparent to-transparent" />
 
               {/* Slide Content Overlay */}
-              <div className="absolute inset-0 p-5 sm:p-7 flex flex-col justify-between z-20 text-white">
-                {/* Top Row: Subtle Category Tag */}
+              <div className="absolute inset-0 p-4 sm:p-7 flex flex-col justify-between z-20 text-white">
+                {/* Top Row: Refined Eyebrow Tag (Taste-skill: subtle frosted glass, natural casing) */}
                 <div className="flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold text-white/95 bg-black/40 backdrop-blur-md border border-white/20">
-                    {slide.tag}
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium text-emerald-100 bg-emerald-950/35 backdrop-blur-md border border-emerald-400/25 shadow-xs tracking-wide">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                    <span>{slide.tag}</span>
                   </span>
                 </div>
 
-                {/* Bottom Text & CTA Row */}
-                <div className="space-y-2 max-w-sm sm:max-w-md pr-4 sm:pr-8">
+                {/* Bottom Text & CTA Row - Clean, Minimalist (no bulky paragraphs) */}
+                <div className="space-y-2.5 max-w-sm sm:max-w-md pr-4">
                   <div className="space-y-0.5">
                     <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight drop-shadow-sm">
                       {slide.title}
                     </h2>
-                    <p className="text-sm sm:text-base font-semibold text-emerald-200 drop-shadow-xs">
+                    <p className="text-xs sm:text-sm md:text-base font-semibold text-emerald-300 drop-shadow-xs">
                       {slide.highlight}
                     </p>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-stone-200 leading-relaxed line-clamp-2 font-normal">
-                    {slide.description}
-                  </p>
-
-                  <div className="pt-1 flex items-center gap-2.5">
+                  <div className="pt-0.5 flex items-center gap-2">
                     <a
                       href={slide.ctaLink}
                       target={slide.ctaLink.startsWith('http') ? '_blank' : '_self'}
                       rel={slide.ctaLink.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-[#1B4D20] hover:bg-[#F2F6F0] text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 sm:py-2.5 rounded-full bg-white hover:bg-stone-100 text-[#1B4D20] text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95 cursor-pointer"
                     >
                       <span>{slide.ctaText}</span>
                     </a>
