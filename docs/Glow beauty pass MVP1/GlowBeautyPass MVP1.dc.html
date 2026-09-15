@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#ECEEE9;font-family:"Be Vietnam Pro",system-ui,sans-serif}
+  a{color:#093E06}a:hover{color:#40813F}
+  *::-webkit-scrollbar{width:0;height:0}
+  @keyframes gbpUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  @keyframes gbpFade{from{opacity:0}to{opacity:1}}
+  @keyframes gbpScreen{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;box-sizing:border-box">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;position:relative;overflow:hidden;background:#F5F7F4;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:#1E2B1C;-webkit-font-smoothing:antialiased">
+
+<sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
+<div style="height:100%;display:flex;flex-direction:column;animation:gbpScreen .3s ease">
+  <div style="flex:1;overflow:auto">
+    <div style="background:#40813F;padding:74px 26px 36px;position:relative;overflow:hidden">
+      <div style="position:absolute;width:320px;height:320px;border-radius:50%;background:#40813F;opacity:.38;filter:blur(70px);top:-130px;right:-110px"></div>
+      <div style="position:relative">
+        <img src="assets/logo-white.png" alt="glow BeautyPass" style="width:168px;display:block;margin-bottom:34px">
+        <div style="font-size:10.5px;font-weight:600;letter-spacing:.16em;color:#E8FDE7;margin-bottom:14px">HỆ THỐNG SPA TIỆN ÍCH</div>
+        <h1 style="font-weight:700;font-size:32px;letter-spacing:-.025em;line-height:1.18;color:#fff;margin:0 0 16px;letter-spacing:-.01em">Nhắn một chỗ.<br>Biết giá trước.</h1>
+        <p style="font-size:14.5px;line-height:1.6;color:#EAF7E8;margin:0;max-width:310px;text-wrap:pretty">Glow Beauty là hệ thống spa tiện ích: 100+ trung tâm cùng một bảng giá, cùng một bộ quy trình, và một Zalo duy nhất để đặt lịch.</p>
+      </div>
+    </div>
+
+    <div style="padding:28px 26px 8px">
+      <div style="font-size:10.5px;font-weight:700;letter-spacing:.14em;color:#6B7869;margin-bottom:16px">CÁCH HOẠT ĐỘNG</div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;border-radius:999px;background:#40813F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex:none">1</div>
+          <div style="padding-top:3px">
+            <div style="font-size:15px;font-weight:600;color:#093E06">Chọn dịch vụ, thấy giá ngay</div>
+            <div style="font-size:13px;line-height:1.5;color:#4A5848;margin-top:3px">Gội dưỡng sinh ở chi nhánh nào cũng 149.000đ.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;border-radius:999px;background:#40813F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex:none">2</div>
+          <div style="padding-top:3px">
+            <div style="font-size:15px;font-weight:600;color:#093E06">Nhắn một Zalo duy nhất</div>
+            <div style="font-size:13px;line-height:1.5;color:#4A5848;margin-top:3px">Một Zalo cho toàn hệ thống Glow Beauty.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;border-radius:999px;background:#40813F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex:none">3</div>
+          <div style="padding-top:3px">
+            <div style="font-size:15px;font-weight:600;color:#093E06">Tổng đài xác nhận lịch</div>
+            <div style="font-size:13px;line-height:1.5;color:#4A5848;margin-top:3px">Dưới 20 phút, đúng chi nhánh và giờ bạn chọn.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;padding:22px 26px 26px">
+      <div style="background:#fff;border:1px solid #DDE4D9;border-radius:16px;padding:13px 10px;text-align:center">
+        <div style="font-size:19px;font-weight:700;color:#40813F;line-height:1">₫</div>
+        <div style="font-size:11.5px;font-weight:600;color:#093E06;margin-top:7px">Đồng giá</div>
+      </div>
+      <div style="background:#fff;border:1px solid #DDE4D9;border-radius:16px;padding:13px 10px;text-align:center">
+        <div style="font-size:17px;font-weight:700;color:#40813F;line-height:1">◎</div>
+        <div style="font-size:11.5px;font-weight:600;color:#093E06;margin-top:7px">1 đầu mối</div>
+      </div>
+      <div style="background:#fff;border:1px solid #DDE4D9;border-radius:16px;padding:13px 10px;text-align:center">
+        <div style="font-size:17px;font-weight:700;color:#40813F;line-height:1">✓</div>
+        <div style="font-size:11.5px;font-weight:600;color:#093E06;margin-top:7px">Đánh giá thật</div>
+      </div>
+    </div>
+
+    <div style="margin:0 26px 30px;background:#E8FDE7;border-radius:20px;padding:16px 18px;display:flex;gap:14px;align-items:center">
+      <div style="font-size:23px;font-weight:700;color:#093E06;line-height:1">5′</div>
+      <div style="font-size:12.5px;line-height:1.5;color:#2C4A29">Phản hồi dưới <b>5 phút</b> trong giờ hành chính. Xác nhận lịch dưới <b>20 phút</b>.</div>
+    </div>
+  </div>
+
+  <div style="padding:14px 22px 40px;background:#fff;border-top:1px solid #DDE4D9">
+    <div onClick="{{ goServices }}" style="background:#40813F;color:#fff;border-radius:999px;height:56px;display:flex;align-items:center;justify-content:center;gap:9px;font-size:16px;font-weight:600;cursor:pointer" style-hover="background:#357033">Xem dịch vụ &amp; giá <span style="font-size:18px">→</span></div>
+    <div style="text-align:center;font-size:11.5px;color:#6B7869;margin-top:11px">148 chi nhánh · 12 tỉnh thành · Đồng giá toàn hệ thống</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isServices }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;animation:gbpScreen .3s ease">
+  <div style="background:#40813F;padding:60px 24px 24px;flex:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
+      <img onClick="{{ goIntro }}" src="assets/logo-white.png" alt="Glow BeautyPass" style="height:36px;display:block;cursor:pointer">
+      <div style="display:flex;gap:6px">
+        <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2">
+          <div onClick="{{ l.pick }}" style="display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:999px;cursor:pointer;background:{{ l.bg }};border:1px solid {{ l.bd }}">
+            <span style="font-size:13px;line-height:1">{{ l.flag }}</span>
+            <span style="font-size:10.5px;font-weight:700;letter-spacing:.04em;color:{{ l.fg }}">{{ l.code }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <h2 style="font-weight:700;font-size:26px;letter-spacing:-.025em;color:#fff;margin:0;line-height:1.14">Hệ thống làm đẹp<br>Glow Beauty</h2>
+    <sc-if value="{{ enHint }}" hint-placeholder-val="{{ false }}">
+      <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.34);border-radius:999px;padding:6px 12px;margin-bottom:8px">
+        <span style="font-size:11px;font-weight:600;color:#fff">English version coming soon</span>
+      </div>
+    </sc-if>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:13px">
+      <span style="font-size:11.5px;font-weight:600;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 11px;white-space:nowrap">100+ trung tâm toàn quốc</span>
+      <span style="font-size:11.5px;font-weight:600;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 11px;white-space:nowrap">Một mức giá</span>
+      <span style="font-size:11.5px;font-weight:600;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 11px;white-space:nowrap">Chất lượng đồng nhất</span>
+    </div>
+  </div>
+
+  <div style="flex:1;overflow:auto;padding:16px 20px 32px">
+    <div style="display:grid;grid-template-columns:{{ gridCols }};gap:11px">
+      <sc-for list="{{ services }}" as="s" hint-placeholder-count="6">
+        <div onClick="{{ s.open }}" style="grid-column:{{ s.span }};background:#fff;border-radius:20px;overflow:hidden;cursor:pointer;border:1px solid #DDE4D9;display:flex;flex-direction:column" style-hover="border-color:#40813F">
+          <div style="position:relative;height:{{ s.imgH }};background:#E8FDE7">
+            <image-slot id="{{ s.slotId }}" shape="rect" placeholder="{{ s.slotLabel }}"></image-slot>
+            <div style="position:absolute;left:9px;top:9px;background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:700;color:#093E06;pointer-events:none;box-shadow:0 2px 8px rgba(9,62,6,.2)">{{ s.price }}</div>
+          </div>
+          <div style="padding:11px 12px 12px;display:flex;align-items:flex-end;gap:8px;flex:1">
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+              <div style="font-size:14px;font-weight:600;color:#093E06;line-height:1.3;text-wrap:pretty">{{ s.name }}</div>
+              <sc-if value="{{ s.dur }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:11.5px;font-weight:500;color:#40813F">{{ s.dur }}</div>
+              </sc-if>
+            </div>
+            <div style="width:29px;height:29px;border-radius:999px;background:#E8FDE7;color:#40813F;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex:none">→</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSpas }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;animation:gbpScreen .3s ease">
+  <div style="background:#40813F;padding:58px 16px 14px;flex:none">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div onClick="{{ goServices }}" style="width:34px;height:34px;border-radius:999px;background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;flex:none">←</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:15px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ service.name }}</div>
+        <div style="font-size:11.5px;color:#E8FDE7;margin-top:2px">{{ service.price }} · đồng giá</div>
+      </div>
+      <div style="display:flex;background:rgba(255,255,255,.14);border-radius:999px;padding:3px;flex:none">
+        <div onClick="{{ setMap }}" style="padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;background:{{ mapTabBg }};color:{{ mapTabFg }}">Bản đồ</div>
+        <div onClick="{{ setList }}" style="padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;background:{{ listTabBg }};color:{{ listTabFg }}">Danh sách</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#fff;border-bottom:1px solid #DDE4D9;flex:none;padding:11px 0 11px;position:relative;z-index:30">
+    <div style="display:flex;gap:7px;overflow:auto;padding:0 16px">
+      <div onClick="{{ toggleCityMenu }}" style="flex:none;padding:8px 13px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;background:#E8FDE7;color:#093E06;display:flex;align-items:center;gap:6px">{{ cityLabel }} <span style="font-size:9px;opacity:.6">▼</span></div>
+      <div onClick="{{ toggleRating }}" style="flex:none;padding:8px 13px;border-radius:999px;font-size:12.5px;font-weight:500;cursor:pointer;background:{{ ratingBg }};color:{{ ratingFg }};border:1px solid {{ ratingBd }}">★ 4.5+</div>
+      <div onClick="{{ toggleOpen }}" style="flex:none;padding:8px 13px;border-radius:999px;font-size:12.5px;font-weight:500;cursor:pointer;background:{{ openBg }};color:{{ openFg }};border:1px solid {{ openBd }}">Đang mở cửa</div>
+    </div>
+    <sc-if value="{{ cityMenu }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div onClick="{{ closeCityMenu }}" style="position:fixed;inset:0;z-index:40"></div>
+        <div style="position:absolute;top:calc(100% - 2px);left:16px;z-index:41;min-width:186px;background:#fff;border:1px solid #DDE4D9;border-radius:16px;padding:6px;box-shadow:0 14px 34px rgba(9,62,6,.18)">
+          <sc-for list="{{ cityOptions }}" as="c" hint-placeholder-count="3">
+            <div onClick="{{ c.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border-radius:11px;cursor:pointer;background:{{ c.bg }}" style-hover="background:#F5F7F4">
+              <span style="font-size:13px;font-weight:{{ c.weight }};color:#093E06">{{ c.name }}</span>
+              <span style="font-size:11.5px;color:#6B7869">{{ c.count }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ isMapView }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;position:relative;background:#EEF1EC;overflow:hidden">
+      <iframe src="map.html" ref="{{ mapRef }}" onLoad="{{ onMapLoad }}" title="Bản đồ điểm GlowBeautyPass" style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+      <div style="position:absolute;top:12px;left:14px;background:#fff;border-radius:999px;padding:7px 13px;font-size:11.5px;font-weight:600;color:#093E06;box-shadow:0 2px 10px rgba(9,62,6,.14)">{{ countLabel }}</div>
+      <div style="position:absolute;left:0;right:0;bottom:14px;display:flex;gap:11px;overflow:auto;padding:0 14px;scroll-snap-type:x mandatory">
+        <sc-for list="{{ spas }}" as="s" hint-placeholder-count="3">
+          <div onClick="{{ s.open }}" style="flex:none;width:272px;scroll-snap-align:center;background:#fff;border-radius:20px;padding:12px;display:flex;gap:12px;cursor:pointer;box-shadow:0 6px 22px rgba(9,62,6,.16);border:1.5px solid {{ s.ring }}">
+            <div style="width:58px;height:58px;border-radius:14px;overflow:hidden;position:relative;background:#E8FDE7;flex:none"><image-slot id="{{ s.slotId }}" shape="rect" placeholder="ảnh"></image-slot></div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:14.5px;font-weight:600;color:#093E06;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.name }}</div>
+              <div style="font-size:11.5px;color:#6B7869;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">★ {{ s.rating }} ({{ s.reviews }}) · {{ s.dist }} · {{ s.ward }}</div>
+              <div style="display:flex;align-items:center;gap:7px;margin-top:7px">
+                <span style="font-size:11px;font-weight:600;color:{{ s.openFg }};background:{{ s.openBg }};border-radius:999px;padding:3px 8px;white-space:nowrap">{{ s.openLabel }}</span>
+                <span style="font-size:12.5px;font-weight:600;color:#093E06">{{ service.price }}</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isListView }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;overflow:auto;padding:12px 16px 34px">
+      <div style="font-size:11.5px;color:#6B7869;margin-bottom:10px">{{ countLabel }}</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ spas }}" as="s" hint-placeholder-count="5">
+          <div onClick="{{ s.open }}" style="background:#fff;border-radius:18px;padding:13px;display:flex;gap:13px;cursor:pointer;border:1px solid #DDE4D9">
+            <div style="width:66px;height:66px;border-radius:14px;overflow:hidden;position:relative;background:#E8FDE7;flex:none"><image-slot id="{{ s.slotId }}" shape="rect" placeholder="ảnh"></image-slot></div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+                <div style="font-size:15px;font-weight:600;color:#093E06;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.name }}</div>
+                <div style="font-size:13px;font-weight:600;color:#093E06;flex:none">{{ service.price }}</div>
+              </div>
+              <div style="font-size:11.5px;color:#6B7869;margin-top:4px">★ {{ s.rating }} ({{ s.reviews }}) · {{ s.dist }} · {{ s.ward }}</div>
+              <div style="display:flex;align-items:center;gap:7px;margin-top:8px">
+                <span style="font-size:11px;font-weight:600;color:{{ s.openFg }};background:{{ s.openBg }};border-radius:999px;padding:3px 8px;white-space:nowrap">{{ s.openLabel }}</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;animation:gbpScreen .3s ease">
+  <div style="flex:1;overflow:auto">
+    <div style="position:relative">
+      <div style="display:flex;gap:4px;overflow:auto;background:#DDE4D9">
+        <sc-for list="{{ detail.photos }}" as="p" hint-placeholder-count="3">
+          <div style="flex:none;width:{{ p.w }};height:216px;position:relative;background:#E8FDE7">
+            <image-slot id="{{ p.id }}" shape="rect" placeholder="{{ p.label }}"></image-slot>
+          </div>
+        </sc-for>
+      </div>
+      <div onClick="{{ goSpas }}" style="position:absolute;top:56px;left:14px;width:38px;height:38px;border-radius:999px;background:rgba(255,255,255,.94);color:#093E06;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:0 2px 10px rgba(9,62,6,.18)">←</div>
+    </div>
+
+    <div style="padding:18px 20px 0">
+      <h2 style="font-weight:700;font-size:22px;letter-spacing:-.02em;color:#093E06;margin:0 0 8px;line-height:1.25">{{ detail.name }}</h2>
+      <div style="font-size:12.5px;color:#4A5848;line-height:1.5">★ {{ detail.rating }} · {{ detail.reviews }} đánh giá · {{ detail.dist }} · {{ detail.ward }}, {{ detail.cityName }}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:12px">
+        <span style="font-size:12px;font-weight:600;color:{{ detail.openFg }};background:{{ detail.openBg }};border-radius:999px;padding:5px 11px;white-space:nowrap">{{ detail.openLabel }}</span>
+        <span style="font-size:12px;color:#4A5848">{{ detail.todayHours }}</span>
+      </div>
+      <div style="background:#fff;border:1px solid #DDE4D9;border-radius:16px;padding:13px 15px;margin-top:13px;display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ detail.hours }}" as="h" hint-placeholder-count="2">
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#4A5848"><span>{{ h.d }}</span><span style="font-weight:500;color:#093E06">{{ h.t }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="padding:24px 20px 0">
+      <div style="font-size:13px;font-weight:600;color:#093E06;margin-bottom:11px">Menu giá niêm yết</div>
+      <div style="background:#fff;border:1px solid #DDE4D9;border-radius:18px;overflow:hidden">
+        <sc-for list="{{ menu }}" as="m" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 15px;border-bottom:1px solid #EFF2EE;background:{{ m.bg }}">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;font-weight:500;color:#093E06;line-height:1.35">{{ m.name }}</div>
+              <sc-if value="{{ m.dur }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:11px;color:#6B7869;margin-top:3px">{{ m.dur }}</div>
+              </sc-if>
+            </div>
+            <div style="font-size:14px;font-weight:600;color:#093E06;flex:none">{{ m.price }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size:11px;color:#6B7869;margin-top:9px">Chi nhánh Glow Beauty — áp dụng đồng giá toàn hệ thống.</div>
+    </div>
+
+    <div style="padding:24px 20px 0">
+      <div style="font-size:13px;font-weight:600;color:#093E06;margin-bottom:11px">Vị trí</div>
+      <div style="border-radius:18px;overflow:hidden;border:1px solid #DDE4D9;background:#EEF1EC">
+        <div style="position:relative;height:168px">
+          <iframe src="map.html?mini=1" ref="{{ miniRef }}" onLoad="{{ onMiniLoad }}" title="Vị trí spa" style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+        </div>
+        <div style="padding:13px 15px;background:#fff;display:flex;align-items:center;gap:12px">
+          <div style="flex:1;font-size:12.5px;line-height:1.5;color:#4A5848">{{ detail.address }}</div>
+          <div onClick="{{ openDirections }}" style="flex:none;font-size:12.5px;font-weight:600;color:#093E06;background:#E8FDE7;border-radius:999px;padding:9px 14px;cursor:pointer">Chỉ đường</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:24px 20px 28px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:11px">
+        <div style="font-size:13px;font-weight:600;color:#093E06">Đánh giá có ảnh</div>
+        <div style="font-size:11.5px;color:#40813F;font-weight:500">Xác thực số điện thoại</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="3">
+          <div style="background:#fff;border:1px solid #DDE4D9;border-radius:18px;padding:14px">
+            <div style="display:flex;gap:11px;align-items:center;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:999px;background:#E8FDE7;color:#40813F;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex:none">{{ r.initial }}</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;font-weight:600;color:#093E06">{{ r.name }}</div>
+                <div style="font-size:11px;color:#6B7869;margin-top:2px">{{ r.stars }} · {{ r.when }}</div>
+              </div>
+            </div>
+            <div style="font-size:12.5px;line-height:1.6;color:#4A5848;text-wrap:pretty">{{ r.text }}</div>
+            <div style="display:flex;gap:7px;margin-top:11px">
+              <sc-for list="{{ r.photos }}" as="ph" hint-placeholder-count="2">
+                <div style="width:62px;height:62px;border-radius:12px;overflow:hidden;position:relative;background:#E8FDE7;flex:none"><image-slot id="{{ ph.id }}" shape="rect" placeholder="ảnh"></image-slot></div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:none;padding:12px 18px 40px;background:#fff;border-top:1px solid #DDE4D9">
+    <div onClick="{{ openSheet }}" style="background:#40813F;color:#fff;border-radius:999px;height:56px;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer" style-hover="background:#357033">
+      <span style="font-size:15.5px;font-weight:600">Đặt lịch ưu tiên qua Zalo</span>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:80;display:flex;flex-direction:column;justify-content:flex-end;animation:gbpFade .2s ease">
+  <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(9,62,6,.42)"></div>
+  <div style="position:relative;background:#fff;border-radius:28px 28px 0 0;padding:8px 20px 34px;max-height:88%;overflow:auto;animation:gbpUp .26s cubic-bezier(.22,.9,.25,1)">
+    <div style="width:38px;height:4px;border-radius:99px;background:#DDE4D9;margin:0 auto 14px"></div>
+
+    <sc-if value="{{ sheetForm }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="font-size:18px;font-weight:600;color:#093E06">Đặt lịch ưu tiên qua Zalo</div>
+        <div style="font-size:12.5px;color:#6B7869;margin-top:5px">{{ detail.name }} · {{ detail.ward }}</div>
+
+        <div style="font-size:12px;font-weight:600;color:#093E06;margin:20px 0 9px">Dịch vụ</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ sheetServices }}" as="s" hint-placeholder-count="4">
+            <div onClick="{{ s.pick }}" style="padding:10px 14px;border-radius:999px;font-size:12.5px;font-weight:500;cursor:pointer;background:{{ s.bg }};color:{{ s.fg }};border:1px solid {{ s.bd }}">{{ s.short }} · {{ s.price }}</div>
+          </sc-for>
+        </div>
+
+        <div style="font-size:12px;font-weight:600;color:#093E06;margin:20px 0 9px">Ngày</div>
+        <div style="display:flex;gap:8px">
+          <sc-for list="{{ days }}" as="d" hint-placeholder-count="3">
+            <div onClick="{{ d.pick }}" style="flex:1;padding:11px 8px;border-radius:16px;text-align:center;cursor:pointer;background:{{ d.bg }};border:1px solid {{ d.bd }}">
+              <div style="font-size:12.5px;font-weight:600;color:{{ d.fg }}">{{ d.label }}</div>
+              <div style="font-size:10.5px;color:{{ d.sub }};margin-top:2px">{{ d.date }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="font-size:12px;font-weight:600;color:#093E06;margin:20px 0 9px">Khung giờ</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ times }}" as="t" hint-placeholder-count="6">
+            <div onClick="{{ t.pick }}" style="padding:10px 15px;border-radius:999px;font-size:12.5px;font-weight:500;cursor:{{ t.cursor }};background:{{ t.bg }};color:{{ t.fg }};border:1px solid {{ t.bd }};text-decoration:{{ t.deco }}">{{ t.label }}</div>
+          </sc-for>
+        </div>
+
+        <div style="background:#F5F7F4;border-radius:18px;padding:14px;margin-top:20px">
+          <div style="font-size:10.5px;font-weight:600;letter-spacing:.08em;color:#6B7869;margin-bottom:8px">TIN NHẮN SẼ GỬI TỚI TỔNG ĐÀI</div>
+          <div style="background:#E8FDE7;border-radius:14px 14px 14px 4px;padding:12px 14px;font-size:12.5px;line-height:1.55;color:#1E2B1C;text-wrap:pretty">{{ message }}</div>
+        </div>
+
+        <div onClick="{{ sendZalo }}" style="background:#40813F;color:#fff;border-radius:999px;height:56px;display:flex;align-items:center;justify-content:center;gap:9px;font-size:15.5px;font-weight:600;cursor:pointer;margin-top:18px" style-hover="background:#357033">Mở Zalo GlowBeautyPass <span style="font-size:17px">→</span></div>
+        <div style="text-align:center;font-size:11px;color:#6B7869;margin-top:9px">Chưa trừ tiền. Tổng đài hỏi chỗ trống rồi xác nhận lại với bạn.</div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ sheetDone }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:14px 0 0;text-align:center">
+        <div style="width:62px;height:62px;border-radius:999px;background:#E8FDE7;color:#40813F;font-size:28px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">✓</div>
+        <div style="font-size:18px;font-weight:600;color:#093E06">Đã chuyển sang Zalo</div>
+        <div style="font-size:13px;line-height:1.6;color:#4A5848;margin:9px auto 0;max-width:290px">Tổng đài GlowBeautyPass đã nhận yêu cầu và sẽ xác nhận lịch với bạn trong 20 phút.</div>
+        <div style="background:#F5F7F4;border-radius:18px;padding:15px;margin-top:20px;text-align:left;display:flex;flex-direction:column;gap:9px">
+          <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:#6B7869">Chi nhánh</span><span style="font-weight:600;color:#093E06">{{ detail.name }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:#6B7869">Dịch vụ</span><span style="font-weight:600;color:#093E06">{{ sheetServiceName }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:#6B7869">Thời gian</span><span style="font-weight:600;color:#093E06">{{ slotLabel }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:#6B7869">Giá niêm yết</span><span style="font-weight:600;color:#093E06">{{ sheetServicePrice }}</span></div>
+        </div>
+        <div onClick="{{ closeSheet }}" style="background:#E8FDE7;color:#093E06;border-radius:999px;height:52px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;cursor:pointer;margin-top:18px">Xong</div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:482,&quot;height&quot;:954},&quot;cardColumns&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:2,&quot;min&quot;:1,&quot;max&quot;:2,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Trang chủ&quot;},&quot;defaultView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;map&quot;,&quot;list&quot;],&quot;default&quot;:&quot;map&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hành vi&quot;}}">
+const CITIES = [
+  { id: 'hcm', name: 'TP.HCM' },
+  { id: 'hn', name: 'Hà Nội' },
+  { id: 'dn', name: 'Đà Nẵng' },
+];
+
+const SERVICES = [
+  { id: 'goi', name: 'Gội đầu sạch', short: 'Gội sạch', price: 39000, dur: '', count: 148 },
+  { id: 'cap', name: 'Gội đầu dầu cặp', short: 'Gội dầu cặp', price: 59000, dur: '', count: 132 },
+  { id: 'duongsinh', name: 'Gội dưỡng sinh', short: 'Dưỡng sinh', price: 149000, dur: '', count: 141 },
+  { id: 'massage', name: 'Massage body', short: 'Massage body', price: 199000, dur: '60 phút', count: 88 },
+  { id: 'da', name: 'Chăm sóc da cơ bản', short: 'Chăm sóc da', price: 169000, dur: '', count: 96 },
+  { id: 'combo', name: 'Combo gội + chăm sóc da', short: 'Combo gội + da', price: 199000, dur: '', count: 74 },
+  { id: 'triet', name: 'Triệt lông', short: 'Triệt lông', price: 99000, dur: '1 buổi / 1 vùng', count: 52, wide: true },
+];
+
+const SPAS = [
+  { id: 's1', name: 'Sen Thanh Spa', ward: 'Quận 1', city: 'hcm', lat: 10.7735, lng: 106.6965, rating: 4.9, reviews: 64, dist: '0,8 km', open: true, tier: 'Certified', hours: [{ d: 'T2 – T6', t: '09:00 – 21:00' }, { d: 'T7 – CN', t: '08:00 – 22:00' }], today: 'Hôm nay 09:00 – 21:00', address: '42 Nguyễn Thị Minh Khai, P. Bến Nghé, Quận 1, TP.HCM' },
+  { id: 's2', name: 'An Nhiên Beauty', ward: 'Quận 3', city: 'hcm', lat: 10.7841, lng: 106.6855, rating: 4.7, reviews: 41, dist: '1,6 km', open: true, tier: 'Verified', hours: [{ d: 'T2 – T6', t: '09:00 – 20:30' }, { d: 'T7 – CN', t: '09:00 – 21:00' }], today: 'Hôm nay 09:00 – 20:30', address: '118 Võ Văn Tần, P. Võ Thị Sáu, Quận 3, TP.HCM' },
+  { id: 's3', name: 'Mộc Lan Dưỡng Sinh', ward: 'Bình Thạnh', city: 'hcm', lat: 10.8039, lng: 106.7101, rating: 4.8, reviews: 37, dist: '3,2 km', open: true, tier: 'Certified', hours: [{ d: 'T2 – T6', t: '08:30 – 21:00' }, { d: 'T7 – CN', t: '08:30 – 21:00' }], today: 'Hôm nay 08:30 – 21:00', address: '25 Phan Đăng Lưu, P. 3, Bình Thạnh, TP.HCM' },
+  { id: 's4', name: 'Hạ Vy Hair & Spa', ward: 'Phú Nhuận', city: 'hcm', lat: 10.7994, lng: 106.6807, rating: 4.4, reviews: 28, dist: '3,9 km', open: false, tier: 'Standard', hours: [{ d: 'T2 – T6', t: '10:00 – 20:00' }, { d: 'T7 – CN', t: '10:00 – 20:00' }], today: 'Mở lại 10:00 mai', address: '7 Hoa Sứ, P. 7, Phú Nhuận, TP.HCM' },
+  { id: 's5', name: 'Thảo Mộc Care', ward: 'Quận 7', city: 'hcm', lat: 10.7340, lng: 106.7215, rating: 4.6, reviews: 52, dist: '5,4 km', open: true, tier: 'Verified', hours: [{ d: 'T2 – T6', t: '09:00 – 21:30' }, { d: 'T7 – CN', t: '08:00 – 22:00' }], today: 'Hôm nay 09:00 – 21:30', address: '190 Nguyễn Thị Thập, P. Tân Phú, Quận 7, TP.HCM' },
+  { id: 's6', name: 'Lá Xanh Spa', ward: 'Cầu Giấy', city: 'hn', lat: 21.0313, lng: 105.7996, rating: 4.8, reviews: 73, dist: '1,1 km', open: true, tier: 'Certified', hours: [{ d: 'T2 – T6', t: '09:00 – 21:00' }, { d: 'T7 – CN', t: '08:30 – 21:30' }], today: 'Hôm nay 09:00 – 21:00', address: '88 Trần Duy Hưng, P. Trung Hoà, Cầu Giấy, Hà Nội' },
+  { id: 's7', name: 'Hương Sen Dưỡng Sinh', ward: 'Thanh Xuân', city: 'hn', lat: 20.9955, lng: 105.8060, rating: 4.7, reviews: 45, dist: '2,4 km', open: true, tier: 'Verified', hours: [{ d: 'T2 – T6', t: '09:00 – 21:00' }, { d: 'T7 – CN', t: '09:00 – 21:00' }], today: 'Hôm nay 09:00 – 21:00', address: '12 Nguyễn Huy Tưởng, P. Thanh Xuân Trung, Hà Nội' },
+  { id: 's8', name: 'Nhà Gội Đầu 26', ward: 'Đống Đa', city: 'hn', lat: 21.0122, lng: 105.8272, rating: 4.3, reviews: 19, dist: '3,6 km', open: true, tier: 'Standard', hours: [{ d: 'T2 – T6', t: '10:00 – 20:30' }, { d: 'T7 – CN', t: '10:00 – 20:30' }], today: 'Hôm nay 10:00 – 20:30', address: '26 Vũ Ngọc Phan, P. Trung Hoà, Đống Đa, Hà Nội' },
+  { id: 's9', name: 'Tĩnh Tâm Spa', ward: 'Hai Bà Trưng', city: 'hn', lat: 21.0089, lng: 105.8543, rating: 4.9, reviews: 58, dist: '4,8 km', open: false, tier: 'Certified', hours: [{ d: 'T2 – T6', t: '09:30 – 20:00' }, { d: 'T7 – CN', t: '09:30 – 20:00' }], today: 'Mở lại 09:30 mai', address: '31 Bà Triệu, P. Nguyễn Du, Hai Bà Trưng, Hà Nội' },
+  { id: 's10', name: 'Bảo Ngọc Beauty', ward: 'Hải Châu', city: 'dn', lat: 16.0678, lng: 108.2208, rating: 4.6, reviews: 33, dist: '0,9 km', open: true, tier: 'Verified', hours: [{ d: 'T2 – T6', t: '08:30 – 21:00' }, { d: 'T7 – CN', t: '08:30 – 21:00' }], today: 'Hôm nay 08:30 – 21:00', address: '104 Lê Duẩn, P. Thạch Thang, Hải Châu, Đà Nẵng' },
+  { id: 's11', name: 'Mây Trắng Spa', ward: 'Sơn Trà', city: 'dn', lat: 16.0745, lng: 108.2440, rating: 4.5, reviews: 24, dist: '3,1 km', open: true, tier: 'Standard', hours: [{ d: 'T2 – T6', t: '09:00 – 20:00' }, { d: 'T7 – CN', t: '09:00 – 21:00' }], today: 'Hôm nay 09:00 – 20:00', address: '55 Phạm Văn Đồng, P. An Hải Bắc, Sơn Trà, Đà Nẵng' },
+];
+
+const REVIEWS = [
+  { initial: 'N', name: 'Ngọc Ánh', stars: '★★★★★', when: '2 ngày trước', text: 'Đúng giá niêm yết, không bị mời mua gói. Bạn kỹ thuật viên làm chắc tay, 45 phút đủ thư giãn.', photos: 2 },
+  { initial: 'T', name: 'Thu Hà', stars: '★★★★☆', when: '1 tuần trước', text: 'Tổng đài xác nhận lịch nhanh, đến là có người đợi sẵn. Phòng hơi nhỏ nhưng sạch.', photos: 1 },
+  { initial: 'M', name: 'Minh Tú', stars: '★★★★★', when: '2 tuần trước', text: 'Nhắn Zalo một lần là xong, không phải gọi từng nơi hỏi còn chỗ. Sẽ quay lại.', photos: 2 },
+];
+
+const DAYS = [
+  { id: 'd0', label: 'Hôm nay', date: '15/09' },
+  { id: 'd1', label: 'Mai', date: '16/09' },
+  { id: 'd2', label: 'T5', date: '17/09' },
+];
+
+const TIMES = ['09:00', '10:30', '13:00', '14:30', '16:00', '17:30', '19:00'];
+const FULL_TIMES = ['17:30'];
+
+const money = (n) => n.toLocaleString('vi-VN') + '₫';
+const short = (n) => Math.round(n / 1000) + 'K';
+
+class Component extends DCLogic {
+  state = {
+    screen: 'services',
+    serviceId: 'duongsinh',
+    cityId: 'hcm',
+    view: null,
+    sort: 'dist',
+    minRating: false,
+    openNow: false,
+    selectedId: null,
+    detailId: null,
+    sheet: null,
+    sheetServiceId: null,
+    dayId: 'd0',
+    time: '14:30',
+    cityMenu: false,
+    lang: 'vi',
+  };
+
+  mapRef = React.createRef();
+  miniRef = React.createRef();
+
+  priceOf(s) { return s.price; }
+  cols() { return Number(this.props.cardColumns) === 1 ? 1 : 2; }
+  view() { return this.state.view || this.props.defaultView || 'map'; }
+
+  service() { return SERVICES.find((s) => s.id === this.state.serviceId) || SERVICES[2]; }
+
+  list() {
+    let out = SPAS.filter((s) => s.city === this.state.cityId);
+    if (this.state.minRating) out = out.filter((s) => s.rating >= 4.5);
+    if (this.state.openNow) out = out.filter((s) => s.open);
+    out = out.slice().sort((a, b) =>
+      this.state.sort === 'rating' ? b.rating - a.rating : parseFloat(a.dist.replace(',', '.')) - parseFloat(b.dist.replace(',', '.')));
+    return out;
+  }
+
+  pins() {
+    return this.list().map((s) => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, label: short(this.priceOf(this.service())) }));
+  }
+
+  syncMap(force) {
+    const win = this.mapRef.current && this.mapRef.current.contentWindow;
+    if (!win) return;
+    const pins = this.pins();
+    const sig = this.state.cityId + '|' + pins.map((p) => p.id).join(',') + '|' + this.state.serviceId;
+    if (force || sig !== this._sig) {
+      this._sig = sig;
+      win.postMessage({ type: 'setSpas', spas: pins, selectedId: this.state.selectedId, fit: true }, '*');
+    } else {
+      win.postMessage({ type: 'select', spas: pins, id: this.state.selectedId }, '*');
+    }
+  }
+
+  syncMini(force) {
+    const win = this.miniRef.current && this.miniRef.current.contentWindow;
+    const d = this.detail();
+    if (!win || !d) return;
+    win.postMessage({ type: 'setSpas', spas: [{ id: d.id, name: d.name, lat: d.lat, lng: d.lng, label: short(this.priceOf(this.service())) }], selectedId: d.id, fit: true }, '*');
+  }
+
+  componentDidMount() {
+    this._onMsg = (e) => {
+      const d = e.data || {};
+      if (d.source !== 'gbp-map') return;
+      if (d.type === 'ready') { this.syncMap(true); this.syncMini(true); }
+      if (d.type === 'pick') this.setState({ selectedId: d.id });
+    };
+    window.addEventListener('message', this._onMsg);
+  }
+  componentWillUnmount() { window.removeEventListener('message', this._onMsg); }
+  componentDidUpdate() { if (this.state.screen === 'spas' && this.view() === 'map') this.syncMap(false); }
+
+  detail() { return SPAS.find((s) => s.id === this.state.detailId) || null; }
+
+  chip(active) {
+    return active
+      ? { bg: '#40813F', fg: '#FFFFFF', bd: '#40813F' }
+      : { bg: '#FFFFFF', fg: '#3E4A3C', bd: '#DDE4D9' };
+  }
+
+  renderVals() {
+    const st = this.state;
+    const svc = this.service();
+    const view = this.view();
+    const spas = this.list();
+    const d = this.detail();
+    const sheetSvc = SERVICES.find((s) => s.id === (st.sheetServiceId || st.serviceId)) || svc;
+    const day = DAYS.find((x) => x.id === st.dayId) || DAYS[0];
+    const slotLabel = day.label + ' ' + day.date + ', ' + st.time;
+
+    const openPill = (s) => s.open
+      ? { openLabel: 'Đang mở', openFg: '#1F5E1B', openBg: '#E8FDE7' }
+      : { openLabel: 'Đã đóng', openFg: '#7A5A12', openBg: '#FBF1D8' };
+
+    return {
+      isIntro: st.screen === 'intro',
+      isServices: st.screen === 'services',
+      isSpas: st.screen === 'spas',
+      isDetail: st.screen === 'detail',
+
+      goIntro: () => this.setState({ screen: 'intro' }),
+      goServices: () => this.setState({ screen: 'services' }),
+      goSpas: () => this.setState({ screen: 'spas' }),
+
+      enHint: st.lang === 'en',
+      langs: [{ code: 'VI', flag: '🇻🇳', id: 'vi' }, { code: 'EN', flag: '🇬🇧', id: 'en' }].map((l) => ({
+        code: l.code, flag: l.flag,
+        pick: () => this.setState({ lang: l.id }),
+        bg: l.id === st.lang ? 'rgba(255,255,255,.22)' : 'transparent',
+        bd: l.id === st.lang ? 'rgba(255,255,255,.5)' : 'rgba(255,255,255,.28)',
+        fg: '#FFFFFF',
+      })),
+
+      gridCols: this.cols() === 1 ? '1fr' : '1fr 1fr',
+      services: SERVICES.map((s) => ({
+        id: s.id,
+        name: s.name,
+        dur: s.dur,
+        price: money(s.price),
+        slotId: 'svc-' + s.id,
+        slotLabel: 'ảnh ' + s.short.toLowerCase(),
+        span: s.wide && this.cols() === 2 ? 'span 2' : 'auto',
+        imgH: s.wide && this.cols() === 2 ? '138px' : '112px',
+        open: () => this.setState({ screen: 'spas', serviceId: s.id, selectedId: null, view: null }),
+      })),
+
+      service: { name: svc.name, price: money(this.priceOf(svc)) },
+
+      cityLabel: (CITIES.find((c) => c.id === st.cityId) || {}).name,
+      cityMenu: !!st.cityMenu,
+      toggleCityMenu: () => this.setState({ cityMenu: !st.cityMenu }),
+      closeCityMenu: () => this.setState({ cityMenu: false }),
+      cityOptions: CITIES.map((c) => ({
+        name: c.name,
+        count: SPAS.filter((s) => s.city === c.id).length + ' chi nhánh',
+        bg: c.id === st.cityId ? '#E8FDE7' : '#FFFFFF',
+        weight: c.id === st.cityId ? '700' : '500',
+        pick: () => this.setState({ cityId: c.id, selectedId: null, cityMenu: false }),
+      })),
+
+      isMapView: view === 'map',
+      isListView: view === 'list',
+      setMap: () => this.setState({ view: 'map' }),
+      setList: () => this.setState({ view: 'list' }),
+      mapTabBg: view === 'map' ? '#FFFFFF' : 'transparent',
+      mapTabFg: view === 'map' ? '#093E06' : '#EDF8EC',
+      listTabBg: view === 'list' ? '#FFFFFF' : 'transparent',
+      listTabFg: view === 'list' ? '#093E06' : '#EDF8EC',
+
+      toggleRating: () => this.setState({ minRating: !st.minRating, selectedId: null }),
+      toggleOpen: () => this.setState({ openNow: !st.openNow, selectedId: null }),
+      ratingBg: this.chip(st.minRating).bg, ratingFg: this.chip(st.minRating).fg, ratingBd: this.chip(st.minRating).bd,
+      openBg: this.chip(st.openNow).bg, openFg: this.chip(st.openNow).fg, openBd: this.chip(st.openNow).bd,
+
+      countLabel: spas.length + ' chi nhánh · ' + (CITIES.find((c) => c.id === st.cityId) || {}).name,
+      mapRef: this.mapRef,
+      miniRef: this.miniRef,
+      onMapLoad: () => this.syncMap(true),
+      onMiniLoad: () => this.syncMini(true),
+
+      spas: spas.map((s) => ({
+        id: s.id,
+        name: s.name,
+        ward: s.ward,
+        slotId: 'spa-thumb-' + s.id,
+        rating: s.rating.toFixed(1),
+        reviews: s.reviews,
+        dist: s.dist,
+        tier: s.tier,
+        ring: s.id === st.selectedId ? '#40813F' : 'transparent',
+        ...openPill(s),
+        open: () => this.setState({ screen: 'detail', detailId: s.id, selectedId: s.id }),
+      })),
+
+      detail: d ? {
+        id: d.id, name: d.name, ward: d.ward, tier: d.tier.toUpperCase(),
+        rating: d.rating.toFixed(1), reviews: d.reviews, dist: d.dist,
+        cityName: (CITIES.find((c) => c.id === d.city) || {}).name,
+        hours: d.hours, todayHours: d.today, address: d.address,
+        photos: [{ id: 'spa-' + d.id + '-a', w: '252px', label: 'ảnh không gian' }, { id: 'spa-' + d.id + '-b', w: '168px', label: 'ảnh phòng gội' }, { id: 'spa-' + d.id + '-c', w: '168px', label: 'ảnh mặt tiền' }],
+        ...openPill(d),
+      } : null,
+
+      menu: SERVICES.map((s) => ({
+        name: s.name, dur: s.dur, price: money(this.priceOf(s)),
+        bg: s.id === st.serviceId ? '#F3FAF2' : '#FFFFFF',
+      })),
+
+      reviews: REVIEWS.map((r, ri) => ({ ...r, photos: Array.from({ length: r.photos }, (_, i) => ({ id: 'rev-' + (d ? d.id : 'x') + '-' + ri + '-' + i })) })),
+
+      openDirections: () => { if (d) window.open('https://www.google.com/maps/search/?api=1&query=' + d.lat + ',' + d.lng, '_blank'); },
+
+      sheetOpen: !!st.sheet,
+      sheetForm: st.sheet === 'form',
+      sheetDone: st.sheet === 'done',
+      openSheet: () => this.setState({ sheet: 'form', sheetServiceId: st.serviceId }),
+      closeSheet: () => this.setState({ sheet: null }),
+      sendZalo: () => this.setState({ sheet: 'done' }),
+
+      sheetServices: SERVICES.map((s) => ({
+        short: s.short, price: short(this.priceOf(s)),
+        pick: () => this.setState({ sheetServiceId: s.id }),
+        ...this.chip(s.id === (st.sheetServiceId || st.serviceId)),
+      })),
+      sheetServiceName: sheetSvc.name,
+      sheetServicePrice: money(this.priceOf(sheetSvc)),
+
+      days: DAYS.map((x) => {
+        const on = x.id === st.dayId;
+        return {
+          label: x.label, date: x.date, pick: () => this.setState({ dayId: x.id }),
+          bg: on ? '#40813F' : '#FFFFFF', bd: on ? '#40813F' : '#DDE4D9',
+          fg: on ? '#FFFFFF' : '#093E06', sub: on ? '#E8FDE7' : '#6B7869',
+        };
+      }),
+
+      times: TIMES.map((t) => {
+        const full = FULL_TIMES.indexOf(t) >= 0;
+        const on = t === st.time && !full;
+        return {
+          label: full ? t + ' · hết chỗ' : t,
+          pick: full ? () => {} : () => this.setState({ time: t }),
+          cursor: full ? 'not-allowed' : 'pointer',
+          deco: 'none',
+          bg: full ? '#F1F3F0' : (on ? '#40813F' : '#FFFFFF'),
+          fg: full ? '#9BA69A' : (on ? '#FFFFFF' : '#3E4A3C'),
+          bd: full ? '#F1F3F0' : (on ? '#40813F' : '#DDE4D9'),
+        };
+      }),
+
+      slotLabel: slotLabel,
+      message: 'Xin chào GlowBeautyPass, mình muốn đặt ' + sheetSvc.name + ' (' + money(this.priceOf(sheetSvc)) + ') tại ' + (d ? d.name + ' — ' + d.ward : '') + ', ' + slotLabel + '. Nhờ tổng đài kiểm tra chỗ trống giúp mình.',
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GBP map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<style>
+  html,body{margin:0;height:100%;background:#eef1ec}
+  #map{position:absolute;inset:0}
+  .leaflet-tile-pane{filter:saturate(.5) brightness(1.06) contrast(.96)}
+  .leaflet-container{background:#eef1ec;font-family:"Be Vietnam Pro",system-ui,sans-serif}
+  .leaflet-control-attribution{font-size:9px;background:rgba(255,255,255,.72)}
+  .gbp-pin{background:none;border:0}
+  .gbp-pin > div{
+    display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
+    padding:6px 10px 6px 7px;border-radius:999px;background:#fff;color:#093E06;
+    font:600 12px/1 "Be Vietnam Pro",system-ui,sans-serif;
+    border:1.5px solid #40813F;box-shadow:0 3px 10px rgba(9,62,6,.22);
+    transform:translate(-50%,-100%);cursor:pointer;transition:.18s;
+  }
+  .gbp-pin > div i{width:16px;height:16px;border-radius:50%;background:#E8FDE7;display:block;
+    box-shadow:inset 0 0 0 4px #40813F}
+  .gbp-pin.sel > div{background:#40813F;color:#fff;border-color:#2C6329;
+    box-shadow:0 8px 20px rgba(9,62,6,.35);font-weight:700}
+  .gbp-pin.sel > div i{background:#fff;box-shadow:inset 0 0 0 4px #E8FDE7}
+  .gbp-me{background:none;border:0}
+  .gbp-me > div{width:16px;height:16px;border-radius:50%;background:#1b6ef3;
+    border:2.5px solid #fff;box-shadow:0 0 0 7px rgba(27,110,243,.16);transform:translate(-50%,-50%)}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+var map = L.map('map', { zoomControl:false, attributionControl:true });
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:'© OpenStreetMap contributors', maxZoom:19
+}).addTo(map);
+map.setView([10.7769,106.7009], 13);
+
+var markers = {}, selected = null, mini = new URLSearchParams(location.search).has('mini');
+if (mini) { map.dragging.disable(); map.touchZoom.disable(); map.doubleClickZoom.disable(); map.scrollWheelZoom.disable(); }
+
+function post(m){ parent.postMessage(Object.assign({source:'gbp-map'}, m), '*'); }
+
+function icon(label, sel){
+  return L.divIcon({
+    className:'gbp-pin' + (sel ? ' sel' : ''),
+    html:'<div><i></i>'+label+'</div>',
+    iconSize:[0,0], iconAnchor:[0,0]
+  });
+}
+
+function render(spas, selectedId, fit){
+  Object.values(markers).forEach(function(m){ map.removeLayer(m); });
+  markers = {}; selected = selectedId;
+  var pts = [];
+  spas.forEach(function(s){
+    var m = L.marker([s.lat, s.lng], { icon: icon(s.label, s.id === selectedId), riseOnHover:true, zIndexOffset: s.id===selectedId?1000:0 });
+    m.on('click', function(){ post({type:'pick', id:s.id}); });
+    m.addTo(map); markers[s.id] = m; pts.push([s.lat, s.lng]);
+  });
+  if (fit && pts.length > 1) map.fitBounds(pts, { padding:[54,54], maxZoom:14 });
+  else if (fit && pts.length === 1) map.setView(pts[0], mini ? 15 : 14);
+}
+
+window.addEventListener('message', function(e){
+  var d = e.data || {};
+  if (d.type === 'setSpas') render(d.spas || [], d.selectedId, d.fit !== false);
+  if (d.type === 'select') {
+    var s = (d.spas||[]).find(function(x){ return x.id === d.id; });
+    render(d.spas || [], d.id, false);
+    if (s) map.panTo([s.lat, s.lng], { animate:true });
+  }
+  if (d.type === 'me' && d.lat) L.marker([d.lat,d.lng],{icon:L.divIcon({className:'gbp-me',html:'<div></div>',iconSize:[0,0]}),interactive:false}).addTo(map);
+});
+map.whenReady(function(){ post({type:'ready'}); });
+</script>
+</body>
+</html>
