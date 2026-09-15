@@ -35,6 +35,19 @@ async function run() {
   })
   console.log('Saved mobile screenshot:', mobileScreenshotPath)
 
+  // 1b. Mobile Scrolled to Why Us
+  await mobilePage.evaluate(() => {
+    const sections = document.querySelectorAll('section')
+    if (sections[3]) sections[3].scrollIntoView()
+  })
+  await new Promise(r => setTimeout(r, 1000))
+  const whyUsMobilePath = path.join(OUTPUT_DIR, 'why_us_mobile.png')
+  await mobilePage.screenshot({
+    path: whyUsMobilePath,
+    fullPage: false,
+  })
+  console.log('Saved mobile why us screenshot:', whyUsMobilePath)
+
   // 2. DESKTOP VIEW (1200 x 900)
   console.log('Testing Desktop View (1200 x 900)...')
   const desktopPage = await browser.newPage()
