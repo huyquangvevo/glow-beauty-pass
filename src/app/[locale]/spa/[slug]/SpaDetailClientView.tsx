@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import {
   ArrowLeft,
+  ArrowRight,
   Star,
   Compass,
   ShieldCheck,
@@ -263,33 +264,36 @@ export default function SpaDetailClientView({
         </div>
 
         {/* Modern Compact Fixed Bottom Bar for Booking */}
-        <div className="flex-none bg-white/95 backdrop-blur-md border-t border-[#E8EDE6] px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] z-30">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex flex-col min-w-0">
-              <span className="text-[18px] sm:text-[19px] font-bold text-[#093E06] leading-tight">
-                {formatPrice(selectedService.price)}
-              </span>
-              <span className="text-[11.5px] text-[#6B7869] truncate mt-0.5">
-                {t.services[selectedServiceId]?.name || selectedService.name}
-              </span>
-            </div>
+        {!isBottomSheetOpen && (
+          <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#E8EDE6] px-4 py-3 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+            <div className="max-w-[440px] mx-auto flex items-center justify-between gap-3">
+              <div className="flex flex-col min-w-0">
+                <span className="text-[18px] sm:text-[19px] font-black text-[#093E06] leading-tight">
+                  {formatPrice(selectedService.price)}
+                </span>
+                <span className="text-[11.5px] text-[#6B7869] truncate mt-0.5 font-medium">
+                  {t.services[selectedServiceId]?.name || selectedService.name}
+                </span>
+              </div>
 
-            <button
-              type="button"
-              onClick={() => handleOpenBooking(selectedServiceId)}
-              className="h-11 px-5 rounded-full bg-[#40813D] hover:bg-[#356F32] active:bg-[#093E06] text-white text-[13.5px] font-bold shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
-            >
-              <Image
-                src="/brand/Logo-Zalo-App-Rec.webp"
-                alt="Zalo"
-                width={16}
-                height={16}
-                className="w-4 h-4 rounded-xs shrink-0 object-contain"
-              />
-              <span>{t.bookNow}</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => handleOpenBooking(selectedServiceId)}
+                className="h-11 px-5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[13.5px] font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+              >
+                <Image
+                  src="/brand/Logo-Zalo-App-Rec.webp"
+                  alt="Zalo"
+                  width={18}
+                  height={18}
+                  className="rounded-[4px] shrink-0 object-contain shadow-2xs"
+                />
+                <span>{t.bookNow}</span>
+                <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Bottom Sheet */}
         <BookingBottomSheet

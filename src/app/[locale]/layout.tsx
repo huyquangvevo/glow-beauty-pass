@@ -34,15 +34,15 @@ export async function generateMetadata({
   const baseUrl = 'https://glowbeautypass.com'
 
   const titles: Record<string, string> = {
-    vi: 'Glow Beauty Pass - Mạng Lưới Spa Chuẩn Hóa Cầu Giấy | Đồng Giá Từ 49K',
-    en: 'Glow Beauty Pass - Standardized Spa Network in Cau Giay | Fixed From 49K VND',
-    ko: 'Glow Beauty Pass - 하노이 꼬우저이 엄선 스파 네트워크 | 49,000동 정찰제',
+    vi: 'Hệ Thống 10.000 Spa Đồng Giá - Glow Beauty Pass | Từ 39K',
+    en: '10,000 Fixed-Price Spa Network - Glow Beauty Pass | From 39K',
+    ko: '10,000개 동일 정찰제 스파 - Glow Beauty Pass | 39,000동부터',
   }
 
   const descriptions: Record<string, string> = {
-    vi: 'Mạng lưới 15 spa dưỡng sinh chuẩn hóa đầu tiên tại Cầu Giấy, Hà Nội. 3 gói gội cố định từ 49K - 149K, quy trình kiểm định chất lượng nghiêm ngặt, đặt lịch 1 chạm qua Zalo.',
-    en: 'First standardized beauty & head spa network in Cau Giay, Hanoi. 15 verified spas, 3 fixed price packages from 49K VND, strict quality audit, instant Zalo booking.',
-    ko: '하노이 꼬우저이 15개 엄선 스파 네트워크. 49,000동부터 시작하는 투명한 정찰제, 철저한 품질 검증, 바가지 없는 Zalo 간편 예약.',
+    vi: 'Hệ thống 10.000 spa đồng giá chuẩn hóa toàn quốc. Bảng giá niêm yết từ 39K - 199K, không chèo kéo, không phụ thu, đặt lịch nhanh qua Zalo.',
+    en: 'Network of 10,000 fixed-price spas nationwide. Transparent prices from 39K - 199K VND, strict quality audit, instant booking via Zalo.',
+    ko: '전국 10,000개 동일 정찰제 스파 네트워크. 39,000동부터 199,000동까지 투명한 정찰제, 바가지 없는 Zalo 간편 예약.',
   }
 
   const title = titles[locale] || titles.vi

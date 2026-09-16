@@ -13,7 +13,7 @@ export function LocationPrompt() {
   return (
     <aside
       aria-label={t('title')}
-      className="fixed bottom-5 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-sm z-50 animate-in fade-in slide-in-from-bottom-5 duration-300 pointer-events-auto"
+      className="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-sm z-50 animate-in fade-in slide-in-from-bottom-5 duration-300 pointer-events-auto"
     >
       <div className="bg-white rounded-3xl p-4.5 sm:p-5 shadow-2xl border border-stone-200/90 relative">
         {/* Close Button */}

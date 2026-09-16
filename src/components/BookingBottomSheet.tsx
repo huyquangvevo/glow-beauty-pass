@@ -131,7 +131,7 @@ export default function BookingBottomSheet({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col justify-end animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[70] flex flex-col justify-end animate-in fade-in duration-200">
       {/* Dark backdrop */}
       <div
         className="absolute inset-0 bg-[#093E06]/40 backdrop-blur-[2px] transition-opacity"
@@ -286,10 +286,6 @@ export default function BookingBottomSheet({
                 <div className="bg-[#E8FDE7] border border-[#D4F4D3] rounded-[12px] p-2.5 text-[12.5px] leading-relaxed text-[#1E2B1C] whitespace-pre-line font-medium">
                   {message}
                 </div>
-                <div className="mt-1.5 text-[10.5px] text-[#556353] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#3A7B37] shrink-0" />
-                  <span>{t.booking.autoCopyNotice}</span>
-                </div>
               </div>
             </div>
 
@@ -310,11 +306,8 @@ export default function BookingBottomSheet({
                 <span>{t.booking.openZaloBtn}</span>
                 <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
               </button>
-              <div className="mt-2 text-center space-y-0.5">
-                <p className="text-[11.5px] font-medium text-[#1E2B1C]">
-                  {t.booking.pasteGuide}
-                </p>
-                <p className="text-[10.5px] text-[#6B7869]">
+              <div className="mt-2 text-center">
+                <p className="text-[11px] text-[#6B7869]">
                   {t.booking.slaNotice}
                 </p>
               </div>

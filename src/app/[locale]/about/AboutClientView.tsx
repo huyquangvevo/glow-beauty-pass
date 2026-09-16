@@ -65,7 +65,7 @@ export default function AboutClientView({ locale }: AboutClientViewProps) {
               </div>
             </div>
             <div className="text-center border-x border-white/15">
-              <div className="text-[18px] font-extrabold text-white">49K - 149K</div>
+              <div className="text-[18px] font-extrabold text-white">39K - 199K</div>
               <div className="text-[11px] text-[#D4F4D3] font-medium">
                 {locale === 'en' ? 'Fixed Rates' : locale === 'ko' ? '정찰제 가격' : 'Đồng giá cố định'}
               </div>

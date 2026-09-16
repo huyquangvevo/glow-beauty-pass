@@ -168,11 +168,6 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
 
-                      {/* Floating Price Pill at top-left (Mockup Style) */}
-                      <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-xs rounded-full px-2.5 py-1 text-[12.5px] font-bold text-[#093E06] shadow-[0_2px_8px_rgba(9,62,6,0.15)] border border-white/60 pointer-events-none">
-                        {formatPrice(s.price)}
-                      </div>
-
                       {s.wide && (
                         <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase shadow-xs">
                           {locale === 'en' ? 'Best Value' : locale === 'ko' ? '베스트' : 'Phổ Biến Nhất'}
@@ -180,24 +175,42 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                       )}
                     </div>
 
-                    {/* Card Body: Title + Duration on Left, Circular Arrow Button on Right (Mockup Style) */}
-                    <div className="p-3 flex items-center justify-between gap-2">
-                      <div className="min-w-0 flex-1">
-                        <h2 className="font-bold text-[13.5px] sm:text-[14px] text-[#093E06] group-hover:text-[#3A7B37] transition-colors leading-tight line-clamp-2 m-0">
-                          {sInfo.name}
-                        </h2>
-                        {sInfo.dur && (
-                          <div className="text-[11px] text-[#6B7869] mt-0.5 font-medium">
-                            {sInfo.dur}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Circular Arrow Button from Mockup */}
-                      <div className="w-8 h-8 rounded-full bg-[#E8FDE7] text-[#2E6B34] flex items-center justify-center shrink-0 group-hover:bg-[#2E6B34] group-hover:text-white transition-all shadow-2xs">
-                        <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
-                      </div>
+                    {/* Card Body: Title & Duration */}
+                    <div className="p-3 pb-2">
+                      <h2 className="font-bold text-[13.5px] sm:text-[14px] text-[#093E06] group-hover:text-[#3A7B37] transition-colors leading-tight line-clamp-2 m-0">
+                        {sInfo.name}
+                      </h2>
+                      {sInfo.dur && (
+                        <div className="text-[11px] text-[#6B7869] mt-0.5 font-medium flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-[#2E6B34]" />
+                          <span>{sInfo.dur}</span>
+                        </div>
+                      )}
                     </div>
+                  </div>
+
+                  {/* Card Footer: Clear Price & Prominent Zalo Button (v1.0 Style) */}
+                  <div className="px-3 pb-3 pt-1 border-t border-[#EDF2EB] flex items-center justify-between gap-1.5 mt-auto">
+                    <span className="text-[13.5px] sm:text-[14px] font-black text-[#093E06]">
+                      {formatPrice(s.price)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenBooking(s.id);
+                      }}
+                      className="h-8 px-3 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[12px] font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer shrink-0"
+                    >
+                      <Image
+                        src="/brand/Logo-Zalo-App-Rec.webp"
+                        alt="Zalo"
+                        width={15}
+                        height={15}
+                        className="rounded-[3px] shrink-0 object-contain shadow-2xs"
+                      />
+                      <span>{t.bookZalo}</span>
+                    </button>
                   </div>
                 </div>
               );
@@ -206,7 +219,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
         </div>
 
         {/* Explore All Spas Banner */}
-        <div className="px-3.5 pb-6">
+        <div className="px-3.5 pb-24">
           <Link
             href="/spas"
             className="w-full bg-[#2E6B34] hover:bg-[#25572A] active:scale-[0.99] text-white rounded-[22px] p-4 flex items-center justify-between shadow-md transition-all cursor-pointer group"
@@ -237,6 +250,42 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
             </div>
           </Link>
         </div>
+
+        {/* Fixed Bottom Booking Bar (v1.0 Style, Prominent Zalo CTA) */}
+        {!isBottomSheetOpen && (
+          <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#E8EDE6] px-4 py-3 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+            <div className="max-w-[440px] mx-auto flex items-center justify-between gap-3">
+              <div className="flex flex-col min-w-0">
+                <span className="text-[17px] sm:text-[18px] font-black text-[#093E06] leading-tight">
+                  {locale === 'en' ? 'From 39,000đ' : locale === 'ko' ? '39,000동부터' : 'Từ 39.000đ'}
+                </span>
+                <span className="text-[11px] text-[#6B7869] truncate mt-0.5 font-medium">
+                  {locale === 'en'
+                    ? 'Fixed price · Instant booking'
+                    : locale === 'ko'
+                    ? '단일 정찰제 · Zalo 간편 예약'
+                    : 'Đồng giá toàn hệ thống · Đặt giữ chỗ'}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => handleOpenBooking(selectedServiceId)}
+                className="h-11 px-5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[13.5px] font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+              >
+                <Image
+                  src="/brand/Logo-Zalo-App-Rec.webp"
+                  alt="Zalo"
+                  width={18}
+                  height={18}
+                  className="rounded-[4px] shrink-0 object-contain shadow-2xs"
+                />
+                <span>{t.bookZalo}</span>
+                <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Booking Bottom Sheet Modal */}
         <BookingBottomSheet
