@@ -68,22 +68,22 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 text-emerald-100/90">
               <li>
-                <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
+                <Link href="/spas?service=goi-sach" className="hover:text-white transition-colors">
                   {t('pkg1')}
                 </Link>
               </li>
               <li>
-                <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
+                <Link href="/spas?service=duong-sinh" className="hover:text-white transition-colors">
                   {t('pkg2')}
                 </Link>
               </li>
               <li>
-                <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
+                <Link href="/spas?service=massage-body" className="hover:text-white transition-colors">
                   {t('pkg3')}
                 </Link>
               </li>
               <li>
-                <Link href="/#goi-dich-vu" className="hover:text-white transition-colors">
+                <Link href="/spas?service=combo-goi-da" className="hover:text-white transition-colors">
                   {t('pkg4')}
                 </Link>
               </li>
@@ -97,27 +97,27 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 text-emerald-100/90">
               <li>
-                <Link href="/#danh-sach-spa" className="hover:text-white transition-colors">
+                <Link href="/spas" className="hover:text-white transition-colors">
                   {t('wardDichVong')}
                 </Link>
               </li>
               <li>
-                <Link href="/#danh-sach-spa" className="hover:text-white transition-colors">
+                <Link href="/spas" className="hover:text-white transition-colors">
                   {t('wardDuyTan')}
                 </Link>
               </li>
               <li>
-                <Link href="/#danh-sach-spa" className="hover:text-white transition-colors">
+                <Link href="/spas" className="hover:text-white transition-colors">
                   {t('wardHoangDaoThuy')}
                 </Link>
               </li>
               <li>
-                <Link href="/#danh-sach-spa" className="hover:text-white transition-colors">
+                <Link href="/spas" className="hover:text-white transition-colors">
                   {t('wardVuPhamHam')}
                 </Link>
               </li>
               <li>
-                <Link href="/#danh-sach-spa" className="hover:text-white transition-colors">
+                <Link href="/spas" className="hover:text-white transition-colors">
                   {t('wardToHieu')}
                 </Link>
               </li>
@@ -130,6 +130,11 @@ export function Footer() {
               {t('colCommitment')}
             </h4>
             <ul className="space-y-2 text-emerald-100/90">
+              <li>
+                <Link href="/about" className="hover:text-white font-medium underline underline-offset-2 transition-colors inline-block mb-1">
+                  Tìm hiểu quy trình SOP Glow Beauty &rarr;
+                </Link>
+              </li>
               <li className="flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-amber-300 shrink-0" />
                 <span>{t('commitNoExtra')}</span>

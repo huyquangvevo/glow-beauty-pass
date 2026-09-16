@@ -272,19 +272,8 @@ export function HeaderSearch() {
   }, [localInput, popularAreas])
 
   const navigateToSpasList = useCallback(() => {
-    const isHome = pathname === '/' || pathname === '/en' || pathname === '/ko'
-    if (!isHome) {
-      const localePrefix = pathname.startsWith('/en')
-        ? '/en'
-        : pathname.startsWith('/ko')
-        ? '/ko'
-        : ''
-      router.push(`${localePrefix}/#danh-sach-spa`)
-    } else {
-      const el = document.getElementById('danh-sach-spa')
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
+    if (!pathname.includes('/spas')) {
+      router.push('/spas')
     }
   }, [pathname, router])
 
