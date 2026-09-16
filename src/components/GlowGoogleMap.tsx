@@ -8,6 +8,8 @@ interface GlowGoogleMapProps {
   selectedSpaId?: string | null;
   onSelectSpa?: (id: string) => void;
   userCoords?: { lat: number; lon: number } | null;
+  searchCenter?: { lat: number; lng: number } | null;
+  searchTitle?: string;
   activePrice?: number;
   className?: string;
   interactive?: boolean;
@@ -75,6 +77,8 @@ export default function GlowGoogleMap({
   selectedSpaId,
   onSelectSpa,
   userCoords,
+  searchCenter,
+  searchTitle,
   activePrice = 149000,
   className = 'w-full h-full',
   interactive = true,
@@ -84,7 +88,7 @@ export default function GlowGoogleMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const overlaysRef = useRef<any[]>([]);
-  const userOverlayRef = useRef<any>(null);
+  const searchMarkerRef = useRef<any>(null);
   const [isReady, setIsReady] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -197,6 +201,7 @@ export default function GlowGoogleMap({
         div.className = `gbp-map-marker ${this.isSelected ? 'is-selected' : ''}`;
         div.style.position = 'absolute';
         div.style.cursor = 'pointer';
+        div.style.zIndex = this.isSelected ? '20' : '10';
 
         const iconUrl = this.isSelected ? '/icons/map-pin-mint.png' : '/icons/map-pin-green.png';
 
@@ -261,6 +266,19 @@ export default function GlowGoogleMap({
 
     // Add overlay for each spa
     const bounds = new g.LatLngBounds();
+    const effectiveCenter =
+      searchCenter || (userCoords ? { lat: userCoords.lat, lng: userCoords.lon } : null);
+
+    if (
+      effectiveCenter &&
+      typeof effectiveCenter.lat === 'number' &&
+      !isNaN(effectiveCenter.lat) &&
+      typeof effectiveCenter.lng === 'number' &&
+      !isNaN(effectiveCenter.lng)
+    ) {
+      bounds.extend(new g.LatLng(effectiveCenter.lat, effectiveCenter.lng));
+    }
+
     spas.forEach((spa) => {
       const pos = new g.LatLng(spa.lat, spa.lng);
       bounds.extend(pos);
@@ -279,20 +297,22 @@ export default function GlowGoogleMap({
       overlaysRef.current.push(overlay);
     });
 
-    // Fit bounds if multiple spas and interactive
-    if (interactive && spas.length > 1) {
-      // Add bottom padding so the floating card doesn't cover markers
-      mapRef.current.fitBounds(bounds, {
-        top: 60,
-        right: 40,
-        bottom: 180,
-        left: 40,
-      });
-    } else if (spas.length === 1) {
-      mapRef.current.setCenter({ lat: spas[0].lat, lng: spas[0].lng });
-      mapRef.current.setZoom(15);
+    // Fit bounds if interactive
+    if (interactive) {
+      if (spas.length > 0) {
+        // Add padding so markers aren't obscured by floating elements
+        mapRef.current.fitBounds(bounds, {
+          top: 60,
+          right: 40,
+          bottom: 180,
+          left: 40,
+        });
+      } else if (effectiveCenter) {
+        mapRef.current.setCenter(effectiveCenter);
+        mapRef.current.setZoom(14);
+      }
     }
-  }, [isReady, spas, selectedSpaId, priceLabel, onSelectSpa, interactive, clearOverlays]);
+  }, [isReady, spas, selectedSpaId, priceLabel, onSelectSpa, interactive, clearOverlays, searchCenter, userCoords]);
 
   // Center on selected spa when selectedSpaId changes
   useEffect(() => {
@@ -303,89 +323,100 @@ export default function GlowGoogleMap({
     }
   }, [isReady, selectedSpaId, spas]);
 
-  // User location marker
+  // Search / User location marker (Pink animated bounce pin with ripple waves)
   useEffect(() => {
     if (!isReady || !mapRef.current) return;
     const g = (window as any).google?.maps;
     if (!g || !g.OverlayView) return;
 
-    if (userOverlayRef.current) {
+    if (searchMarkerRef.current) {
       try {
-        userOverlayRef.current.setMap(null);
+        searchMarkerRef.current.setMap(null);
       } catch (e) {
         /* noop */
       }
-      userOverlayRef.current = null;
+      searchMarkerRef.current = null;
     }
 
-    if (!userCoords) return;
+    const effectiveCenter =
+      searchCenter || (userCoords ? { lat: userCoords.lat, lng: userCoords.lon } : null);
 
-    class UserLocationOverlay extends g.OverlayView {
-      private div: HTMLDivElement | null = null;
-      private position: any;
+    if (
+      effectiveCenter &&
+      typeof effectiveCenter.lat === 'number' &&
+      !isNaN(effectiveCenter.lat) &&
+      typeof effectiveCenter.lng === 'number' &&
+      !isNaN(effectiveCenter.lng)
+    ) {
+      class SearchLocationOverlay extends g.OverlayView {
+        private div: HTMLDivElement | null = null;
+        private position: any;
+        private title: string;
 
-      constructor(position: any) {
-        super();
-        this.position = position;
-      }
+        constructor(position: any, title: string) {
+          super();
+          this.position = position;
+          this.title = title;
+        }
 
-      onAdd() {
-        const div = document.createElement('div');
-        div.style.position = 'absolute';
-        div.style.transform = 'translate(-50%, -50%)';
-        div.style.pointerEvents = 'none';
-        div.style.zIndex = '50';
+        onAdd() {
+          const div = document.createElement('div');
+          div.className = 'glow-search-location-marker';
+          div.style.position = 'absolute';
+          div.style.zIndex = '9999';
+          div.style.cursor = 'default';
+          div.title = this.title;
+          div.innerHTML = `
+            <img
+              src="/location.svg"
+              alt="${this.title}"
+              style="width: 80px; height: 80px; display: block; transform: translate(-40px, -57px); pointer-events: none;"
+            />
+          `;
+          this.div = div;
+          const panes = this.getPanes();
+          panes?.overlayMouseTarget?.appendChild(div);
+        }
 
-        div.innerHTML = `
-          <div style="
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #1B6EF3;
-            border: 2.5px solid #ffffff;
-            box-shadow: 0 0 0 6px rgba(27, 110, 243, 0.25), 0 4px 10px rgba(0,0,0,0.2);
-          "></div>
-        `;
+        draw() {
+          const overlayProjection = this.getProjection();
+          if (!overlayProjection || !this.div) return;
+          const point = overlayProjection.fromLatLngToDivPixel(this.position);
+          if (point) {
+            this.div.style.left = point.x + 'px';
+            this.div.style.top = point.y + 'px';
+          }
+        }
 
-        this.div = div;
-        const panes = this.getPanes();
-        panes?.overlayLayer?.appendChild(div);
-      }
-
-      draw() {
-        const overlayProjection = this.getProjection();
-        if (!overlayProjection || !this.div) return;
-        const point = overlayProjection.fromLatLngToDivPixel(this.position);
-        if (point) {
-          this.div.style.left = point.x + 'px';
-          this.div.style.top = point.y + 'px';
+        onRemove() {
+          if (this.div?.parentNode) {
+            this.div.parentNode.removeChild(this.div);
+            this.div = null;
+          }
         }
       }
 
-      onRemove() {
-        if (this.div?.parentNode) {
-          this.div.parentNode.removeChild(this.div);
-          this.div = null;
-        }
+      try {
+        const pos = new g.LatLng(effectiveCenter.lat, effectiveCenter.lng);
+        const searchOverlay = new SearchLocationOverlay(pos, searchTitle || 'Vị trí tìm kiếm');
+        searchOverlay.setMap(mapRef.current);
+        searchMarkerRef.current = searchOverlay;
+      } catch (err) {
+        console.warn('Failed to create search overlay:', err);
       }
     }
-
-    const userPos = new g.LatLng(userCoords.lat, userCoords.lon);
-    const userOverlay = new UserLocationOverlay(userPos);
-    userOverlay.setMap(mapRef.current);
-    userOverlayRef.current = userOverlay;
 
     return () => {
-      if (userOverlayRef.current) {
+      if (searchMarkerRef.current) {
         try {
-          userOverlayRef.current.setMap(null);
+          searchMarkerRef.current.setMap(null);
         } catch (e) {
           /* noop */
         }
-        userOverlayRef.current = null;
+        searchMarkerRef.current = null;
       }
     };
-  }, [isReady, userCoords]);
+  }, [isReady, searchCenter, userCoords, searchTitle]);
 
   // Handle Window Resize Trigger
   useEffect(() => {

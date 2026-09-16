@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <!-- White glow filter for the pin -->
+    <filter id="white-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feComponentTransfer in="blur" result="brightBlur">
+        <feFuncA type="linear" slope="2" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="brightBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <style>
+    @keyframes pulse {
+      0% {
+        r: 6px;
+        opacity: 0.95;
+        stroke-width: 8px;
+      }
+      100% {
+        r: 58px;
+        opacity: 0;
+        stroke-width: 3px;
+      }
+    }
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+    .pulse-circle-1 {
+      animation: pulse 2.4s infinite cubic-bezier(0.215, 0.610, 0.355, 1);
+      transform-origin: 60px 85px;
+    }
+    .pulse-circle-2 {
+      animation: pulse 2.4s infinite cubic-bezier(0.215, 0.610, 0.355, 1);
+      animation-delay: 0.8s;
+      transform-origin: 60px 85px;
+    }
+    .pulse-circle-3 {
+      animation: pulse 2.4s infinite cubic-bezier(0.215, 0.610, 0.355, 1);
+      animation-delay: 1.6s;
+      transform-origin: 60px 85px;
+    }
+    .pin-group {
+      animation: bounce 2s infinite ease-in-out;
+      transform-origin: 60px 85px;
+    }
+  </style>
+
+  <!-- Pulsating waves at the base of the pin (x=60, y=85) -->
+  <circle cx="60" cy="85" r="6" fill="#FF007F" fill-opacity="0.22" stroke="#FF007F" class="pulse-circle-1" />
+  <circle cx="60" cy="85" r="6" fill="#FF007F" fill-opacity="0.22" stroke="#FF007F" class="pulse-circle-2" />
+  <circle cx="60" cy="85" r="6" fill="#FF007F" fill-opacity="0.22" stroke="#FF007F" class="pulse-circle-3" />
+  
+  <!-- Base Shadow under the pin -->
+  <ellipse cx="60" cy="86" rx="16" ry="5" fill="rgba(0, 0, 0, 0.2)" />
+
+  <!-- Animated Pin Group with White Glow -->
+  <g class="pin-group" filter="url(#white-glow)">
+    <!-- Glowing Outer Aura (Thick white path underneath) -->
+    <path d="M 60 85 C 43 68, 38 52, 38 42 A 22 22 0 1 1 82 42 C 82 52, 77 68, 60 85 Z" 
+          fill="none" 
+          stroke="#FFFFFF" 
+          stroke-width="8" 
+          stroke-linejoin="round" 
+          opacity="0.6" />
+
+    <!-- Main Pin Body with sharp White Border -->
+    <path d="M 60 85 C 43 68, 38 52, 38 42 A 22 22 0 1 1 82 42 C 82 52, 77 68, 60 85 Z" 
+          fill="#FF007F" 
+          stroke="#FFFFFF" 
+          stroke-width="4.5" 
+          stroke-linejoin="round" />
+          
+    <!-- Inner White Circle -->
+    <circle cx="60" cy="42" r="8.5" fill="#FFFFFF" />
+  </g>
+</svg>

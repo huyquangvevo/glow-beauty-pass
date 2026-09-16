@@ -39,6 +39,34 @@ function computeDistanceKm(lat1: number, lon1: number, lat2: number, lon2: numbe
   return Math.round(R * c * 10) / 10;
 }
 
+const CITY_CENTERS: Record<'hn' | 'hcm' | 'dn', { lat: number; lng: number }> = {
+  hn: { lat: 21.0333, lng: 105.7925 }, // Cầu Giấy, Hà Nội
+  hcm: { lat: 10.7769, lng: 106.7009 }, // Bến Nghé, Quận 1, TP.HCM
+  dn: { lat: 16.0544, lng: 108.2022 }, // Hải Châu, Đà Nẵng
+};
+
+const KNOWN_AREAS: { keywords: string[]; coords: { lat: number; lng: number } }[] = [
+  { keywords: ['dinh cong', 'định công', 'ward liet'], coords: { lat: 20.984503, lng: 105.835853 } },
+  { keywords: ['cau giay', 'cầu giấy'], coords: { lat: 21.0333, lng: 105.7925 } },
+  { keywords: ['dich vong', 'dịch vọng'], coords: { lat: 21.0313, lng: 105.7934 } },
+  { keywords: ['yen hoa', 'yên hòa'], coords: { lat: 21.0182, lng: 105.7950 } },
+  { keywords: ['trung hoa', 'trung hòa'], coords: { lat: 21.0118, lng: 105.8010 } },
+  { keywords: ['dong da', 'đống đa'], coords: { lat: 21.0181, lng: 105.8277 } },
+  { keywords: ['ba dinh', 'ba đình'], coords: { lat: 21.0341, lng: 105.8242 } },
+  { keywords: ['hoan kiem', 'hoàn kiếm', 'ho guom', 'hồ gươm'], coords: { lat: 21.0285, lng: 105.8542 } },
+  { keywords: ['tay ho', 'tây hồ', 'ho tay', 'hồ tây'], coords: { lat: 21.0718, lng: 105.8227 } },
+  { keywords: ['hai ba trung', 'hai bà trưng'], coords: { lat: 21.0069, lng: 105.8524 } },
+  { keywords: ['thanh xuan', 'thanh xuân'], coords: { lat: 20.9980, lng: 105.8058 } },
+  { keywords: ['hoang mai', 'hoàng mai'], coords: { lat: 20.9754, lng: 105.8527 } },
+  { keywords: ['ha dong', 'hà đông'], coords: { lat: 20.9634, lng: 105.7766 } },
+  { keywords: ['nam tu liem', 'nam từ liêm', 'my dinh', 'mỹ đình'], coords: { lat: 21.0177, lng: 105.7645 } },
+  { keywords: ['bac tu liem', 'bắc từ liêm'], coords: { lat: 21.0664, lng: 105.7616 } },
+  { keywords: ['long bien', 'long biên'], coords: { lat: 21.0428, lng: 105.8890 } },
+  { keywords: ['quan 1', 'quận 1', 'ben nghe', 'bến nghé'], coords: { lat: 10.7756, lng: 106.7004 } },
+  { keywords: ['quan 3', 'quận 3'], coords: { lat: 10.7844, lng: 106.6845 } },
+  { keywords: ['hai chau', 'hải châu'], coords: { lat: 16.0592, lng: 108.2208 } },
+];
+
 interface SpasClientViewProps {
   locale: string;
 }
@@ -55,7 +83,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
 
   // State
   const { searchQuery, setSearchQuery } = useSearch();
-  const { userCoords, locationLabel } = useLocation();
+  const { userCoords, locationLabel, setCustomLocation } = useLocation();
 
   const [selectedServiceId, setSelectedServiceId] = useState<string>(initialServiceId);
   const [selectedCityId, setSelectedCityId] = useState<'hn' | 'hcm' | 'dn'>(initialCityId);
@@ -69,6 +97,94 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
   const [sheetSpaId, setSheetSpaId] = useState<string>('la-xanh-cau-giay');
   const [sheetInitialServiceId, setSheetInitialServiceId] = useState<string>(initialServiceId);
+
+  // Synchronize URL search params: q, lat, lng/lon
+  useEffect(() => {
+    const qParam = searchParams.get('q');
+    if (qParam && qParam !== searchQuery) {
+      setSearchQuery(qParam);
+    }
+  }, [searchParams, searchQuery, setSearchQuery]);
+
+  // Parse explicit coordinates from URL (e.g. ?lat=20.984503&lng=105.835853 or ?lat=20984503&lng=105835853)
+  const urlCoords = useMemo(() => {
+    const rawLat = searchParams.get('lat');
+    const rawLng = searchParams.get('lng') || searchParams.get('lon');
+    if (!rawLat || !rawLng) return null;
+    let pLat = parseFloat(rawLat);
+    let pLng = parseFloat(rawLng);
+    if (pLat > 1000) pLat = pLat / 1e6;
+    if (pLng > 1000) pLng = pLng / 1e6;
+    if (!isNaN(pLat) && !isNaN(pLng)) {
+      return { lat: pLat, lng: pLng };
+    }
+    return null;
+  }, [searchParams]);
+
+  // Match keyword in search query against known districts / wards
+  const queryMatchedCoords = useMemo(() => {
+    const q = (searchQuery || searchParams.get('q') || '').trim().toLowerCase();
+    if (!q) return null;
+    for (const area of KNOWN_AREAS) {
+      if (area.keywords.some((k) => q.includes(k))) {
+        return area.coords;
+      }
+    }
+    return null;
+  }, [searchQuery, searchParams]);
+
+  // Dynamic geocoding for arbitrary address search
+  const [geocodedCoords, setGeocodedCoords] = useState<{ lat: number; lng: number } | null>(null);
+
+  useEffect(() => {
+    const q = (searchQuery || searchParams.get('q') || '').trim();
+    if (!q || urlCoords || queryMatchedCoords) {
+      setGeocodedCoords(null);
+      return;
+    }
+
+    let isCancelled = false;
+    const timer = setTimeout(() => {
+      const g = typeof window !== 'undefined' ? (window as any).google?.maps : null;
+      if (!g?.Geocoder) return;
+      const geocoder = new g.Geocoder();
+      geocoder.geocode(
+        { address: q, componentRestrictions: { country: 'vn' } },
+        (results: any[], status: any) => {
+          if (isCancelled) return;
+          if (status === 'OK' && results?.[0]?.geometry?.location) {
+            const loc = results[0].geometry.location;
+            const lat = typeof loc.lat === 'function' ? loc.lat() : loc.lat;
+            const lng = typeof loc.lng === 'function' ? loc.lng() : loc.lng;
+            setGeocodedCoords({ lat, lng });
+          }
+        }
+      );
+    }, 500);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+    };
+  }, [searchQuery, searchParams, urlCoords, queryMatchedCoords]);
+
+  // Active search reference coordinate (Pink pulsing pin on map)
+  const activeSearchCenter = useMemo(() => {
+    if (urlCoords) return urlCoords;
+    if (queryMatchedCoords) return queryMatchedCoords;
+    if (geocodedCoords) return geocodedCoords;
+    if (userCoords) return { lat: userCoords.lat, lng: userCoords.lon };
+    return CITY_CENTERS[selectedCityId] || CITY_CENTERS.hn;
+  }, [urlCoords, queryMatchedCoords, geocodedCoords, userCoords, selectedCityId]);
+
+  const searchTitle = useMemo(() => {
+    const q = (searchQuery || searchParams.get('q') || '').trim();
+    if (q) return q;
+    if (locationLabel && locationLabel !== 'Bật vị trí') return locationLabel;
+    if (selectedCityId === 'hn') return 'Cầu Giấy, Hà Nội';
+    if (selectedCityId === 'hcm') return 'Quận 1, TP.HCM';
+    return 'Hải Châu, Đà Nẵng';
+  }, [searchQuery, searchParams, locationLabel, selectedCityId]);
 
   // Hide footer when in full-screen map mode
   useEffect(() => {
@@ -99,41 +215,54 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
   const filteredSpas = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
 
-    return MVP_SPAS.filter((s) => {
-      if (q) {
-        const matchesQuery =
-          s.name.toLowerCase().includes(q) ||
-          s.ward.toLowerCase().includes(q) ||
-          (s.district && s.district.toLowerCase().includes(q)) ||
-          s.address.toLowerCase().includes(q) ||
-          s.cityName.toLowerCase().includes(q);
-        if (!matchesQuery) return false;
-      } else {
-        if (s.city !== selectedCityId) return false;
-      }
+    // Check if query directly matches any spa by name or address
+    const directMatches = q
+      ? MVP_SPAS.filter((s) => {
+          return (
+            s.name.toLowerCase().includes(q) ||
+            s.ward.toLowerCase().includes(q) ||
+            (s.district && s.district.toLowerCase().includes(q)) ||
+            s.address.toLowerCase().includes(q) ||
+            s.cityName.toLowerCase().includes(q)
+          );
+        })
+      : [];
 
-      if (minRating && s.rating < 4.8) return false;
-      if (openNow && !s.open) return false;
-      return true;
-    }).map((s) => {
-      let distanceKm: number | null = null;
-      let formattedDist = s.dist;
-      if (userCoords) {
-        distanceKm = computeDistanceKm(userCoords.lat, userCoords.lon, s.lat, s.lng);
-        formattedDist = distanceKm < 1 ? `${Math.round(distanceKm * 1000)}m` : `${distanceKm}km`;
-      }
-      return {
-        ...s,
-        distanceKm,
-        formattedDist,
-      };
-    }).sort((a, b) => {
-      if (userCoords && a.distanceKm !== null && b.distanceKm !== null) {
-        return a.distanceKm - b.distanceKm;
-      }
-      return b.rating - a.rating;
-    });
-  }, [selectedCityId, minRating, openNow, searchQuery, userCoords]);
+    // If text search directly matched spas, use them.
+    // Otherwise, show all spas in the selected city sorted by distance to activeSearchCenter!
+    const spasToFilter =
+      q && directMatches.length > 0
+        ? directMatches
+        : MVP_SPAS.filter((s) => s.city === selectedCityId);
+
+    const refCoords = activeSearchCenter;
+
+    return spasToFilter
+      .filter((s) => {
+        if (minRating && s.rating < 4.8) return false;
+        if (openNow && !s.open) return false;
+        return true;
+      })
+      .map((s) => {
+        let distanceKm: number | null = null;
+        let formattedDist = s.dist;
+        if (refCoords) {
+          distanceKm = computeDistanceKm(refCoords.lat, refCoords.lng, s.lat, s.lng);
+          formattedDist = distanceKm < 1 ? `${Math.round(distanceKm * 1000)}m` : `${distanceKm}km`;
+        }
+        return {
+          ...s,
+          distanceKm,
+          formattedDist,
+        };
+      })
+      .sort((a, b) => {
+        if (a.distanceKm !== null && b.distanceKm !== null) {
+          return a.distanceKm - b.distanceKm;
+        }
+        return b.rating - a.rating;
+      });
+  }, [selectedCityId, minRating, openNow, searchQuery, activeSearchCenter]);
 
   const activeSelectedSpa =
     filteredSpas.find((s) => s.id === selectedSpaId) || filteredSpas[0] || MVP_SPAS[0];
@@ -300,6 +429,9 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 spas={filteredSpas}
                 selectedSpaId={selectedSpaId}
                 onSelectSpa={(id) => setSelectedSpaId(id)}
+                searchCenter={activeSearchCenter}
+                searchTitle={searchTitle}
+                userCoords={userCoords}
                 activePrice={activeService.price}
                 className="w-full h-full"
               />

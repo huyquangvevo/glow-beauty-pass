@@ -42,8 +42,8 @@ export default function SpaDetailClientView({
 
   return (
     <div className="w-full bg-[#FAF8F5] flex flex-col items-center justify-start p-0 sm:py-6 font-sans">
-      <div className="w-full max-w-[430px] min-h-screen sm:min-h-[844px] bg-[#F5F7F4] relative overflow-hidden flex flex-col sm:rounded-[36px] sm:shadow-xl sm:border sm:border-stone-200/80 mb-0 sm:mb-6">
-        <div className="flex-1 overflow-y-auto">
+      <div className="w-full max-w-[440px] bg-[#F5F7F4] relative flex flex-col sm:rounded-[36px] sm:shadow-xl sm:border sm:border-stone-200/80 mb-0 sm:mb-10 overflow-hidden animate-in fade-in duration-200">
+        <div className="flex-1 pb-10">
           {/* Photo Gallery with Back Button to /spas */}
           <div className="relative">
             <div className="flex gap-1 overflow-x-auto bg-[#DDE4D9] no-scrollbar">

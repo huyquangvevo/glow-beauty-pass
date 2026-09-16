@@ -15,35 +15,19 @@ async function verify() {
     const page = await browser.newPage();
     await page.setViewport({ width: 412, height: 915, isMobile: true, hasTouch: true });
 
-    // 1. Check VI Home
-    console.log('Testing http://localhost:3000/vi...');
-    await page.goto('http://localhost:3000/vi', { waitUntil: 'networkidle0' });
-    
-    // Dismiss location prompt if visible
+    // 1. Check Spa Detail screen in EN
+    const spaUrl = 'http://localhost:3000/en/spa/an-nhien-duong-sinh-cau-giay';
+    console.log('Testing', spaUrl);
+    await page.goto(spaUrl, { waitUntil: 'networkidle0' });
+
     let dismissBtn = await page.$('button[aria-label="Bỏ qua"], button[aria-label="Dismiss"]');
     if (dismissBtn) {
       await dismissBtn.click();
       await new Promise(r => setTimeout(r, 200));
     }
-    await page.screenshot({ path: path.join(ARTIFACT_DIR, 'home_vi_10000_spas.png') });
-    console.log('Saved home_vi_10000_spas.png');
 
-    // Scroll to see Triệt lông card
-    await page.evaluate(() => window.scrollBy(0, 500));
-    await new Promise(r => setTimeout(r, 300));
-    await page.screenshot({ path: path.join(ARTIFACT_DIR, 'home_vi_triet_long.png') });
-    console.log('Saved home_vi_triet_long.png');
-
-    // 2. Check EN Home
-    console.log('Testing http://localhost:3000/en...');
-    await page.goto('http://localhost:3000/en', { waitUntil: 'networkidle0' });
-    dismissBtn = await page.$('button[aria-label="Bỏ qua"], button[aria-label="Dismiss"]');
-    if (dismissBtn) {
-      await dismissBtn.click();
-      await new Promise(r => setTimeout(r, 200));
-    }
-    await page.screenshot({ path: path.join(ARTIFACT_DIR, 'home_en_10000_spas.png') });
-    console.log('Saved home_en_10000_spas.png');
+    await page.screenshot({ path: path.join(ARTIFACT_DIR, 'spa_detail_header_logo.png') });
+    console.log('Saved spa_detail_header_logo.png');
 
     console.log('Verification completed successfully!');
   } finally {

@@ -1,15 +1,13 @@
 'use client'
 
 import Image from 'next/image'
-import { Link, useRouter, usePathname } from '@/i18n/routing'
-import { ArrowLeft } from 'lucide-react'
+import { Link, usePathname } from '@/i18n/routing'
 import { BrandWordmark } from './BrandLogo'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { HeaderSearch } from './HeaderSearch'
 
 export function Navbar() {
   const pathname = usePathname()
-  const router = useRouter()
 
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342'
   const isSpaDetail = pathname.startsWith('/spa/')
@@ -19,24 +17,14 @@ export function Navbar() {
       {/* TOP HEADER: GLOW BEAUTY PASS (Brand Green #40813D, Logo + Search + Language) */}
       <header className="sticky top-0 z-40 bg-[#40813D] shadow-sm border-b border-[#356F32]">
         <div className="w-full max-w-5xl mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-2.5 sm:gap-4">
-          {/* Brand Logo or Back Button */}
-          {isSpaDetail ? (
-            <button
-              onClick={() => router.back()}
-              className="p-1.5 -ml-1 text-white hover:text-emerald-200 transition-colors flex items-center gap-1 active:scale-90 cursor-pointer"
-              aria-label="Quay lại"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-          ) : (
-            <Link
-              href="/"
-              className="flex items-center gap-1.5 shrink-0 hover:opacity-95 transition-opacity"
-              aria-label="Glow Beauty Pass Trang Chủ"
-            >
-              <BrandWordmark className="h-10 sm:h-11 w-auto text-white drop-shadow-xs" />
-            </Link>
-          )}
+          {/* Brand Logo (Always fixed logo like Home screen) */}
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 shrink-0 hover:opacity-95 transition-opacity"
+            aria-label="Glow Beauty Pass Trang Chủ"
+          >
+            <BrandWordmark className="h-10 sm:h-11 w-auto text-white drop-shadow-xs" />
+          </Link>
 
           {/* Advanced Search Pill with Autocomplete & Mobile Modal */}
           <HeaderSearch />
