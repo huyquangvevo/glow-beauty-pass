@@ -175,7 +175,7 @@ export function NearbySpaCard({
               height={16}
               className="w-4 h-4 rounded-xs shrink-0 object-contain"
             />
-            <span>Đặt Zalo</span>
+            <span>{tCommon('bookNow')}</span>
           </a>
         </div>
       </div>
