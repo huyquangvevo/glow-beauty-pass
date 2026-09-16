@@ -110,7 +110,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
         </div>
 
         {/* Content Body: Standardized Service Cards with Prominent Zalo CTAs */}
-        <div className="p-3.5 pb-5">
+        <div className="p-2.5 min-[360px]:p-3 sm:p-3.5 pb-5">
           <div className="flex items-center justify-between mb-3 px-1">
             <div className="flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-[#3A7B37]" />
@@ -127,7 +127,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
             {MVP_SERVICES.map((s) => {
               const sInfo = getServiceInfo(s.id);
               const servicePhoto =
@@ -176,8 +176,8 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                     </div>
 
                     {/* Card Body: Title & Duration */}
-                    <div className="p-3 pb-2">
-                      <h2 className="font-bold text-[13.5px] sm:text-[14px] text-[#093E06] group-hover:text-[#3A7B37] transition-colors leading-tight line-clamp-2 m-0">
+                    <div className="p-2.5 min-[360px]:p-3 pb-2">
+                      <h2 className="font-bold text-[13px] min-[360px]:text-[13.5px] sm:text-[14px] text-[#093E06] group-hover:text-[#3A7B37] transition-colors leading-tight line-clamp-2 m-0">
                         {sInfo.name}
                       </h2>
                       {sInfo.dur && (
@@ -190,8 +190,8 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                   </div>
 
                   {/* Card Footer: Clear Price & Prominent Zalo Button (v1.0 Style) */}
-                  <div className="px-3 pb-3 pt-1 border-t border-[#EDF2EB] flex items-center justify-between gap-1.5 mt-auto">
-                    <span className="text-[13.5px] sm:text-[14px] font-black text-[#093E06]">
+                  <div className="px-2 min-[360px]:px-2.5 sm:px-3 pb-2.5 sm:pb-3 pt-1.5 border-t border-[#EDF2EB] flex items-center justify-between gap-1 mt-auto">
+                    <span className="text-[12px] min-[360px]:text-[12.5px] min-[390px]:text-[13.5px] sm:text-[14px] font-black text-[#093E06] leading-none shrink-0 tracking-tight">
                       {formatPrice(s.price)}
                     </span>
                     <button
@@ -200,16 +200,25 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                         e.stopPropagation();
                         handleOpenBooking(s.id);
                       }}
-                      className="h-8 px-3 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[12px] font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer shrink-0"
+                      className="h-7 sm:h-7.5 px-2 min-[390px]:px-2.5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[10.5px] min-[360px]:text-[11px] min-[390px]:text-[11.5px] sm:text-[12px] font-bold flex items-center gap-1 shadow-2xs transition-all cursor-pointer shrink-0 whitespace-nowrap"
                     >
                       <Image
                         src="/brand/Logo-Zalo-App-Rec.webp"
                         alt="Zalo"
-                        width={15}
-                        height={15}
-                        className="rounded-[3px] shrink-0 object-contain shadow-2xs"
+                        width={14}
+                        height={14}
+                        className="w-3.5 h-3.5 rounded-[3px] shrink-0 object-contain shadow-2xs"
                       />
-                      <span>{t.bookZalo}</span>
+                      <span>
+                        {s.wide ? (
+                          t.bookZalo
+                        ) : (
+                          <>
+                            <span className="inline min-[390px]:hidden">{t.bookZaloShort}</span>
+                            <span className="hidden min-[390px]:inline">{t.bookZalo}</span>
+                          </>
+                        )}
+                      </span>
                     </button>
                   </div>
                 </div>
