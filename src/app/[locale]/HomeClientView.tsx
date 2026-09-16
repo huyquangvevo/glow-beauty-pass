@@ -251,41 +251,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
           </Link>
         </div>
 
-        {/* Fixed Bottom Booking Bar (v1.0 Style, Prominent Zalo CTA) */}
-        {!isBottomSheetOpen && (
-          <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#E8EDE6] px-4 py-3 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
-            <div className="max-w-[440px] mx-auto flex items-center justify-between gap-3">
-              <div className="flex flex-col min-w-0">
-                <span className="text-[17px] sm:text-[18px] font-black text-[#093E06] leading-tight">
-                  {locale === 'en' ? 'From 39,000đ' : locale === 'ko' ? '39,000동부터' : 'Từ 39.000đ'}
-                </span>
-                <span className="text-[11px] text-[#6B7869] truncate mt-0.5 font-medium">
-                  {locale === 'en'
-                    ? 'Fixed price · Instant booking'
-                    : locale === 'ko'
-                    ? '단일 정찰제 · Zalo 간편 예약'
-                    : 'Đồng giá toàn hệ thống · Đặt giữ chỗ'}
-                </span>
-              </div>
 
-              <button
-                type="button"
-                onClick={() => handleOpenBooking(selectedServiceId)}
-                className="h-11 px-5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[13.5px] font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
-              >
-                <Image
-                  src="/brand/Logo-Zalo-App-Rec.webp"
-                  alt="Zalo"
-                  width={18}
-                  height={18}
-                  className="rounded-[4px] shrink-0 object-contain shadow-2xs"
-                />
-                <span>{t.bookZalo}</span>
-                <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Booking Bottom Sheet Modal */}
         <BookingBottomSheet
