@@ -221,17 +221,17 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       'goi-sach': {
         name: 'Gội đầu sạch',
         short: 'Gội sạch',
-        dur: '35 phút',
+        dur: '',
       },
       'goi-dau-cap': {
         name: 'Gội đầu dầu cặp',
         short: 'Gội dầu cặp',
-        dur: '45 phút',
+        dur: '',
       },
       'duong-sinh': {
         name: 'Gội dưỡng sinh',
         short: 'Dưỡng sinh',
-        dur: '60 phút',
+        dur: '',
         badge: 'ĐƯỢC CHỌN NHIỀU NHẤT',
       },
       'massage-body': {
@@ -242,12 +242,12 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       'cham-soc-da': {
         name: 'Chăm sóc da cơ bản',
         short: 'Chăm sóc da',
-        dur: '45 phút',
+        dur: '',
       },
       'combo-goi-da': {
         name: 'Combo gội + chăm sóc da',
         short: 'Combo gội & da',
-        dur: '75 phút',
+        dur: '',
       },
       'triet-long': {
         name: 'Triệt lông (1 buổi / 1 vùng)',
@@ -383,17 +383,17 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       'goi-sach': {
         name: 'Clean Hair Wash',
         short: 'Clean Wash',
-        dur: '35 mins',
+        dur: '',
       },
       'goi-dau-cap': {
         name: 'Dual Shampoo Wash',
         short: 'Dual Shampoo',
-        dur: '45 mins',
+        dur: '',
       },
       'duong-sinh': {
         name: 'Herbal Head Spa',
         short: 'Head Spa',
-        dur: '60 mins',
+        dur: '',
         badge: 'MOST POPULAR',
       },
       'massage-body': {
@@ -404,12 +404,12 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       'cham-soc-da': {
         name: 'Basic Facial Care',
         short: 'Facial Care',
-        dur: '45 mins',
+        dur: '',
       },
       'combo-goi-da': {
         name: 'Combo Hair Wash & Facial',
         short: 'Wash & Facial',
-        dur: '75 mins',
+        dur: '',
       },
       'triet-long': {
         name: 'Hair Removal (1 session / zone)',
@@ -545,17 +545,17 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       'goi-sach': {
         name: '클린 샴푸 케어',
         short: '클린 샴푸',
-        dur: '35분',
+        dur: '',
       },
       'goi-dau-cap': {
         name: '프리미엄 샴푸 케어',
         short: '프리미엄 샴푸',
-        dur: '45분',
+        dur: '',
       },
       'duong-sinh': {
         name: '두피 영양 힐링 스파',
         short: '두피 힐링',
-        dur: '60분',
+        dur: '',
         badge: '가장 인기 있는 코스',
       },
       'massage-body': {
@@ -566,12 +566,12 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       'cham-soc-da': {
         name: '기본 페이셜 피부 케어',
         short: '피부 케어',
-        dur: '45분',
+        dur: '',
       },
       'combo-goi-da': {
         name: '샴푸 + 페이셜 콤보',
         short: '샴푸 & 피부',
-        dur: '75분',
+        dur: '',
       },
       'triet-long': {
         name: '다이오드 레이저 제모 (1회)',

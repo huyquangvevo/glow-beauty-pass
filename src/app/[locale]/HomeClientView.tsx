@@ -157,7 +157,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                   <div>
                     <div
                       className={`relative ${
-                        s.wide ? 'h-[140px]' : 'h-[116px]'
+                        s.wide ? 'h-[140px]' : 'h-[118px]'
                       } bg-[#E8FDE7] overflow-hidden`}
                     >
                       <Image
@@ -167,10 +167,9 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                         priority={s.id === 'goi-sach'}
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
 
-                      {/* Floating Price Pill at top-left */}
-                      <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-xs rounded-full px-2.5 py-1 text-[12px] font-bold text-[#093E06] shadow-[0_2px_8px_rgba(9,62,6,0.18)] border border-white/60 pointer-events-none">
+                      {/* Floating Price Pill at top-left (Mockup Style) */}
+                      <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-xs rounded-full px-2.5 py-1 text-[12.5px] font-bold text-[#093E06] shadow-[0_2px_8px_rgba(9,62,6,0.15)] border border-white/60 pointer-events-none">
                         {formatPrice(s.price)}
                       </div>
 
@@ -181,42 +180,24 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                       )}
                     </div>
 
-                    {/* Card Body */}
-                    <div className="p-3">
-                      <h2 className="font-bold text-[13.5px] sm:text-[14px] text-[#093E06] group-hover:text-[#3A7B37] transition-colors leading-tight line-clamp-1 m-0">
-                        {sInfo.name}
-                      </h2>
-                      {sInfo.dur && (
-                        <div className="flex items-center gap-1 text-[11px] text-[#6B7869] mt-1 font-medium">
-                          <Clock className="w-3 h-3 text-[#3A7B37]" />
-                          <span>{sInfo.dur}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                    {/* Card Body: Title + Duration on Left, Circular Arrow Button on Right (Mockup Style) */}
+                    <div className="p-3 flex items-center justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <h2 className="font-bold text-[13.5px] sm:text-[14px] text-[#093E06] group-hover:text-[#3A7B37] transition-colors leading-tight line-clamp-2 m-0">
+                          {sInfo.name}
+                        </h2>
+                        {sInfo.dur && (
+                          <div className="text-[11px] text-[#6B7869] mt-0.5 font-medium">
+                            {sInfo.dur}
+                          </div>
+                        )}
+                      </div>
 
-                  {/* Card Footer: Clear Price & Prominent Zalo Booking Button (v1.0 Style) */}
-                  <div className="px-3 pb-3 pt-1 border-t border-[#EDF2EB] flex items-center justify-between gap-1.5 mt-auto">
-                    <span className="text-[13px] font-black text-[#093E06]">
-                      {formatPrice(s.price)}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenBooking(s.id);
-                      }}
-                      className="h-7.5 px-3 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[11.5px] font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer shrink-0"
-                    >
-                      <Image
-                        src="/brand/Logo-Zalo-App-Rec.webp"
-                        alt="Zalo"
-                        width={14}
-                        height={14}
-                        className="rounded-[3px] shrink-0 object-contain shadow-2xs"
-                      />
-                      <span>{t.bookZalo}</span>
-                    </button>
+                      {/* Circular Arrow Button from Mockup */}
+                      <div className="w-8 h-8 rounded-full bg-[#E8FDE7] text-[#2E6B34] flex items-center justify-center shrink-0 group-hover:bg-[#2E6B34] group-hover:text-white transition-all shadow-2xs">
+                        <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
@@ -225,7 +206,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
         </div>
 
         {/* Explore All Spas Banner */}
-        <div className="px-3.5 pb-4">
+        <div className="px-3.5 pb-6">
           <Link
             href="/spas"
             className="w-full bg-[#2E6B34] hover:bg-[#25572A] active:scale-[0.99] text-white rounded-[22px] p-4 flex items-center justify-between shadow-md transition-all cursor-pointer group"
@@ -255,50 +236,6 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
               <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
             </div>
           </Link>
-        </div>
-
-        {/* Prominent Sticky Bottom Zalo Booking Bar (v1.0 Essential Feature) */}
-        <div className="sticky bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#E8EDE6] px-4 py-3 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex flex-col min-w-0">
-              <span className="text-[13.5px] font-bold text-[#093E06] leading-tight">
-                {locale === 'en'
-                  ? 'Priority Zalo Booking'
-                  : locale === 'ko'
-                  ? 'Zalo 우선 예약'
-                  : 'Đặt Lịch Ưu Tiên Zalo'}
-              </span>
-              <span className="text-[11px] text-[#6B7869] truncate mt-0.5">
-                {locale === 'en'
-                  ? 'Confirmation within 20 mins'
-                  : locale === 'ko'
-                  ? '20분 내 예약 확정 안내'
-                  : 'Tổng đài xác nhận trong 20 phút'}
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => handleOpenBooking(selectedServiceId)}
-              className="h-11 px-5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[13.5px] font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
-            >
-              <Image
-                src="/brand/Logo-Zalo-App-Rec.webp"
-                alt="Zalo"
-                width={18}
-                height={18}
-                className="rounded-[4px] shrink-0 object-contain shadow-2xs"
-              />
-              <span>
-                {locale === 'en'
-                  ? 'Book via Zalo'
-                  : locale === 'ko'
-                  ? 'Zalo 예약하기'
-                  : 'Đặt Lịch Zalo'}
-              </span>
-              <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
-            </button>
-          </div>
         </div>
 
         {/* Booking Bottom Sheet Modal */}
