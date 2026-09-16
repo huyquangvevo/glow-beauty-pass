@@ -14,6 +14,7 @@ export interface LocalizedMVP {
   viewMap: string;
   bookNow: string;
   bookZalo: string;
+  viewDetails: string;
   back: string;
   close: string;
   serviceDetails: string;
@@ -71,6 +72,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     viewMap: 'Xem bản đồ',
     bookNow: 'Đặt lịch',
     bookZalo: 'Đặt lịch qua Zalo',
+    viewDetails: 'Chi tiết',
     back: 'Quay lại',
     close: 'Đóng',
     serviceDetails: 'Chi tiết dịch vụ',
@@ -156,6 +158,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     viewMap: 'View Map',
     bookNow: 'Book Now',
     bookZalo: 'Book via Zalo',
+    viewDetails: 'Details',
     back: 'Back',
     close: 'Close',
     serviceDetails: 'Service details',
@@ -241,6 +244,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     viewMap: '지도 보기',
     bookNow: '예약하기',
     bookZalo: 'Zalo 간편 예약',
+    viewDetails: '상세보기',
     back: '뒤로가기',
     close: '닫기',
     serviceDetails: '서비스 상세',
