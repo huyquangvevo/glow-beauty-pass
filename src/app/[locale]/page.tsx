@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   Star,
   ChevronDown,
+  ChevronRight,
   Check,
   ShieldCheck,
   MapPin,
@@ -15,6 +16,7 @@ import {
   CheckCircle2,
   Compass,
   BadgePercent,
+  Store,
   X,
   SlidersHorizontal,
 } from 'lucide-react';
@@ -195,29 +197,36 @@ export default function MVPPage() {
             {/* Elegant, Light Sub-Hero (Clean aesthetic directly under v1.0 Header) */}
             <div className="bg-white border-b border-[#E8EDE6] pt-5 pb-4 px-4 sm:px-5 flex-none sm:rounded-t-[32px]">
               <div className="flex items-center justify-between gap-3">
-                <h1 className="font-bold text-[21px] sm:text-[23px] tracking-tight text-[#17231A] leading-tight m-0">
+                <h1 className="font-bold text-[20px] sm:text-[22px] tracking-tight text-[#141E16] leading-tight m-0">
                   {t.brandTagline}
                 </h1>
                 <button
                   type="button"
                   onClick={() => setScreen('intro')}
-                  className="text-[12px] font-semibold text-[#40813D] bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/70 px-3 py-1.5 rounded-full transition-all cursor-pointer shrink-0 active:scale-95 shadow-2xs inline-flex items-center gap-1"
+                  className="group inline-flex items-center gap-1.5 pl-3.5 pr-1.5 py-1 rounded-full bg-[#F5F7F4] hover:bg-[#EBF0E7] border border-[#DCE3D8] hover:border-[#CAD5C5] text-[12px] font-semibold text-stone-700 hover:text-stone-950 transition-all duration-200 active:scale-95 cursor-pointer shrink-0 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
+                  aria-label={t.introButton}
                 >
                   <span>{t.introButton}</span>
+                  <span className="w-5 h-5 rounded-full bg-white border border-[#DCE3D8] flex items-center justify-center text-stone-400 group-hover:text-[#3A7B37] group-hover:translate-x-0.5 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+                    <ChevronRight className="w-3 h-3" strokeWidth={2.2} />
+                  </span>
                 </button>
               </div>
 
-              {/* 3 Information Value Badges */}
-              <div className="flex flex-wrap gap-1.5 mt-3">
-                {t.valuePills.map((pill, idx) => (
-                  <span
-                    key={idx}
-                    className="inline-flex items-center gap-1.5 text-[11px] font-medium text-stone-700 bg-[#F5F7F4] border border-[#DDE4D9] rounded-full px-2.5 py-1 whitespace-nowrap"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#40813D] shrink-0" />
-                    {pill}
-                  </span>
-                ))}
+              {/* 3 Information Value Badges (Refined micro-cards with bespoke SVG icons) */}
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3">
+                {t.valuePills.map((pill, idx) => {
+                  const Icon = idx === 0 ? Store : idx === 1 ? BadgePercent : ShieldCheck;
+                  return (
+                    <div
+                      key={idx}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F7F9F6] border border-[#DEE5DC] text-[11px] sm:text-[11.5px] font-medium text-stone-700 tracking-tight shadow-[0_1px_2px_rgba(0,0,0,0.02)] select-none"
+                    >
+                      <Icon className="w-3.5 h-3.5 text-[#3A7B37] shrink-0" strokeWidth={2} />
+                      <span>{pill}</span>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Active Location Search Indicator if user searched in Header */}
@@ -501,7 +510,7 @@ export default function MVPPage() {
                     onClick={() => setIsCityMenuOpen(!isCityMenuOpen)}
                     className="px-3 py-1.5 rounded-full text-[12px] font-bold bg-[#E8FDE7] text-[#093E06] flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
-                    <span>{searchQuery ? t.allCities : activeCity.name}</span>
+                    <span>{searchQuery ? t.allCities : (t.cities[selectedCityId] || activeCity.name)}</span>
                     <ChevronDown className="w-3.5 h-3.5 opacity-70" strokeWidth={2} />
                   </button>
 
@@ -527,9 +536,9 @@ export default function MVPPage() {
                                 : 'text-[#3E4A3C] hover:bg-stone-50'
                             }`}
                           >
-                            <span>{c.name}</span>
+                            <span>{t.cities[c.id] || c.name}</span>
                             <span className="text-[11px] text-[#6B7869]">
-                              {MVP_SPAS.filter((s) => s.city === c.id).length} điểm
+                              {MVP_SPAS.filter((s) => s.city === c.id).length} {t.locationsCount}
                             </span>
                           </div>
                         ))}
@@ -663,7 +672,7 @@ export default function MVPPage() {
                               }}
                               className="flex-1 py-2 px-3 rounded-xl bg-[#F5F7F4] hover:bg-stone-200 text-stone-700 text-xs font-semibold text-center transition-colors cursor-pointer"
                             >
-                              {t.viewDetails || 'Chi tiết'}
+                              {t.viewDetails}
                             </button>
                             <button
                               type="button"
@@ -677,7 +686,7 @@ export default function MVPPage() {
                                 height={16}
                                 className="w-4 h-4 rounded-xs shrink-0 object-contain"
                               />
-                              <span>Đặt Zalo</span>
+                              <span>{t.bookZalo}</span>
                             </button>
                           </div>
                         </div>
@@ -763,7 +772,7 @@ export default function MVPPage() {
                                 height={13}
                                 className="w-3.5 h-3.5 rounded-2xs object-contain"
                               />
-                              <span>Đặt Zalo</span>
+                              <span>{t.bookZalo}</span>
                             </button>
                           </div>
                         </div>
@@ -811,7 +820,7 @@ export default function MVPPage() {
                 </button>
 
                 <div className="absolute bottom-3 right-3 bg-black/60 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full backdrop-blur-xs">
-                  {detailSpa.photos.length} ảnh
+                  {detailSpa.photos.length} {t.photosCount}
                 </div>
               </div>
 
@@ -833,7 +842,7 @@ export default function MVPPage() {
                       <span>{detailSpa.rating}</span>
                     </div>
                     <div className="text-[11px] text-[#6B7869]">
-                      {detailSpa.reviews} đánh giá
+                      {detailSpa.reviews} {t.reviewsCount}
                     </div>
                   </div>
                 </div>
@@ -847,7 +856,7 @@ export default function MVPPage() {
               {/* Mini Map */}
               <div className="p-4 bg-white border-b border-[#DDE4D9]">
                 <div className="text-[11.5px] font-bold text-[#6B7869] uppercase tracking-wider mb-2.5">
-                  Vị trí trên bản đồ
+                  {t.mapLocationTitle}
                 </div>
                 <div className="h-36 rounded-[16px] overflow-hidden border border-[#DDE4D9] relative bg-[#ECEEE9]">
                   <GlowGoogleMap
@@ -865,12 +874,12 @@ export default function MVPPage() {
               {/* Opening Hours */}
               <div className="p-4 bg-white border-b border-[#DDE4D9]">
                 <div className="text-[11.5px] font-bold text-[#6B7869] uppercase tracking-wider mb-2">
-                  Giờ hoạt động
+                  {t.openingHoursTitle}
                 </div>
                 <div className="flex items-center justify-between text-[13px]">
-                  <span className="text-[#093E06] font-semibold">{detailSpa.today}</span>
+                  <span className="text-[#093E06] font-semibold">{t.todayLabel} 09:00 - 21:00</span>
                   <span className="text-[#40813D] font-bold">
-                    {detailSpa.open ? 'Đang mở cửa' : 'Đã đóng cửa'}
+                    {detailSpa.open ? t.openNowStatus : t.closedStatus}
                   </span>
                 </div>
               </div>
@@ -878,7 +887,7 @@ export default function MVPPage() {
               {/* Real Reviews */}
               <div className="p-4 bg-white mb-6">
                 <div className="text-[11.5px] font-bold text-[#6B7869] uppercase tracking-wider mb-3">
-                  Đánh giá từ khách hàng ({MVP_REVIEWS.length})
+                  {t.customerReviewsTitle} ({MVP_REVIEWS.length})
                 </div>
                 <div className="space-y-3">
                   {MVP_REVIEWS.map((r, idx) => (
@@ -894,7 +903,7 @@ export default function MVPPage() {
                           <div>
                             <span className="text-[13px] font-bold text-[#093E06]">{r.name}</span>
                             {r.verifiedPhone && (
-                              <span className="text-[10px] text-[#40813D] ml-1.5 font-semibold">✓ Đã xác minh</span>
+                              <span className="text-[10px] text-[#40813D] ml-1.5 font-semibold">{t.verifiedCustomerBadge}</span>
                             )}
                           </div>
                         </div>
@@ -944,6 +953,7 @@ export default function MVPPage() {
         <BookingBottomSheet
           isOpen={isBottomSheetOpen}
           onClose={() => setIsBottomSheetOpen(false)}
+          locale={currentLocale}
           initialServiceId={sheetInitialServiceId}
           spaName={detailSpa.name}
           spaAddress={detailSpa.address}

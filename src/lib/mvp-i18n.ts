@@ -26,6 +26,63 @@ export interface LocalizedMVP {
   certifiedBadge: string;
   verifiedBadge: string;
   standardBadge: string;
+
+  // Detail & location filter tokens
+  cities: Record<'hn' | 'hcm' | 'dn', string>;
+  locationsCount: string;
+  photosCount: string;
+  reviewsCount: string;
+  mapLocationTitle: string;
+  openingHoursTitle: string;
+  openNowStatus: string;
+  closedStatus: string;
+  todayLabel: string;
+  customerReviewsTitle: string;
+  verifiedCustomerBadge: string;
+  menuTitle: string;
+  menuNotice: string;
+  getDirections: string;
+  bookPriorityZalo: string;
+  reviews: Array<{
+    initial: string;
+    name: string;
+    stars: string;
+    when: string;
+    text: string;
+    photos: number;
+    verifiedPhone?: boolean;
+  }>;
+
+  // Booking Bottom Sheet tokens
+  booking: {
+    title: string;
+    subtitle: string;
+    serviceLabel: string;
+    dateLabel: string;
+    today: string;
+    tomorrow: string;
+    thu: string;
+    timeLabel: string;
+    fullyBooked: string;
+    messagePreviewTitle: string;
+    autoCopyNotice: string;
+    copyBtn: string;
+    copiedBtn: string;
+    openZaloBtn: string;
+    pasteGuide: string;
+    slaNotice: string;
+    confirmedTitle: string;
+    confirmedAction: string;
+    confirmedSla: string;
+    branchLabel: string;
+    serviceSummaryLabel: string;
+    timeSummaryLabel: string;
+    fixedPriceLabel: string;
+    doneBtn: string;
+    copyAgainBtn: string;
+    copiedAgainBtn: string;
+  };
+
   services: Record<
     string,
     {
@@ -59,7 +116,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
   vi: {
     appName: 'Hệ thống làm đẹp Glow Beauty',
     brandTagline: 'Hệ thống làm đẹp Glow Beauty',
-    introButton: 'Giới thiệu →',
+    introButton: 'Giới thiệu',
     valuePills: ['100+ trung tâm toàn quốc', 'Một mức giá', 'Chất lượng đồng nhất'],
     servicesTitle: 'Dịch vụ đồng giá',
     selectSpaTitle: 'Chọn chi nhánh',
@@ -71,7 +128,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     openNowFilter: 'Đang mở cửa',
     viewMap: 'Xem bản đồ',
     bookNow: 'Đặt lịch',
-    bookZalo: 'Đặt lịch qua Zalo',
+    bookZalo: 'Đặt Zalo',
     viewDetails: 'Chi tiết',
     back: 'Quay lại',
     close: 'Đóng',
@@ -84,6 +141,82 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     certifiedBadge: 'Chuẩn hoá SOP',
     verifiedBadge: 'Đã xác thực',
     standardBadge: 'Tiêu chuẩn',
+    cities: {
+      hn: 'Hà Nội',
+      hcm: 'TP.HCM',
+      dn: 'Đà Nẵng',
+    },
+    locationsCount: 'điểm',
+    photosCount: 'ảnh',
+    reviewsCount: 'đánh giá',
+    mapLocationTitle: 'Vị trí trên bản đồ',
+    openingHoursTitle: 'Giờ hoạt động',
+    openNowStatus: 'Đang mở cửa',
+    closedStatus: 'Đã đóng cửa',
+    todayLabel: 'Hôm nay',
+    customerReviewsTitle: 'Đánh giá từ khách hàng',
+    verifiedCustomerBadge: '✓ Đã xác minh',
+    menuTitle: 'Menu giá niêm yết',
+    menuNotice: 'Chi nhánh Glow Beauty - áp dụng đồng giá toàn hệ thống.',
+    getDirections: 'Chỉ đường',
+    bookPriorityZalo: 'Đặt lịch ưu tiên qua Zalo',
+    reviews: [
+      {
+        initial: 'N',
+        name: 'Ngọc Ánh',
+        stars: '★★★★★',
+        when: '2 ngày trước',
+        text: 'Đúng giá niêm yết, không bị mời mua gói hay chèo kéo. Bạn kỹ thuật viên làm chắc tay, 45 phút gội massage đủ thư giãn sau giờ làm việc.',
+        photos: 2,
+        verifiedPhone: true,
+      },
+      {
+        initial: 'T',
+        name: 'Thu Hà',
+        stars: '★★★★☆',
+        when: '1 tuần trước',
+        text: 'Tổng đài xác nhận lịch nhanh trong 10 phút, đến nơi là nhân viên tiếp đón đúng giờ. Không gian sạch sẽ, mùi tinh dầu sả chanh dễ chịu.',
+        photos: 1,
+        verifiedPhone: true,
+      },
+      {
+        initial: 'M',
+        name: 'Minh Tú',
+        stars: '★★★★★',
+        when: '2 tuần trước',
+        text: 'Nhắn Zalo một nơi là xong, không cần gọi từng spa dò hỏi giá với lịch trống. Cực kỳ tiện cho dân văn phòng.',
+        photos: 2,
+        verifiedPhone: true,
+      },
+    ],
+    booking: {
+      title: 'Đặt lịch ưu tiên qua Zalo',
+      subtitle: 'Hệ thống Glow Beauty',
+      serviceLabel: 'Dịch vụ',
+      dateLabel: 'Ngày',
+      today: 'Hôm nay',
+      tomorrow: 'Mai',
+      thu: 'T5',
+      timeLabel: 'Khung giờ',
+      fullyBooked: 'hết chỗ',
+      messagePreviewTitle: 'Tin nhắn sẽ gửi tới tổng đài',
+      autoCopyNotice: 'Hệ thống tự động copy tin nhắn khi bạn bấm mở Zalo.',
+      copyBtn: 'Sao chép',
+      copiedBtn: 'Đã copy',
+      openZaloBtn: 'Mở Zalo GlowBeautyPass',
+      pasteGuide: 'Zalo không tự điền được nội dung — dán tin nhắn đã copy vào khung chat là xong.',
+      slaNotice: 'Chưa trừ tiền. Tổng đài hỏi chỗ trống rồi xác nhận lại với bạn trong 20 phút.',
+      confirmedTitle: 'Đã copy tin nhắn',
+      confirmedAction: 'Dán vào khung chat Zalo Glow Beauty và gửi.',
+      confirmedSla: 'Tổng đài xác nhận lịch trong 20 phút.',
+      branchLabel: 'Chi nhánh',
+      serviceSummaryLabel: 'Dịch vụ',
+      timeSummaryLabel: 'Thời gian',
+      fixedPriceLabel: 'Giá niêm yết',
+      doneBtn: 'Xong',
+      copyAgainBtn: 'Sao chép lại tin nhắn',
+      copiedAgainBtn: 'Đã sao chép lại tin nhắn!',
+    },
     services: {
       'goi-sach': {
         name: 'Gội đầu sạch',
@@ -138,14 +271,14 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       prop2Title: '1 đầu mối',
       prop3Title: 'Đánh giá thật',
       slaNotice: 'Phản hồi trong 5 phút trong giờ hành chính. Xác nhận lịch dưới 20 phút.',
-      viewServicesCta: 'Xem dịch vụ & giá →',
+      viewServicesCta: 'Xem dịch vụ & giá',
       branchesCountNotice: '100+ trung tâm · 12 tỉnh thành · Đồng giá toàn hệ thống',
     },
   },
   en: {
     appName: 'Glow Beauty Spa Network',
     brandTagline: 'Glow Beauty Spa Network',
-    introButton: 'About →',
+    introButton: 'About',
     valuePills: ['100+ centers nationwide', 'Fixed price', 'Standardized quality'],
     servicesTitle: 'Standardized Services',
     selectSpaTitle: 'Select Spa Branch',
@@ -170,6 +303,82 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     certifiedBadge: 'SOP Certified',
     verifiedBadge: 'Verified',
     standardBadge: 'Standard',
+    cities: {
+      hn: 'Hanoi',
+      hcm: 'Ho Chi Minh City',
+      dn: 'Da Nang',
+    },
+    locationsCount: 'locations',
+    photosCount: 'photos',
+    reviewsCount: 'reviews',
+    mapLocationTitle: 'Location on map',
+    openingHoursTitle: 'Opening hours',
+    openNowStatus: 'Open now',
+    closedStatus: 'Closed',
+    todayLabel: 'Today',
+    customerReviewsTitle: 'Customer reviews',
+    verifiedCustomerBadge: '✓ Verified',
+    menuTitle: 'Standardized Price Menu',
+    menuNotice: 'Glow Beauty branches - uniform pricing system-wide.',
+    getDirections: 'Directions',
+    bookPriorityZalo: 'Priority Booking via Zalo',
+    reviews: [
+      {
+        initial: 'N',
+        name: 'Ngoc Anh',
+        stars: '★★★★★',
+        when: '2 days ago',
+        text: 'Exact transparent price, zero pressure to buy packages or upselling. The therapist had skilled technique, 45 minutes of herbal wash was deeply relaxing after work.',
+        photos: 2,
+        verifiedPhone: true,
+      },
+      {
+        initial: 'T',
+        name: 'Thu Ha',
+        stars: '★★★★☆',
+        when: '1 week ago',
+        text: 'Central hotline confirmed my booking within 10 minutes. Upon arrival, staff welcomed me on time. Clean ambiance and pleasant lemongrass aroma.',
+        photos: 1,
+        verifiedPhone: true,
+      },
+      {
+        initial: 'M',
+        name: 'Minh Tu',
+        stars: '★★★★★',
+        when: '2 weeks ago',
+        text: 'Messaging one single Zalo handled everything, no need to call each individual spa to check rates and openings. Extremely convenient for busy people.',
+        photos: 2,
+        verifiedPhone: true,
+      },
+    ],
+    booking: {
+      title: 'Priority Booking via Zalo',
+      subtitle: 'Glow Beauty Network',
+      serviceLabel: 'Service',
+      dateLabel: 'Date',
+      today: 'Today',
+      tomorrow: 'Tomorrow',
+      thu: 'Thu',
+      timeLabel: 'Time slot',
+      fullyBooked: 'Full',
+      messagePreviewTitle: 'Message to be sent to hotline',
+      autoCopyNotice: 'System will auto-copy this message when you tap Open Zalo.',
+      copyBtn: 'Copy',
+      copiedBtn: 'Copied',
+      openZaloBtn: 'Open Zalo GlowBeautyPass',
+      pasteGuide: 'Zalo cannot auto-fill message — simply paste copied text into chat.',
+      slaNotice: 'No upfront charge. Hotline verifies slot and confirms within 20 mins.',
+      confirmedTitle: 'Message Copied',
+      confirmedAction: 'Paste into Glow Beauty Zalo chat and send.',
+      confirmedSla: 'Hotline will confirm your booking within 20 minutes.',
+      branchLabel: 'Branch',
+      serviceSummaryLabel: 'Service',
+      timeSummaryLabel: 'Time',
+      fixedPriceLabel: 'Fixed Price',
+      doneBtn: 'Done',
+      copyAgainBtn: 'Copy message again',
+      copiedAgainBtn: 'Message copied to clipboard!',
+    },
     services: {
       'goi-sach': {
         name: 'Clean Hair Wash',
@@ -224,14 +433,14 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       prop2Title: '1 Contact',
       prop3Title: 'Real Reviews',
       slaNotice: 'Response within 5 mins during business hours. Booking confirmed in under 20 mins.',
-      viewServicesCta: 'View Services & Pricing →',
+      viewServicesCta: 'View Services & Pricing',
       branchesCountNotice: '100+ branches · 12 cities · Standardized nationwide',
     },
   },
   ko: {
     appName: 'Glow Beauty 스파 네트워크',
     brandTagline: 'Glow Beauty 스파 네트워크',
-    introButton: '소개 →',
+    introButton: '소개',
     valuePills: ['전국 100+ 지점', '단일 정찰제', '표준화된 품질'],
     servicesTitle: '정찰제 뷰티 케어',
     selectSpaTitle: '지점 선택하기',
@@ -243,7 +452,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     openNowFilter: '영업 중',
     viewMap: '지도 보기',
     bookNow: '예약하기',
-    bookZalo: 'Zalo 간편 예약',
+    bookZalo: 'Zalo 예약',
     viewDetails: '상세보기',
     back: '뒤로가기',
     close: '닫기',
@@ -256,6 +465,49 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     certifiedBadge: 'SOP 인증',
     verifiedBadge: '검증 완료',
     standardBadge: '표준 지점',
+    cities: {
+      hn: '하노이',
+      hcm: '호치민',
+      dn: '다낭',
+    },
+    locationsCount: '개 지점',
+    photosCount: '장의 사진',
+    reviewsCount: '개 리뷰',
+    mapLocationTitle: '지도 상 위치',
+    openingHoursTitle: '영업 시간',
+    openNowStatus: '영업 중',
+    closedStatus: '영업 종료',
+    todayLabel: '오늘',
+    customerReviewsTitle: '고객 이용 후기',
+    verifiedCustomerBadge: '✓ 인증 완료',
+    booking: {
+      title: 'Zalo 우선 간편 예약',
+      subtitle: 'Glow Beauty 네트워크',
+      serviceLabel: '서비스',
+      dateLabel: '예약 날짜',
+      today: '오늘',
+      tomorrow: '내일',
+      thu: '목',
+      timeLabel: '희망 시간대',
+      fullyBooked: '마감',
+      messagePreviewTitle: '고객센터 전송 메시지',
+      autoCopyNotice: 'Zalo 열기를 누르면 메시지가 클립보드에 자동 복사됩니다.',
+      copyBtn: '복사',
+      copiedBtn: '복사됨',
+      openZaloBtn: 'Zalo GlowBeautyPass 열기',
+      pasteGuide: 'Zalo는 내용이 자동 입력되지 않으므로, 복사된 메시지를 채팅창에 붙여넣기(Paste)만 하시면 됩니다.',
+      slaNotice: '사전 결제 없음. 고객센터에서 잔여 좌석 확인 후 20분 내로 확정 안내드립니다.',
+      confirmedTitle: '메시지 복사 완료',
+      confirmedAction: 'Glow Beauty Zalo 채팅창에 붙여넣고 전송해 주세요.',
+      confirmedSla: '고객센터에서 20분 이내로 예약을 확정해 드립니다.',
+      branchLabel: '스파 지점',
+      serviceSummaryLabel: '서비스',
+      timeSummaryLabel: '예약 시간',
+      fixedPriceLabel: '정찰 가격',
+      doneBtn: '완료',
+      copyAgainBtn: '메시지 다시 복사',
+      copiedAgainBtn: '클립보드에 다시 복사되었습니다!',
+    },
     services: {
       'goi-sach': {
         name: '클린 샴푸 케어',
@@ -310,7 +562,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       prop2Title: '단일 채널',
       prop3Title: '실제 후기',
       slaNotice: '근무 시간 내 5분 이내 응답. 20분 이내 예약 확정.',
-      viewServicesCta: '서비스 & 가격 보기 →',
+      viewServicesCta: '서비스 & 가격 보기',
       branchesCountNotice: '100+ 개 지점 · 12개 도시 · 전국 단일 정찰제',
     },
   },
@@ -319,4 +571,20 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
 export function getMvpTranslation(locale: string): LocalizedMVP {
   const code = (locale === 'en' || locale === 'ko' ? locale : 'vi') as 'vi' | 'en' | 'ko';
   return MVP_TRANSLATIONS[code];
+}
+
+export function getLocalizedBookingMessage(
+  locale: string,
+  serviceName: string,
+  priceStr: string,
+  spaDisplayName: string,
+  slotStr: string
+): string {
+  if (locale === 'en') {
+    return `Hello GlowBeautyPass, I would like to book ${serviceName} (${priceStr}) at ${spaDisplayName}, ${slotStr}. Please check and confirm the slot availability for me. (Xin chào, mình muốn đặt ${serviceName} tại ${spaDisplayName}, ${slotStr})`;
+  }
+  if (locale === 'ko') {
+    return `안녕하세요 GlowBeautyPass, ${spaDisplayName} 지점에서 ${slotStr}에 ${serviceName} (${priceStr}) 예약을 원합니다. 잔여 좌석 확인 부탁드립니다. (Xin chào, mình muốn đặt ${serviceName} tại ${spaDisplayName}, ${slotStr})`;
+  }
+  return `Xin chào GlowBeautyPass, mình muốn đặt ${serviceName} (${priceStr}) tại ${spaDisplayName}, ${slotStr}. Nhờ tổng đài kiểm tra chỗ trống giúp mình.`;
 }
