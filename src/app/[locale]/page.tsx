@@ -80,10 +80,10 @@ export default function MVPPage() {
     }
   }, [searchQuery]);
 
-  // Hide footer on map view to maximize map screen space
+  // Hide footer on map view or spa detail to maximize screen space & keep bottom bar pinned
   useEffect(() => {
-    const isMapMode = screen === 'spas' && viewMode === 'map';
-    if (isMapMode) {
+    const isFullScreen = (screen === 'spas' && viewMode === 'map') || screen === 'detail';
+    if (isFullScreen) {
       document.body.classList.add('hide-footer-for-map');
     } else {
       document.body.classList.remove('hide-footer-for-map');
@@ -174,14 +174,14 @@ export default function MVPPage() {
     handleOpenBooking(activeService.id);
   };
 
-  const isMapMode = screen === 'spas' && viewMode === 'map';
+  const isFullScreenApp = (screen === 'spas' && viewMode === 'map') || screen === 'detail';
 
   return (
-    <div className={`w-full bg-[#FAF8F5] flex flex-col items-center justify-start ${isMapMode ? 'p-0 h-[calc(100dvh-56px)] overflow-hidden' : 'p-0 sm:py-6'} font-sans`}>
+    <div className={`w-full bg-[#FAF8F5] flex flex-col items-center justify-start ${isFullScreenApp ? 'p-0 h-[calc(100dvh-56px)] overflow-hidden' : 'p-0 sm:py-6'} font-sans`}>
       {/* Mobile-first App Container */}
       <div
         className={`w-full max-w-[440px] bg-[#F5F7F4] relative flex flex-col sm:rounded-[32px] sm:shadow-xl sm:border sm:border-stone-200/80 transition-all ${
-          isMapMode
+          isFullScreenApp
             ? 'h-full sm:h-[calc(100dvh-56px)] overflow-hidden mb-0'
             : 'mb-0 sm:mb-10'
         }`}
@@ -780,8 +780,8 @@ export default function MVPPage() {
         {/* SCREEN 4: SPA DETAIL (Chi Tiết Chi Nhánh & Đặt Lịch)       */}
         {/* ========================================================= */}
         {screen === 'detail' && (
-          <div className="flex-1 flex flex-col bg-[#F5F7F4] animate-in fade-in duration-200">
-            <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 flex flex-col h-full min-h-0 overflow-hidden bg-[#F5F7F4] animate-in fade-in duration-200">
+            <div id="spa-detail-content" className="flex-1 overflow-y-auto pb-8">
               {/* Photo Gallery with Back Button */}
               <div className="relative">
                 <div className="flex gap-1 overflow-x-auto bg-[#DDE4D9] no-scrollbar">
@@ -909,33 +909,33 @@ export default function MVPPage() {
               </div>
             </div>
 
-            {/* Bottom Action Sheet for Booking */}
-            <div className="p-4 bg-white border-t border-[#DDE4D9] flex-none">
-              <div className="flex items-center justify-between mb-3 px-1">
-                <div>
-                  <div className="text-[11px] text-[#6B7869]">{t.serviceDetails}</div>
-                  <div className="text-[14px] font-bold text-[#093E06]">
-                    {getServiceInfo(activeService.id).name}
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-[16px] font-bold text-[#093E06]">
+            {/* Fixed Bottom Action Bar for Booking (Simple, Compact, Fixed at bottom) */}
+            <div className="flex-none bg-white/95 backdrop-blur-md border-t border-[#E8EDE6] px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] z-30">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[18px] sm:text-[19px] font-bold text-[#093E06] leading-tight">
                     {formatPrice(activeService.price)}
-                  </div>
-                  <div className="text-[10.5px] text-[#40813D] font-medium">
-                    {t.fixedPriceNotice}
-                  </div>
+                  </span>
+                  <span className="text-[11.5px] text-[#6B7869] truncate mt-0.5">
+                    {getServiceInfo(activeService.id).name}
+                  </span>
                 </div>
-              </div>
 
-              <button
-                type="button"
-                onClick={() => handleOpenBooking(activeService.id)}
-                className="w-full bg-[#40813D] hover:bg-[#357033] active:scale-[0.99] text-white rounded-full h-13 flex items-center justify-center gap-2 font-bold text-[15.5px] transition-all shadow-md cursor-pointer"
-              >
-                <span>{t.bookNow}</span>
-                <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => handleOpenBooking(activeService.id)}
+                  className="h-11 px-5 rounded-full bg-[#40813D] hover:bg-[#356F32] active:bg-[#093E06] text-white text-[13.5px] font-bold shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
+                >
+                  <Image
+                    src="/brand/Logo-Zalo-App-Rec.webp"
+                    alt="Zalo"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4 rounded-xs shrink-0 object-contain"
+                  />
+                  <span>{t.bookNow}</span>
+                </button>
+              </div>
             </div>
           </div>
         )}
