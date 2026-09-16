@@ -38,8 +38,20 @@ export function LanguageSwitcher() {
         type="button"
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 px-2 py-1.5 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 text-white font-bold transition-all active:scale-95 cursor-pointer shadow-xs"
-        aria-label={`Ngôn ngữ: ${currentLang.name}`}
-        title={`Ngôn ngữ: ${currentLang.name}`}
+        aria-label={
+          locale === 'en'
+            ? `Language: ${currentLang.name}`
+            : locale === 'ko'
+            ? `언어: ${currentLang.name}`
+            : `Ngôn ngữ: ${currentLang.name}`
+        }
+        title={
+          locale === 'en'
+            ? `Language: ${currentLang.name}`
+            : locale === 'ko'
+            ? `언어: ${currentLang.name}`
+            : `Ngôn ngữ: ${currentLang.name}`
+        }
       >
         <div className="relative w-5 h-3.5 rounded-xs overflow-hidden shrink-0 shadow-xs">
           <Image
@@ -60,7 +72,7 @@ export function LanguageSwitcher() {
       {open && (
         <div className="absolute right-0 mt-2 w-44 rounded-2xl border border-stone-200 bg-white p-1.5 shadow-xl animate-in fade-in slide-in-from-top-2 duration-150 text-stone-800">
           <div className="px-2.5 py-1 text-[10px] font-bold text-stone-400 uppercase tracking-wider">
-            Chọn Ngôn Ngữ
+            {locale === 'en' ? 'Select Language' : locale === 'ko' ? '언어 선택' : 'Chọn Ngôn Ngữ'}
           </div>
           {LANGUAGE_OPTIONS.map((l) => {
             const isSelected = locale === l.code

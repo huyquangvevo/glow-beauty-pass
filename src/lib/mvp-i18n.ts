@@ -480,6 +480,39 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     todayLabel: '오늘',
     customerReviewsTitle: '고객 이용 후기',
     verifiedCustomerBadge: '✓ 인증 완료',
+    menuTitle: '정찰제 가격 메뉴',
+    menuNotice: 'Glow Beauty 전 지점 동일한 정찰 가격이 적용됩니다.',
+    getDirections: '길찾기',
+    bookPriorityZalo: 'Zalo 우선 간편 예약',
+    reviews: [
+      {
+        initial: 'N',
+        name: '응옥 안 (Ngoc Anh)',
+        stars: '★★★★★',
+        when: '2일 전',
+        text: '정찰 가격 그대로였고 회원권 강요나 추가 요금이 전혀 없었습니다. 테라피스트 실력이 훌륭해서 퇴근 후 45분간 힐링 샴푸 마사지를 편안하게 받았습니다.',
+        photos: 2,
+        verifiedPhone: true,
+      },
+      {
+        initial: 'T',
+        name: '투 하 (Thu Ha)',
+        stars: '★★★★☆',
+        when: '1주일 전',
+        text: '고객센터에서 10분 만에 예약 확정을 해줬고, 도착하자마자 지체 없이 안내받았습니다. 매장이 청결하고 레몬그라스 아로마 향이 마음을 편안하게 해줍니다.',
+        photos: 1,
+        verifiedPhone: true,
+      },
+      {
+        initial: 'M',
+        name: '민 투 (Minh Tu)',
+        stars: '★★★★★',
+        when: '2주일 전',
+        text: '개별 스파마다 일일이 전화해서 가격이나 빈자리 물어볼 필요 없이 Zalo 하나로 해결되니 너무 편리합니다. 여행자나 직장인에게 강력 추천합니다!',
+        photos: 2,
+        verifiedPhone: true,
+      },
+    ],
     booking: {
       title: 'Zalo 우선 간편 예약',
       subtitle: 'Glow Beauty 네트워크',
@@ -587,4 +620,21 @@ export function getLocalizedBookingMessage(
     return `안녕하세요 GlowBeautyPass, ${spaDisplayName} 지점에서 ${slotStr}에 ${serviceName} (${priceStr}) 예약을 원합니다. 잔여 좌석 확인 부탁드립니다. (Xin chào, mình muốn đặt ${serviceName} tại ${spaDisplayName}, ${slotStr})`;
   }
   return `Xin chào GlowBeautyPass, mình muốn đặt ${serviceName} (${priceStr}) tại ${spaDisplayName}, ${slotStr}. Nhờ tổng đài kiểm tra chỗ trống giúp mình.`;
+}
+
+export function formatDayRange(d: string, locale: string): string {
+  if (locale === 'en') {
+    if (d === 'T2 - T6') return 'Mon - Fri';
+    if (d === 'T7 - CN') return 'Sat - Sun';
+  } else if (locale === 'ko') {
+    if (d === 'T2 - T6') return '월 - 금';
+    if (d === 'T7 - CN') return '토 - 일';
+  }
+  return d;
+}
+
+export function formatTodayHours(todayStr: string, locale: string): string {
+  const timeOnly = todayStr.replace(/^Hôm nay\s*/i, '');
+  const t = getMvpTranslation(locale);
+  return `${t.todayLabel} ${timeOnly}`;
 }

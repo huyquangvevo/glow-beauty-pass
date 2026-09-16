@@ -198,31 +198,36 @@ export default function GlowGoogleMap({
         div.style.position = 'absolute';
         div.style.cursor = 'pointer';
 
+        const iconUrl = this.isSelected ? '/icons/map-pin-mint.png' : '/icons/map-pin-green.png';
+
         div.innerHTML = `
           <div style="
-            display: inline-flex;
+            position: relative;
+            width: ${this.isSelected ? '42px' : '38px'};
+            height: ${this.isSelected ? '42px' : '38px'};
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22), 0 1px 4px rgba(0, 0, 0, 0.14)${
+              this.isSelected ? ', 0 0 0 3.5px #356F32' : ''
+            };
+            display: flex;
             align-items: center;
-            gap: 5px;
-            white-space: nowrap;
-            padding: 5px 10px 5px 7px;
-            border-radius: 9999px;
-            background: ${this.isSelected ? '#40813D' : '#ffffff'};
-            color: ${this.isSelected ? '#ffffff' : '#093E06'};
-            font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, sans-serif);
-            font-size: 12px;
-            font-weight: 700;
-            border: 1.5px solid ${this.isSelected ? '#093E06' : '#40813D'};
-            box-shadow: 0 4px 14px rgba(9, 62, 6, ${this.isSelected ? '0.35' : '0.18'});
+            justify-content: center;
+            border: 2px solid #ffffff;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
           ">
-            <span style="
-              width: 14px;
-              height: 14px;
-              border-radius: 50%;
-              background: ${this.isSelected ? '#ffffff' : '#E8FDE7'};
-              display: inline-block;
-              box-shadow: inset 0 0 0 3px ${this.isSelected ? '#093E06' : '#40813D'};
-            "></span>
-            <span>${this.label}</span>
+            <img
+              src="${iconUrl}"
+              alt="${this.spa.name}"
+              style="
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                display: block;
+                object-fit: cover;
+                pointer-events: none;
+              "
+            />
           </div>
         `;
 

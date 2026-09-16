@@ -234,9 +234,18 @@ export function HeaderSearch() {
   }, [spas, userCoords])
 
   const serviceChips = [
-    { label: 'Gội 49K', value: '49K' },
-    { label: 'Trị liệu 149K', value: '149K' },
-    { label: 'Gội dưỡng sinh SOP', value: 'dưỡng sinh' },
+    {
+      label: tNav.has('chipWash') ? tNav('chipWash') : 'Gội 49K',
+      value: '49K',
+    },
+    {
+      label: tNav.has('chipTherapy') ? tNav('chipTherapy') : 'Trị liệu 149K',
+      value: '149K',
+    },
+    {
+      label: tNav.has('chipSpa') ? tNav('chipSpa') : 'Gội dưỡng sinh SOP',
+      value: 'dưỡng sinh',
+    },
   ]
 
   // Filtered matching spas & wards based on input
@@ -604,7 +613,7 @@ export function HeaderSearch() {
               <div className="px-3 pt-1 pb-1">
                 <div className="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2 flex items-center gap-1.5">
                   <Tag className="w-3.5 h-3.5 text-stone-400" />
-                  <span>Gói dịch vụ hot</span>
+                  <span>{tNav.has('popularServices') ? tNav('popularServices') : 'Gói dịch vụ hot'}</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {serviceChips.map((s) => (
@@ -901,7 +910,7 @@ export function HeaderSearch() {
               <div className="bg-white rounded-2xl p-4 border border-stone-200/90 shadow-sm space-y-3">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-500 flex items-center gap-1.5">
                   <Tag className="w-3.5 h-3.5 text-amber-600" />
-                  <span>Gói dịch vụ hot</span>
+                  <span>{tNav.has('popularServices') ? tNav('popularServices') : 'Gói dịch vụ hot'}</span>
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {serviceChips.map((s) => (

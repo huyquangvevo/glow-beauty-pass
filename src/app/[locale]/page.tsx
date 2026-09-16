@@ -887,10 +887,10 @@ export default function MVPPage() {
               {/* Real Reviews */}
               <div className="p-4 bg-white mb-6">
                 <div className="text-[11.5px] font-bold text-[#6B7869] uppercase tracking-wider mb-3">
-                  {t.customerReviewsTitle} ({MVP_REVIEWS.length})
+                  {t.customerReviewsTitle} ({t.reviews.length})
                 </div>
                 <div className="space-y-3">
-                  {MVP_REVIEWS.map((r, idx) => (
+                  {t.reviews.map((r, idx) => (
                     <div
                       key={idx}
                       className="p-3 rounded-[16px] bg-[#F5F7F4] border border-[#E8EDE6]"

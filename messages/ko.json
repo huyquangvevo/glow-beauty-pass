@@ -35,7 +35,11 @@
     "searchPlaceholder": "주변 스파 찾기...",
     "supportBadge": "정찰제 49,000동부터 (~2,700원) • 바가지 요금 일체 없음",
     "callHotline": "예약 상담 핫라인",
-    "language": "언어 (Language)"
+    "language": "언어 (Language)",
+    "popularServices": "인기 뷰티 패키지",
+    "chipWash": "헤어 샴푸 49K",
+    "chipTherapy": "어깨 테라피 149K",
+    "chipSpa": "헤드 스파 SOP"
   },
   "Hero": {
     "slide1": {

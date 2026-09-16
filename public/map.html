@@ -14,17 +14,13 @@
   .leaflet-control-attribution{font-size:9px;background:rgba(255,255,255,.72)}
   .gbp-pin{background:none;border:0}
   .gbp-pin > div{
-    display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
-    padding:6px 10px 6px 7px;border-radius:999px;background:#fff;color:#093E06;
-    font:600 12px/1 "Be Vietnam Pro",system-ui,sans-serif;
-    border:1.5px solid #40813F;box-shadow:0 3px 10px rgba(9,62,6,.22);
-    transform:translate(-50%,-100%);cursor:pointer;transition:.18s;
+    display:flex;align-items:center;justify-content:center;
+    width:38px;height:38px;border-radius:50%;background:#fff;
+    border:2px solid #fff;box-shadow:0 3px 12px rgba(0,0,0,.22),0 1px 4px rgba(0,0,0,.14);
+    transform:translate(-50%,-50%);cursor:pointer;transition:.18s;
   }
-  .gbp-pin > div i{width:16px;height:16px;border-radius:50%;background:#E8FDE7;display:block;
-    box-shadow:inset 0 0 0 4px #40813F}
-  .gbp-pin.sel > div{background:#40813F;color:#fff;border-color:#2C6329;
-    box-shadow:0 8px 20px rgba(9,62,6,.35);font-weight:700}
-  .gbp-pin.sel > div i{background:#fff;box-shadow:inset 0 0 0 4px #E8FDE7}
+  .gbp-pin > div img{width:100%;height:100%;border-radius:50%;display:block;object-fit:cover;pointer-events:none}
+  .gbp-pin.sel > div{width:42px;height:42px;box-shadow:0 4px 18px rgba(9,62,6,.45),0 0 0 3.5px #356F32}
   .gbp-me{background:none;border:0}
   .gbp-me > div{width:16px;height:16px;border-radius:50%;background:#1b6ef3;
     border:2.5px solid #fff;box-shadow:0 0 0 7px rgba(27,110,243,.16);transform:translate(-50%,-50%)}
@@ -45,9 +41,10 @@ if (mini) { map.dragging.disable(); map.touchZoom.disable(); map.doubleClickZoom
 function post(m){ parent.postMessage(Object.assign({source:'gbp-map'}, m), '*'); }
 
 function icon(label, sel){
+  var iconSrc = sel ? '/icons/map-pin-mint.png' : '/icons/map-pin-green.png';
   return L.divIcon({
     className:'gbp-pin' + (sel ? ' sel' : ''),
-    html:'<div><i></i>'+label+'</div>',
+    html:'<div><img src="' + iconSrc + '" alt="Glow" /></div>',
     iconSize:[0,0], iconAnchor:[0,0]
   });
 }

@@ -35,7 +35,11 @@
     "searchPlaceholder": "Find nearby spas...",
     "supportBadge": "Fixed Price from 49K VND (~$2) • No Hidden Fees",
     "callHotline": "Zalo Hub Hotline",
-    "language": "Language"
+    "language": "Language",
+    "popularServices": "Popular Services",
+    "chipWash": "Herbal Wash 49K",
+    "chipTherapy": "Therapy 149K",
+    "chipSpa": "Head Spa SOP"
   },
   "Hero": {
     "slide1": {

@@ -6,7 +6,6 @@ import { useParams } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import {
   ArrowLeft,
-  ArrowRight,
   Star,
   Compass,
   ShieldCheck,
@@ -14,15 +13,17 @@ import {
 import {
   MVP_SERVICES,
   MVP_SPAS,
-  MVP_REVIEWS,
   MVPSpa,
   formatPrice,
 } from '@/lib/mvp-data';
+import { getMvpTranslation, formatDayRange, formatTodayHours } from '@/lib/mvp-i18n';
 import BookingBottomSheet from '@/components/BookingBottomSheet';
 
 export default function SpaDetailPage() {
   const params = useParams();
   const slug = params?.slug as string;
+  const locale = (params?.locale as string) || 'vi';
+  const t = getMvpTranslation(locale);
 
   // Find matching spa or fallback
   const spa: MVPSpa =
@@ -33,6 +34,9 @@ export default function SpaDetailPage() {
   const [selectedServiceId, setSelectedServiceId] = useState<string>('duong-sinh');
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
   const miniMapIframeRef = useRef<HTMLIFrameElement>(null);
+
+  const selectedService =
+    MVP_SERVICES.find((s) => s.id === selectedServiceId) || MVP_SERVICES[2];
 
   const handleOpenBooking = (serviceId?: string) => {
     if (serviceId) setSelectedServiceId(serviceId);
@@ -66,14 +70,19 @@ export default function SpaDetailPage() {
             <Link
               href="/"
               className="absolute top-4 left-4 w-9 h-9 rounded-full bg-white/95 shadow-md flex items-center justify-center text-[#093E06] transition-transform active:scale-90 cursor-pointer"
-              aria-label="Quay lại"
+              aria-label={t.back}
             >
               <ArrowLeft className="w-4 h-4" strokeWidth={2.2} />
             </Link>
 
-            {/* Certified Badge */}
+            {/* Certified / Verified Badge */}
             <div className="absolute top-4 right-4 bg-[#093E06] text-white text-[10.5px] font-bold tracking-widest px-3 py-1 rounded-full uppercase shadow-md">
-              {spa.tier}
+              {spa.tier === 'Certified' ? t.certifiedBadge : t.verifiedBadge}
+            </div>
+
+            {/* Photos Count Badge */}
+            <div className="absolute bottom-3 right-3 bg-black/60 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full backdrop-blur-xs">
+              {spa.photos.length} {t.photosCount}
             </div>
           </div>
 
@@ -84,7 +93,9 @@ export default function SpaDetailPage() {
             </h1>
             <div className="flex items-center gap-1.5 text-[12.5px] text-[#4A5848] mt-1 leading-normal">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
-              <span>{spa.rating.toFixed(1)} · {spa.reviews} đánh giá · {spa.dist} · {spa.ward}, {spa.cityName}</span>
+              <span>
+                {spa.rating.toFixed(1)} · {spa.reviews} {t.reviewsCount} · {spa.dist} · {spa.ward}, {t.cities[spa.city] || spa.cityName}
+              </span>
             </div>
 
             {/* Status pill */}
@@ -96,9 +107,9 @@ export default function SpaDetailPage() {
                     : 'bg-[#FBF1D8] text-[#7A5A12]'
                 }`}
               >
-                {spa.open ? 'Đang mở' : 'Đã đóng'}
+                {spa.open ? t.openNowStatus : t.closedStatus}
               </span>
-              <span className="text-[12px] text-[#4A5848]">{spa.today}</span>
+              <span className="text-[12px] text-[#4A5848]">{formatTodayHours(spa.today, locale)}</span>
             </div>
 
             {/* Hours Box */}
@@ -108,7 +119,7 @@ export default function SpaDetailPage() {
                   key={i}
                   className="flex justify-between text-[12.5px] text-[#4A5848]"
                 >
-                  <span>{h.d}</span>
+                  <span>{formatDayRange(h.d, locale)}</span>
                   <span className="font-semibold text-[#093E06]">{h.t}</span>
                 </div>
               ))}
@@ -118,11 +129,12 @@ export default function SpaDetailPage() {
           {/* Standardized Price Menu */}
           <div className="px-5 pt-6">
             <h2 className="text-[13.5px] font-bold text-[#093E06] mb-2.5">
-              Menu giá niêm yết
+              {t.menuTitle}
             </h2>
             <div className="bg-white border border-[#DDE4D9] rounded-[18px] overflow-hidden shadow-xs divide-y divide-[#EFF2EE]">
               {MVP_SERVICES.map((s) => {
                 const isCurrent = s.id === selectedServiceId;
+                const sInfo = t.services[s.id] || { name: s.name, dur: s.dur };
                 return (
                   <div
                     key={s.id}
@@ -133,11 +145,11 @@ export default function SpaDetailPage() {
                   >
                     <div className="flex-1 min-w-0 pr-3">
                       <div className="text-[13.5px] font-semibold text-[#093E06]">
-                        {s.name}
+                        {sInfo.name}
                       </div>
-                      {s.dur && (
+                      {sInfo.dur && (
                         <div className="text-[11px] text-[#6B7869] mt-0.5">
-                          {s.dur}
+                          {sInfo.dur}
                         </div>
                       )}
                     </div>
@@ -149,21 +161,21 @@ export default function SpaDetailPage() {
               })}
             </div>
             <p className="text-[11px] text-[#6B7869] mt-2">
-              Chi nhánh Glow Beauty - áp dụng đồng giá toàn hệ thống.
+              {t.menuNotice}
             </p>
           </div>
 
           {/* Location Mini Map */}
           <div className="px-5 pt-6">
             <h2 className="text-[13.5px] font-bold text-[#093E06] mb-2.5">
-              Vị trí
+              {t.mapLocationTitle}
             </h2>
             <div className="rounded-[18px] overflow-hidden border border-[#DDE4D9] bg-[#EEF1EC] shadow-xs">
               <div className="relative h-40">
                 <iframe
                   ref={miniMapIframeRef}
                   src="/map.html?mini=1"
-                  title="Vị trí spa"
+                  title={t.mapLocationTitle}
                   className="absolute inset-0 w-full h-full border-0"
                 />
               </div>
@@ -182,7 +194,7 @@ export default function SpaDetailPage() {
                   className="shrink-0 text-[12.5px] font-bold text-[#093E06] bg-[#E8FDE7] hover:bg-[#d8f5d7] rounded-full px-3.5 py-2 transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                   <Compass className="w-3.5 h-3.5 text-[#093E06]" strokeWidth={2} />
-                  <span>Chỉ đường</span>
+                  <span>{t.getDirections}</span>
                 </button>
               </div>
             </div>
@@ -192,16 +204,16 @@ export default function SpaDetailPage() {
           <div className="px-5 pt-6 pb-28">
             <div className="flex items-baseline justify-between mb-3">
               <h2 className="text-[13.5px] font-bold text-[#093E06]">
-                Đánh giá có ảnh
+                {t.customerReviewsTitle}
               </h2>
               <div className="flex items-center gap-1 text-[#40813F] text-[11.5px] font-semibold">
                 <ShieldCheck className="w-3.5 h-3.5" strokeWidth={2} />
-                <span>Xác thực số điện thoại</span>
+                <span>{t.verifiedCustomerBadge}</span>
               </div>
             </div>
 
             <div className="space-y-3">
-              {MVP_REVIEWS.map((r, i) => (
+              {t.reviews.map((r, i) => (
                 <div
                   key={i}
                   className="bg-white border border-[#DDE4D9] rounded-[18px] p-3.5 shadow-xs"
@@ -254,16 +266,33 @@ export default function SpaDetailPage() {
           </div>
         </div>
 
-        {/* Sticky Bottom Booking Button */}
-        <div className="p-3.5 bg-white border-t border-[#DDE4D9] flex-none">
-          <button
-            type="button"
-            onClick={() => handleOpenBooking(selectedServiceId)}
-            className="w-full bg-[#40813F] hover:bg-[#357033] active:scale-[0.99] text-white rounded-full h-14 flex items-center justify-center gap-2 font-bold text-[15.5px] shadow-md transition-all cursor-pointer"
-          >
-            <span>Đặt lịch ưu tiên qua Zalo</span>
-            <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
-          </button>
+        {/* Modern Compact Fixed Bottom Bar for Booking */}
+        <div className="flex-none bg-white/95 backdrop-blur-md border-t border-[#E8EDE6] px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] z-30">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col min-w-0">
+              <span className="text-[18px] sm:text-[19px] font-bold text-[#093E06] leading-tight">
+                {formatPrice(selectedService.price)}
+              </span>
+              <span className="text-[11.5px] text-[#6B7869] truncate mt-0.5">
+                {t.services[selectedServiceId]?.name || selectedService.name}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => handleOpenBooking(selectedServiceId)}
+              className="h-11 px-5 rounded-full bg-[#40813D] hover:bg-[#356F32] active:bg-[#093E06] text-white text-[13.5px] font-bold shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
+            >
+              <Image
+                src="/brand/Logo-Zalo-App-Rec.webp"
+                alt="Zalo"
+                width={16}
+                height={16}
+                className="w-4 h-4 rounded-xs shrink-0 object-contain"
+              />
+              <span>{t.bookNow}</span>
+            </button>
+          </div>
         </div>
 
         {/* Bottom Sheet */}
@@ -274,6 +303,7 @@ export default function SpaDetailPage() {
           services={MVP_SERVICES}
           initialServiceId={selectedServiceId}
           zaloPhone="0359178342"
+          locale={locale}
         />
       </div>
     </div>
