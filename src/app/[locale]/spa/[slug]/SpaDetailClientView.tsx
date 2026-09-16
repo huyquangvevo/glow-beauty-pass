@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import {
   ArrowLeft,
@@ -28,12 +29,32 @@ export default function SpaDetailClientView({
   locale,
 }: SpaDetailClientViewProps) {
   const t = getMvpTranslation(locale);
-  const [selectedServiceId, setSelectedServiceId] = useState<string>('duong-sinh');
+  const searchParams = useSearchParams();
+  const serviceFromQuery = searchParams.get('service');
+
+  // Filter only services that THIS spa offers!
+  const spaServices = useMemo(() => {
+    return MVP_SERVICES.filter((s) => spa.serviceIds && spa.serviceIds.includes(s.id));
+  }, [spa]);
+
+  const [selectedServiceId, setSelectedServiceId] = useState<string>(() => {
+    if (serviceFromQuery && spa.serviceIds?.includes(serviceFromQuery)) {
+      return serviceFromQuery;
+    }
+    return spaServices[0]?.id || 'duong-sinh';
+  });
+
+  useEffect(() => {
+    if (serviceFromQuery && spa.serviceIds?.includes(serviceFromQuery)) {
+      setSelectedServiceId(serviceFromQuery);
+    }
+  }, [serviceFromQuery, spa]);
+
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
   const miniMapIframeRef = useRef<HTMLIFrameElement>(null);
 
   const selectedService =
-    MVP_SERVICES.find((s) => s.id === selectedServiceId) || MVP_SERVICES[2];
+    spaServices.find((s) => s.id === selectedServiceId) || spaServices[0] || MVP_SERVICES[2];
 
   const handleOpenBooking = (serviceId?: string) => {
     if (serviceId) setSelectedServiceId(serviceId);
@@ -65,7 +86,7 @@ export default function SpaDetailClientView({
 
             {/* Back Button to /spas */}
             <Link
-              href="/spas"
+              href={`/spas?service=${selectedServiceId}`}
               className="absolute top-4 left-4 w-9 h-9 rounded-full bg-white/95 shadow-md flex items-center justify-center text-[#093E06] transition-transform active:scale-90 cursor-pointer"
               aria-label={t.back}
             >
@@ -129,7 +150,7 @@ export default function SpaDetailClientView({
               {t.menuTitle}
             </h2>
             <div className="bg-white border border-[#DDE4D9] rounded-[18px] overflow-hidden shadow-xs divide-y divide-[#EFF2EE]">
-              {MVP_SERVICES.map((s) => {
+              {spaServices.map((s) => {
                 const isCurrent = s.id === selectedServiceId;
                 const sInfo = t.services[s.id] || { name: s.name, dur: s.dur };
                 return (
@@ -137,12 +158,19 @@ export default function SpaDetailClientView({
                     key={s.id}
                     onClick={() => setSelectedServiceId(s.id)}
                     className={`flex items-center justify-between p-3.5 cursor-pointer transition-colors ${
-                      isCurrent ? 'bg-[#F3FAF2]' : 'hover:bg-stone-50'
+                      isCurrent ? 'bg-[#F3FAF2] border-l-4 border-l-[#40813D]' : 'hover:bg-stone-50'
                     }`}
                   >
                     <div className="flex-1 min-w-0 pr-3">
-                      <div className="text-[13.5px] font-semibold text-[#093E06]">
-                        {sInfo.name}
+                      <div className="flex items-center gap-2">
+                        <span className="text-[13.5px] font-semibold text-[#093E06]">
+                          {sInfo.name}
+                        </span>
+                        {isCurrent && (
+                          <span className="text-[10px] font-bold text-[#40813D] bg-[#E8FDE7] px-2 py-0.5 rounded-full">
+                            Đang chọn
+                          </span>
+                        )}
                       </div>
                       {sInfo.dur && (
                         <div className="text-[11px] text-[#6B7869] mt-0.5">
@@ -301,7 +329,7 @@ export default function SpaDetailClientView({
         isOpen={isBottomSheetOpen}
         onClose={() => setIsBottomSheetOpen(false)}
         spa={spa}
-        services={MVP_SERVICES}
+        services={spaServices}
         initialServiceId={selectedServiceId}
         zaloPhone="0359178342"
         locale={locale}

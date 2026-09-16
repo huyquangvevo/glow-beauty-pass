@@ -40,4 +40,4 @@ pnpm dlx tsx prisma/seed.ts
 # 4. Khởi động server
 pnpm dev
 ```
-Mở trình duyệt tại [http://localhost:3000](http://localhost:3000).
+Mở trình duyệt tại [http://localhost:3005](http://localhost:3005).

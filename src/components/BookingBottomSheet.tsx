@@ -37,10 +37,20 @@ export default function BookingBottomSheet({
   const currentLocale = (locale || (params?.locale as string) || 'vi') as 'vi' | 'en' | 'ko';
   const t = getMvpTranslation(currentLocale);
 
-  const serviceList = services && services.length > 0 ? services : MVP_SERVICES;
-  const [selectedServiceId, setSelectedServiceId] = useState<string>(
-    initialServiceId || (serviceList[2] ? serviceList[2].id : serviceList[0]?.id || '')
-  );
+  const serviceList = React.useMemo(() => {
+    if (services && services.length > 0) return services;
+    if (spa && spa.serviceIds && spa.serviceIds.length > 0) {
+      return MVP_SERVICES.filter((s) => spa.serviceIds.includes(s.id));
+    }
+    return MVP_SERVICES;
+  }, [services, spa]);
+
+  const [selectedServiceId, setSelectedServiceId] = useState<string>(() => {
+    if (initialServiceId && serviceList.some((s) => s.id === initialServiceId)) {
+      return initialServiceId;
+    }
+    return serviceList[0]?.id || 'duong-sinh';
+  });
   const [selectedDayId, setSelectedDayId] = useState<string>('d0');
   const [selectedTime, setSelectedTime] = useState<string>('14:30');
   const [isDone, setIsDone] = useState<boolean>(false);
@@ -53,12 +63,14 @@ export default function BookingBottomSheet({
     { id: 'd2', label: t.booking.thu, date: '18/09' },
   ];
 
-  // Keep selectedService in sync if initialServiceId changes
+  // Keep selectedService in sync with serviceList and initialServiceId
   React.useEffect(() => {
-    if (initialServiceId) {
+    if (initialServiceId && serviceList.some((s) => s.id === initialServiceId)) {
       setSelectedServiceId(initialServiceId);
+    } else if (serviceList.length > 0 && !serviceList.some((s) => s.id === selectedServiceId)) {
+      setSelectedServiceId(serviceList[0].id);
     }
-  }, [initialServiceId]);
+  }, [initialServiceId, serviceList, selectedServiceId]);
 
   if (!isOpen) return null;
 

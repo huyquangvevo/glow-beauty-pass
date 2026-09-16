@@ -98,13 +98,17 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
   const [sheetSpaId, setSheetSpaId] = useState<string>('la-xanh-cau-giay');
   const [sheetInitialServiceId, setSheetInitialServiceId] = useState<string>(initialServiceId);
 
-  // Synchronize URL search params: q, lat, lng/lon
+  // Synchronize URL search params: q, lat, lng/lon, service
   useEffect(() => {
     const qParam = searchParams.get('q');
     if (qParam && qParam !== searchQuery) {
       setSearchQuery(qParam);
     }
-  }, [searchParams, searchQuery, setSearchQuery]);
+    const svcParam = searchParams.get('service');
+    if (svcParam && svcParam !== selectedServiceId) {
+      setSelectedServiceId(svcParam);
+    }
+  }, [searchParams, searchQuery, setSearchQuery, selectedServiceId]);
 
   // Parse explicit coordinates from URL (e.g. ?lat=20.984503&lng=105.835853 or ?lat=20984503&lng=105835853)
   const urlCoords = useMemo(() => {
@@ -239,6 +243,10 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
 
     return spasToFilter
       .filter((s) => {
+        // Critical: Only include spas that offer the selected service category!
+        if (selectedServiceId && (!s.serviceIds || !s.serviceIds.includes(selectedServiceId))) {
+          return false;
+        }
         if (minRating && s.rating < 4.8) return false;
         if (openNow && !s.open) return false;
         return true;
@@ -262,7 +270,14 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
         }
         return b.rating - a.rating;
       });
-  }, [selectedCityId, minRating, openNow, searchQuery, activeSearchCenter]);
+  }, [selectedCityId, selectedServiceId, minRating, openNow, searchQuery, activeSearchCenter]);
+
+  // If currently selected spa is no longer in filteredSpas (e.g. after switching service), switch to first available spa
+  useEffect(() => {
+    if (filteredSpas.length > 0 && !filteredSpas.some((s) => s.id === selectedSpaId)) {
+      setSelectedSpaId(filteredSpas[0].id);
+    }
+  }, [filteredSpas, selectedSpaId]);
 
   const activeSelectedSpa =
     filteredSpas.find((s) => s.id === selectedSpaId) || filteredSpas[0] || MVP_SPAS[0];
@@ -422,6 +437,35 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
             </div>
           </div>
 
+          {/* Service Category Switcher Strip */}
+          <div className="flex items-center gap-1.5 px-3 py-2 bg-white border-b border-[#E8EDE6] overflow-x-auto no-scrollbar shrink-0 shadow-2xs">
+            {MVP_SERVICES.map((s) => {
+              const isSelected = s.id === selectedServiceId;
+              const sInfo = getServiceInfo(s.id);
+              const countInCity = MVP_SPAS.filter((spa) => spa.city === selectedCityId && spa.serviceIds?.includes(s.id)).length;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedServiceId(s.id);
+                    router.replace(`/spas?service=${s.id}&city=${selectedCityId}&view=${viewMode}`, { scroll: false });
+                  }}
+                  className={`px-3 py-1 rounded-full text-[11.5px] font-semibold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                    isSelected
+                      ? 'bg-[#40813D] text-white shadow-xs'
+                      : 'bg-[#F5F7F4] text-stone-700 border border-[#DDE4D9] hover:border-[#40813D]'
+                  }`}
+                >
+                  <span>{sInfo.short || sInfo.name}</span>
+                  <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-white text-stone-500 border border-stone-200'}`}>
+                    {countInCity}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
           {/* TAB 1: MAP VIEW */}
           {viewMode === 'map' && (
             <div className="relative flex-1 w-full h-full min-h-0 overflow-hidden bg-stone-100">
@@ -440,7 +484,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
               {activeSelectedSpa && (
                 <div className="absolute bottom-4 left-3 right-3 z-10 animate-in slide-in-from-bottom-3 duration-200">
                   <div
-                    onClick={() => router.push(`/spa/${activeSelectedSpa.id}`)}
+                    onClick={() => router.push(`/spa/${activeSelectedSpa.id}?service=${selectedServiceId}`)}
                     className="bg-white/95 backdrop-blur-md rounded-[22px] p-3.5 border border-stone-200 shadow-xl flex gap-3 cursor-pointer hover:border-[#40813D] transition-all"
                   >
                     <div className="relative w-20 h-20 rounded-[16px] overflow-hidden bg-[#E8FDE7] shrink-0">
@@ -509,6 +553,16 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
           {/* TAB 2: LIST VIEW */}
           {viewMode === 'list' && (
             <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-12">
+              {/* Service Count Summary Header */}
+              <div className="text-[12px] font-bold text-[#093E06] px-1 flex items-center justify-between">
+                <span>
+                  {filteredSpas.length} {locale === 'en' ? 'spas offering' : locale === 'ko' ? '개 스파' : 'chi nhánh có'} &quot;{getServiceInfo(activeService.id).name}&quot;
+                </span>
+                <span className="text-[11px] font-medium text-[#6B7869]">
+                  {activeCity.name}
+                </span>
+              </div>
+
               {filteredSpas.length === 0 ? (
                 <div className="py-12 text-center text-stone-500 text-sm">
                   <p>{t.noSpasFound}</p>
@@ -526,7 +580,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 filteredSpas.map((s) => (
                   <div
                     key={s.id}
-                    onClick={() => router.push(`/spa/${s.id}`)}
+                    onClick={() => router.push(`/spa/${s.id}?service=${selectedServiceId}`)}
                     className="bg-white rounded-[20px] p-3.5 border border-[#DDE4D9] flex gap-3.5 cursor-pointer hover:border-[#40813D] hover:shadow-md transition-all active:scale-[0.99]"
                   >
                     <div className="relative w-22 h-22 rounded-[16px] overflow-hidden bg-[#E8FDE7] shrink-0">

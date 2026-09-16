@@ -146,9 +146,9 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                   : '/spas/spa_thumb_4.jpg';
 
               return (
-                <div
+                <Link
                   key={s.id}
-                  onClick={() => handleOpenBooking(s.id)}
+                  href={`/spas?service=${s.id}`}
                   className={`${
                     s.wide ? 'col-span-2' : 'col-span-1'
                   } group bg-white rounded-[22px] border border-[#DDE4D9] overflow-hidden flex flex-col justify-between cursor-pointer transition-all duration-200 hover:border-[#3A7B37] hover:shadow-md active:scale-[0.99]`}
@@ -167,6 +167,11 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                         priority={s.id === 'goi-sach'}
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
+
+                      {/* Price Pill Over Image */}
+                      <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-xs text-[#093E06] rounded-full px-2.5 py-0.5 text-[11px] min-[360px]:text-[12px] font-bold shadow-xs">
+                        {formatPrice(s.price)}
+                      </div>
 
                       {s.wide && (
                         <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase shadow-xs">
@@ -189,39 +194,17 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                     </div>
                   </div>
 
-                  {/* Card Footer: Clear Price & Prominent Zalo Button (v1.0 Style) */}
+                  {/* Card Footer: Spa count & Action */}
                   <div className="px-2 min-[360px]:px-2.5 sm:px-3 pb-2.5 sm:pb-3 pt-1.5 border-t border-[#EDF2EB] flex items-center justify-between gap-1 mt-auto">
-                    <span className="text-[12px] min-[360px]:text-[12.5px] min-[390px]:text-[13.5px] sm:text-[14px] font-black text-[#093E06] leading-none shrink-0 tracking-tight">
-                      {formatPrice(s.price)}
+                    <span className="text-[11.5px] font-semibold text-[#6B7869]">
+                      {s.count} {locale === 'en' ? 'spas' : locale === 'ko' ? '개 지점' : 'chi nhánh'}
                     </span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenBooking(s.id);
-                      }}
-                      className="h-7 sm:h-7.5 px-2 min-[390px]:px-2.5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[10.5px] min-[360px]:text-[11px] min-[390px]:text-[11.5px] sm:text-[12px] font-bold flex items-center gap-1 shadow-2xs transition-all cursor-pointer shrink-0 whitespace-nowrap"
-                    >
-                      <Image
-                        src="/brand/Logo-Zalo-App-Rec.webp"
-                        alt="Zalo"
-                        width={14}
-                        height={14}
-                        className="w-3.5 h-3.5 rounded-[3px] shrink-0 object-contain shadow-2xs"
-                      />
-                      <span>
-                        {s.wide ? (
-                          t.bookZalo
-                        ) : (
-                          <>
-                            <span className="inline min-[390px]:hidden">{t.bookZaloShort}</span>
-                            <span className="hidden min-[390px]:inline">{t.bookZalo}</span>
-                          </>
-                        )}
-                      </span>
-                    </button>
+                    <div className="h-7 px-2.5 rounded-full bg-[#E8FDE7] group-hover:bg-[#236B38] text-[#236B38] group-hover:text-white text-[11px] min-[390px]:text-[11.5px] font-bold flex items-center gap-1 transition-colors">
+                      <span>{locale === 'en' ? 'View Spas' : locale === 'ko' ? '스파 보기' : 'Xem Spa'}</span>
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

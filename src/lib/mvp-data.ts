@@ -28,6 +28,7 @@ export interface MVPSpa {
   hours: { d: string; t: string }[];
   address: string;
   photos: string[];
+  serviceIds: string[];
 }
 
 export interface MVPReview {
@@ -109,32 +110,60 @@ export const MVP_SERVICES: MVPService[] = [
 
 import snapshotData from './spas-snapshot.json';
 
-const SNAPSHOT_SPAS: MVPSpa[] = (snapshotData.spas || []).map((s: any, idx: number) => ({
-  id: s.slug || s.id,
-  name: s.name,
-  ward: s.ward || 'Cầu Giấy',
-  district: s.district || 'Cầu Giấy',
-  city: 'hn' as const,
-  cityName: 'Hà Nội',
-  lat: s.latitude,
-  lng: s.longitude,
-  rating: s.rating || 4.9,
-  reviews: s.reviewCount || 42,
-  dist: `${(0.4 + (idx * 0.2)).toFixed(1).replace('.', ',')} km`,
-  open: true,
-  tier: (s.tier === 'CERTIFIED' ? 'Certified' : 'Verified') as 'Certified' | 'Verified',
-  today: s.openHours ? `Hôm nay ${s.openHours}` : 'Hôm nay 09:00 - 21:30',
-  hours: [
-    { d: 'T2 - T6', t: s.openHours || '09:00 - 21:30' },
-    { d: 'T7 - CN', t: s.openHours || '09:00 - 21:30' },
-  ],
-  address: s.address,
-  photos: [
-    `/spas/spa_thumb_${(idx % 5) + 1}.jpg`,
-    '/banners/banner_spa_ambiance.jpg',
-    '/banners/banner_herbal_wash.jpg',
-  ],
-}));
+const SNAPSHOT_SERVICES_MAP: Record<string, string[]> = {
+  'an-nhien-duong-sinh-cau-giay': ['duong-sinh', 'massage-body', 'combo-goi-da'],
+  'moc-tra-beauty-trung-hoa': ['cham-soc-da', 'combo-goi-da', 'triet-long'],
+  'bach-cuc-hair-spa-duy-tan': ['goi-sach', 'goi-dau-cap', 'duong-sinh'],
+  'la-que-duong-sinh-quan-hoa-bang': ['goi-sach', 'goi-dau-cap', 'duong-sinh'],
+  'sen-vang-beauty-care-tran-thai-tong': ['cham-soc-da', 'combo-goi-da', 'triet-long'],
+  'huong-thao-duoc-to-hieu': ['goi-dau-cap', 'duong-sinh', 'massage-body', 'combo-goi-da'],
+  'ngoc-lan-thao-moc-hoang-quoc-viet': ['goi-sach', 'duong-sinh', 'cham-soc-da'],
+  'tam-an-duong-tam-xuan-thuy': ['duong-sinh', 'massage-body'],
+  'thu-gian-pho-nguyen-khang': ['massage-body', 'combo-goi-da', 'duong-sinh'],
+  'yen-nhien-thao-vien-chua-ha': ['goi-sach', 'goi-dau-cap', 'duong-sinh'],
+  'glow-care-tran-dang-ninh': ['cham-soc-da', 'combo-goi-da', 'triet-long'],
+  'moc-mien-spa-vu-pham-ham': ['duong-sinh', 'massage-body', 'cham-soc-da'],
+  'nha-truc-hair-relax-trung-kinh': ['goi-sach', 'goi-dau-cap', 'duong-sinh'],
+  'thien-duong-spa-pham-van-dong': ['massage-body', 'combo-goi-da', 'triet-long'],
+  'an-khang-duong-sinh-le-van-luong': ['goi-sach', 'duong-sinh', 'massage-body', 'combo-goi-da'],
+};
+
+const SNAPSHOT_SPAS: MVPSpa[] = (snapshotData.spas || []).map((s: any, idx: number) => {
+  const slug = s.slug || s.id;
+  const serviceIds = SNAPSHOT_SERVICES_MAP[slug] || [
+    'duong-sinh',
+    idx % 2 === 0 ? 'massage-body' : 'goi-sach',
+    idx % 3 === 0 ? 'cham-soc-da' : 'combo-goi-da',
+  ];
+
+  return {
+    id: slug,
+    name: s.name,
+    ward: s.ward || 'Cầu Giấy',
+    district: s.district || 'Cầu Giấy',
+    city: 'hn' as const,
+    cityName: 'Hà Nội',
+    lat: s.latitude,
+    lng: s.longitude,
+    rating: s.rating || 4.9,
+    reviews: s.reviewCount || 42,
+    dist: `${(0.4 + (idx * 0.2)).toFixed(1).replace('.', ',')} km`,
+    open: true,
+    tier: (s.tier === 'CERTIFIED' ? 'Certified' : 'Verified') as 'Certified' | 'Verified',
+    today: s.openHours ? `Hôm nay ${s.openHours}` : 'Hôm nay 09:00 - 21:30',
+    hours: [
+      { d: 'T2 - T6', t: s.openHours || '09:00 - 21:30' },
+      { d: 'T7 - CN', t: s.openHours || '09:00 - 21:30' },
+    ],
+    address: s.address,
+    photos: [
+      `/spas/spa_thumb_${(idx % 5) + 1}.jpg`,
+      '/banners/banner_spa_ambiance.jpg',
+      '/banners/banner_herbal_wash.jpg',
+    ],
+    serviceIds,
+  };
+});
 
 export const MVP_SPAS: MVPSpa[] = [
   ...SNAPSHOT_SPAS,
@@ -163,6 +192,7 @@ export const MVP_SPAS: MVPSpa[] = [
       '/banners/banner_spa_ambiance.jpg',
       '/banners/banner_herbal_wash.jpg',
     ],
+    serviceIds: ['goi-sach', 'goi-dau-cap', 'duong-sinh'],
   },
   {
     id: 'sen-thanh-q1',
@@ -189,6 +219,7 @@ export const MVP_SPAS: MVPSpa[] = [
       '/banners/banner_neck_massage.jpg',
       '/banners/banner_spa_ambiance.jpg',
     ],
+    serviceIds: ['goi-sach', 'duong-sinh', 'massage-body', 'cham-soc-da', 'combo-goi-da'],
   },
   {
     id: 'huong-sen-thanh-xuan',
@@ -215,6 +246,7 @@ export const MVP_SPAS: MVPSpa[] = [
       '/banners/banner_herbal_wash.jpg',
       '/banners/banner_spa_ambiance.jpg',
     ],
+    serviceIds: ['duong-sinh', 'massage-body', 'combo-goi-da'],
   },
   {
     id: 'an-nhien-q3',
@@ -241,6 +273,7 @@ export const MVP_SPAS: MVPSpa[] = [
       '/banners/banner_spa_ambiance.jpg',
       '/banners/banner_neck_massage.jpg',
     ],
+    serviceIds: ['cham-soc-da', 'combo-goi-da', 'triet-long'],
   },
   {
     id: 'moc-lan-binh-thanh',
@@ -267,6 +300,7 @@ export const MVP_SPAS: MVPSpa[] = [
       '/banners/banner_herbal_wash.jpg',
       '/banners/banner_spa_ambiance.jpg',
     ],
+    serviceIds: ['duong-sinh', 'massage-body', 'combo-goi-da'],
   },
   {
     id: 'tinh-tam-hai-ba-trung',
@@ -293,6 +327,7 @@ export const MVP_SPAS: MVPSpa[] = [
       '/banners/banner_spa_ambiance.jpg',
       '/banners/banner_neck_massage.jpg',
     ],
+    serviceIds: ['duong-sinh', 'massage-body'],
   },
   {
     id: 'nha-goi-dau-26-dong-da',
@@ -319,6 +354,7 @@ export const MVP_SPAS: MVPSpa[] = [
       '/banners/banner_herbal_wash.jpg',
       '/banners/banner_spa_ambiance.jpg',
     ],
+    serviceIds: ['goi-sach', 'goi-dau-cap', 'duong-sinh'],
   },
   {
     id: 'bao-ngoc-hai-chau',
@@ -345,6 +381,7 @@ export const MVP_SPAS: MVPSpa[] = [
       '/banners/banner_spa_ambiance.jpg',
       '/banners/banner_neck_massage.jpg',
     ],
+    serviceIds: ['cham-soc-da', 'triet-long', 'combo-goi-da'],
   },
   {
     id: 'may-trang-son-tra',
@@ -371,6 +408,7 @@ export const MVP_SPAS: MVPSpa[] = [
       '/banners/banner_herbal_wash.jpg',
       '/banners/banner_spa_ambiance.jpg',
     ],
+    serviceIds: ['goi-sach', 'goi-dau-cap', 'duong-sinh'],
   },
 ];
 
