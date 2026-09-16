@@ -1,192 +1,129 @@
-'use client'
+'use client';
 
-import { Link, usePathname } from '@/i18n/routing'
-import Image from 'next/image'
-import { BrandWordmark } from './BrandLogo'
-import { ShieldCheck, Sparkles, MessageCircle, Phone, Heart } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/routing';
+import Image from 'next/image';
+import { BrandWordmark } from './BrandLogo';
+import { ShieldCheck, Sparkles, Phone, MessageCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function Footer() {
-  const pathname = usePathname()
-  const t = useTranslations('Footer')
-  const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342'
+  const t = useTranslations('Footer');
+  const zaloHubLink =
+    process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342';
 
   return (
-    <footer className="bg-[#40813D] text-white pt-12 pb-16 border-t border-white/15">
-      <div className="max-w-md sm:max-w-xl md:max-w-4xl mx-auto px-5 sm:px-6 space-y-10">
-        {/* BRAND IDENTITY & APP STORE ROW */}
-        <div className="space-y-4">
-          <Link href="/" className="inline-block group" aria-label="glow beauty pass">
-            <BrandWordmark className="h-10 sm:h-11 text-white hover:opacity-90 transition-opacity drop-shadow-xs" />
-          </Link>
-          <p className="text-xs sm:text-sm text-emerald-50/90 max-w-md leading-relaxed font-normal">
-            {t('tagline')}
-          </p>
+    <footer className="bg-[#40813D] text-white pt-8 pb-10 sm:py-10 border-t border-white/15 font-sans">
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
+        {/* Main Row: Brand Info & Clean Navigation */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          {/* Brand Wordmark & Concise Tagline */}
+          <div className="space-y-1.5 max-w-md">
+            <Link href="/" className="inline-block group" aria-label="Glow Beauty Pass">
+              <BrandWordmark className="h-8 sm:h-9 w-auto text-white hover:opacity-90 transition-opacity drop-shadow-xs" />
+            </Link>
+            <p className="text-[12.5px] sm:text-[13px] text-emerald-100/90 leading-relaxed font-normal">
+              {t.has('shortTagline') ? t('shortTagline') : t('tagline')}
+            </p>
+          </div>
 
-          {/* OFFICIAL APP STORE & GOOGLE PLAY BADGES (Exact from Glow Explore) */}
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+          {/* Clean Horizontal Navigation Pills */}
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <Link
+              href="/"
+              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[12px] font-semibold text-white transition-colors"
+            >
+              {t.has('navHome') ? t('navHome') : 'Home'}
+            </Link>
+            <Link
+              href="/about"
+              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[12px] font-semibold text-white transition-colors"
+            >
+              {t.has('navAbout') ? t('navAbout') : 'About Us'}
+            </Link>
+            <Link
+              href="/spas"
+              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[12px] font-semibold text-white transition-colors"
+            >
+              {t.has('navSpas') ? t('navSpas') : 'Find Spas'}
+            </Link>
+            <a
+              href={zaloHubLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-[#093E06] hover:bg-emerald-50 text-[12px] font-bold shadow-xs transition-all active:scale-95"
+            >
+              <Image
+                src="/brand/Logo-Zalo-App-Rec.webp"
+                alt="Zalo"
+                width={14}
+                height={14}
+                className="w-3.5 h-3.5 rounded-xs object-contain"
+              />
+              <span>{t.has('navContact') ? t('navContact') : 'Zalo: 0359 178 342'}</span>
+            </a>
+          </nav>
+        </div>
+
+        {/* Compact Trust & Value Strip */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/15 text-[11.5px] sm:text-[12px] text-emerald-100/85">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+            <span className="flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+              <span>{t('commitNoExtra')}</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>{t('commitSop')}</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <Phone className="w-3.5 h-3.5 text-amber-300" />
+              <a href="tel:0359178342" className="hover:text-white transition-colors">
+                0359 178 342
+              </a>
+            </span>
+          </div>
+
+          {/* Official App Download Badges (Compact) */}
+          <div className="flex items-center gap-2">
             <a
               href="https://apps.apple.com/us/app/glow-home-massage-beauty/id6443428819"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:opacity-85 transition-opacity active:scale-95 drop-shadow-sm inline-block"
+              className="hover:opacity-85 transition-opacity active:scale-95 inline-block"
+              aria-label="App Store"
             >
               <Image
                 src="/assets/images/app-store.svg"
-                alt="Download on the App Store"
-                width={140}
-                height={42}
-                className="w-[140px] h-[42px] object-contain"
+                alt="App Store"
+                width={100}
+                height={30}
+                className="h-[26px] w-auto object-contain"
                 unoptimized
               />
             </a>
-
             <a
               href="https://play.google.com/store/apps/details?id=com.glow.mobileApp"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:opacity-85 transition-opacity active:scale-95 drop-shadow-sm inline-block"
+              className="hover:opacity-85 transition-opacity active:scale-95 inline-block"
+              aria-label="Google Play"
             >
               <Image
                 src="/assets/images/google-play.svg"
-                alt="Get it on Google Play"
-                width={140}
-                height={42}
-                className="w-[140px] h-[42px] object-contain"
+                alt="Google Play"
+                width={100}
+                height={30}
+                className="h-[26px] w-auto object-contain"
                 unoptimized
               />
             </a>
           </div>
         </div>
 
-        {/* NAVIGATION LINKS GRID */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-4 border-t border-white/20 text-xs sm:text-[13px]">
-          {/* Col 1: Dịch vụ đồng giá */}
-          <div className="space-y-3">
-            <h4 className="font-extrabold text-[12px] uppercase tracking-wider text-white">
-              {t('colPackages')}
-            </h4>
-            <ul className="space-y-2 text-emerald-100/90">
-              <li>
-                <Link href="/spas?service=goi-sach" className="hover:text-white transition-colors">
-                  {t('pkg1')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/spas?service=duong-sinh" className="hover:text-white transition-colors">
-                  {t('pkg2')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/spas?service=massage-body" className="hover:text-white transition-colors">
-                  {t('pkg3')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/spas?service=combo-goi-da" className="hover:text-white transition-colors">
-                  {t('pkg4')}
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Col 2: Khu Vực Cầu Giấy */}
-          <div className="space-y-3">
-            <h4 className="font-extrabold text-[12px] uppercase tracking-wider text-white">
-              {t('colCoverage')}
-            </h4>
-            <ul className="space-y-2 text-emerald-100/90">
-              <li>
-                <Link href="/spas" className="hover:text-white transition-colors">
-                  {t('wardDichVong')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/spas" className="hover:text-white transition-colors">
-                  {t('wardDuyTan')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/spas" className="hover:text-white transition-colors">
-                  {t('wardHoangDaoThuy')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/spas" className="hover:text-white transition-colors">
-                  {t('wardVuPhamHam')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/spas" className="hover:text-white transition-colors">
-                  {t('wardToHieu')}
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Col 3: Cam kết & Hỗ trợ */}
-          <div className="space-y-3 col-span-2 sm:col-span-1">
-            <h4 className="font-extrabold text-[12px] uppercase tracking-wider text-white">
-              {t('colCommitment')}
-            </h4>
-            <ul className="space-y-2 text-emerald-100/90">
-              <li>
-                <Link href="/about" className="hover:text-white font-medium underline underline-offset-2 transition-colors inline-block mb-1">
-                  Tìm hiểu quy trình SOP Glow Beauty &rarr;
-                </Link>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>{t('commitNoExtra')}</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>{t('commitSop')}</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <Heart className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>{t('commitNoUpsell')}</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <MessageCircle className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>{t('commitZalo5min')}</span>
-              </li>
-            </ul>
-
-            <div className="pt-2 flex flex-wrap items-center gap-2">
-              <a
-                href="tel:0359178342"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-white hover:text-amber-200 transition-colors bg-white/15 hover:bg-white/25 px-3 py-1.5 rounded-full border border-white/20"
-              >
-                <Phone className="w-3.5 h-3.5 text-amber-300" />
-                <span>{t('callHotline')}</span>
-              </a>
-
-              <a
-                href={zaloHubLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#093E06] hover:bg-white transition-colors bg-amber-300 px-3 py-1.5 rounded-full shadow-xs"
-              >
-                <Image
-                  src="/brand/Logo-Zalo-App-Rec.webp"
-                  alt="Zalo"
-                  width={15}
-                  height={15}
-                  className="w-3.5 h-3.5 rounded-xs shrink-0 object-contain"
-                />
-                <span>{t('chatZalo')}</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* BOTTOM COPYRIGHT & ECOSYSTEM NOTE */}
-        <div className="pt-6 border-t border-white/20 text-[11px] text-emerald-50/75 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-          <p>
-            {t('copyright')}
-          </p>
-          <div className="flex items-center gap-4 text-emerald-50/80">
+        {/* Bottom Copyright Strip */}
+        <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-emerald-100/65 text-center sm:text-left">
+          <p>© 2026 Glow Vietnam. All rights reserved.</p>
+          <div className="flex items-center gap-3">
             <span>{t('sopBadge')}</span>
             <span>•</span>
             <span>{t('privacyBadge')}</span>
@@ -196,5 +133,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

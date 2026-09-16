@@ -128,7 +128,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     openNowFilter: 'Đang mở cửa',
     viewMap: 'Xem bản đồ',
     bookNow: 'Đặt lịch',
-    bookZalo: 'Đặt lịch',
+    bookZalo: 'Đặt Zalo',
     viewDetails: 'Chi tiết',
     back: 'Quay lại',
     close: 'Đóng',
@@ -138,7 +138,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     clearFilter: 'Xoá lọc',
     noSpasFound: 'Không tìm thấy spa nào phù hợp.',
     viewServices: 'Xem dịch vụ',
-    certifiedBadge: 'Chuẩn hoá SOP',
+    certifiedBadge: 'Đã kiểm định',
     verifiedBadge: 'Đã xác thực',
     standardBadge: 'Tiêu chuẩn',
     cities: {
@@ -290,7 +290,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     openNowFilter: 'Open now',
     viewMap: 'View Map',
     bookNow: 'Book Now',
-    bookZalo: 'Book Now',
+    bookZalo: 'Book Zalo',
     viewDetails: 'Details',
     back: 'Back',
     close: 'Close',
@@ -300,7 +300,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     clearFilter: 'Clear filter',
     noSpasFound: 'No spas found matching your criteria.',
     viewServices: 'View services',
-    certifiedBadge: 'SOP Certified',
+    certifiedBadge: 'Certified',
     verifiedBadge: 'Verified',
     standardBadge: 'Standard',
     cities: {
@@ -421,7 +421,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       heroTag: 'STANDARDIZED SPA NETWORK',
       heroTitle: 'One message.\nClear price upfront.',
       heroDesc:
-        'Glow Beauty is a standardized spa network: 100+ centers with uniform transparent pricing, strict SOP quality, and single Zalo hotline.',
+        'Glow Beauty is a standardized spa network: 100+ centers with uniform transparent pricing, strict quality standards, and single Zalo hotline.',
       howItWorks: 'HOW IT WORKS',
       step1Title: 'Pick service, see fixed price',
       step1Desc: 'Herbal head spa is 149,000đ at every single branch.',
@@ -452,7 +452,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     openNowFilter: '영업 중',
     viewMap: '지도 보기',
     bookNow: '예약하기',
-    bookZalo: '예약하기',
+    bookZalo: 'Zalo 예약',
     viewDetails: '상세보기',
     back: '뒤로가기',
     close: '닫기',
@@ -462,7 +462,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     clearFilter: '필터 해제',
     noSpasFound: '조건에 맞는 스파를 찾을 수 없습니다.',
     viewServices: '서비스 보기',
-    certifiedBadge: 'SOP 인증',
+    certifiedBadge: '인증 완료',
     verifiedBadge: '검증 완료',
     standardBadge: '표준 지점',
     cities: {
@@ -583,7 +583,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       heroTag: '표준화 스파 네트워크',
       heroTitle: '간편한 예약.\n투명한 정찰제.',
       heroDesc:
-        'Glow Beauty는 전국 100여 개 엄선 스파를 동일한 정찰 가격, 엄격한 SOP 절차, 단일 Zalo 고객센터로 연결합니다.',
+        'Glow Beauty는 전국 100여 개 엄선 스파를 동일한 정찰 가격, 엄격한 품질 관리, 단일 Zalo 고객센터로 연결합니다.',
       howItWorks: '이용 방법',
       step1Title: '서비스 선택, 바로 가격 확인',
       step1Desc: '두피 영양 스파는 어떤 지점을 방문해도 149,000동입니다.',
@@ -614,12 +614,24 @@ export function getLocalizedBookingMessage(
   slotStr: string
 ): string {
   if (locale === 'en') {
-    return `Hello GlowBeautyPass, I would like to book ${serviceName} (${priceStr}) at ${spaDisplayName}, ${slotStr}. Please check and confirm the slot availability for me. (Xin chào, mình muốn đặt ${serviceName} tại ${spaDisplayName}, ${slotStr})`;
+    return `Hi Glow, I'd like to book:
+🌿 ${serviceName} (${priceStr})
+📍 ${spaDisplayName}
+⏰ ${slotStr}
+Please check if this slot is open!`;
   }
   if (locale === 'ko') {
-    return `안녕하세요 GlowBeautyPass, ${spaDisplayName} 지점에서 ${slotStr}에 ${serviceName} (${priceStr}) 예약을 원합니다. 잔여 좌석 확인 부탁드립니다. (Xin chào, mình muốn đặt ${serviceName} tại ${spaDisplayName}, ${slotStr})`;
+    return `안녕하세요 Glow, 예약 문의합니다:
+🌿 ${serviceName} (${priceStr})
+📍 ${spaDisplayName}
+⏰ ${slotStr}
+예약 가능한지 확인 부탁드려요!`;
   }
-  return `Xin chào GlowBeautyPass, mình muốn đặt ${serviceName} (${priceStr}) tại ${spaDisplayName}, ${slotStr}. Nhờ tổng đài kiểm tra chỗ trống giúp mình.`;
+  return `Chào Glow, mình đặt lịch nhé:
+🌿 ${serviceName} (${priceStr})
+📍 ${spaDisplayName}
+⏰ ${slotStr}
+Check chỗ giúp mình nha!`;
 }
 
 export function formatDayRange(d: string, locale: string): string {

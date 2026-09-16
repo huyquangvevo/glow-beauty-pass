@@ -319,7 +319,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                         className="object-cover"
                       />
                       <div className="absolute top-1.5 left-1.5 bg-white/90 backdrop-blur-xs px-1.5 py-0.5 rounded-full text-[10px] font-bold text-[#093E06]">
-                        {activeSelectedSpa.tier === 'Certified' ? 'SOP' : 'OK'}
+                        {activeSelectedSpa.tier === 'Certified' ? (locale === 'en' ? 'TOP' : locale === 'ko' ? '인증' : 'Chuẩn') : 'OK'}
                       </div>
                     </div>
 
@@ -405,7 +405,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                         className="object-cover"
                       />
                       <div className="absolute top-1.5 left-1.5 bg-white/90 backdrop-blur-xs px-1.5 py-0.5 rounded-full text-[10px] font-bold text-[#093E06]">
-                        {s.tier === 'Certified' ? 'SOP' : 'OK'}
+                        {s.tier === 'Certified' ? (locale === 'en' ? 'TOP' : locale === 'ko' ? '인증' : 'Chuẩn') : 'OK'}
                       </div>
                     </div>
 

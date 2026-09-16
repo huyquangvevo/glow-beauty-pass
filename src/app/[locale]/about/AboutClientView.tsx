@@ -60,15 +60,21 @@ export default function AboutClientView({ locale }: AboutClientViewProps) {
           <div className="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-white/15">
             <div className="text-center">
               <div className="text-[18px] font-extrabold text-white">15+</div>
-              <div className="text-[11px] text-[#D4F4D3] font-medium">Spa đối tác</div>
+              <div className="text-[11px] text-[#D4F4D3] font-medium">
+                {locale === 'en' ? 'Verified Spas' : locale === 'ko' ? '제휴 스파' : 'Spa đối tác'}
+              </div>
             </div>
             <div className="text-center border-x border-white/15">
               <div className="text-[18px] font-extrabold text-white">49K - 149K</div>
-              <div className="text-[11px] text-[#D4F4D3] font-medium">Đồng giá cố định</div>
+              <div className="text-[11px] text-[#D4F4D3] font-medium">
+                {locale === 'en' ? 'Fixed Rates' : locale === 'ko' ? '정찰제 가격' : 'Đồng giá cố định'}
+              </div>
             </div>
             <div className="text-center">
               <div className="text-[18px] font-extrabold text-white">100%</div>
-              <div className="text-[11px] text-[#D4F4D3] font-medium">Kiểm định SOP</div>
+              <div className="text-[11px] text-[#D4F4D3] font-medium">
+                {locale === 'en' ? 'Quality Verified' : locale === 'ko' ? '품질 검증' : 'Kiểm định chất lượng'}
+              </div>
             </div>
           </div>
         </div>
@@ -135,7 +141,7 @@ export default function AboutClientView({ locale }: AboutClientViewProps) {
           <div className="flex items-center gap-2 mb-3">
             <div className="w-1.5 h-4 bg-[#40813D] rounded-full" />
             <h2 className="text-[13px] font-bold tracking-wider text-[#093E06] uppercase">
-              Giá trị cốt lõi
+              {locale === 'en' ? 'Core Values' : locale === 'ko' ? '핵심 가치' : 'Giá trị cốt lõi'}
             </h2>
           </div>
 
@@ -161,12 +167,18 @@ export default function AboutClientView({ locale }: AboutClientViewProps) {
           </div>
         </div>
 
-        {/* AI & GEO Citability / SLA Guarantee Block */}
+        {/* Quality Guarantee / SLA Guarantee Block */}
         <div className="px-5 pt-3 pb-6">
           <div className="bg-[#E8FDE7] rounded-[22px] p-4.5 flex gap-3.5 items-start border border-[#D4F4D3]">
             <Clock className="w-6 h-6 text-[#093E06] shrink-0 mt-0.5" strokeWidth={2} />
             <div className="text-[13px] leading-relaxed text-[#2C4A29]">
-              <strong className="font-bold block mb-1 text-[#093E06]">Cam kết dịch vụ minh bạch:</strong>
+              <strong className="font-bold block mb-1 text-[#093E06]">
+                {locale === 'en'
+                  ? 'Transparent Service Guarantee:'
+                  : locale === 'ko'
+                  ? '투명한 서비스 보장:'
+                  : 'Cam kết dịch vụ minh bạch:'}
+              </strong>
               {t.intro.slaNotice}
             </div>
           </div>

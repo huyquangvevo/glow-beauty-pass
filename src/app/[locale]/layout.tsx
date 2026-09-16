@@ -40,9 +40,9 @@ export async function generateMetadata({
   }
 
   const descriptions: Record<string, string> = {
-    vi: 'Mạng lưới 15 spa dưỡng sinh chuẩn hóa đầu tiên tại Cầu Giấy, Hà Nội. 3 gói gội cố định từ 49K - 149K, quy trình kiểm định SOP nghiêm ngặt, đặt lịch 1 chạm qua Zalo.',
-    en: 'First standardized beauty & head spa network in Cau Giay, Hanoi. 15 verified spas, 3 fixed price packages from 49K VND, strict SOP audit, instant Zalo booking.',
-    ko: '하노이 꼬우저이 15개 엄선 스파 네트워크. 49,000동부터 시작하는 투명한 정찰제, 철저한 SOP 검증, 바가지 없는 Zalo 간편 예약.',
+    vi: 'Mạng lưới 15 spa dưỡng sinh chuẩn hóa đầu tiên tại Cầu Giấy, Hà Nội. 3 gói gội cố định từ 49K - 149K, quy trình kiểm định chất lượng nghiêm ngặt, đặt lịch 1 chạm qua Zalo.',
+    en: 'First standardized beauty & head spa network in Cau Giay, Hanoi. 15 verified spas, 3 fixed price packages from 49K VND, strict quality audit, instant Zalo booking.',
+    ko: '하노이 꼬우저이 15개 엄선 스파 네트워크. 49,000동부터 시작하는 투명한 정찰제, 철저한 품질 검증, 바가지 없는 Zalo 간편 예약.',
   }
 
   const title = titles[locale] || titles.vi

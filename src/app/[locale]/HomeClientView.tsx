@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { Link, useRouter } from '@/i18n/routing';
 import {
@@ -10,17 +10,18 @@ import {
   ShieldCheck,
   MapPin,
   Clock,
-  Sparkles,
   ArrowRight,
-  CheckCircle2,
-  HelpCircle,
+  Sparkles,
 } from 'lucide-react';
 import {
   MVP_SERVICES,
+  MVP_SPAS,
+  MVPSpa,
   formatPrice,
 } from '@/lib/mvp-data';
 import { useSearch } from '@/context/SearchContext';
 import { getMvpTranslation } from '@/lib/mvp-i18n';
+import BookingBottomSheet from '@/components/BookingBottomSheet';
 
 interface HomeClientViewProps {
   locale: string;
@@ -31,6 +32,10 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
   const t = getMvpTranslation(locale);
   const { searchQuery, setSearchQuery } = useSearch();
 
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [selectedServiceId, setSelectedServiceId] = useState<string>('goi-dau-cap');
+  const [selectedSpa, setSelectedSpa] = useState<MVPSpa>(MVP_SPAS[0]);
+
   const getServiceInfo = (id: string) => {
     return t.services[id] || {
       name: MVP_SERVICES.find((s) => s.id === id)?.name || '',
@@ -39,8 +44,11 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
     };
   };
 
-  const handleSelectService = (serviceId: string) => {
-    router.push(`/spas?service=${serviceId}`);
+  const handleOpenBooking = (serviceId?: string) => {
+    if (serviceId) {
+      setSelectedServiceId(serviceId);
+    }
+    setIsBottomSheetOpen(true);
   };
 
   return (
@@ -101,8 +109,24 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
           )}
         </div>
 
-        {/* Content Body: Standardized Service Cards */}
-        <div className="p-3.5 pb-6">
+        {/* Content Body: Standardized Service Cards with Prominent Zalo CTAs */}
+        <div className="p-3.5 pb-5">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-[#3A7B37]" />
+              <span className="text-[13px] font-bold text-[#093E06] uppercase tracking-wide">
+                {t.servicesTitle}
+              </span>
+            </div>
+            <Link
+              href="/spas"
+              className="text-[12px] font-semibold text-[#3A7B37] hover:text-[#093E06] flex items-center gap-0.5 transition-colors"
+            >
+              <span>{locale === 'en' ? 'View 15+ Spas' : locale === 'ko' ? '15개 스파 보기' : 'Xem 15+ Spa'}</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
           <div className="grid grid-cols-2 gap-2.5">
             {MVP_SERVICES.map((s) => {
               const sInfo = getServiceInfo(s.id);
@@ -124,36 +148,42 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
               return (
                 <div
                   key={s.id}
-                  onClick={() => handleSelectService(s.id)}
+                  onClick={() => handleOpenBooking(s.id)}
                   className={`${
                     s.wide ? 'col-span-2' : 'col-span-1'
-                  } group bg-white rounded-[20px] border border-[#DDE4D9] overflow-hidden flex flex-col cursor-pointer transition-all duration-200 hover:border-[#40813D] hover:shadow-md active:scale-[0.99]`}
+                  } group bg-white rounded-[22px] border border-[#DDE4D9] overflow-hidden flex flex-col justify-between cursor-pointer transition-all duration-200 hover:border-[#3A7B37] hover:shadow-md active:scale-[0.99]`}
                 >
                   {/* Top Image Box */}
-                  <div
-                    className={`relative ${
-                      s.wide ? 'h-[138px]' : 'h-[112px]'
-                    } bg-[#E8FDE7] overflow-hidden`}
-                  >
-                    <Image
-                      src={servicePhoto}
-                      alt={sInfo.name}
-                      fill
-                      priority={s.id === 'goi-sach'}
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+                  <div>
+                    <div
+                      className={`relative ${
+                        s.wide ? 'h-[140px]' : 'h-[116px]'
+                      } bg-[#E8FDE7] overflow-hidden`}
+                    >
+                      <Image
+                        src={servicePhoto}
+                        alt={sInfo.name}
+                        fill
+                        priority={s.id === 'goi-sach'}
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
 
-                    {/* Floating Price Pill at top-left */}
-                    <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-xs rounded-full px-2.5 py-1 text-[12px] font-bold text-[#093E06] shadow-[0_2px_8px_rgba(9,62,6,0.18)] border border-white/60 pointer-events-none">
-                      {formatPrice(s.price)}
+                      {/* Floating Price Pill at top-left */}
+                      <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-xs rounded-full px-2.5 py-1 text-[12px] font-bold text-[#093E06] shadow-[0_2px_8px_rgba(9,62,6,0.18)] border border-white/60 pointer-events-none">
+                        {formatPrice(s.price)}
+                      </div>
+
+                      {s.wide && (
+                        <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase shadow-xs">
+                          {locale === 'en' ? 'Best Value' : locale === 'ko' ? '베스트' : 'Phổ Biến Nhất'}
+                        </div>
+                      )}
                     </div>
-                  </div>
 
-                  {/* Card Body */}
-                  <div className="p-3 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h2 className="font-bold text-[13.5px] sm:text-[14px] text-[#093E06] group-hover:text-[#40813D] transition-colors leading-tight line-clamp-1 m-0">
+                    {/* Card Body */}
+                    <div className="p-3">
+                      <h2 className="font-bold text-[13.5px] sm:text-[14px] text-[#093E06] group-hover:text-[#3A7B37] transition-colors leading-tight line-clamp-1 m-0">
                         {sInfo.name}
                       </h2>
                       {sInfo.dur && (
@@ -163,16 +193,30 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                         </div>
                       )}
                     </div>
+                  </div>
 
-                    <div className="mt-2.5 pt-2 border-t border-[#F0F4EF] flex items-center justify-between">
-                      <span className="text-[11px] font-semibold text-[#40813D] group-hover:underline flex items-center gap-0.5">
-                        <span>{t.chooseBranch}</span>
-                        <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                      </span>
-                      <span className="text-[10.5px] text-stone-400 font-medium">
-                        15+ spa
-                      </span>
-                    </div>
+                  {/* Card Footer: Clear Price & Prominent Zalo Booking Button (v1.0 Style) */}
+                  <div className="px-3 pb-3 pt-1 border-t border-[#EDF2EB] flex items-center justify-between gap-1.5 mt-auto">
+                    <span className="text-[13px] font-black text-[#093E06]">
+                      {formatPrice(s.price)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenBooking(s.id);
+                      }}
+                      className="h-7.5 px-3 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[11.5px] font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer shrink-0"
+                    >
+                      <Image
+                        src="/brand/Logo-Zalo-App-Rec.webp"
+                        alt="Zalo"
+                        width={14}
+                        height={14}
+                        className="rounded-[3px] shrink-0 object-contain shadow-2xs"
+                      />
+                      <span>{t.bookZalo}</span>
+                    </button>
                   </div>
                 </div>
               );
@@ -181,10 +225,10 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
         </div>
 
         {/* Explore All Spas Banner */}
-        <div className="px-3.5 pb-5">
+        <div className="px-3.5 pb-4">
           <Link
             href="/spas"
-            className="w-full bg-[#40813D] hover:bg-[#356F32] active:scale-[0.99] text-white rounded-[22px] p-4 flex items-center justify-between shadow-md transition-all cursor-pointer group"
+            className="w-full bg-[#2E6B34] hover:bg-[#25572A] active:scale-[0.99] text-white rounded-[22px] p-4 flex items-center justify-between shadow-md transition-all cursor-pointer group"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform">
@@ -192,10 +236,18 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
               </div>
               <div>
                 <div className="text-[15px] font-bold text-white leading-tight">
-                  Xem Bản Đồ & 15+ Spa Đối Tác
+                  {locale === 'en'
+                    ? 'Explore Map & 15+ Spas'
+                    : locale === 'ko'
+                    ? '지도 & 15개 제휴 스파 확인'
+                    : 'Bản Đồ 15+ Spa Đối Tác'}
                 </div>
                 <div className="text-[12px] text-[#E8FDE7] mt-0.5">
-                  Tìm chi nhánh gần nhất tại Cầu Giấy
+                  {locale === 'en'
+                    ? 'Find verified partner spas in Cau Giay'
+                    : locale === 'ko'
+                    ? '가장 가까운 하노i 꼬우저i 스파 찾기'
+                    : 'Tìm chi nhánh gần bạn nhất tại Cầu Giấy'}
                 </div>
               </div>
             </div>
@@ -205,30 +257,58 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
           </Link>
         </div>
 
-        {/* AI Citability & GEO Answer Block (Generative Engine Optimization) */}
-        <div className="px-3.5 pb-6">
-          <div className="bg-white rounded-[22px] p-4.5 border border-[#DDE4D9] shadow-xs space-y-3">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#40813D]" />
-              <h3 className="text-[13px] font-bold text-[#093E06] uppercase tracking-wider m-0">
-                Chuẩn Mực SOP Glow Beauty Pass
-              </h3>
+        {/* Prominent Sticky Bottom Zalo Booking Bar (v1.0 Essential Feature) */}
+        <div className="sticky bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#E8EDE6] px-4 py-3 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col min-w-0">
+              <span className="text-[13.5px] font-bold text-[#093E06] leading-tight">
+                {locale === 'en'
+                  ? 'Priority Zalo Booking'
+                  : locale === 'ko'
+                  ? 'Zalo 우선 예약'
+                  : 'Đặt Lịch Ưu Tiên Zalo'}
+              </span>
+              <span className="text-[11px] text-[#6B7869] truncate mt-0.5">
+                {locale === 'en'
+                  ? 'Confirmation within 20 mins'
+                  : locale === 'ko'
+                  ? '20분 내 예약 확정 안내'
+                  : 'Tổng đài xác nhận trong 20 phút'}
+              </span>
             </div>
-            <p className="text-[12.5px] leading-relaxed text-[#4A5848] m-0">
-              Glow Beauty Pass là mạng lưới spa làm đẹp và dưỡng sinh chuẩn hóa đầu tiên tại Cầu Giấy, Hà Nội. Toàn bộ các cơ sở đối tác đều trải qua quy trình thẩm định 30 tiêu chí nghiêm ngặt, đảm bảo mức giá niêm yết cố định từ 49.000đ đến 149.000đ mà không có bất kỳ khoản phụ thu hay tiền boa ép buộc nào.
-            </p>
-            <div className="grid grid-cols-2 gap-2 pt-1 text-[11.5px] font-semibold text-[#093E06]">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#40813D]" />
-                <span>Không chèo kéo mua gói</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#40813D]" />
-                <span>Hoàn tiền nếu sai giá</span>
-              </div>
-            </div>
+
+            <button
+              type="button"
+              onClick={() => handleOpenBooking(selectedServiceId)}
+              className="h-11 px-5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[13.5px] font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+            >
+              <Image
+                src="/brand/Logo-Zalo-App-Rec.webp"
+                alt="Zalo"
+                width={18}
+                height={18}
+                className="rounded-[4px] shrink-0 object-contain shadow-2xs"
+              />
+              <span>
+                {locale === 'en'
+                  ? 'Book via Zalo'
+                  : locale === 'ko'
+                  ? 'Zalo 예약하기'
+                  : 'Đặt Lịch Zalo'}
+              </span>
+              <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
+            </button>
           </div>
         </div>
+
+        {/* Booking Bottom Sheet Modal */}
+        <BookingBottomSheet
+          isOpen={isBottomSheetOpen}
+          onClose={() => setIsBottomSheetOpen(false)}
+          locale={locale}
+          initialServiceId={selectedServiceId}
+          spa={selectedSpa}
+        />
 
       </div>
     </div>

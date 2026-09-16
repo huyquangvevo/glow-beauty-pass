@@ -33,7 +33,7 @@ export default async function HomePage({ params }: HomePageProps) {
       item: {
         '@type': 'Service',
         name: s.name,
-        description: `${s.name} với thời lượng ${s.dur || 'chuẩn quy trình SOP'}, đồng giá tại 15+ cơ sở`,
+        description: `${s.name} với thời lượng ${s.dur || 'chuẩn hóa'}, đồng giá tại 15+ cơ sở`,
         offers: {
           '@type': 'Offer',
           price: s.price,
