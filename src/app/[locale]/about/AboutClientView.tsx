@@ -48,7 +48,7 @@ export default function AboutClientView({ locale }: AboutClientViewProps) {
             <span>{t.intro.heroTag}</span>
           </div>
 
-          <h1 className="font-serif text-[26px] font-bold text-white leading-tight mb-2.5">
+          <h1 className="font-sans text-[26px] font-extrabold text-white leading-tight tracking-tight mb-2.5">
             {t.intro.heroTitle}
           </h1>
 

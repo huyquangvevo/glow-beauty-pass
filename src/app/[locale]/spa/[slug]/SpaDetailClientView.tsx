@@ -42,7 +42,7 @@ export default function SpaDetailClientView({
 
   return (
     <div className="w-full bg-[#FAF8F5] flex flex-col items-center justify-start p-0 sm:py-6 font-sans">
-      <div className="w-full max-w-[440px] bg-[#F5F7F4] relative flex flex-col sm:rounded-[36px] sm:shadow-xl sm:border sm:border-stone-200/80 mb-0 sm:mb-10 overflow-hidden animate-in fade-in duration-200">
+      <div className="w-full max-w-[440px] bg-[#F5F7F4] relative flex flex-col sm:rounded-[36px] sm:shadow-xl sm:border sm:border-stone-200/80 mb-0 sm:mb-10 overflow-hidden">
         <div className="flex-1 pb-10">
           {/* Photo Gallery with Back Button to /spas */}
           <div className="relative">
@@ -85,7 +85,7 @@ export default function SpaDetailClientView({
 
           {/* Spa Header Info */}
           <div className="px-5 pt-4.5">
-            <h1 className="font-serif text-[22px] font-bold text-[#093E06] leading-tight m-0">
+            <h1 className="font-sans text-[22px] font-extrabold text-[#093E06] leading-tight tracking-tight m-0">
               {spa.name}
             </h1>
             <div className="flex items-center gap-1.5 text-[12.5px] text-[#4A5848] mt-1 leading-normal">
@@ -262,50 +262,50 @@ export default function SpaDetailClientView({
             </div>
           </div>
         </div>
-
-        {/* Modern Compact Fixed Bottom Bar for Booking */}
-        {!isBottomSheetOpen && (
-          <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#E8EDE6] px-4 py-3 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
-            <div className="max-w-[440px] mx-auto flex items-center justify-between gap-3">
-              <div className="flex flex-col min-w-0">
-                <span className="text-[18px] sm:text-[19px] font-black text-[#093E06] leading-tight">
-                  {formatPrice(selectedService.price)}
-                </span>
-                <span className="text-[11.5px] text-[#6B7869] truncate mt-0.5 font-medium">
-                  {t.services[selectedServiceId]?.name || selectedService.name}
-                </span>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => handleOpenBooking(selectedServiceId)}
-                className="h-11 px-5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[13.5px] font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
-              >
-                <Image
-                  src="/brand/Logo-Zalo-App-Rec.webp"
-                  alt="Zalo"
-                  width={18}
-                  height={18}
-                  className="rounded-[4px] shrink-0 object-contain shadow-2xs"
-                />
-                <span>{t.bookNow}</span>
-                <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Bottom Sheet */}
-        <BookingBottomSheet
-          isOpen={isBottomSheetOpen}
-          onClose={() => setIsBottomSheetOpen(false)}
-          spa={spa}
-          services={MVP_SERVICES}
-          initialServiceId={selectedServiceId}
-          zaloPhone="0359178342"
-          locale={locale}
-        />
       </div>
+
+      {/* Modern Compact Fixed Bottom Bar for Booking - Guaranteed Viewport Stick */}
+      {!isBottomSheetOpen && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#E8EDE6] px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom))] z-50 shadow-[0_-4px_25px_rgba(0,0,0,0.12)]">
+          <div className="max-w-[440px] mx-auto flex items-center justify-between gap-3">
+            <div className="flex flex-col min-w-0">
+              <span className="text-[18px] sm:text-[19px] font-black text-[#093E06] leading-tight">
+                {formatPrice(selectedService.price)}
+              </span>
+              <span className="text-[11.5px] text-[#6B7869] truncate mt-0.5 font-medium">
+                {t.services[selectedServiceId]?.name || selectedService.name}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => handleOpenBooking(selectedServiceId)}
+              className="h-11 px-5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[13.5px] font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+            >
+              <Image
+                src="/brand/Logo-Zalo-App-Rec.webp"
+                alt="Zalo"
+                width={18}
+                height={18}
+                className="rounded-[4px] shrink-0 object-contain shadow-2xs"
+              />
+              <span>{t.bookNow}</span>
+              <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Sheet */}
+      <BookingBottomSheet
+        isOpen={isBottomSheetOpen}
+        onClose={() => setIsBottomSheetOpen(false)}
+        spa={spa}
+        services={MVP_SERVICES}
+        initialServiceId={selectedServiceId}
+        zaloPhone="0359178342"
+        locale={locale}
+      />
     </div>
   );
 }

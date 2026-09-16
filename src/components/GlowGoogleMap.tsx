@@ -89,6 +89,9 @@ export default function GlowGoogleMap({
   const mapRef = useRef<any>(null);
   const overlaysRef = useRef<any[]>([]);
   const searchMarkerRef = useRef<any>(null);
+  const lastFitKeyRef = useRef<string>('');
+  const selectedSpaIdRef = useRef<string | null | undefined>(selectedSpaId);
+  selectedSpaIdRef.current = selectedSpaId;
   const [isReady, setIsReady] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -140,6 +143,9 @@ export default function GlowGoogleMap({
           });
 
           mapRef.current = map;
+          if (typeof window !== 'undefined') {
+            (window as any).__glowGoogleMap = map;
+          }
           setIsReady(true);
         }
       })
@@ -176,8 +182,8 @@ export default function GlowGoogleMap({
     class CustomMarkerOverlay extends g.OverlayView {
       private div: HTMLDivElement | null = null;
       private position: any;
-      private spa: MVPSpa;
-      private isSelected: boolean;
+      public spa: MVPSpa;
+      public isSelected: boolean;
       private label: string;
       private onClick: () => void;
 
@@ -246,6 +252,25 @@ export default function GlowGoogleMap({
         panes?.overlayMouseTarget?.appendChild(div);
       }
 
+      setSelected(isSelected: boolean) {
+        this.isSelected = isSelected;
+        if (!this.div) return;
+        this.div.className = `gbp-map-marker ${isSelected ? 'is-selected' : ''}`;
+        this.div.style.zIndex = isSelected ? '20' : '10';
+        const img = this.div.querySelector('img');
+        if (img) {
+          img.src = isSelected ? '/icons/map-pin-mint.png' : '/icons/map-pin-green.png';
+        }
+        const inner = this.div.firstElementChild as HTMLElement | null;
+        if (inner) {
+          inner.style.width = isSelected ? '42px' : '38px';
+          inner.style.height = isSelected ? '42px' : '38px';
+          inner.style.boxShadow = isSelected
+            ? '0 3px 12px rgba(0, 0, 0, 0.22), 0 1px 4px rgba(0, 0, 0, 0.14), 0 0 0 3.5px #356F32'
+            : '0 3px 12px rgba(0, 0, 0, 0.22), 0 1px 4px rgba(0, 0, 0, 0.14)';
+        }
+      }
+
       draw() {
         const overlayProjection = this.getProjection();
         if (!overlayProjection || !this.div) return;
@@ -283,7 +308,7 @@ export default function GlowGoogleMap({
       const pos = new g.LatLng(spa.lat, spa.lng);
       bounds.extend(pos);
 
-      const isSel = spa.id === selectedSpaId;
+      const isSel = spa.id === selectedSpaIdRef.current;
       const overlay = new CustomMarkerOverlay(
         pos,
         spa,
@@ -297,29 +322,39 @@ export default function GlowGoogleMap({
       overlaysRef.current.push(overlay);
     });
 
-    // Fit bounds if interactive
+    // Fit bounds ONLY when spas list or searchCenter changes (not on clicking marker)
     if (interactive) {
-      if (spas.length > 0) {
-        // Add padding so markers aren't obscured by floating elements
-        mapRef.current.fitBounds(bounds, {
-          top: 60,
-          right: 40,
-          bottom: 180,
-          left: 40,
-        });
-      } else if (effectiveCenter) {
-        mapRef.current.setCenter(effectiveCenter);
-        mapRef.current.setZoom(14);
+      const currentFitKey = `${spas.map((s) => s.id).join(',')}_${effectiveCenter?.lat}_${effectiveCenter?.lng}`;
+      if (currentFitKey !== lastFitKeyRef.current) {
+        lastFitKeyRef.current = currentFitKey;
+        if (spas.length > 0) {
+          mapRef.current.fitBounds(bounds, {
+            top: 60,
+            right: 40,
+            bottom: 180,
+            left: 40,
+          });
+        } else if (effectiveCenter) {
+          mapRef.current.setCenter(effectiveCenter);
+          mapRef.current.setZoom(14);
+        }
       }
     }
-  }, [isReady, spas, selectedSpaId, priceLabel, onSelectSpa, interactive, clearOverlays, searchCenter, userCoords]);
+  }, [isReady, spas, priceLabel, onSelectSpa, interactive, clearOverlays, searchCenter, userCoords]);
 
-  // Center on selected spa when selectedSpaId changes
+  // Update marker selection and pan to selected spa while preserving current zoom
   useEffect(() => {
-    if (!isReady || !mapRef.current || !selectedSpaId) return;
-    const selected = spas.find((s) => s.id === selectedSpaId);
-    if (selected) {
-      mapRef.current.panTo({ lat: selected.lat, lng: selected.lng });
+    if (!isReady || !mapRef.current) return;
+    overlaysRef.current.forEach((ov) => {
+      if (ov && typeof ov.setSelected === 'function' && ov.spa) {
+        ov.setSelected(ov.spa.id === selectedSpaId);
+      }
+    });
+    if (selectedSpaId) {
+      const selected = spas.find((s) => s.id === selectedSpaId);
+      if (selected) {
+        mapRef.current.panTo({ lat: selected.lat, lng: selected.lng });
+      }
     }
   }, [isReady, selectedSpaId, spas]);
 

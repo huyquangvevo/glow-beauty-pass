@@ -3,12 +3,16 @@
 import { useLocation } from '@/context/LocationContext'
 import { MapPin, X, Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { usePathname } from 'next/navigation'
 
 export function LocationPrompt() {
   const t = useTranslations('LocationPrompt')
   const { isPromptOpen, isLocating, requestLocation, dismissPrompt } = useLocation()
+  const pathname = usePathname()
 
   if (!isPromptOpen) return null
+  // Don't show location prompt on spa detail page so it doesn't block the sticky booking CTA
+  if (pathname?.includes('/spa/')) return null
 
   return (
     <aside
