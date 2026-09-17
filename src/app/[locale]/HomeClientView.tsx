@@ -225,6 +225,30 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
               );
             })}
           </div>
+
+          {/* Partnership Trust Banner (Thu hút các chủ spa uy tín hợp tác) */}
+          <div className="mt-3.5 bg-white border border-[#DDE4D9] rounded-[20px] p-3.5 sm:p-4 flex items-center justify-between gap-3 shadow-xs">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#236B38] uppercase tracking-wider mb-0.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                <span>{locale === 'en' ? 'Spa Partnership' : locale === 'ko' ? '스파 제휴 안내' : 'Hợp tác Spa'}</span>
+              </div>
+              <p className="text-[12.5px] sm:text-[13px] text-[#2D3D2C] font-semibold leading-snug">
+                {locale === 'en'
+                  ? 'Are you a verified spa owner? Join the 500+ Glow network.'
+                  : locale === 'ko'
+                  ? '스파 대표님이신가요? 500+ Glow 네트워크와 함께하세요.'
+                  : 'Bạn là chủ Spa uy tín? Gia nhập mạng lưới 500+ cơ sở.'}
+              </p>
+            </div>
+            <Link
+              href="/about"
+              className="shrink-0 px-3 py-1.5 rounded-full bg-[#E8FDE7] hover:bg-[#236B38] text-[#236B38] hover:text-white text-[12px] sm:text-[12.5px] font-bold transition-all flex items-center gap-1 active:scale-95 cursor-pointer shadow-2xs"
+            >
+              <span>{locale === 'en' ? 'Learn more' : locale === 'ko' ? '알아보기' : 'Tìm hiểu'}</span>
+              <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+            </Link>
+          </div>
         </div>
 
 
