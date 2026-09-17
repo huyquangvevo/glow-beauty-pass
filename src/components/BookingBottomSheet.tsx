@@ -383,7 +383,7 @@ export default function BookingBottomSheet({
             </div>
 
             {/* FIXED BOTTOM ACTION BAR (Always visible at the bottom) */}
-            <div className="flex-none bg-white border-t border-[#E8EDE6] px-5 pt-3 pb-5 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] z-20">
+            <div className="flex-none bg-white border-t border-[#E8EDE6] px-5 py-3.5 pb-[max(14px,env(safe-area-inset-bottom))] shadow-[0_-4px_16px_rgba(0,0,0,0.06)] z-20">
               <button
                 type="button"
                 onClick={handleOpenZalo}
@@ -399,16 +399,6 @@ export default function BookingBottomSheet({
                 <span>{t.booking.openZaloBtn}</span>
                 <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
               </button>
-              <div className="mt-2 text-center space-y-1">
-                {t.booking.pasteGuide && (
-                  <p className="text-[13px] text-[#6B7869] leading-snug">
-                    {t.booking.pasteGuide}
-                  </p>
-                )}
-                <p className="text-[13px] text-[#6B7869]">
-                  {t.booking.slaNotice}
-                </p>
-              </div>
             </div>
           </>
         ) : (

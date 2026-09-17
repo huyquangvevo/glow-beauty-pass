@@ -3,7 +3,6 @@
 import React from 'react';
 import {
   ArrowLeft,
-  ArrowRight,
   ShieldCheck,
   CheckCircle2,
   Clock,
@@ -59,7 +58,7 @@ export default function AboutClientView({ locale }: AboutClientViewProps) {
           {/* Quick Stats Banner */}
           <div className="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-white/15">
             <div className="text-center">
-              <div className="text-[20px] font-extrabold text-white">15+</div>
+              <div className="text-[20px] font-extrabold text-white">500+</div>
               <div className="text-[12px] text-[#D4F4D3] font-medium">
                 {locale === 'en' ? 'Verified Spas' : locale === 'ko' ? '제휴 스파' : 'Spa đối tác'}
               </div>
@@ -137,7 +136,7 @@ export default function AboutClientView({ locale }: AboutClientViewProps) {
         </div>
 
         {/* 3 Core Value Pillars */}
-        <div className="px-5 pt-4 pb-6">
+        <div className="px-5 pt-4 pb-7 sm:pb-8">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-1.5 h-4 bg-[#40813D] rounded-full" />
             <h2 className="text-[14px] font-bold tracking-wider text-[#093E06] uppercase">
@@ -164,20 +163,6 @@ export default function AboutClientView({ locale }: AboutClientViewProps) {
                 {t.intro.prop3Title}
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Bottom CTA Action */}
-        <div className="p-4 bg-white border-t border-[#DDE4D9] flex-none">
-          <Link
-            href="/spas"
-            className="w-full bg-[#40813D] hover:bg-[#357033] active:scale-[0.99] text-white rounded-full h-13 flex items-center justify-center gap-2 font-bold text-[16px] transition-all shadow-md cursor-pointer"
-          >
-            <span>{t.intro.viewServicesCta}</span>
-            <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
-          </Link>
-          <div className="text-center text-[12px] text-[#6B7869] mt-2.5">
-            {t.intro.branchesCountNotice}
           </div>
         </div>
 

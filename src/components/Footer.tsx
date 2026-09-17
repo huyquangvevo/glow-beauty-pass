@@ -46,12 +46,6 @@ export function Footer() {
             >
               {t.has('navAbout') ? t('navAbout') : 'About Us'}
             </Link>
-            <Link
-              href="/spas"
-              className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[13px] font-semibold text-white transition-colors"
-            >
-              {t.has('navSpas') ? t('navSpas') : 'Find Spas'}
-            </Link>
             <a
               href={zaloHubLink}
               target="_blank"
