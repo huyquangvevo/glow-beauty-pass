@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { Link, useRouter } from '@/i18n/routing';
@@ -62,10 +62,17 @@ const KNOWN_AREAS: { keywords: string[]; coords: { lat: number; lng: number } }[
   { keywords: ['ha dong', 'hà đông'], coords: { lat: 20.9634, lng: 105.7766 } },
   { keywords: ['nam tu liem', 'nam từ liêm', 'my dinh', 'mỹ đình'], coords: { lat: 21.0177, lng: 105.7645 } },
   { keywords: ['bac tu liem', 'bắc từ liêm'], coords: { lat: 21.0664, lng: 105.7616 } },
-  { keywords: ['long bien', 'long biên'], coords: { lat: 21.0428, lng: 105.8890 } },
-  { keywords: ['quan 1', 'quận 1', 'ben nghe', 'bến nghé'], coords: { lat: 10.7756, lng: 106.7004 } },
-  { keywords: ['quan 3', 'quận 3'], coords: { lat: 10.7844, lng: 106.6845 } },
-  { keywords: ['hai chau', 'hải châu'], coords: { lat: 16.0592, lng: 108.2208 } },
+  { keywords: ['quan 1', 'quận 1', 'ben nghe', 'bến nghé', 'ben thanh', 'bến thành', 'hcm', 'tp hcm', 'tphcm', 'sai gon', 'sài gòn'], coords: { lat: 10.7756, lng: 106.7004 } },
+  { keywords: ['quan 3', 'quận 3', 'vo thi sau', 'võ thị sáu'], coords: { lat: 10.7844, lng: 106.6845 } },
+  { keywords: ['binh thanh', 'bình thạnh'], coords: { lat: 10.8039, lng: 106.7101 } },
+  { keywords: ['phu nhuan', 'phú nhuận', 'phan xich long', 'phan xích long'], coords: { lat: 10.7967, lng: 106.689 } },
+  { keywords: ['quan 10', 'quận 10', 'su van hanh', 'sư vạn hạnh'], coords: { lat: 10.7725, lng: 106.6685 } },
+  { keywords: ['tan binh', 'tân bình', 'cong hoa', 'cộng hòa'], coords: { lat: 10.8015, lng: 106.654 } },
+  { keywords: ['quan 7', 'quận 7', 'phu my hung', 'phú mỹ hưng'], coords: { lat: 10.738, lng: 106.7112 } },
+  { keywords: ['hai chau', 'hải châu', 'da nang', 'đà nẵng', 'bach dang', 'bạch đằng'], coords: { lat: 16.0592, lng: 108.2208 } },
+  { keywords: ['son tra', 'sơn trà'], coords: { lat: 16.0745, lng: 108.244 } },
+  { keywords: ['thanh khe', 'thanh khê'], coords: { lat: 16.064, lng: 108.1965 } },
+  { keywords: ['ngu hanh son', 'ngũ hành sơn'], coords: { lat: 16.0545, lng: 108.2435 } },
 ];
 
 interface SpasClientViewProps {
@@ -93,6 +100,40 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
   const [minRating, setMinRating] = useState<boolean>(false);
   const [openNow, setOpenNow] = useState<boolean>(false);
   const [isCityMenuOpen, setIsCityMenuOpen] = useState<boolean>(false);
+  const cityMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (cityMenuRef.current && !cityMenuRef.current.contains(e.target as Node)) {
+        setIsCityMenuOpen(false);
+      }
+    };
+    if (isCityMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isCityMenuOpen]);
+
+  const handleSelectCity = (cityId: 'hn' | 'hcm' | 'dn') => {
+    setSelectedCityId(cityId);
+    setIsCityMenuOpen(false);
+
+    // Pick first matching spa in the newly selected city
+    const citySpas = MVP_SPAS.filter((s) => s.city === cityId);
+    const matchingSpa =
+      citySpas.find((s) => s.serviceIds?.includes(selectedServiceId) && (openNow ? s.open : true)) ||
+      citySpas[0];
+    if (matchingSpa) {
+      setSelectedSpaId(matchingSpa.id);
+    }
+
+    // Update URL query param ?city=...
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('city', cityId);
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
 
   // Booking Bottom Sheet
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
@@ -178,18 +219,32 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
     if (urlCoords) return urlCoords;
     if (queryMatchedCoords) return queryMatchedCoords;
     if (geocodedCoords) return geocodedCoords;
-    if (userCoords) return { lat: userCoords.lat, lng: userCoords.lon };
+
+    // Only use user GPS coords if user is actually in the selected city (within 60km)
+    if (userCoords) {
+      const cityCenter = CITY_CENTERS[selectedCityId] || CITY_CENTERS.hn;
+      const distToCity = computeDistanceKm(userCoords.lat, userCoords.lon, cityCenter.lat, cityCenter.lng);
+      if (distToCity < 60) {
+        return { lat: userCoords.lat, lng: userCoords.lon };
+      }
+    }
     return CITY_CENTERS[selectedCityId] || CITY_CENTERS.hn;
   }, [urlCoords, queryMatchedCoords, geocodedCoords, userCoords, selectedCityId]);
 
   const searchTitle = useMemo(() => {
     const q = (searchQuery || searchParams.get('q') || '').trim();
     if (q) return q;
-    if (locationLabel && locationLabel !== 'Bật vị trí') return locationLabel;
+    if (userCoords) {
+      const cityCenter = CITY_CENTERS[selectedCityId] || CITY_CENTERS.hn;
+      const distToCity = computeDistanceKm(userCoords.lat, userCoords.lon, cityCenter.lat, cityCenter.lng);
+      if (distToCity < 60 && locationLabel && locationLabel !== 'Bật vị trí') {
+        return locationLabel;
+      }
+    }
     if (selectedCityId === 'hn') return 'Cầu Giấy, Hà Nội';
     if (selectedCityId === 'hcm') return 'Quận 1, TP.HCM';
     return 'Hải Châu, Đà Nẵng';
-  }, [searchQuery, searchParams, locationLabel, selectedCityId]);
+  }, [searchQuery, searchParams, locationLabel, selectedCityId, userCoords]);
 
   // Hide footer when in full-screen map mode
   useEffect(() => {
@@ -220,21 +275,20 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
   const filteredSpas = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
 
-    // Check if query directly matches any spa by name or address
+    // Direct matches strictly within the selected city
     const directMatches = q
       ? MVP_SPAS.filter((s) => {
-          return (
+          const inCity = s.city === selectedCityId;
+          const matchText =
             s.name.toLowerCase().includes(q) ||
             s.ward.toLowerCase().includes(q) ||
             (s.district && s.district.toLowerCase().includes(q)) ||
             s.address.toLowerCase().includes(q) ||
-            s.cityName.toLowerCase().includes(q)
-          );
+            s.cityName.toLowerCase().includes(q);
+          return inCity && matchText;
         })
       : [];
 
-    // If text search directly matched spas, use them.
-    // Otherwise, show all spas in the selected city sorted by distance to activeSearchCenter!
     const spasToFilter =
       q && directMatches.length > 0
         ? directMatches
@@ -361,14 +415,14 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
               </div>
             </div>
 
-            {/* Filter Row: City dropdown & Quick filter chips */}
-            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/15 overflow-x-auto no-scrollbar">
+            {/* Filter Row: City dropdown (fixed, unclipped) & Quick filter chips (scrollable) */}
+            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/15 relative z-20">
               {/* City selector */}
-              <div className="relative shrink-0">
+              <div ref={cityMenuRef} className="relative shrink-0">
                 <button
                   type="button"
                   onClick={() => setIsCityMenuOpen(!isCityMenuOpen)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 hover:bg-white/25 text-white text-[11.5px] font-semibold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 hover:bg-white/25 text-white text-[11.5px] font-semibold transition-colors cursor-pointer shadow-xs active:scale-95"
                 >
                   <MapPin className="w-3 h-3 text-[#D4F4D3]" />
                   <span>{activeCity.name}</span>
@@ -376,69 +430,72 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 </button>
 
                 {isCityMenuOpen && (
-                  <div className="absolute top-full left-0 mt-1.5 bg-white rounded-xl shadow-xl border border-stone-200 py-1 z-30 min-w-[130px] text-[#093E06] animate-in fade-in zoom-in-95 duration-100">
+                  <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-stone-200 py-1.5 z-50 min-w-[145px] text-[#093E06] animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-3.5 py-1 text-[10.5px] font-bold uppercase tracking-wider text-stone-400 border-b border-stone-100 mb-1">
+                      {locale === 'en' ? 'Select City' : locale === 'ko' ? '지역 선택' : 'Chọn khu vực'}
+                    </div>
                     {CITIES.map((c) => (
                       <button
                         key={c.id}
                         type="button"
-                        onClick={() => {
-                          setSelectedCityId(c.id);
-                          setIsCityMenuOpen(false);
-                        }}
-                        className={`w-full text-left px-3.5 py-1.5 text-xs font-semibold hover:bg-emerald-50 transition-colors flex items-center justify-between cursor-pointer ${
-                          selectedCityId === c.id ? 'text-[#40813D] bg-emerald-50/50' : 'text-stone-700'
+                        onClick={() => handleSelectCity(c.id)}
+                        className={`w-full text-left px-3.5 py-2 text-xs font-semibold hover:bg-emerald-50 transition-colors flex items-center justify-between cursor-pointer ${
+                          selectedCityId === c.id ? 'text-[#40813D] bg-emerald-50/70 font-bold' : 'text-stone-700'
                         }`}
                       >
                         <span>{c.name}</span>
-                        {selectedCityId === c.id && <span className="w-1.5 h-1.5 rounded-full bg-[#40813D]" />}
+                        {selectedCityId === c.id && <span className="w-2 h-2 rounded-full bg-[#40813D]" />}
                       </button>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* Rating 4.8+ filter */}
-              <button
-                type="button"
-                onClick={() => setMinRating(!minRating)}
-                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11.5px] font-semibold transition-all shrink-0 cursor-pointer ${
-                  minRating
-                    ? 'bg-white text-[#093E06] shadow-xs'
-                    : 'bg-white/15 text-white/90 hover:bg-white/25'
-                }`}
-              >
-                <Star className={`w-3 h-3 ${minRating ? 'fill-amber-400 text-amber-400' : 'text-white/80'}`} />
-                <span>{t.ratingFilter}</span>
-              </button>
-
-              {/* Open Now filter */}
-              <button
-                type="button"
-                onClick={() => setOpenNow(!openNow)}
-                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11.5px] font-semibold transition-all shrink-0 cursor-pointer ${
-                  openNow
-                    ? 'bg-white text-[#093E06] shadow-xs'
-                    : 'bg-white/15 text-white/90 hover:bg-white/25'
-                }`}
-              >
-                <Clock className="w-3 h-3" />
-                <span>{t.openNowFilter}</span>
-              </button>
-
-              {/* Clear filters if active */}
-              {(minRating || openNow || searchQuery) && (
+              {/* Quick filter chips (scrollable) */}
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar min-w-0 flex-1">
+                {/* Rating 4.8+ filter */}
                 <button
                   type="button"
-                  onClick={() => {
-                    setMinRating(false);
-                    setOpenNow(false);
-                    setSearchQuery('');
-                  }}
-                  className="px-2 py-1 rounded-full text-[11px] text-[#D4F4D3] hover:text-white underline cursor-pointer shrink-0"
+                  onClick={() => setMinRating(!minRating)}
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11.5px] font-semibold transition-all shrink-0 cursor-pointer ${
+                    minRating
+                      ? 'bg-white text-[#093E06] shadow-xs'
+                      : 'bg-white/15 text-white/90 hover:bg-white/25'
+                  }`}
                 >
-                  {t.clearFilter}
+                  <Star className={`w-3 h-3 ${minRating ? 'fill-amber-400 text-amber-400' : 'text-white/80'}`} />
+                  <span>{t.ratingFilter}</span>
                 </button>
-              )}
+
+                {/* Open Now filter */}
+                <button
+                  type="button"
+                  onClick={() => setOpenNow(!openNow)}
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11.5px] font-semibold transition-all shrink-0 cursor-pointer ${
+                    openNow
+                      ? 'bg-white text-[#093E06] shadow-xs'
+                      : 'bg-white/15 text-white/90 hover:bg-white/25'
+                  }`}
+                >
+                  <Clock className="w-3 h-3" />
+                  <span>{t.openNowFilter}</span>
+                </button>
+
+                {/* Clear filters if active */}
+                {(minRating || openNow || searchQuery) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMinRating(false);
+                      setOpenNow(false);
+                      setSearchQuery('');
+                    }}
+                    className="px-2 py-1 rounded-full text-[11px] text-[#D4F4D3] hover:text-white underline cursor-pointer shrink-0"
+                  >
+                    {t.clearFilter}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
