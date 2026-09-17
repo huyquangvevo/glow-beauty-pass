@@ -30,7 +30,7 @@ export function Navbar() {
           <div className="flex-1 flex items-center justify-start min-w-0">
             <Link
               href="/about"
-              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 border border-white/20 text-white text-[12px] sm:text-[12.5px] font-bold transition-all active:scale-95 shadow-xs shrink-0"
+              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 border border-white/20 text-white text-[13px] sm:text-[13.5px] font-bold transition-all active:scale-95 shadow-xs shrink-0"
               aria-label={locale === 'en' ? 'About Us' : locale === 'ko' ? '소개' : 'Giới thiệu'}
             >
               <Info className="w-3.5 h-3.5 text-white/90 shrink-0" />
