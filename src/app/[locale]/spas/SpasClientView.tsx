@@ -494,9 +494,11 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                         fill
                         className="object-cover"
                       />
-                      <div className="absolute top-1.5 left-1.5 bg-white/90 backdrop-blur-xs px-1.5 py-0.5 rounded-full text-[10px] font-bold text-[#093E06]">
-                        {activeSelectedSpa.tier === 'Certified' ? (locale === 'en' ? 'TOP' : locale === 'ko' ? '인증' : 'Chuẩn') : 'OK'}
-                      </div>
+                      {activeSelectedSpa.tier === 'Certified' && (
+                        <div className="absolute top-1.5 left-1.5 bg-white/90 backdrop-blur-xs px-1.5 py-0.5 rounded-full text-[10px] font-bold text-[#093E06]">
+                          {locale === 'en' ? 'TOP' : locale === 'ko' ? '인증' : 'Chuẩn'}
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -590,9 +592,11 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                         fill
                         className="object-cover"
                       />
-                      <div className="absolute top-1.5 left-1.5 bg-white/90 backdrop-blur-xs px-1.5 py-0.5 rounded-full text-[10px] font-bold text-[#093E06]">
-                        {s.tier === 'Certified' ? (locale === 'en' ? 'TOP' : locale === 'ko' ? '인증' : 'Chuẩn') : 'OK'}
-                      </div>
+                      {s.tier === 'Certified' && (
+                        <div className="absolute top-1.5 left-1.5 bg-white/90 backdrop-blur-xs px-1.5 py-0.5 rounded-full text-[10px] font-bold text-[#093E06]">
+                          {locale === 'en' ? 'TOP' : locale === 'ko' ? '인증' : 'Chuẩn'}
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex-1 min-w-0 flex flex-col justify-between">

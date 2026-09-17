@@ -33,7 +33,7 @@ var map = L.map('map', { zoomControl:false, attributionControl:true });
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution:'© OpenStreetMap contributors', maxZoom:19
 }).addTo(map);
-map.setView([10.7769,106.7009], 13);
+map.setView([21.0333, 105.7925], 14);
 
 var markers = {}, selected = null, mini = new URLSearchParams(location.search).has('mini');
 if (mini) { map.dragging.disable(); map.touchZoom.disable(); map.doubleClickZoom.disable(); map.scrollWheelZoom.disable(); }

@@ -223,17 +223,17 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
               <div>
                 <div className="text-[15px] font-bold text-white leading-tight">
                   {locale === 'en'
-                    ? 'Explore Map & 15+ Spas'
+                    ? 'Explore Map & Partner Spas'
                     : locale === 'ko'
-                    ? '지도 & 15개 제휴 스파 확인'
-                    : 'Bản Đồ 15+ Spa Đối Tác'}
+                    ? '지도 & 제휴 스파 확인'
+                    : 'Bản Đồ Hệ Thống Spa Đối Tác'}
                 </div>
                 <div className="text-[12px] text-[#E8FDE7] mt-0.5">
                   {locale === 'en'
-                    ? 'Find verified partner spas in Cau Giay'
+                    ? 'Find verified partner spas near you'
                     : locale === 'ko'
-                    ? '가장 가까운 하노i 꼬우저i 스파 찾기'
-                    : 'Tìm chi nhánh gần bạn nhất tại Cầu Giấy'}
+                    ? '가장 가까운 제휴 스파 찾기'
+                    : 'Tìm chi nhánh đối tác gần bạn nhất'}
                 </div>
               </div>
             </div>

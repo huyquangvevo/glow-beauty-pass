@@ -18,6 +18,7 @@ import {
 } from '@/lib/mvp-data';
 import { getMvpTranslation, formatDayRange, formatTodayHours } from '@/lib/mvp-i18n';
 import BookingBottomSheet from '@/components/BookingBottomSheet';
+import GlowGoogleMap from '@/components/GlowGoogleMap';
 
 interface SpaDetailClientViewProps {
   spa: MVPSpa;
@@ -51,7 +52,6 @@ export default function SpaDetailClientView({
   }, [serviceFromQuery, spa]);
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
-  const miniMapIframeRef = useRef<HTMLIFrameElement>(null);
 
   const selectedService =
     spaServices.find((s) => s.id === selectedServiceId) || spaServices[0] || MVP_SERVICES[2];
@@ -196,12 +196,14 @@ export default function SpaDetailClientView({
               {t.mapLocationTitle}
             </h2>
             <div className="rounded-[18px] overflow-hidden border border-[#DDE4D9] bg-[#EEF1EC] shadow-xs">
-              <div className="relative h-40">
-                <iframe
-                  ref={miniMapIframeRef}
-                  src="/map.html?mini=1"
-                  title={t.mapLocationTitle}
-                  className="absolute inset-0 w-full h-full border-0"
+              <div className="relative h-48 sm:h-52 w-full">
+                <GlowGoogleMap
+                  spas={[spa]}
+                  selectedSpaId={spa.id}
+                  initialCenter={{ lat: spa.lat, lng: spa.lng }}
+                  initialZoom={15}
+                  interactive={true}
+                  className="w-full h-full"
                 />
               </div>
               <div className="p-3.5 bg-white flex items-center justify-between gap-3">

@@ -227,8 +227,8 @@
     "locating": "Đang lấy vị trí..."
   },
   "Footer": {
-    "tagline": "Mạng lưới spa gội đầu dưỡng sinh & trị liệu chuẩn hoá độc lập tại Quận Cầu Giấy. Đồng giá niêm yết, không phụ thu, bảo vệ quyền lợi khách hàng tuyệt đối.",
-    "shortTagline": "Mạng lưới spa gội đầu dưỡng sinh chuẩn hóa tại Cầu Giấy, Hà Nội. Đồng giá niêm yết từ 49K, không phụ thu.",
+    "tagline": "Mạng lưới spa gội đầu dưỡng sinh & trị liệu chuẩn hoá độc lập toàn quốc. Đồng giá niêm yết, không phụ thu, bảo vệ quyền lợi khách hàng tuyệt đối.",
+    "shortTagline": "Mạng lưới spa gội đầu dưỡng sinh chuẩn hóa trên toàn quốc. Đồng giá niêm yết từ 49K, không phụ thu.",
     "navHome": "Trang chủ",
     "navServices": "Dịch vụ",
     "navAbout": "Giới thiệu",
@@ -240,7 +240,7 @@
     "colCommitment": "Cam Kết Thương Hiệu",
     "colContact": "Tổng Đài Hỗ Trợ",
     "colServices": "Dịch Vụ Niêm Yết",
-    "colLocations": "Khu Vực Cầu Giấy",
+    "colLocations": "Khu Vực Phủ Sóng",
     "colPolicies": "Chính Sách & Cam Kết",
     "pkg1": "Gội Thư Giãn (49.000đ)",
     "pkg2": "Gội Dưỡng Sinh Chuyên Sâu (69.000đ)",
@@ -261,6 +261,6 @@
     "copyright": "© 2026 Glow Vietnam. Nền tảng thành viên thuộc hệ sinh thái Glow (Glow Explore).",
     "sopBadge": "Đạt chuẩn Glow",
     "privacyBadge": "Bảo mật dữ liệu",
-    "locationBadge": "Cầu Giấy, Hà Nội"
+    "locationBadge": "Toàn quốc • Việt Nam"
   }
 }

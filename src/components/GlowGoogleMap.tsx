@@ -327,7 +327,10 @@ export default function GlowGoogleMap({
       const currentFitKey = `${spas.map((s) => s.id).join(',')}_${effectiveCenter?.lat}_${effectiveCenter?.lng}`;
       if (currentFitKey !== lastFitKeyRef.current) {
         lastFitKeyRef.current = currentFitKey;
-        if (spas.length > 0) {
+        if (spas.length === 1 && !effectiveCenter) {
+          mapRef.current.setCenter({ lat: spas[0].lat, lng: spas[0].lng });
+          mapRef.current.setZoom(initialZoom || 15);
+        } else if (spas.length > 0) {
           mapRef.current.fitBounds(bounds, {
             top: 60,
             right: 40,

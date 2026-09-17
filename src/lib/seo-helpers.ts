@@ -28,15 +28,15 @@ export function getHreflangAlternates(path: string = '') {
 
 export function getHomeMetadata(locale: string): Metadata {
   const titles: Record<string, string> = {
-    vi: 'Glow Beauty Pass - Mạng Lưới Spa Chuẩn Hóa Cầu Giấy | Đồng Giá Từ 49K',
-    en: 'Glow Beauty Pass - Standardized Head Spa Network in Cau Giay | Fixed From 49K',
-    ko: 'Glow Beauty Pass - 하노이 꼬우저이 엄선 스파 네트워크 | 49,000동 정찰제',
+    vi: 'Glow Beauty Pass - Mạng Lưới Spa Chuẩn Hóa Toàn Quốc | Đồng Giá Từ 49K',
+    en: 'Glow Beauty Pass - Standardized Head Spa Network Across Vietnam | Fixed From 49K',
+    ko: 'Glow Beauty Pass - 베트남 전역 엄선 스파 네트워크 | 49,000동 정찰제',
   };
 
   const descriptions: Record<string, string> = {
-    vi: 'Mạng lưới spa dưỡng sinh chuẩn hóa đầu tiên tại Cầu Giấy, Hà Nội. Các gói gội dưỡng sinh, massage cổ vai gáy đồng giá từ 49K - 149K, kiểm định chất lượng nghiêm ngặt, đặt lịch Zalo nhanh.',
-    en: 'First standardized beauty & head spa network in Cau Giay, Hanoi. Verified partner spas with fixed packages from 49K VND, strict quality audits, instant Zalo booking.',
-    ko: '하노이 꼬우저이 엄선 스파 네트워크. 49,000동부터 시작하는 투명한 정찰제, 철저한 품질 검증, 바가지 없는 Zalo 간편 예약.',
+    vi: 'Mạng lưới spa dưỡng sinh chuẩn hóa hàng đầu Việt Nam. Các gói gội dưỡng sinh, massage cổ vai gáy đồng giá từ 49K - 149K, kiểm định chất lượng nghiêm ngặt, đặt lịch Zalo nhanh.',
+    en: 'Standardized beauty & head spa network across Vietnam. Verified partner spas with fixed packages from 49K VND, strict quality audits, instant Zalo booking.',
+    ko: '베트남 전역 엄선 스파 네트워크. 49,000동부터 시작하는 투명한 정찰제, 철저한 품질 검증, 바가지 없는 Zalo 간편 예약.',
   };
 
   const title = titles[locale] || titles.vi;
@@ -79,15 +79,15 @@ export function getHomeMetadata(locale: string): Metadata {
 
 export function getAboutMetadata(locale: string): Metadata {
   const titles: Record<string, string> = {
-    vi: 'Giới Thiệu Glow Beauty Pass - Hệ Thống Spa Chuẩn Hóa Hà Nội',
-    en: 'About Glow Beauty Pass - Standardized Head Spa Network in Hanoi',
-    ko: 'Glow Beauty Pass 소개 - 하노이 엄선 스파 네트워크 & 안심 정찰제',
+    vi: 'Giới Thiệu Glow Beauty Pass - Hệ Thống Spa Chuẩn Hóa Toàn Quốc',
+    en: 'About Glow Beauty Pass - Standardized Head Spa Network Across Vietnam',
+    ko: 'Glow Beauty Pass 소개 - 베트남 엄선 스파 네트워크 & 안심 정찰제',
   };
 
   const descriptions: Record<string, string> = {
-    vi: 'Tìm hiểu về Glow Beauty Pass: Quy trình chuẩn hóa 3 bước, tiêu chuẩn thẩm định 15+ cơ sở spa đối tác tại Cầu Giấy, cam kết đồng giá minh bạch và không phụ thu.',
-    en: 'Learn about Glow Beauty Pass: 3-step standardized booking workflow, rigorous audit criteria across 15+ Hanoi partner spas, transparent fixed pricing.',
-    ko: 'Glow Beauty Pass 안내: 3단계 표준 예약 절차, 하노이 15개 이상 파트너 스파의 엄격한 심사 기준, 추가 요금 없는 투명한 정찰제 보장.',
+    vi: 'Tìm hiểu về Glow Beauty Pass: Quy trình chuẩn hóa 3 bước, tiêu chuẩn thẩm định hệ thống đối tác spa, cam kết đồng giá minh bạch và không phụ thu.',
+    en: 'Learn about Glow Beauty Pass: 3-step standardized booking workflow, rigorous audit criteria across partner spas, transparent fixed pricing.',
+    ko: 'Glow Beauty Pass 안내: 3단계 표준 예약 절차, 베트남 전역 파트너 스파의 엄격한 심사 기준, 추가 요금 없는 투명한 정찰제 보장.',
   };
 
   const title = titles[locale] || titles.vi;
@@ -130,15 +130,15 @@ export function getAboutMetadata(locale: string): Metadata {
 
 export function getSpasMetadata(locale: string): Metadata {
   const titles: Record<string, string> = {
-    vi: 'Danh Sách 15+ Spa Dưỡng Sinh Chuẩn Hóa Cầu Giấy | Bản Đồ & Đặt Lịch',
-    en: 'Verified Head Spas in Cau Giay, Hanoi | Interactive Map & Direct Booking',
-    ko: '하노이 꼬우저이 엄선 스파 지점 찾기 | 인터랙티브 지도 & 즉시 예약',
+    vi: 'Danh Sách Spa Dưỡng Sinh Chuẩn Hóa Toàn Quốc | Bản Đồ & Đặt Lịch',
+    en: 'Verified Head Spas Across Vietnam | Interactive Map & Direct Booking',
+    ko: '베트남 엄선 스파 지점 찾기 | 인터랙티브 지도 & 즉시 예약',
   };
 
   const descriptions: Record<string, string> = {
-    vi: 'Bản đồ và danh bạ 15+ chi nhánh spa dưỡng sinh đối tác đạt chuẩn kiểm định tại Cầu Giấy (Dịch Vọng, Yên Hòa, Trung Hòa...). Xem đánh giá thực tế, khoảng cách gần nhất và đặt lịch qua Zalo.',
-    en: 'Interactive map and directory of 15+ certified head spas in Cau Giay, Hanoi. Verified reviews, nearest distance calculations, transparent pricing and fast Zalo booking.',
-    ko: '하노이 꼬우저이 15개 이상 인증 스파 위치 및 지도. 실제 고객 리뷰, 가장 가까운 거리 확인, 49,000동 정찰제 및 Zalo 실시간 예약.',
+    vi: 'Bản đồ và danh bạ các chi nhánh spa dưỡng sinh đối tác đạt chuẩn kiểm định của Glow Beauty Pass. Xem đánh giá thực tế, khoảng cách gần nhất và đặt lịch qua Zalo.',
+    en: 'Interactive map and directory of certified head spas across Vietnam. Verified reviews, nearest distance calculations, transparent pricing and fast Zalo booking.',
+    ko: '베트남 전역 인증 스파 위치 및 지도. 실제 고객 리뷰, 가장 가까운 거리 확인, 투명한 정찰제 및 Zalo 실시간 예약.',
   };
 
   const title = titles[locale] || titles.vi;
