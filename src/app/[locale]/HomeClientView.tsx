@@ -177,10 +177,10 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                   {/* Card Footer: Spa count & Action */}
                   <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 pt-1.5 border-t border-[#EDF2EB] flex items-center justify-between gap-1.5 mt-auto">
                     <span className="text-[11px] min-[380px]:text-[11.5px] font-semibold text-[#6B7869] whitespace-nowrap shrink-0">
-                      {s.count} {locale === 'en' ? 'spas' : locale === 'ko' ? '개 지점' : s.wide ? 'chi nhánh' : 'spa'}
+                      {s.count} {locale === 'en' ? 'spas' : locale === 'ko' ? '개 지점' : 'chi nhánh'}
                     </span>
-                    <div className="h-6.5 min-[380px]:h-7 px-2 min-[380px]:px-2.5 rounded-full bg-[#E8FDE7] group-hover:bg-[#236B38] text-[#236B38] group-hover:text-white text-[10.5px] min-[380px]:text-[11.5px] font-bold flex items-center gap-1 transition-colors whitespace-nowrap shrink-0">
-                      <span>{locale === 'en' ? 'View Spas' : locale === 'ko' ? '스파 보기' : 'Xem Spa'}</span>
+                    <div className="h-6.5 min-[380px]:h-7 px-2.5 min-[380px]:px-3 rounded-full bg-[#E8FDE7] group-hover:bg-[#236B38] text-[#236B38] group-hover:text-white text-[11px] min-[380px]:text-[11.5px] font-bold flex items-center gap-1 transition-colors whitespace-nowrap shrink-0">
+                      <span>{locale === 'en' ? 'View' : locale === 'ko' ? '보기' : 'Xem'}</span>
                       <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform shrink-0" />
                     </div>
                   </div>
