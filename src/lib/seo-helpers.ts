@@ -28,15 +28,15 @@ export function getHreflangAlternates(path: string = '') {
 
 export function getHomeMetadata(locale: string): Metadata {
   const titles: Record<string, string> = {
-    vi: 'Glow Beauty Pass - Mạng Lưới Spa Chuẩn Hóa Toàn Quốc | Đồng Giá Từ 49K',
-    en: 'Glow Beauty Pass - Standardized Head Spa Network Across Vietnam | Fixed From 49K',
-    ko: 'Glow Beauty Pass - 베트남 전역 엄선 스파 네트워크 | 49,000동 정찰제',
+    vi: 'Glow Beauty Pass - Mạng Lưới Spa Chuẩn Hóa Toàn Quốc | Đồng Giá Từ 39K',
+    en: 'Glow Beauty Pass - Standardized Head Spa Network Across Vietnam | Fixed From 39K',
+    ko: 'Glow Beauty Pass - 베트남 전역 엄선 스파 네트워크 | 39,000동 정찰제',
   };
 
   const descriptions: Record<string, string> = {
-    vi: 'Mạng lưới spa dưỡng sinh chuẩn hóa hàng đầu Việt Nam. Các gói gội dưỡng sinh, massage cổ vai gáy đồng giá từ 49K - 149K, kiểm định chất lượng nghiêm ngặt, đặt lịch Zalo nhanh.',
-    en: 'Standardized beauty & head spa network across Vietnam. Verified partner spas with fixed packages from 49K VND, strict quality audits, instant Zalo booking.',
-    ko: '베트남 전역 엄선 스파 네트워크. 49,000동부터 시작하는 투명한 정찰제, 철저한 품질 검증, 바가지 없는 Zalo 간편 예약.',
+    vi: 'Mạng lưới spa dưỡng sinh chuẩn hóa hàng đầu Việt Nam. Các gói gội dưỡng sinh, massage cổ vai gáy đồng giá từ 39K - 199K, kiểm định chất lượng nghiêm ngặt, đặt lịch Zalo nhanh.',
+    en: 'Standardized beauty & head spa network across Vietnam. Verified partner spas with fixed packages from 39K VND, strict quality audits, instant Zalo booking.',
+    ko: '베트남 전역 엄선 스파 네트워크. 39,000동부터 시작하는 투명한 정찰제, 철저한 품질 검증, 바가지 없는 Zalo 간편 예약.',
   };
 
   const title = titles[locale] || titles.vi;
@@ -187,9 +187,9 @@ export function getSpaDetailMetadata(locale: string, spa: MVPSpa): Metadata {
   };
 
   const descriptions: Record<string, string> = {
-    vi: `Đặt lịch tại ${spa.name} (${spa.address}). Cơ sở đối tác chuẩn ${spa.tier === 'Certified' ? 'kiểm định' : 'thẩm định'} của Glow Beauty Pass. Đánh giá ${spa.rating}/5 sao (${spa.reviews} review). Đồng giá từ 49K, đặt qua Zalo.`,
-    en: `Book your session at ${spa.name} (${spa.address}). ${spa.tier} partner of Glow Beauty Pass. Rating: ${spa.rating}/5 (${spa.reviews} reviews). Fixed rates from 49K VND via Zalo.`,
-    ko: `${spa.name} (${spa.address}) 예약 안내. Glow Beauty Pass 엄선 인증 스파, 평점 ${spa.rating}/5 (${spa.reviews}개 리뷰). 49,000동 투명 정찰제 및 Zalo 간편 예약.`,
+    vi: `Đặt lịch tại ${spa.name} (${spa.address}). Cơ sở đối tác chuẩn ${spa.tier === 'Certified' ? 'kiểm định' : 'thẩm định'} của Glow Beauty Pass. Đánh giá ${spa.rating}/5 sao (${spa.reviews} review). Đồng giá từ 39K, đặt qua Zalo.`,
+    en: `Book your session at ${spa.name} (${spa.address}). ${spa.tier} partner of Glow Beauty Pass. Rating: ${spa.rating}/5 (${spa.reviews} reviews). Fixed rates from 39K VND via Zalo.`,
+    ko: `${spa.name} (${spa.address}) 예약 안내. Glow Beauty Pass 엄선 인증 스파, 평점 ${spa.rating}/5 (${spa.reviews}개 리뷰). 39,000동 투명 정찰제 및 Zalo 간편 예약.`,
   };
 
   const title = titles[locale] || titles.vi;
@@ -254,7 +254,7 @@ export function getAboutPageSchema(locale: string) {
     name: 'Giới Thiệu Glow Beauty Pass',
     url: getCanonicalUrl(locale, '/about'),
     description:
-      'Mạng lưới spa dưỡng sinh chuẩn hóa đầu tiên tại Cầu Giấy, Hà Nội với quy trình thẩm định chất lượng nghiêm ngặt và đồng giá từ 49K.',
+      'Mạng lưới spa dưỡng sinh chuẩn hóa đầu tiên tại Cầu Giấy, Hà Nội với quy trình thẩm định chất lượng nghiêm ngặt và đồng giá từ 39K.',
     isPartOf: {
       '@type': 'WebSite',
       name: 'Glow Beauty Pass',

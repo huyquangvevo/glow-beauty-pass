@@ -487,7 +487,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
 
               {/* Selected Spa Floating Card at Bottom of Map */}
               {activeSelectedSpa && (
-                <div className="absolute bottom-4 left-3 right-3 z-10 animate-in slide-in-from-bottom-3 duration-200">
+                <div className="absolute bottom-[max(72px,calc(1.25rem+env(safe-area-inset-bottom)))] sm:bottom-6 left-3 right-3 z-10 animate-in slide-in-from-bottom-3 duration-200">
                   <div
                     onClick={() => router.push(`/spa/${activeSelectedSpa.id}?service=${selectedServiceId}`)}
                     className="bg-white/95 backdrop-blur-md rounded-[18px] p-3 sm:p-3.5 border border-[#DDE4D9] shadow-lg flex gap-3 sm:gap-3.5 cursor-pointer hover:border-[#40813D] transition-all active:scale-[0.99] overflow-hidden"
@@ -527,7 +527,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
 
           {/* TAB 2: LIST VIEW */}
           {viewMode === 'list' && (
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-12">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-[max(80px,calc(2rem+env(safe-area-inset-bottom)))] sm:pb-12">
               {/* Service Count Summary Header */}
               <div className="text-[12px] font-bold text-[#093E06] px-1 flex items-center justify-between">
                 <span>

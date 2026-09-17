@@ -137,7 +137,7 @@ export default function AboutClientView({ locale }: AboutClientViewProps) {
         </div>
 
         {/* 3 Core Value Pillars */}
-        <div className="px-5 pt-4 pb-2">
+        <div className="px-5 pt-4 pb-6">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-1.5 h-4 bg-[#40813D] rounded-full" />
             <h2 className="text-[13px] font-bold tracking-wider text-[#093E06] uppercase">
@@ -163,23 +163,6 @@ export default function AboutClientView({ locale }: AboutClientViewProps) {
               <div className="text-[11.5px] font-bold text-[#093E06] leading-snug">
                 {t.intro.prop3Title}
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quality Guarantee / SLA Guarantee Block */}
-        <div className="px-5 pt-3 pb-6">
-          <div className="bg-[#E8FDE7] rounded-[22px] p-4.5 flex gap-3.5 items-start border border-[#D4F4D3]">
-            <Clock className="w-6 h-6 text-[#093E06] shrink-0 mt-0.5" strokeWidth={2} />
-            <div className="text-[13px] leading-relaxed text-[#2C4A29]">
-              <strong className="font-bold block mb-1 text-[#093E06]">
-                {locale === 'en'
-                  ? 'Transparent Service Guarantee:'
-                  : locale === 'ko'
-                  ? '투명한 서비스 보장:'
-                  : 'Cam kết dịch vụ minh bạch:'}
-              </strong>
-              {t.intro.slaNotice}
             </div>
           </div>
         </div>

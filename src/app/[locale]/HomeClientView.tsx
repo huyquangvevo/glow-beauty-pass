@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Link, useRouter } from '@/i18n/routing';
 import {
-  ChevronRight,
   Store,
   BadgePercent,
   ShieldCheck,
@@ -57,20 +56,10 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
         
         {/* Sub-Hero Header */}
         <div className="bg-white border-b border-[#E8EDE6] pt-5 pb-4 px-4 sm:px-5 flex-none sm:rounded-t-[32px]">
-          <div className="flex items-center justify-between gap-3">
+          <div>
             <h1 className="font-bold text-[20px] sm:text-[22px] tracking-tight text-[#141E16] leading-tight m-0">
               {t.brandTagline}
             </h1>
-            <Link
-              href="/about"
-              className="group inline-flex items-center gap-1.5 pl-3.5 pr-1.5 py-1 rounded-full bg-[#F5F7F4] hover:bg-[#EBF0E7] border border-[#DCE3D8] hover:border-[#CAD5C5] text-[12px] font-semibold text-stone-700 hover:text-stone-950 transition-all duration-200 active:scale-95 cursor-pointer shrink-0 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
-              aria-label={t.introButton}
-            >
-              <span>{t.introButton}</span>
-              <span className="w-5 h-5 rounded-full bg-white border border-[#DCE3D8] flex items-center justify-center text-stone-400 group-hover:text-[#3A7B37] group-hover:translate-x-0.5 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-                <ChevronRight className="w-3 h-3" strokeWidth={2.2} />
-              </span>
-            </Link>
           </div>
 
           {/* Information Value Badges */}
@@ -186,13 +175,13 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                   </div>
 
                   {/* Card Footer: Spa count & Action */}
-                  <div className="px-2 min-[360px]:px-2.5 sm:px-3 pb-2.5 sm:pb-3 pt-1.5 border-t border-[#EDF2EB] flex items-center justify-between gap-1 mt-auto">
-                    <span className="text-[11.5px] font-semibold text-[#6B7869]">
-                      {s.count} {locale === 'en' ? 'spas' : locale === 'ko' ? '개 지점' : 'chi nhánh'}
+                  <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 pt-1.5 border-t border-[#EDF2EB] flex items-center justify-between gap-1.5 mt-auto">
+                    <span className="text-[11px] min-[380px]:text-[11.5px] font-semibold text-[#6B7869] whitespace-nowrap shrink-0">
+                      {s.count} {locale === 'en' ? 'spas' : locale === 'ko' ? '개 지점' : s.wide ? 'chi nhánh' : 'spa'}
                     </span>
-                    <div className="h-7 px-2.5 rounded-full bg-[#E8FDE7] group-hover:bg-[#236B38] text-[#236B38] group-hover:text-white text-[11px] min-[390px]:text-[11.5px] font-bold flex items-center gap-1 transition-colors">
+                    <div className="h-6.5 min-[380px]:h-7 px-2 min-[380px]:px-2.5 rounded-full bg-[#E8FDE7] group-hover:bg-[#236B38] text-[#236B38] group-hover:text-white text-[10.5px] min-[380px]:text-[11.5px] font-bold flex items-center gap-1 transition-colors whitespace-nowrap shrink-0">
                       <span>{locale === 'en' ? 'View Spas' : locale === 'ko' ? '스파 보기' : 'Xem Spa'}</span>
-                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform shrink-0" />
                     </div>
                   </div>
                 </Link>

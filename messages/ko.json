@@ -19,7 +19,7 @@
     "minutes": "분",
     "duration": "소요 시간:",
     "hotBadge": "인기 최고",
-    "priceFrom49k": "정찰제 49,000동부터",
+    "priceFrom49k": "정찰제 39,000동부터",
     "noSurcharge": "정찰제 • 추가 요금 없음",
     "sopCommitment": "표준 SOP 안심 보장",
     "bookNow": "우선 예약",
@@ -33,11 +33,11 @@
   },
   "Navbar": {
     "searchPlaceholder": "주변 스파 찾기...",
-    "supportBadge": "정찰제 49,000동부터 (~2,700원) • 바가지 요금 일체 없음",
+    "supportBadge": "39,000동부터 시작하는 정찰제 • 추가 요금 없음",
     "callHotline": "예약 상담 핫라인",
     "language": "언어 (Language)",
     "popularServices": "인기 뷰티 패키지",
-    "chipWash": "헤어 샴푸 49K",
+    "chipWash": "허브 샴푸 39K",
     "chipTherapy": "어깨 테라피 149K",
     "chipSpa": "헤드 스파 SOP"
   },
@@ -227,7 +227,7 @@
   },
   "Footer": {
     "tagline": "베트남 전역 독립 인증 허브 두피스파 & 힐링 테라피 네트워크. 투명한 정찰제, 추가 요금 일체 없음, 고객 권익 100% 보호.",
-    "shortTagline": "베트남 전역 엄선 헤드스파 네트워크. 49,000동부터 시작하는 투명한 정찰제, 추가 요금 일체 없음.",
+    "shortTagline": "베트남 전역 엄선 헤드스파 네트워크. 39,000동부터 시작하는 투명한 정찰제, 추가 요금 일체 없음.",
     "navHome": "홈",
     "navServices": "서비스",
     "navAbout": "소개",

@@ -5,7 +5,7 @@ import { Link, usePathname } from '@/i18n/routing'
 import { useLocale } from 'next-intl'
 import { BrandWordmark } from './BrandLogo'
 import { LanguageSwitcher } from './LanguageSwitcher'
-import { HeaderSearch } from './HeaderSearch'
+import { Info } from 'lucide-react'
 
 export function Navbar() {
   const pathname = usePathname()
@@ -23,23 +23,36 @@ export function Navbar() {
 
   return (
     <>
-      {/* TOP HEADER: GLOW BEAUTY PASS (Brand Green #40813D, Logo + Search + Language) */}
+      {/* TOP HEADER: GLOW BEAUTY PASS (Left: About, Center: Logo, Right: Language) */}
       <header className="sticky top-0 z-40 bg-[#40813D] shadow-sm border-b border-[#356F32]">
-        <div className="w-full max-w-5xl mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-2.5 sm:gap-4">
-          {/* Brand Logo (Always fixed logo like Home screen) */}
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 shrink-0 hover:opacity-95 transition-opacity"
-            aria-label="Glow Beauty Pass Trang Chủ"
-          >
-            <BrandWordmark className="h-10 sm:h-11 w-auto text-white drop-shadow-xs" />
-          </Link>
+        <div className="w-full max-w-5xl mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-2 sm:gap-4">
+          {/* Left: About Link */}
+          <div className="flex-1 flex items-center justify-start min-w-0">
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 border border-white/20 text-white text-[12px] sm:text-[12.5px] font-bold transition-all active:scale-95 shadow-xs shrink-0"
+              aria-label={locale === 'en' ? 'About Us' : locale === 'ko' ? '소개' : 'Giới thiệu'}
+            >
+              <Info className="w-3.5 h-3.5 text-white/90 shrink-0" />
+              <span className="whitespace-nowrap">{locale === 'en' ? 'About' : locale === 'ko' ? '소개' : 'Giới thiệu'}</span>
+            </Link>
+          </div>
 
-          {/* Tạm ẩn thanh search để người dùng tập trung vào dịch vụ & USP giá */}
-          {/* <HeaderSearch /> */}
+          {/* Center: Brand Logo (Centrally aligned) */}
+          <div className="flex items-center justify-center shrink-0 px-1">
+            <Link
+              href="/"
+              className="flex items-center justify-center hover:opacity-95 transition-opacity"
+              aria-label="Glow Beauty Pass Trang Chủ"
+            >
+              <BrandWordmark className="h-9 sm:h-10 w-auto text-white drop-shadow-xs" />
+            </Link>
+          </div>
 
-          {/* Language Switcher Dropdown (VI • EN • KO) */}
-          <LanguageSwitcher />
+          {/* Right: Language Switcher Dropdown (VI • EN • KO) */}
+          <div className="flex-1 flex items-center justify-end min-w-0">
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
 

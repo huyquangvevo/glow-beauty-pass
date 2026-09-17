@@ -19,7 +19,7 @@
     "minutes": "mins",
     "duration": "Duration:",
     "hotBadge": "MOST POPULAR",
-    "priceFrom49k": "Fixed from 49K VND",
+    "priceFrom49k": "Fixed from 39K VND",
     "noSurcharge": "Fixed Price • Zero Hidden Fees",
     "sopCommitment": "Verified SOP Standard",
     "bookNow": "Priority Booking",
@@ -33,11 +33,11 @@
   },
   "Navbar": {
     "searchPlaceholder": "Find nearby spas...",
-    "supportBadge": "Fixed Price from 49K VND (~$2) • No Hidden Fees",
+    "supportBadge": "Fixed Price from 39K VND (~$1.5) • No Hidden Fees",
     "callHotline": "Zalo Hub Hotline",
     "language": "Language",
     "popularServices": "Popular Services",
-    "chipWash": "Herbal Wash 49K",
+    "chipWash": "Herbal Wash 39K",
     "chipTherapy": "Therapy 149K",
     "chipSpa": "Head Spa SOP"
   },
@@ -227,7 +227,7 @@
   },
   "Footer": {
     "tagline": "Independent certified herbal head spa & therapy network across Vietnam. Uniform fixed prices, zero surcharges, 100% customer protection.",
-    "shortTagline": "Standardized herbal head spa network across Vietnam. Fixed prices from 49K VND with zero hidden fees.",
+    "shortTagline": "Standardized herbal head spa network across Vietnam. Fixed prices from 39K VND with zero hidden fees.",
     "navHome": "Home",
     "navServices": "Services",
     "navAbout": "About Us",
