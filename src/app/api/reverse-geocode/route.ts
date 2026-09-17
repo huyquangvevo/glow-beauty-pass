@@ -1,34 +1,52 @@
 import { NextResponse } from 'next/server'
 
-// Danh sách các khu vực trọng điểm tại Cầu Giấy & Hà Nội để tính toán dự phòng
+// Danh sách các khu vực trọng điểm tại Hà Nội, TP.HCM, Đà Nẵng
 const KNOWN_AREAS = [
-  { name: 'Dịch Vọng', lat: 21.0345, lon: 105.7930 },
-  { name: 'Duy Tân', lat: 21.0315, lon: 105.7830 },
-  { name: 'Trung Hòa', lat: 21.0110, lon: 105.8010 },
-  { name: 'Yên Hòa', lat: 21.0220, lon: 105.7940 },
-  { name: 'Tô Hiệu', lat: 21.0450, lon: 105.7960 },
-  { name: 'Xuân Thủy', lat: 21.0365, lon: 105.7850 },
-  { name: 'Nghĩa Tân', lat: 21.0440, lon: 105.7910 },
-  { name: 'Mai Dịch', lat: 21.0390, lon: 105.7760 },
-  { name: 'Mỹ Đình', lat: 21.0280, lon: 105.7720 },
-  { name: 'Cầu Giấy', lat: 21.0333, lon: 105.7925 },
-  { name: 'Ba Đình', lat: 21.0340, lon: 105.8200 },
-  { name: 'Đống Đa', lat: 21.0180, lon: 105.8260 },
-  { name: 'Thanh Xuân', lat: 20.9980, lon: 105.8080 },
-  { name: 'Tây Hồ', lat: 21.0600, lon: 105.8200 },
-]
+  // Hà Nội
+  { name: 'Dịch Vọng, Cầu Giấy', city: 'hn', lat: 21.0345, lon: 105.7930 },
+  { name: 'Duy Tân, Cầu Giấy', city: 'hn', lat: 21.0315, lon: 105.7830 },
+  { name: 'Trung Hòa, Cầu Giấy', city: 'hn', lat: 21.0110, lon: 105.8010 },
+  { name: 'Yên Hòa, Cầu Giấy', city: 'hn', lat: 21.0220, lon: 105.7940 },
+  { name: 'Cầu Giấy, Hà Nội', city: 'hn', lat: 21.0333, lon: 105.7925 },
+  { name: 'Mỹ Đình, Nam Từ Liêm', city: 'hn', lat: 21.0280, lon: 105.7720 },
+  { name: 'Ba Đình, Hà Nội', city: 'hn', lat: 21.0340, lon: 105.8200 },
+  { name: 'Đống Đa, Hà Nội', city: 'hn', lat: 21.0180, lon: 105.8260 },
+  { name: 'Thanh Xuân, Hà Nội', city: 'hn', lat: 20.9980, lon: 105.8080 },
+  { name: 'Tây Hồ, Hà Nội', city: 'hn', lat: 21.0600, lon: 105.8200 },
+  { name: 'Hoàn Kiếm, Hà Nội', city: 'hn', lat: 21.0285, lon: 105.8542 },
+  { name: 'Hai Bà Trưng, Hà Nội', city: 'hn', lat: 21.0069, lon: 105.8524 },
 
-function getFallbackAreaName(lat: number, lon: number): string {
-  let closest = KNOWN_AREAS[0]
-  let minDistance = Infinity
+  // TP. Hồ Chí Minh
+  { name: 'Bến Nghé, Quận 1', city: 'hcm', lat: 10.7769, lon: 106.7009 },
+  { name: 'Bến Thành, Quận 1', city: 'hcm', lat: 10.7712, lon: 106.6934 },
+  { name: 'Quận 1, TP.HCM', city: 'hcm', lat: 10.7756, lon: 106.7004 },
+  { name: 'Võ Thị Sáu, Quận 3', city: 'hcm', lat: 10.7844, lon: 106.6845 },
+  { name: 'Quận 3, TP.HCM', city: 'hcm', lat: 10.7841, lon: 106.6855 },
+  { name: 'Bình Thạnh, TP.HCM', city: 'hcm', lat: 10.8039, lon: 106.7101 },
+  { name: 'Phan Xích Long, Phú Nhuận', city: 'hcm', lat: 10.7967, lon: 106.6890 },
+  { name: 'Sư Vạn Hạnh, Quận 10', city: 'hcm', lat: 10.7725, lon: 106.6685 },
+  { name: 'Cộng Hòa, Tân Bình', city: 'hcm', lat: 10.8015, lon: 106.6540 },
+  { name: 'Tân Phú, Quận 7', city: 'hcm', lat: 10.7380, lon: 106.7112 },
+
+  // Đà Nẵng
+  { name: 'Hải Châu, Đà Nẵng', city: 'dn', lat: 16.0678, lon: 108.2208 },
+  { name: 'Bạch Đằng, Hải Châu', city: 'dn', lat: 16.0695, lon: 108.2255 },
+  { name: 'Sơn Trà, Đà Nẵng', city: 'dn', lat: 16.0745, lon: 108.2440 },
+  { name: 'Thanh Khê, Đà Nẵng', city: 'dn', lat: 16.0640, lon: 108.1965 },
+  { name: 'Ngũ Hành Sơn, Đà Nẵng', city: 'dn', lat: 16.0545, lon: 108.2435 },
+];
+
+function getFallbackArea(lat: number, lon: number): { name: string; city: 'hn' | 'hcm' | 'dn' } {
+  let closest = KNOWN_AREAS[0];
+  let minDistance = Infinity;
   for (const area of KNOWN_AREAS) {
-    const d = Math.hypot(lat - area.lat, lon - area.lon)
+    const d = Math.hypot(lat - area.lat, lon - area.lon);
     if (d < minDistance) {
-      minDistance = d
-      closest = area
+      minDistance = d;
+      closest = area;
     }
   }
-  return closest.name
+  return { name: closest.name, city: closest.city as 'hn' | 'hcm' | 'dn' };
 }
 
 export async function GET(request: Request) {
@@ -77,6 +95,7 @@ export async function GET(request: Request) {
           addr.district ||
           addr.city
 
+        const city = detectCity(lat, lon)
         if (detected) {
           // Làm sạch tiền tố hành chính dài
           detected = detected
@@ -85,6 +104,7 @@ export async function GET(request: Request) {
 
           return NextResponse.json({
             area: detected,
+            city,
             fullAddress: data.display_name,
           })
         }
@@ -94,9 +114,18 @@ export async function GET(request: Request) {
     }
 
     // Thuật toán dự phòng tính khoảng cách gần nhất
-    const fallback = getFallbackAreaName(lat, lon)
-    return NextResponse.json({ area: fallback })
+    const fallback = getFallbackArea(lat, lon)
+    return NextResponse.json({ area: fallback.name, city: fallback.city })
   } catch (err) {
-    return NextResponse.json({ area: 'Cầu Giấy' })
+    return NextResponse.json({ area: 'Cầu Giấy', city: 'hn' })
   }
+}
+
+function detectCity(lat: number, lon: number): 'hn' | 'hcm' | 'dn' {
+  const distHn = Math.hypot(lat - 21.0285, lon - 105.8048);
+  const distHcm = Math.hypot(lat - 10.7769, lon - 106.7009);
+  const distDn = Math.hypot(lat - 16.0544, lon - 108.2022);
+  if (distHcm <= distHn && distHcm <= distDn) return 'hcm';
+  if (distDn <= distHn && distDn <= distHcm) return 'dn';
+  return 'hn';
 }

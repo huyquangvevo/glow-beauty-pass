@@ -11,6 +11,7 @@ import {
   Clock,
   ArrowRight,
   Sparkles,
+  Navigation,
 } from 'lucide-react';
 import {
   MVP_SERVICES,
@@ -19,6 +20,7 @@ import {
   formatPrice,
 } from '@/lib/mvp-data';
 import { useSearch } from '@/context/SearchContext';
+import { useLocation } from '@/context/LocationContext';
 import { getMvpTranslation } from '@/lib/mvp-i18n';
 import BookingBottomSheet from '@/components/BookingBottomSheet';
 
@@ -30,6 +32,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
   const router = useRouter();
   const t = getMvpTranslation(locale);
   const { searchQuery, setSearchQuery } = useSearch();
+  const { userCoords, locationLabel, requestLocation, isLocating } = useLocation();
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<string>('goi-dau-cap');
@@ -57,7 +60,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
         {/* Sub-Hero Header */}
         <div className="bg-white border-b border-[#E8EDE6] pt-5 pb-4 px-4 sm:px-5 flex-none sm:rounded-t-[32px]">
           <div>
-            <h1 className="font-bold text-[21px] sm:text-[23px] tracking-tight text-[#141E16] leading-tight m-0">
+            <h1 className="font-bold text-[23px] sm:text-[25px] tracking-tight text-[#141E16] leading-tight m-0">
               {t.brandTagline}
             </h1>
           </div>
@@ -69,20 +72,54 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
               return (
                 <div
                   key={idx}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F7F9F6] border border-[#DEE5DC] text-[12px] sm:text-[12.5px] font-medium text-stone-700 tracking-tight shadow-[0_1px_2px_rgba(0,0,0,0.02)] select-none"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F7F9F6] border border-[#DEE5DC] text-[13.5px] sm:text-[14px] font-semibold text-stone-700 tracking-tight shadow-[0_1px_2px_rgba(0,0,0,0.02)] select-none"
                 >
-                  <Icon className="w-3.5 h-3.5 text-[#3A7B37] shrink-0" strokeWidth={2} />
+                  <Icon className="w-4 h-4 text-[#3A7B37] shrink-0" strokeWidth={2} />
                   <span>{pill}</span>
                 </div>
               );
             })}
           </div>
 
+          {/* Location status bar */}
+          <div className="mt-3 flex items-center justify-between bg-[#F4F8F3] border border-[#DEE7DC] rounded-xl px-3 py-1.5 text-[13px] sm:text-[13.5px]">
+            <div className="flex items-center gap-1.5 truncate text-stone-700">
+              <Navigation
+                className={`w-3.5 h-3.5 shrink-0 ${
+                  isLocating
+                    ? 'animate-spin text-[#40813D]'
+                    : userCoords
+                    ? 'text-[#40813D] fill-[#40813D]'
+                    : 'text-stone-400'
+                }`}
+              />
+              <span className="truncate">
+                {isLocating ? (
+                  'Đang xác định vị trí...'
+                ) : userCoords ? (
+                  <span>
+                    Vị trí của bạn: <strong className="text-[#093E06] font-bold">{locationLabel}</strong>
+                  </span>
+                ) : (
+                  'Chưa bật định vị GPS'
+                )}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => requestLocation(false)}
+              disabled={isLocating}
+              className="text-[12.5px] sm:text-[13px] font-bold text-[#40813D] hover:text-[#356F32] hover:underline shrink-0 ml-2 cursor-pointer active:scale-95"
+            >
+              {userCoords ? 'Định vị lại' : 'Bật vị trí'}
+            </button>
+          </div>
+
           {/* Active Location Search Indicator if user searched in Header */}
           {searchQuery && (
-            <div className="mt-3 flex items-center justify-between bg-emerald-50/80 border border-emerald-200/80 rounded-xl px-3 py-1.5 text-xs text-[#093E06]">
+            <div className="mt-3 flex items-center justify-between bg-emerald-50/80 border border-emerald-200/80 rounded-xl px-3.5 py-2 text-[13px] text-[#093E06]">
               <div className="flex items-center gap-1.5 truncate">
-                <MapPin className="w-3.5 h-3.5 text-[#40813D] shrink-0" />
+                <MapPin className="w-4 h-4 text-[#40813D] shrink-0" />
                 <span className="truncate">
                   {t.searchingAt} <strong className="font-semibold">{searchQuery}</strong>
                 </span>
@@ -90,7 +127,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="text-[12px] font-semibold text-[#40813D] hover:underline shrink-0 ml-2 cursor-pointer"
+                className="text-[13px] font-bold text-[#40813D] hover:underline shrink-0 ml-2 cursor-pointer"
               >
                 {t.clearFilter}
               </button>
@@ -100,9 +137,9 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
 
         {/* Content Body: Standardized Service Cards with Prominent Zalo CTAs */}
         <div className="p-2.5 min-[360px]:p-3 sm:p-3.5 pb-12 sm:pb-16">
-          <div className="flex items-center gap-1.5 mb-3 px-1">
-            <Sparkles className="w-4 h-4 text-[#3A7B37]" />
-            <span className="text-[14px] font-bold text-[#093E06] uppercase tracking-wide">
+          <div className="flex items-center gap-2 mb-3.5 px-1">
+            <Sparkles className="w-4.5 h-4.5 text-[#3A7B37]" />
+            <span className="text-[15.5px] font-bold text-[#093E06] uppercase tracking-wide">
               {t.servicesTitle}
             </span>
           </div>
@@ -149,12 +186,12 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                       />
 
                       {/* Price Pill Over Image */}
-                      <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-xs text-[#093E06] rounded-full px-2.5 py-0.5 text-[12px] min-[360px]:text-[13px] font-bold shadow-xs">
+                      <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-xs text-[#093E06] rounded-full px-2.5 py-0.5 text-[13.5px] min-[360px]:text-[14.5px] font-bold shadow-xs">
                         {formatPrice(s.price)}
                       </div>
 
                       {s.wide && (
-                        <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2 py-0.5 text-[11px] font-bold tracking-wide uppercase shadow-xs">
+                        <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2.5 py-0.5 text-[12px] font-bold tracking-wide uppercase shadow-xs">
                           {locale === 'en' ? 'Best Value' : locale === 'ko' ? '베스트' : 'Phổ Biến Nhất'}
                         </div>
                       )}
@@ -162,11 +199,11 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
 
                     {/* Card Body: Title & Duration */}
                     <div className="p-2.5 min-[360px]:p-3 pb-2">
-                      <h2 className="font-bold text-[14px] min-[360px]:text-[14.5px] sm:text-[15.5px] text-[#093E06] group-hover:text-[#3A7B37] transition-colors leading-tight line-clamp-2 m-0">
+                      <h2 className="font-bold text-[15.5px] min-[360px]:text-[16px] sm:text-[17px] text-[#093E06] group-hover:text-[#3A7B37] transition-colors leading-tight line-clamp-2 m-0">
                         {sInfo.name}
                       </h2>
                       {sInfo.dur && (
-                        <div className="text-[12px] text-[#6B7869] mt-0.5 font-medium flex items-center gap-1">
+                        <div className="text-[13px] text-[#6B7869] mt-0.5 font-medium flex items-center gap-1">
                           <Clock className="w-3.5 h-3.5 text-[#2E6B34]" />
                           <span>{sInfo.dur}</span>
                         </div>
@@ -175,13 +212,13 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                   </div>
 
                   {/* Card Footer: Spa count & Action */}
-                  <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 pt-1.5 border-t border-[#EDF2EB] flex items-center justify-between gap-1.5 mt-auto">
-                    <span className="text-[12px] min-[380px]:text-[12.5px] font-semibold text-[#6B7869] whitespace-nowrap shrink-0">
+                  <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 pt-2 border-t border-[#EDF2EB] flex items-center justify-between gap-1.5 mt-auto">
+                    <span className="text-[13px] min-[380px]:text-[13.5px] font-semibold text-[#6B7869] whitespace-nowrap shrink-0">
                       {s.count} {locale === 'en' ? 'spas' : locale === 'ko' ? '개 지점' : 'chi nhánh'}
                     </span>
-                    <div className="h-7 min-[380px]:h-7.5 px-2.5 min-[380px]:px-3 rounded-full bg-[#E8FDE7] group-hover:bg-[#236B38] text-[#236B38] group-hover:text-white text-[12px] min-[380px]:text-[12.5px] font-bold flex items-center gap-1 transition-colors whitespace-nowrap shrink-0">
+                    <div className="h-7.5 min-[380px]:h-8 px-3 rounded-full bg-[#E8FDE7] group-hover:bg-[#236B38] text-[#236B38] group-hover:text-white text-[13px] min-[380px]:text-[13.5px] font-bold flex items-center gap-1 transition-colors whitespace-nowrap shrink-0">
                       <span>{locale === 'en' ? 'View' : locale === 'ko' ? '보기' : 'Xem'}</span>
-                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform shrink-0" />
                     </div>
                   </div>
                 </Link>

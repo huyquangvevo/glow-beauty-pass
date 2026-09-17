@@ -15,6 +15,7 @@ import {
   X,
   Store,
   ShieldCheck,
+  Navigation,
 } from 'lucide-react';
 import {
   MVP_SERVICES,
@@ -23,7 +24,7 @@ import {
   formatPrice,
 } from '@/lib/mvp-data';
 import { useSearch } from '@/context/SearchContext';
-import { useLocation } from '@/context/LocationContext';
+import { useLocation, detectCityFromCoords } from '@/context/LocationContext';
 import { getMvpTranslation } from '@/lib/mvp-i18n';
 import BookingBottomSheet from '@/components/BookingBottomSheet';
 import GlowGoogleMap from '@/components/GlowGoogleMap';
@@ -91,7 +92,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
 
   // State
   const { searchQuery, setSearchQuery } = useSearch();
-  const { userCoords, locationLabel, setCustomLocation } = useLocation();
+  const { userCoords, locationLabel, detectedCity, requestLocation, isLocating } = useLocation();
 
   const [selectedServiceId, setSelectedServiceId] = useState<string>(initialServiceId);
   const [selectedCityId, setSelectedCityId] = useState<'hn' | 'hcm' | 'dn'>(initialCityId);
@@ -101,6 +102,23 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
   const [openNow, setOpenNow] = useState<boolean>(false);
   const [isCityMenuOpen, setIsCityMenuOpen] = useState<boolean>(false);
   const cityMenuRef = useRef<HTMLDivElement | null>(null);
+
+  // Track if user explicitly chose a city from dropdown or URL query
+  const hasUserSelectedCity = useRef<boolean>(!!searchParams.get('city'));
+
+  // Auto-switch selectedCityId when user's actual city is detected and user hasn't explicitly chosen another city
+  useEffect(() => {
+    if (!hasUserSelectedCity.current && detectedCity && detectedCity !== selectedCityId) {
+      setSelectedCityId(detectedCity);
+      const citySpas = MVP_SPAS.filter((s) => s.city === detectedCity);
+      const matchingSpa =
+        citySpas.find((s) => s.serviceIds?.includes(selectedServiceId) && (openNow ? s.open : true)) ||
+        citySpas[0];
+      if (matchingSpa) {
+        setSelectedSpaId(matchingSpa.id);
+      }
+    }
+  }, [detectedCity, selectedCityId, selectedServiceId, openNow]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -117,6 +135,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
   }, [isCityMenuOpen]);
 
   const handleSelectCity = (cityId: 'hn' | 'hcm' | 'dn') => {
+    hasUserSelectedCity.current = true;
     setSelectedCityId(cityId);
     setIsCityMenuOpen(false);
 
@@ -220,8 +239,12 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
     if (queryMatchedCoords) return queryMatchedCoords;
     if (geocodedCoords) return geocodedCoords;
 
-    // Only use user GPS coords if user is actually in the selected city (within 60km)
+    // Use user GPS coords if user is in selected city
     if (userCoords) {
+      const userCity = detectedCity || detectCityFromCoords(userCoords.lat, userCoords.lon);
+      if (userCity === selectedCityId) {
+        return { lat: userCoords.lat, lng: userCoords.lon };
+      }
       const cityCenter = CITY_CENTERS[selectedCityId] || CITY_CENTERS.hn;
       const distToCity = computeDistanceKm(userCoords.lat, userCoords.lon, cityCenter.lat, cityCenter.lng);
       if (distToCity < 60) {
@@ -229,22 +252,21 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
       }
     }
     return CITY_CENTERS[selectedCityId] || CITY_CENTERS.hn;
-  }, [urlCoords, queryMatchedCoords, geocodedCoords, userCoords, selectedCityId]);
+  }, [urlCoords, queryMatchedCoords, geocodedCoords, userCoords, selectedCityId, detectedCity]);
 
   const searchTitle = useMemo(() => {
     const q = (searchQuery || searchParams.get('q') || '').trim();
     if (q) return q;
     if (userCoords) {
-      const cityCenter = CITY_CENTERS[selectedCityId] || CITY_CENTERS.hn;
-      const distToCity = computeDistanceKm(userCoords.lat, userCoords.lon, cityCenter.lat, cityCenter.lng);
-      if (distToCity < 60 && locationLabel && locationLabel !== 'Bật vị trí') {
+      const userCity = detectedCity || detectCityFromCoords(userCoords.lat, userCoords.lon);
+      if (userCity === selectedCityId && locationLabel && locationLabel !== 'Bật vị trí') {
         return locationLabel;
       }
     }
     if (selectedCityId === 'hn') return 'Cầu Giấy, Hà Nội';
     if (selectedCityId === 'hcm') return 'Quận 1, TP.HCM';
     return 'Hải Châu, Đà Nẵng';
-  }, [searchQuery, searchParams, locationLabel, selectedCityId, userCoords]);
+  }, [searchQuery, searchParams, locationLabel, selectedCityId, userCoords, detectedCity]);
 
   // Hide footer when in full-screen map mode
   useEffect(() => {
@@ -375,10 +397,10 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
               </Link>
 
               <div className="flex-1 min-w-0 pr-1">
-                <h1 className="text-[15.5px] sm:text-[16.5px] font-bold text-white truncate m-0 leading-tight">
+                <h1 className="text-[17px] sm:text-[18px] font-bold text-white truncate m-0 leading-tight">
                   {getServiceInfo(activeService.id).name}
                 </h1>
-                <div className="text-[12px] text-[#E8FDE7] truncate">
+                <div className="text-[13.5px] text-[#E8FDE7] truncate">
                   {formatPrice(activeService.price)} · {t.fixedPriceNotice}
                 </div>
               </div>
@@ -388,7 +410,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 <button
                   type="button"
                   onClick={() => setViewMode('map')}
-                  className={`px-2.5 py-1 rounded-full text-[12.5px] font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1 rounded-full text-[13.5px] font-bold transition-all cursor-pointer ${
                     viewMode === 'map'
                       ? 'bg-white text-[#093E06] shadow-xs'
                       : 'text-white/80 hover:text-white'
@@ -399,7 +421,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 <button
                   type="button"
                   onClick={() => setViewMode('list')}
-                  className={`px-2.5 py-1 rounded-full text-[12.5px] font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1 rounded-full text-[13.5px] font-bold transition-all cursor-pointer ${
                     viewMode === 'list'
                       ? 'bg-white text-[#093E06] shadow-xs'
                       : 'text-white/80 hover:text-white'
@@ -422,7 +444,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 <button
                   type="button"
                   onClick={() => setIsCityMenuOpen(!isCityMenuOpen)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 hover:bg-white/25 text-white text-[12.5px] font-semibold transition-colors cursor-pointer shadow-xs active:scale-95"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 hover:bg-white/25 text-white text-[13.5px] font-semibold transition-colors cursor-pointer shadow-xs active:scale-95"
                 >
                   <MapPin className="w-3.5 h-3.5 text-[#D4F4D3]" />
                   <span>{activeCity.name}</span>
@@ -431,7 +453,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
 
                 {isCityMenuOpen && (
                   <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-stone-200 py-1.5 z-50 min-w-[145px] text-[#093E06] animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-stone-400 border-b border-stone-100 mb-1">
+                    <div className="px-3.5 py-1 text-[11.5px] font-bold uppercase tracking-wider text-stone-400 border-b border-stone-100 mb-1">
                       {locale === 'en' ? 'Select City' : locale === 'ko' ? '지역 선택' : 'Chọn khu vực'}
                     </div>
                     {CITIES.map((c) => (
@@ -439,7 +461,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                         key={c.id}
                         type="button"
                         onClick={() => handleSelectCity(c.id)}
-                        className={`w-full text-left px-3.5 py-2 text-[13px] font-semibold hover:bg-emerald-50 transition-colors flex items-center justify-between cursor-pointer ${
+                        className={`w-full text-left px-3.5 py-2 text-[14px] font-semibold hover:bg-emerald-50 transition-colors flex items-center justify-between cursor-pointer ${
                           selectedCityId === c.id ? 'text-[#40813D] bg-emerald-50/70 font-bold' : 'text-stone-700'
                         }`}
                       >
@@ -453,11 +475,41 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
 
               {/* Quick filter chips (scrollable) */}
               <div className="flex items-center gap-2 overflow-x-auto no-scrollbar min-w-0 flex-1">
+                {/* GPS Current Location button */}
+                <button
+                  type="button"
+                  onClick={() => requestLocation(false)}
+                  disabled={isLocating}
+                  title={userCoords ? `Vị trí hiện tại: ${locationLabel || 'Đã định vị'}` : 'Nhấn để lấy vị trí GPS hiện tại'}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13.5px] font-semibold transition-all shrink-0 cursor-pointer shadow-xs active:scale-95 ${
+                    userCoords
+                      ? 'bg-white text-[#093E06] shadow-xs'
+                      : 'bg-white/15 hover:bg-white/25 text-white'
+                  }`}
+                >
+                  <Navigation
+                    className={`w-3.5 h-3.5 shrink-0 ${
+                      isLocating
+                        ? 'animate-spin text-[#40813D]'
+                        : userCoords
+                        ? 'text-[#40813D] fill-[#40813D]'
+                        : 'text-[#D4F4D3]'
+                    }`}
+                  />
+                  <span className="truncate max-w-[130px] sm:max-w-[160px]">
+                    {isLocating
+                      ? 'Đang tìm...'
+                      : userCoords
+                      ? (locationLabel || 'Gần bạn')
+                      : 'Vị trí của bạn'}
+                  </span>
+                </button>
+
                 {/* Rating 4.8+ filter */}
                 <button
                   type="button"
                   onClick={() => setMinRating(!minRating)}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[12.5px] font-semibold transition-all shrink-0 cursor-pointer ${
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[13.5px] font-semibold transition-all shrink-0 cursor-pointer ${
                     minRating
                       ? 'bg-white text-[#093E06] shadow-xs'
                       : 'bg-white/15 text-white/90 hover:bg-white/25'
@@ -471,7 +523,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 <button
                   type="button"
                   onClick={() => setOpenNow(!openNow)}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[12.5px] font-semibold transition-all shrink-0 cursor-pointer ${
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[13.5px] font-semibold transition-all shrink-0 cursor-pointer ${
                     openNow
                       ? 'bg-white text-[#093E06] shadow-xs'
                       : 'bg-white/15 text-white/90 hover:bg-white/25'
@@ -490,7 +542,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                       setOpenNow(false);
                       setSearchQuery('');
                     }}
-                    className="px-2 py-1 rounded-full text-[12px] text-[#D4F4D3] hover:text-white underline cursor-pointer shrink-0"
+                    className="px-2 py-1 rounded-full text-[13px] font-medium text-[#D4F4D3] hover:text-white underline cursor-pointer shrink-0"
                   >
                     {t.clearFilter}
                   </button>
@@ -520,7 +572,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                     onClick={() => router.push(`/spa/${activeSelectedSpa.id}?service=${selectedServiceId}`)}
                     className="bg-white/95 backdrop-blur-md rounded-[18px] p-3 sm:p-3.5 border border-[#DDE4D9] shadow-lg flex gap-3 sm:gap-3.5 cursor-pointer hover:border-[#40813D] transition-all active:scale-[0.99] overflow-hidden"
                   >
-                    <div className="relative w-[66px] h-[66px] rounded-[14px] overflow-hidden bg-[#E8FDE7] shrink-0">
+                    <div className="relative w-[70px] h-[70px] rounded-[14px] overflow-hidden bg-[#E8FDE7] shrink-0">
                       <Image
                         src={activeSelectedSpa.photos[0] || '/spas/spa_thumb_1.jpg'}
                         alt={activeSelectedSpa.name}
@@ -531,18 +583,18 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-2">
-                        <div className="font-semibold text-[16px] text-[#093E06] truncate">
+                        <div className="font-bold text-[17.5px] text-[#093E06] truncate">
                           {activeSelectedSpa.name}
                         </div>
-                        <div className="font-semibold text-[14.5px] text-[#093E06] shrink-0 whitespace-nowrap">
+                        <div className="font-bold text-[16px] text-[#093E06] shrink-0 whitespace-nowrap">
                           {formatPrice(activeService.price)}
                         </div>
                       </div>
-                      <div className="text-[12.5px] text-[#6B7869] mt-1 truncate">
+                      <div className="text-[13.5px] text-[#6B7869] mt-1 truncate">
                         ★ {activeSelectedSpa.rating} ({activeSelectedSpa.reviews}) · {activeSelectedSpa.formattedDist || activeSelectedSpa.dist} · {activeSelectedSpa.ward || activeSelectedSpa.district || activeSelectedSpa.address}
                       </div>
                       <div className="flex items-center gap-1.5 mt-2">
-                        <span className="text-[11.5px] font-semibold text-[#093E06] bg-[#E8FDE7] rounded-full px-2.5 py-0.5 whitespace-nowrap">
+                        <span className="text-[12.5px] font-semibold text-[#093E06] bg-[#E8FDE7] rounded-full px-2.5 py-0.5 whitespace-nowrap">
                           {locale === 'en' ? 'Open now' : locale === 'ko' ? '영업중' : 'Đang mở'}
                         </span>
                       </div>
@@ -557,23 +609,23 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
           {viewMode === 'list' && (
             <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-[max(80px,calc(2rem+env(safe-area-inset-bottom)))] sm:pb-12">
               {/* Service Count Summary Header */}
-              <div className="text-[13px] font-bold text-[#093E06] px-1 flex items-center justify-between">
+              <div className="text-[14.5px] font-bold text-[#093E06] px-1 flex items-center justify-between">
                 <span>
                   {filteredSpas.length} {locale === 'en' ? 'spas offering' : locale === 'ko' ? '개 스파' : 'chi nhánh có'} &quot;{getServiceInfo(activeService.id).name}&quot;
                 </span>
-                <span className="text-[12px] font-medium text-[#6B7869]">
+                <span className="text-[13.5px] font-medium text-[#6B7869]">
                   {activeCity.name}
                 </span>
               </div>
 
               {filteredSpas.length === 0 ? (
-                <div className="py-12 text-center text-stone-500 text-sm">
+                <div className="py-12 text-center text-stone-500 text-base">
                   <p>{t.noSpasFound}</p>
                   {searchQuery && (
                     <button
                       type="button"
                       onClick={() => setSearchQuery('')}
-                      className="mt-3 px-4 py-2 rounded-full bg-[#40813D] text-white text-xs font-semibold cursor-pointer"
+                      className="mt-3 px-4 py-2 rounded-full bg-[#40813D] text-white text-[13px] font-semibold cursor-pointer"
                     >
                       {t.clearFilter}
                     </button>
@@ -586,7 +638,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                     onClick={() => router.push(`/spa/${s.id}?service=${selectedServiceId}`)}
                     className="bg-white rounded-[18px] p-3 sm:p-3.5 border border-[#DDE4D9] flex gap-3 sm:gap-3.5 cursor-pointer hover:border-[#40813D] hover:shadow-xs transition-all active:scale-[0.99] overflow-hidden"
                   >
-                    <div className="relative w-[66px] h-[66px] rounded-[14px] overflow-hidden bg-[#E8FDE7] shrink-0">
+                    <div className="relative w-[70px] h-[70px] rounded-[14px] overflow-hidden bg-[#E8FDE7] shrink-0">
                       <Image
                         src={s.photos[0] || '/spas/spa_thumb_1.jpg'}
                         alt={s.name}
@@ -597,18 +649,18 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-2">
-                        <div className="font-semibold text-[16px] text-[#093E06] truncate">
+                        <div className="font-bold text-[17.5px] text-[#093E06] truncate">
                           {s.name}
                         </div>
-                        <div className="font-semibold text-[14.5px] text-[#093E06] shrink-0 whitespace-nowrap">
+                        <div className="font-bold text-[16px] text-[#093E06] shrink-0 whitespace-nowrap">
                           {formatPrice(activeService.price)}
                         </div>
                       </div>
-                      <div className="text-[12.5px] text-[#6B7869] mt-1 truncate">
+                      <div className="text-[13.5px] text-[#6B7869] mt-1 truncate">
                         ★ {s.rating} ({s.reviews}) · {s.formattedDist || s.dist} · {s.ward || s.district || s.address}
                       </div>
                       <div className="flex items-center gap-1.5 mt-2">
-                        <span className="text-[11.5px] font-semibold text-[#093E06] bg-[#E8FDE7] rounded-full px-2.5 py-0.5 whitespace-nowrap">
+                        <span className="text-[12.5px] font-semibold text-[#093E06] bg-[#E8FDE7] rounded-full px-2.5 py-0.5 whitespace-nowrap">
                           {locale === 'en' ? 'Open now' : locale === 'ko' ? '영업중' : 'Đang mở'}
                         </span>
                       </div>

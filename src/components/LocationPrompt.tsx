@@ -44,7 +44,7 @@ export function LocationPrompt() {
 
             <div className="flex items-center gap-3 pt-2">
               <button
-                onClick={requestLocation}
+                onClick={() => requestLocation(false)}
                 disabled={isLocating}
                 className="px-4 py-2 rounded-xl bg-[#40813D] hover:bg-[#356F32] disabled:bg-[#40813D]/60 text-white text-xs font-bold shadow-xs active:scale-95 transition-all flex items-center gap-1.5"
               >
