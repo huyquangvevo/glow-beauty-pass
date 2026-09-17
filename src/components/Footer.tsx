@@ -27,7 +27,7 @@ export function Footer() {
             <Link href="/" className="inline-block group" aria-label="Glow Beauty Pass">
               <BrandWordmark className="h-8 sm:h-9 w-auto text-white hover:opacity-90 transition-opacity drop-shadow-xs" />
             </Link>
-            <p className="text-[12.5px] sm:text-[13px] text-emerald-100/90 leading-relaxed font-normal">
+            <p className="text-[13.5px] sm:text-[14px] text-emerald-100/90 leading-relaxed font-normal">
               {t.has('shortTagline') ? t('shortTagline') : t('tagline')}
             </p>
           </div>
@@ -36,19 +36,19 @@ export function Footer() {
           <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             <Link
               href="/"
-              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[12px] font-semibold text-white transition-colors"
+              className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[13px] font-semibold text-white transition-colors"
             >
               {t.has('navHome') ? t('navHome') : 'Home'}
             </Link>
             <Link
               href="/about"
-              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[12px] font-semibold text-white transition-colors"
+              className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[13px] font-semibold text-white transition-colors"
             >
               {t.has('navAbout') ? t('navAbout') : 'About Us'}
             </Link>
             <Link
               href="/spas"
-              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[12px] font-semibold text-white transition-colors"
+              className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[13px] font-semibold text-white transition-colors"
             >
               {t.has('navSpas') ? t('navSpas') : 'Find Spas'}
             </Link>
@@ -56,7 +56,7 @@ export function Footer() {
               href={zaloHubLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-[#093E06] hover:bg-emerald-50 text-[12px] font-bold shadow-xs transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-[#093E06] hover:bg-emerald-50 text-[13px] font-bold shadow-xs transition-all active:scale-95"
             >
               <Image
                 src="/brand/Logo-Zalo-App-Rec.webp"
@@ -71,7 +71,7 @@ export function Footer() {
         </div>
 
         {/* Compact Trust & Value Strip */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/15 text-[11.5px] sm:text-[12px] text-emerald-100/85">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/15 text-[12.5px] sm:text-[13px] text-emerald-100/85">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
             <span className="flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />

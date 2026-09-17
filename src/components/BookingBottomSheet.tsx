@@ -217,7 +217,7 @@ export default function BookingBottomSheet({
             >
               {/* Step 1: Dịch vụ */}
               <div>
-                <label className="block text-[11.5px] font-bold text-[#093E06] mb-1.5 uppercase tracking-wide">
+                <label className="block text-[12.5px] font-bold text-[#093E06] mb-1.5 uppercase tracking-wide">
                   {t.booking.serviceLabel}
                 </label>
                 <div className="flex flex-wrap gap-1.5">
@@ -232,7 +232,7 @@ export default function BookingBottomSheet({
                           setSelectedServiceId(s.id);
                           onServiceChange?.(s.id);
                         }}
-                        className={`px-3 py-1.5 rounded-full text-[12px] font-medium transition-all cursor-pointer ${
+                        className={`px-3 py-1.5 rounded-full text-[13px] font-medium transition-all cursor-pointer ${
                           isSelected
                             ? 'bg-[#40813F] text-white shadow-xs ring-1 ring-[#40813F]'
                             : 'bg-white text-[#3E4A3C] border border-[#DDE4D9] hover:border-[#40813F]/50 active:bg-stone-50'
@@ -247,7 +247,7 @@ export default function BookingBottomSheet({
 
               {/* Step 2: Ngày */}
               <div>
-                <label className="block text-[11.5px] font-bold text-[#093E06] mb-1.5 uppercase tracking-wide">
+                <label className="block text-[12.5px] font-bold text-[#093E06] mb-1.5 uppercase tracking-wide">
                   {t.booking.dateLabel}
                 </label>
                 <div className="flex gap-2">
@@ -265,14 +265,14 @@ export default function BookingBottomSheet({
                         }`}
                       >
                         <div
-                          className={`text-[12px] font-bold ${
+                          className={`text-[13px] font-bold ${
                             isSelected ? 'text-white' : 'text-[#093E06]'
                           }`}
                         >
                           {d.label}
                         </div>
                         <div
-                          className={`text-[10px] mt-0.5 ${
+                          className={`text-[11px] mt-0.5 ${
                             isSelected ? 'text-[#E8FDE7]' : 'text-[#6B7869]'
                           }`}
                         >
@@ -286,7 +286,7 @@ export default function BookingBottomSheet({
 
               {/* Step 3: Khung giờ */}
               <div>
-                <label className="block text-[11.5px] font-bold text-[#093E06] mb-1.5 uppercase tracking-wide">
+                <label className="block text-[12.5px] font-bold text-[#093E06] mb-1.5 uppercase tracking-wide">
                   {t.booking.timeLabel}
                 </label>
                 <div className="flex flex-wrap gap-1.5">
@@ -299,7 +299,7 @@ export default function BookingBottomSheet({
                         type="button"
                         disabled={isFull}
                         onClick={() => !isFull && setSelectedTime(time)}
-                        className={`px-3 py-1.5 rounded-full text-[12px] font-medium transition-all ${
+                        className={`px-3 py-1.5 rounded-full text-[13px] font-medium transition-all ${
                           isFull
                             ? 'bg-[#F1F3F0] text-[#9BA69A] border border-[#F1F3F0] cursor-not-allowed'
                             : isSelected
@@ -318,7 +318,7 @@ export default function BookingBottomSheet({
               <div>
                 <div className="flex gap-2.5">
                   <div className="flex-1 min-w-0">
-                    <label className="block text-[12px] font-semibold text-[#093E06] mb-1.5">
+                    <label className="block text-[13px] font-semibold text-[#093E06] mb-1.5">
                       {t.booking.nameLabel}
                     </label>
                     <input
@@ -326,11 +326,11 @@ export default function BookingBottomSheet({
                       value={guestName}
                       onChange={(e) => setGuestName(e.target.value)}
                       placeholder={t.booking.namePlaceholder}
-                      className="w-full box-border h-[46px] rounded-[14px] border border-[#DDE4D9] bg-white px-3.5 text-[13.5px] text-[#1E2B1C] placeholder:text-[#9BA69A] outline-none focus:border-[#40813F] transition-colors"
+                      className="w-full box-border h-[46px] rounded-[14px] border border-[#DDE4D9] bg-white px-3.5 text-[14.5px] text-[#1E2B1C] placeholder:text-[#9BA69A] outline-none focus:border-[#40813F] transition-colors"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <label className="block text-[12px] font-semibold text-[#093E06] mb-1.5">
+                    <label className="block text-[13px] font-semibold text-[#093E06] mb-1.5">
                       {t.booking.phoneLabel} <span className="text-[#C0392B]">*</span>
                     </label>
                     <input
@@ -342,7 +342,7 @@ export default function BookingBottomSheet({
                         if (phoneError) setPhoneError(false);
                       }}
                       placeholder={t.booking.phonePlaceholder}
-                      className={`w-full box-border h-[46px] rounded-[14px] border px-3.5 text-[13.5px] text-[#1E2B1C] placeholder:text-[#9BA69A] outline-none transition-colors ${
+                      className={`w-full box-border h-[46px] rounded-[14px] border px-3.5 text-[14.5px] text-[#1E2B1C] placeholder:text-[#9BA69A] outline-none transition-colors ${
                         phoneError && !phoneOk
                           ? 'border-[#C0392B] bg-[#FFF8F8] focus:border-[#C0392B]'
                           : 'border-[#DDE4D9] bg-white focus:border-[#40813F]'
@@ -351,7 +351,7 @@ export default function BookingBottomSheet({
                   </div>
                 </div>
                 {phoneError && !phoneOk && (
-                  <p className="text-[11.5px] text-[#C0392B] mt-1.5 font-medium">
+                  <p className="text-[12px] text-[#C0392B] mt-1.5 font-medium">
                     {t.booking.phoneErrorNotice}
                   </p>
                 )}
@@ -360,13 +360,13 @@ export default function BookingBottomSheet({
               {/* Message preview box */}
               <div className="bg-[#F5F7F4] rounded-[18px] p-3.5 border border-[#E8ECE6]">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-bold tracking-wider text-[#6B7869] uppercase">
+                  <span className="text-[11px] font-bold tracking-wider text-[#6B7869] uppercase">
                     {t.booking.messagePreviewTitle}
                   </span>
                   <button
                     type="button"
                     onClick={handleCopyPreview}
-                    className={`inline-flex items-center gap-1 text-[11.5px] font-semibold rounded-full px-3 py-1 border transition-colors cursor-pointer ${
+                    className={`inline-flex items-center gap-1 text-[12px] font-semibold rounded-full px-3 py-1 border transition-colors cursor-pointer ${
                       copied
                         ? 'bg-[#40813F] text-white border-[#40813F]'
                         : 'bg-white text-[#093E06] border-[#DDE4D9] hover:bg-stone-50'
@@ -375,7 +375,7 @@ export default function BookingBottomSheet({
                     <span>{copied ? t.booking.copiedBtn : t.booking.copyBtn}</span>
                   </button>
                 </div>
-                <div className="bg-[#E8FDE7] border border-[#D4F4D3] rounded-[14px] p-3 text-[12.5px] leading-relaxed text-[#1E2B1C] whitespace-pre-line font-medium">
+                <div className="bg-[#E8FDE7] border border-[#D4F4D3] rounded-[14px] p-3 text-[13.5px] leading-relaxed text-[#1E2B1C] whitespace-pre-line font-medium">
                   {message}
                 </div>
               </div>
@@ -386,7 +386,7 @@ export default function BookingBottomSheet({
               <button
                 type="button"
                 onClick={handleOpenZalo}
-                className="w-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-[0.99] text-white rounded-full h-12.5 flex items-center justify-center gap-2 font-bold text-[15px] shadow-md transition-all cursor-pointer"
+                className="w-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-[0.99] text-white rounded-full h-12.5 flex items-center justify-center gap-2 font-bold text-[16px] shadow-md transition-all cursor-pointer"
               >
                 <Image
                   src="/brand/Logo-Zalo-App-Rec.webp"
@@ -400,11 +400,11 @@ export default function BookingBottomSheet({
               </button>
               <div className="mt-2 text-center space-y-1">
                 {t.booking.pasteGuide && (
-                  <p className="text-[11px] text-[#6B7869] leading-snug">
+                  <p className="text-[12px] text-[#6B7869] leading-snug">
                     {t.booking.pasteGuide}
                   </p>
                 )}
-                <p className="text-[11px] text-[#6B7869]">
+                <p className="text-[12px] text-[#6B7869]">
                   {t.booking.slaNotice}
                 </p>
               </div>
