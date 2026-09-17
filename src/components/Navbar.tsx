@@ -16,6 +16,11 @@ export function Navbar() {
   const isSpasMap = pathname.includes('/spas')
   const isHub = pathname.includes('/hub')
 
+  // Trên trang /spas (Bản đồ & Danh sách spa), SpasClientView đã có thanh điều hướng chuyên biệt, ẩn Navbar để tránh trùng lặp 2 header
+  if (isSpasMap) {
+    return null
+  }
+
   return (
     <>
       {/* TOP HEADER: GLOW BEAUTY PASS (Brand Green #40813D, Logo + Search + Language) */}
@@ -30,8 +35,8 @@ export function Navbar() {
             <BrandWordmark className="h-10 sm:h-11 w-auto text-white drop-shadow-xs" />
           </Link>
 
-          {/* Advanced Search Pill with Autocomplete & Mobile Modal */}
-          <HeaderSearch />
+          {/* Tạm ẩn thanh search để người dùng tập trung vào dịch vụ & USP giá */}
+          {/* <HeaderSearch /> */}
 
           {/* Language Switcher Dropdown (VI • EN • KO) */}
           <LanguageSwitcher />

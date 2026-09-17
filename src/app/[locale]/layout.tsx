@@ -34,15 +34,15 @@ export async function generateMetadata({
   const baseUrl = 'https://glowbeautypass.com'
 
   const titles: Record<string, string> = {
-    vi: 'Hệ Thống 10.000 Spa Đồng Giá - Glow Beauty Pass | Từ 39K',
-    en: '10,000 Fixed-Price Spa Network - Glow Beauty Pass | From 39K',
-    ko: '10,000개 동일 정찰제 스파 - Glow Beauty Pass | 39,000동부터',
+    vi: 'Hệ Thống 500 Spa Đồng Giá - Glow Beauty Pass | Từ 39K',
+    en: '500 Fixed-Price Spa Network - Glow Beauty Pass | From 39K',
+    ko: '500개 동일 정찰제 스파 - Glow Beauty Pass | 39,000동부터',
   }
 
   const descriptions: Record<string, string> = {
-    vi: 'Hệ thống 10.000 spa đồng giá chuẩn hóa toàn quốc. Bảng giá niêm yết từ 39K - 199K, không chèo kéo, không phụ thu, đặt lịch nhanh qua Zalo.',
-    en: 'Network of 10,000 fixed-price spas nationwide. Transparent prices from 39K - 199K VND, strict quality audit, instant booking via Zalo.',
-    ko: '전국 10,000개 동일 정찰제 스파 네트워크. 39,000동부터 199,000동까지 투명한 정찰제, 바가지 없는 Zalo 간편 예약.',
+    vi: 'Hệ thống 500 spa đồng giá chuẩn hóa toàn quốc. Bảng giá niêm yết từ 39K - 199K, không chèo kéo, không phụ thu, đặt lịch nhanh qua Zalo.',
+    en: 'Network of 500 fixed-price spas nationwide. Transparent prices from 39K - 199K VND, strict quality audit, instant booking via Zalo.',
+    ko: '전국 500개 동일 정찰제 스파 네트워크. 39,000동부터 199,000동까지 투명한 정찰제, 바가지 없는 Zalo 간편 예약.',
   }
 
   const title = titles[locale] || titles.vi
@@ -204,7 +204,8 @@ export default async function LocaleLayout({
               <Navbar />
               <main className="flex-1 w-full">{children}</main>
               <Footer />
-              <LocationPrompt />
+              {/* Tạm ẩn LocationPrompt để tập trung vào dịch vụ & USP giá */}
+              {/* <LocationPrompt /> */}
             </SearchProvider>
           </LocationProvider>
         </NextIntlClientProvider>

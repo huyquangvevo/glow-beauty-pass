@@ -93,10 +93,7 @@ export default function SpaDetailClientView({
               <ArrowLeft className="w-4 h-4" strokeWidth={2.2} />
             </Link>
 
-            {/* Certified / Verified Badge */}
-            <div className="absolute top-4 right-4 bg-[#093E06] text-white text-[10.5px] font-bold tracking-widest px-3 py-1 rounded-full uppercase shadow-md">
-              {spa.tier === 'Certified' ? t.certifiedBadge : t.verifiedBadge}
-            </div>
+
 
             {/* Photos Count Badge */}
             <div className="absolute bottom-3 right-3 bg-black/60 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full backdrop-blur-xs">
@@ -310,7 +307,7 @@ export default function SpaDetailClientView({
             <button
               type="button"
               onClick={() => handleOpenBooking(selectedServiceId)}
-              className="h-11 px-5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[13.5px] font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
+              className="h-11 px-4.5 sm:px-5 rounded-full bg-[#236B38] hover:bg-[#1D5A2E] active:scale-95 text-white text-[13px] sm:text-[13.5px] font-bold shadow-md transition-all flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shrink-0 whitespace-nowrap"
             >
               <Image
                 src="/brand/Logo-Zalo-App-Rec.webp"

@@ -1,6 +1,6 @@
 'use client';
 
-import { Link } from '@/i18n/routing';
+import { Link, usePathname } from '@/i18n/routing';
 import Image from 'next/image';
 import { BrandWordmark } from './BrandLogo';
 import { ShieldCheck, Sparkles, Phone, MessageCircle } from 'lucide-react';
@@ -8,8 +8,14 @@ import { useTranslations } from 'next-intl';
 
 export function Footer() {
   const t = useTranslations('Footer');
+  const pathname = usePathname();
   const zaloHubLink =
     process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342';
+
+  // Không hiển thị Footer trên trang /spas để màn hình bản đồ full viewport 100% không bị cuộn
+  if (pathname?.includes('/spas')) {
+    return null;
+  }
 
   return (
     <footer className="bg-[#40813D] text-white pt-8 pb-10 sm:py-10 border-t border-white/15 font-sans">

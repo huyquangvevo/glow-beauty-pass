@@ -27,6 +27,7 @@ import { useLocation } from '@/context/LocationContext';
 import { getMvpTranslation } from '@/lib/mvp-i18n';
 import BookingBottomSheet from '@/components/BookingBottomSheet';
 import GlowGoogleMap from '@/components/GlowGoogleMap';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 function computeDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371;
@@ -293,25 +294,24 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
     handleOpenBooking(spaId, activeService.id);
   };
 
-  const isFullScreenApp = viewMode === 'map';
+  // Ensure page is pinned to top when viewing spas
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
+  }, []);
 
   return (
     <div
-      className={`w-full bg-[#FAF8F5] flex flex-col items-center justify-start ${
-        isFullScreenApp ? 'p-0 h-[calc(100dvh-56px)] overflow-hidden' : 'p-0 sm:py-6'
-      } font-sans`}
+      className="w-full bg-[#FAF8F5] flex flex-col items-center justify-start p-0 h-[100dvh] h-screen overflow-hidden font-sans fixed inset-0 sm:relative sm:inset-auto sm:h-[100dvh]"
     >
       <div
-        className={`w-full max-w-[440px] bg-[#F5F7F4] relative flex flex-col sm:rounded-[32px] sm:shadow-xl sm:border sm:border-stone-200/80 transition-all ${
-          isFullScreenApp
-            ? 'h-full sm:h-[calc(100dvh-56px)] overflow-hidden mb-0'
-            : 'mb-0 sm:mb-10'
-        }`}
+        className="w-full max-w-[440px] bg-[#F5F7F4] relative flex flex-col sm:rounded-[32px] sm:shadow-xl sm:border sm:border-stone-200/80 transition-all h-full overflow-hidden mb-0"
       >
-        <div id="danh-sach-spa" className="flex-1 flex flex-col h-full animate-in fade-in duration-200">
+        <div id="danh-sach-spa" className="flex-1 flex flex-col h-full overflow-hidden animate-in fade-in duration-200">
           {/* Top Green Bar with Navigation & Map/List Switcher */}
-          <div className="bg-[#40813D] pt-4 pb-3.5 px-4 flex-none text-white border-b border-[#356F32]">
-            <div className="flex items-center gap-2.5">
+          <div className="bg-[#40813D] pt-3 pb-2.5 px-3 sm:px-4 flex-none text-white border-b border-[#356F32]">
+            <div className="flex items-center gap-2">
               <Link
                 href="/"
                 className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white shrink-0 transition-colors cursor-pointer"
@@ -320,21 +320,21 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 <ArrowLeft className="w-4 h-4" strokeWidth={2.2} />
               </Link>
 
-              <div className="flex-1 min-w-0">
-                <h1 className="text-[14.5px] font-bold text-white truncate m-0">
+              <div className="flex-1 min-w-0 pr-1">
+                <h1 className="text-[14px] sm:text-[15px] font-bold text-white truncate m-0 leading-tight">
                   {getServiceInfo(activeService.id).name}
                 </h1>
-                <div className="text-[11.5px] text-[#E8FDE7]">
+                <div className="text-[11px] text-[#E8FDE7] truncate">
                   {formatPrice(activeService.price)} · {t.fixedPriceNotice}
                 </div>
               </div>
 
               {/* View Switcher: Bản đồ | Danh sách */}
-              <div className="flex bg-black/15 rounded-full p-0.5 shrink-0">
+              <div className="flex bg-black/20 rounded-full p-0.5 shrink-0">
                 <button
                   type="button"
                   onClick={() => setViewMode('map')}
-                  className={`px-3 py-1.5 rounded-full text-[12px] font-bold transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-full text-[11.5px] font-bold transition-all cursor-pointer ${
                     viewMode === 'map'
                       ? 'bg-white text-[#093E06] shadow-xs'
                       : 'text-white/80 hover:text-white'
@@ -345,7 +345,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 <button
                   type="button"
                   onClick={() => setViewMode('list')}
-                  className={`px-3 py-1.5 rounded-full text-[12px] font-bold transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-full text-[11.5px] font-bold transition-all cursor-pointer ${
                     viewMode === 'list'
                       ? 'bg-white text-[#093E06] shadow-xs'
                       : 'text-white/80 hover:text-white'
@@ -354,10 +354,15 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                   {t.listView}
                 </button>
               </div>
+
+              {/* Language Switcher */}
+              <div className="shrink-0 scale-90 -mr-1">
+                <LanguageSwitcher />
+              </div>
             </div>
 
             {/* Filter Row: City dropdown & Quick filter chips */}
-            <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-white/15 overflow-x-auto no-scrollbar">
+            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/15 overflow-x-auto no-scrollbar">
               {/* City selector */}
               <div className="relative shrink-0">
                 <button
