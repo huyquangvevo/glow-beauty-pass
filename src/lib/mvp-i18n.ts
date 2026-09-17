@@ -2,7 +2,7 @@ export interface LocalizedMVP {
   appName: string;
   brandTagline: string;
   introButton: string;
-  valuePills: [string, string, string];
+  valuePills: string[];
   servicesTitle: string;
   selectSpaTitle: string;
   chooseBranch: string;
@@ -65,6 +65,12 @@ export interface LocalizedMVP {
     thu: string;
     timeLabel: string;
     fullyBooked: string;
+    nameLabel: string;
+    namePlaceholder: string;
+    phoneLabel: string;
+    phonePlaceholder: string;
+    phoneErrorNotice: string;
+    contactLabel: string;
     messagePreviewTitle: string;
     autoCopyNotice: string;
     copyBtn: string;
@@ -118,7 +124,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     appName: 'Hệ thống 10.000 spa đồng giá',
     brandTagline: 'Hệ thống 10.000 spa đồng giá',
     introButton: 'Giới thiệu',
-    valuePills: ['10.000+ spa toàn quốc', 'Một mức giá', 'Chất lượng đồng nhất'],
+    valuePills: ['Một mức giá', 'Chất lượng đồng nhất'],
     servicesTitle: 'Dịch vụ đồng giá',
     selectSpaTitle: 'Chọn chi nhánh',
     chooseBranch: 'Chọn chi nhánh',
@@ -201,12 +207,18 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       thu: 'T5',
       timeLabel: 'Khung giờ',
       fullyBooked: 'hết chỗ',
-      messagePreviewTitle: 'Nội dung gửi Zalo',
+      nameLabel: 'Tên của bạn',
+      namePlaceholder: 'VD: Ngọc Ánh',
+      phoneLabel: 'Số điện thoại',
+      phonePlaceholder: '09xx xxx xxx',
+      phoneErrorNotice: 'Nhập số điện thoại để tổng đài gọi xác nhận lịch.',
+      contactLabel: 'Liên hệ',
+      messagePreviewTitle: 'TIN NHẮN GỬI TỚI TỔNG ĐÀI',
       autoCopyNotice: '',
-      copyBtn: 'Sao chép',
-      copiedBtn: 'Đã copy',
-      openZaloBtn: 'Mở Zalo GlowBeautyPass',
-      pasteGuide: '',
+      copyBtn: 'Copy',
+      copiedBtn: 'Đã copy ✓',
+      openZaloBtn: 'Copy & mở Zalo Glow Beauty',
+      pasteGuide: 'Zalo không tự điền được nội dung — dán tin nhắn đã copy vào khung chat là xong.',
       slaNotice: 'Chưa trừ tiền · Tổng đài xác nhận chỗ trong 15-20 phút',
       confirmedTitle: 'Đã copy tin nhắn',
       confirmedAction: 'Dán vào khung chat Zalo Glow Beauty và gửi.',
@@ -281,7 +293,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     appName: 'Network of 10,000 Fixed-Price Spas',
     brandTagline: 'Network of 10,000 Fixed-Price Spas',
     introButton: 'About',
-    valuePills: ['10,000+ spas nationwide', 'Fixed price', 'Standardized quality'],
+    valuePills: ['Fixed price', 'Standardized quality'],
     servicesTitle: 'Standardized Services',
     selectSpaTitle: 'Select Spa Branch',
     chooseBranch: 'Choose branch',
@@ -364,12 +376,18 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       thu: 'Thu',
       timeLabel: 'Time slot',
       fullyBooked: 'Full',
-      messagePreviewTitle: 'Zalo message',
+      nameLabel: 'Your name',
+      namePlaceholder: 'e.g. Jessica',
+      phoneLabel: 'Phone number',
+      phonePlaceholder: '09xx xxx xxx',
+      phoneErrorNotice: 'Please enter your phone number to confirm appointment.',
+      contactLabel: 'Contact',
+      messagePreviewTitle: 'MESSAGE TO HOTLINE',
       autoCopyNotice: '',
       copyBtn: 'Copy',
-      copiedBtn: 'Copied',
-      openZaloBtn: 'Open Zalo GlowBeautyPass',
-      pasteGuide: '',
+      copiedBtn: 'Copied ✓',
+      openZaloBtn: 'Copy & open Zalo Glow Beauty',
+      pasteGuide: 'Zalo does not auto-fill — just paste the copied message into the chat.',
       slaNotice: 'No upfront payment · Confirmation within 15-20 mins',
       confirmedTitle: 'Message Copied',
       confirmedAction: 'Paste into Glow Beauty Zalo chat and send.',
@@ -444,7 +462,7 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     appName: '10,000개 동일 정찰제 스파',
     brandTagline: '10,000개 동일 정찰제 스파',
     introButton: '소개',
-    valuePills: ['전국 10,000+ 스파', '단일 정찰제', '표준화된 품질'],
+    valuePills: ['단일 정찰제', '표준화된 품질'],
     servicesTitle: '정찰제 뷰티 케어',
     selectSpaTitle: '지점 선택하기',
     chooseBranch: '지점 선택',
@@ -525,14 +543,20 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
       today: '오늘',
       tomorrow: '내일',
       thu: '목',
-      timeLabel: '희망 시간대',
+      timeLabel: '예약 시간',
       fullyBooked: '마감',
-      messagePreviewTitle: 'Zalo 메시지',
+      nameLabel: '고객명',
+      namePlaceholder: '예: 김민지',
+      phoneLabel: '연락처',
+      phonePlaceholder: '09xx xxx xxx',
+      phoneErrorNotice: '예약 확정을 위해 전화번호를 입력해 주세요.',
+      contactLabel: '연락처',
+      messagePreviewTitle: '상담원 전달 메시지',
       autoCopyNotice: '',
       copyBtn: '복사',
-      copiedBtn: '복사됨',
-      openZaloBtn: 'Zalo GlowBeautyPass 열기',
-      pasteGuide: '',
+      copiedBtn: '복사됨 ✓',
+      openZaloBtn: '복사 & Zalo Glow Beauty 열기',
+      pasteGuide: 'Zalo는 자동 입력되지 않으므로 채팅창에 복사된 내용을 붙여넣어 주세요.',
       slaNotice: '사전 결제 없음 · 15~20분 내 예약 확정',
       confirmedTitle: '메시지 복사 완료',
       confirmedAction: 'Glow Beauty Zalo 채팅창에 붙여넣고 전송해 주세요.',
@@ -615,27 +639,20 @@ export function getLocalizedBookingMessage(
   serviceName: string,
   priceStr: string,
   spaDisplayName: string,
-  slotStr: string
+  slotStr: string,
+  guestPhone?: string,
+  guestName?: string
 ): string {
+  const phone = guestPhone?.trim() || '....';
+  const name = guestName?.trim();
+
   if (locale === 'en') {
-    return `Hi Glow, I'd like to book:
-${serviceName} (${priceStr})
-${spaDisplayName}
-${slotStr}
-Is this slot available?`;
+    return `Hi Glow Beauty, ${name ? `I'm ${name}, ` : ''}I'd like to book ${serviceName} (${priceStr}) at ${spaDisplayName}, ${slotStr}. My phone: ${phone}. Please check availability and confirm.`;
   }
   if (locale === 'ko') {
-    return `안녕하세요 Glow, 예약 문의드립니다:
-${serviceName} (${priceStr})
-${spaDisplayName}
-${slotStr}
-예약 가능한지 확인 부탁드려요!`;
+    return `안녕하세요 Glow Beauty, ${name ? `저는 ${name}입니다. ` : ''}${spaDisplayName}에서 ${serviceName} (${priceStr}), ${slotStr} 예약 문의합니다. 연락처: ${phone}. 예약 가능한지 확인 부탁드립니다.`;
   }
-  return `Chào Glow, mình muốn đặt lịch:
-${serviceName} (${priceStr})
-${spaDisplayName}
-${slotStr}
-Bên mình còn chỗ không ạ?`;
+  return `Xin chào Glow Beauty, mình${name ? ` là ${name},` : ''} muốn đặt ${serviceName} (${priceStr}) tại ${spaDisplayName}, ${slotStr}. SĐT của mình: ${phone}. Nhờ tổng đài kiểm tra chỗ trống và gọi xác nhận giúp mình.`;
 }
 
 export function formatDayRange(d: string, locale: string): string {

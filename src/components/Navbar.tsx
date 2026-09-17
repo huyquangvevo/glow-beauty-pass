@@ -14,6 +14,7 @@ export function Navbar() {
   const zaloHubLink = process.env.NEXT_PUBLIC_ZALO_HUB_LINK || 'https://zalo.me/0359178342'
   const isSpaDetail = pathname.startsWith('/spa/')
   const isSpasMap = pathname.includes('/spas')
+  const isHub = pathname.includes('/hub')
 
   return (
     <>
@@ -38,7 +39,7 @@ export function Navbar() {
       </header>
 
       {/* FLOATING SUPPORT ZALO FAB (v1.0 Round Icon Only) */}
-      {!isSpaDetail && !isSpasMap && (
+      {!isSpaDetail && !isSpasMap && !isHub && (
         <aside
           aria-label="Liên hệ Zalo Hotline tư vấn"
           className="fixed bottom-6 right-4 sm:right-6 z-50 pointer-events-auto animate-in fade-in slide-in-from-bottom-4 duration-300"

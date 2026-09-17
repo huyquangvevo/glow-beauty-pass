@@ -17,6 +17,7 @@ interface BookingBottomSheetProps {
   zaloPhone?: string;
   spaName?: string;
   spaAddress?: string;
+  onServiceChange?: (serviceId: string) => void;
 }
 
 const TIMES = ['09:00', '10:30', '13:00', '14:30', '16:00', '17:30', '19:00'];
@@ -32,6 +33,7 @@ export default function BookingBottomSheet({
   zaloPhone = '0359178342',
   spaName,
   spaAddress,
+  onServiceChange,
 }: BookingBottomSheetProps) {
   const params = useParams();
   const currentLocale = (locale || (params?.locale as string) || 'vi') as 'vi' | 'en' | 'ko';
@@ -53,8 +55,15 @@ export default function BookingBottomSheet({
   });
   const [selectedDayId, setSelectedDayId] = useState<string>('d0');
   const [selectedTime, setSelectedTime] = useState<string>('14:30');
+  const [guestName, setGuestName] = useState<string>('');
+  const [guestPhone, setGuestPhone] = useState<string>('');
+  const [phoneError, setPhoneError] = useState<boolean>(false);
   const [isDone, setIsDone] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+
+  // Phone validation
+  const phoneDigits = guestPhone.replace(/\D/g, '');
+  const phoneOk = phoneDigits.length >= 9;
 
   // Localized days of appointment
   const days = [
@@ -63,14 +72,21 @@ export default function BookingBottomSheet({
     { id: 'd2', label: t.booking.thu, date: '18/09' },
   ];
 
-  // Keep selectedService in sync with serviceList and initialServiceId
+  const prevIsOpenRef = React.useRef(false);
+
+  // Sync selectedServiceId ONLY when sheet transitions from closed to open
   React.useEffect(() => {
-    if (initialServiceId && serviceList.some((s) => s.id === initialServiceId)) {
-      setSelectedServiceId(initialServiceId);
-    } else if (serviceList.length > 0 && !serviceList.some((s) => s.id === selectedServiceId)) {
-      setSelectedServiceId(serviceList[0].id);
+    if (isOpen && !prevIsOpenRef.current) {
+      if (initialServiceId && serviceList.some((s) => s.id === initialServiceId)) {
+        setSelectedServiceId(initialServiceId);
+      } else if (serviceList.length > 0) {
+        setSelectedServiceId((prev) =>
+          serviceList.some((s) => s.id === prev) ? prev : serviceList[0].id
+        );
+      }
     }
-  }, [initialServiceId, serviceList, selectedServiceId]);
+    prevIsOpenRef.current = isOpen;
+  }, [isOpen, initialServiceId, serviceList]);
 
   if (!isOpen) return null;
 
@@ -97,7 +113,9 @@ export default function BookingBottomSheet({
     getServiceName(activeService?.id || ''),
     formatPrice(activeService?.price || 0),
     displayName,
-    slotLabel
+    slotLabel,
+    guestPhone,
+    guestName
   );
 
   const copyToClipboard = async (text: string) => {
@@ -130,6 +148,10 @@ export default function BookingBottomSheet({
   };
 
   const handleOpenZalo = async () => {
+    if (!phoneOk) {
+      setPhoneError(true);
+      return;
+    }
     await copyToClipboard(message);
     const cleanPhone = zaloPhone.replace(/\D/g, '');
     const zaloUrl = `https://zalo.me/${cleanPhone}`;
@@ -137,8 +159,17 @@ export default function BookingBottomSheet({
     setIsDone(true);
   };
 
+  const handleCopyPreview = async () => {
+    if (!phoneOk) {
+      setPhoneError(true);
+      return;
+    }
+    await copyToClipboard(message);
+  };
+
   const handleClose = () => {
     setIsDone(false);
+    setPhoneError(false);
     onClose();
   };
 
@@ -197,11 +228,14 @@ export default function BookingBottomSheet({
                       <button
                         key={s.id}
                         type="button"
-                        onClick={() => setSelectedServiceId(s.id)}
-                        className={`px-3 py-1.5 rounded-full text-[12px] font-medium transition-all ${
+                        onClick={() => {
+                          setSelectedServiceId(s.id);
+                          onServiceChange?.(s.id);
+                        }}
+                        className={`px-3 py-1.5 rounded-full text-[12px] font-medium transition-all cursor-pointer ${
                           isSelected
                             ? 'bg-[#40813F] text-white shadow-xs ring-1 ring-[#40813F]'
-                            : 'bg-white text-[#3E4A3C] border border-[#DDE4D9] hover:border-[#40813F]/50'
+                            : 'bg-white text-[#3E4A3C] border border-[#DDE4D9] hover:border-[#40813F]/50 active:bg-stone-50'
                         }`}
                       >
                         {localizedShort} · {formatShortPrice(s.price)}
@@ -280,22 +314,68 @@ export default function BookingBottomSheet({
                 </div>
               </div>
 
+              {/* Step 4: Tên của bạn & Số điện thoại */}
+              <div>
+                <div className="flex gap-2.5">
+                  <div className="flex-1 min-w-0">
+                    <label className="block text-[12px] font-semibold text-[#093E06] mb-1.5">
+                      {t.booking.nameLabel}
+                    </label>
+                    <input
+                      type="text"
+                      value={guestName}
+                      onChange={(e) => setGuestName(e.target.value)}
+                      placeholder={t.booking.namePlaceholder}
+                      className="w-full box-border h-[46px] rounded-[14px] border border-[#DDE4D9] bg-white px-3.5 text-[13.5px] text-[#1E2B1C] placeholder:text-[#9BA69A] outline-none focus:border-[#40813F] transition-colors"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <label className="block text-[12px] font-semibold text-[#093E06] mb-1.5">
+                      {t.booking.phoneLabel} <span className="text-[#C0392B]">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      inputMode="tel"
+                      value={guestPhone}
+                      onChange={(e) => {
+                        setGuestPhone(e.target.value);
+                        if (phoneError) setPhoneError(false);
+                      }}
+                      placeholder={t.booking.phonePlaceholder}
+                      className={`w-full box-border h-[46px] rounded-[14px] border px-3.5 text-[13.5px] text-[#1E2B1C] placeholder:text-[#9BA69A] outline-none transition-colors ${
+                        phoneError && !phoneOk
+                          ? 'border-[#C0392B] bg-[#FFF8F8] focus:border-[#C0392B]'
+                          : 'border-[#DDE4D9] bg-white focus:border-[#40813F]'
+                      }`}
+                    />
+                  </div>
+                </div>
+                {phoneError && !phoneOk && (
+                  <p className="text-[11.5px] text-[#C0392B] mt-1.5 font-medium">
+                    {t.booking.phoneErrorNotice}
+                  </p>
+                )}
+              </div>
+
               {/* Message preview box */}
-              <div className="bg-[#F5F7F4] rounded-[16px] p-3 border border-[#E8ECE6]">
-                <div className="flex items-center justify-between mb-1.5">
+              <div className="bg-[#F5F7F4] rounded-[18px] p-3.5 border border-[#E8ECE6]">
+                <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] font-bold tracking-wider text-[#6B7869] uppercase">
                     {t.booking.messagePreviewTitle}
                   </span>
                   <button
                     type="button"
-                    onClick={() => copyToClipboard(message)}
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#236B38] hover:text-[#184d28] cursor-pointer"
+                    onClick={handleCopyPreview}
+                    className={`inline-flex items-center gap-1 text-[11.5px] font-semibold rounded-full px-3 py-1 border transition-colors cursor-pointer ${
+                      copied
+                        ? 'bg-[#40813F] text-white border-[#40813F]'
+                        : 'bg-white text-[#093E06] border-[#DDE4D9] hover:bg-stone-50'
+                    }`}
                   >
-                    <Copy className="w-3.5 h-3.5" />
                     <span>{copied ? t.booking.copiedBtn : t.booking.copyBtn}</span>
                   </button>
                 </div>
-                <div className="bg-[#E8FDE7] border border-[#D4F4D3] rounded-[12px] p-2.5 text-[12.5px] leading-relaxed text-[#1E2B1C] whitespace-pre-line font-medium">
+                <div className="bg-[#E8FDE7] border border-[#D4F4D3] rounded-[14px] p-3 text-[12.5px] leading-relaxed text-[#1E2B1C] whitespace-pre-line font-medium">
                   {message}
                 </div>
               </div>
@@ -318,7 +398,12 @@ export default function BookingBottomSheet({
                 <span>{t.booking.openZaloBtn}</span>
                 <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
               </button>
-              <div className="mt-2 text-center">
+              <div className="mt-2 text-center space-y-1">
+                {t.booking.pasteGuide && (
+                  <p className="text-[11px] text-[#6B7869] leading-snug">
+                    {t.booking.pasteGuide}
+                  </p>
+                )}
                 <p className="text-[11px] text-[#6B7869]">
                   {t.booking.slaNotice}
                 </p>
@@ -364,6 +449,12 @@ export default function BookingBottomSheet({
                 <div className="flex justify-between text-[12px]">
                   <span className="text-[#6B7869]">{t.booking.timeSummaryLabel}</span>
                   <span className="font-bold text-[#093E06]">{slotLabel}</span>
+                </div>
+                <div className="flex justify-between text-[12px]">
+                  <span className="text-[#6B7869]">{t.booking.contactLabel}</span>
+                  <span className="font-bold text-[#093E06]">
+                    {guestName.trim() ? `${guestName.trim()} · ` : ''}{guestPhone.trim() || '—'}
+                  </span>
                 </div>
                 <div className="flex justify-between text-[12px] border-t border-stone-200 pt-1.5">
                   <span className="text-[#6B7869]">{t.booking.fixedPriceLabel}</span>

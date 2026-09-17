@@ -225,9 +225,9 @@ export default function HubOpsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          senderName: 'Chị Mai (Trần Thái Tông)',
+          senderName: 'Chị Mai',
           senderPhone: '0988' + Math.floor(100000 + Math.random() * 900000),
-          content: 'Em ơi kiểm tra giúp chị chiều nay 15h còn chỗ làm gội đầu dưỡng sinh ở mạn Dịch Vọng không em?',
+          content: 'Em ơi kiểm tra giúp chị chiều nay 15h còn chỗ làm gội đầu dưỡng sinh không em?',
         }),
       })
       await loadConversations()
@@ -241,12 +241,12 @@ export default function HubOpsPage() {
   // Danh mục tin nhắn mẫu (Quick Replies SOP Hub)
   const quickReplies = [
     {
-      label: '1. Chào & Gửi Menu 3 SKU',
-      text: 'Dạ em chào chị ạ! GlowBeautyPass là mạng lưới spa chuẩn hóa tại Cầu Giấy. Bên em có 3 gói niêm yết: Gội sạch (49k/45p), Gội Premium (69k/55p) và Gội dưỡng sinh chuyên sâu (149k/65p). Chị muốn trải nghiệm dịch vụ nào ạ?',
+      label: '1. Chào & Gửi Menu Đồng Giá',
+      text: 'Dạ em chào chị ạ! GlowBeautyPass là hệ thống spa đồng giá toàn quốc: Gội sạch (39k), Gội dầu cặp (59k), Dưỡng sinh (79k), Massage body (99k), Chăm sóc da (89k), Combo gội & da (129k). Chị muốn trải nghiệm gói nào ạ?',
     },
     {
-      label: '2. Xin giờ hẹn & Vị trí',
-      text: 'Dạ chị muốn đặt lịch vào khung mấy giờ chiều nay và quanh khu vực nào (Duy Tân, Trung Hòa hay Dịch Vọng) để em điều phối ghế trống gần chị nhất ạ?',
+      label: '2. Xin giờ hẹn & Khu vực',
+      text: 'Dạ chị muốn đặt lịch vào khung mấy giờ chiều nay và quanh khu vực/quận nào để em kiểm tra điều phối giường trống gần chị nhất ạ?',
     },
     {
       label: '3. Cam kết giá chuẩn',
@@ -268,7 +268,7 @@ export default function HubOpsPage() {
             </button>
           )}
           <div className="w-2.5 h-2.5 rounded-full bg-[#236B38] animate-pulse" />
-          <span className="font-extrabold text-sm text-stone-900">Hub Điều Phối Zalo • Cầu Giấy</span>
+          <span className="font-extrabold text-sm text-stone-900">Hub Điều Phối Zalo • Toàn Quốc</span>
           <span className="text-[11px] text-stone-500 hidden md:inline">
             (SLA: Giờ hành chính &lt; 5 phút | Ngoài giờ &lt; 15 phút)
           </span>

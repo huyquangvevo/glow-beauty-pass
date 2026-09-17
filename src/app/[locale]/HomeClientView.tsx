@@ -73,10 +73,10 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
             </Link>
           </div>
 
-          {/* 3 Information Value Badges */}
+          {/* Information Value Badges */}
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3">
             {t.valuePills.map((pill, idx) => {
-              const Icon = idx === 0 ? Store : idx === 1 ? BadgePercent : ShieldCheck;
+              const Icon = idx === 0 ? BadgePercent : ShieldCheck;
               return (
                 <div
                   key={idx}
@@ -110,21 +110,12 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
         </div>
 
         {/* Content Body: Standardized Service Cards with Prominent Zalo CTAs */}
-        <div className="p-2.5 min-[360px]:p-3 sm:p-3.5 pb-5">
-          <div className="flex items-center justify-between mb-3 px-1">
-            <div className="flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-[#3A7B37]" />
-              <span className="text-[13px] font-bold text-[#093E06] uppercase tracking-wide">
-                {t.servicesTitle}
-              </span>
-            </div>
-            <Link
-              href="/spas"
-              className="text-[12px] font-semibold text-[#3A7B37] hover:text-[#093E06] flex items-center gap-0.5 transition-colors"
-            >
-              <span>{locale === 'en' ? 'View 15+ Spas' : locale === 'ko' ? '15개 스파 보기' : 'Xem 15+ Spa'}</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
+        <div className="p-2.5 min-[360px]:p-3 sm:p-3.5 pb-12 sm:pb-16">
+          <div className="flex items-center gap-1.5 mb-3 px-1">
+            <Sparkles className="w-4 h-4 text-[#3A7B37]" />
+            <span className="text-[13px] font-bold text-[#093E06] uppercase tracking-wide">
+              {t.servicesTitle}
+            </span>
           </div>
 
           <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
@@ -210,39 +201,6 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
           </div>
         </div>
 
-        {/* Explore All Spas Banner */}
-        <div className="px-3.5 pb-24">
-          <Link
-            href="/spas"
-            className="w-full bg-[#2E6B34] hover:bg-[#25572A] active:scale-[0.99] text-white rounded-[22px] p-4 flex items-center justify-between shadow-md transition-all cursor-pointer group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform">
-                <MapPin className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-[15px] font-bold text-white leading-tight">
-                  {locale === 'en'
-                    ? 'Explore Map & Partner Spas'
-                    : locale === 'ko'
-                    ? '지도 & 제휴 스파 확인'
-                    : 'Bản Đồ Hệ Thống Spa Đối Tác'}
-                </div>
-                <div className="text-[12px] text-[#E8FDE7] mt-0.5">
-                  {locale === 'en'
-                    ? 'Find verified partner spas near you'
-                    : locale === 'ko'
-                    ? '가장 가까운 제휴 스파 찾기'
-                    : 'Tìm chi nhánh đối tác gần bạn nhất'}
-                </div>
-              </div>
-            </div>
-            <div className="w-8 h-8 rounded-full bg-white text-[#093E06] flex items-center justify-center shrink-0 group-hover:translate-x-0.5 transition-transform shadow-xs">
-              <ArrowRight className="w-4 h-4" strokeWidth={2.2} />
-            </div>
-          </Link>
-        </div>
-
 
 
         {/* Booking Bottom Sheet Modal */}
@@ -251,6 +209,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
           onClose={() => setIsBottomSheetOpen(false)}
           locale={locale}
           initialServiceId={selectedServiceId}
+          onServiceChange={setSelectedServiceId}
           spa={selectedSpa}
         />
 

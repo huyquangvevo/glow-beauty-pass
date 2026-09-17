@@ -110,6 +110,12 @@ export function HeaderSearch() {
     loadSpas()
   }, [])
 
+  // Reset search state and loading spinner whenever route/page changes
+  useEffect(() => {
+    setIsOpen(false)
+    setIsSearchingGoogle(false)
+  }, [pathname])
+
   // Refresh recent searches when opening
   useEffect(() => {
     if (isOpen) {
@@ -117,11 +123,18 @@ export function HeaderSearch() {
     }
   }, [isOpen])
 
-  // Google Maps autocomplete with debounce
+  // Google Maps autocomplete with debounce (only when search input is open)
   useEffect(() => {
+    if (!isOpen) {
+      setIsSearchingGoogle(false)
+      setGooglePredictions([])
+      return
+    }
+
     const q = localInput.trim()
     if (q.length < 2) {
       setGooglePredictions([])
+      setIsSearchingGoogle(false)
       return
     }
 
@@ -137,15 +150,16 @@ export function HeaderSearch() {
       } catch (e) {
         console.warn('Google predictions error:', e)
       } finally {
-        if (active) setIsSearchingGoogle(false)
+        setIsSearchingGoogle(false)
       }
     }, 250)
 
     return () => {
       active = false
       clearTimeout(timer)
+      setIsSearchingGoogle(false)
     }
-  }, [localInput])
+  }, [localInput, isOpen])
 
   // Close desktop dropdown on outside click
   useEffect(() => {
@@ -286,6 +300,7 @@ export function HeaderSearch() {
       } else {
         setSearchQuery('')
       }
+      setIsSearchingGoogle(false)
       setIsOpen(false)
       navigateToSpasList()
     },
@@ -297,6 +312,7 @@ export function HeaderSearch() {
     try {
       saveRecentSearch(prediction.mainText)
       setIsOpen(false)
+      setIsSearchingGoogle(false)
       setLocalInput(prediction.mainText)
       setSearchQuery('') // Clear text search filter so all partner spas are shown sorted by distance
 
@@ -308,6 +324,7 @@ export function HeaderSearch() {
       navigateToSpasList()
     } catch (err) {
       console.error('Failed to select Google Place:', err)
+      setIsSearchingGoogle(false)
       executeSearch(prediction.mainText)
     }
   }
@@ -316,6 +333,7 @@ export function HeaderSearch() {
     setLocalInput('')
     setSearchQuery('')
     setGooglePredictions([])
+    setIsSearchingGoogle(false)
     if (inputRef.current) inputRef.current.focus()
     if (mobileInputRef.current) mobileInputRef.current.focus()
   }
@@ -346,7 +364,7 @@ export function HeaderSearch() {
           inputRef.current?.focus()
         }}
       >
-        {isSearchingGoogle ? (
+        {isSearchingGoogle && isOpen ? (
           <Loader2 className="w-4 h-4 text-[#40813D] animate-spin shrink-0 mr-2.5" />
         ) : (
           <Search className="w-4 h-4 text-stone-400 shrink-0 mr-2.5" />
@@ -492,6 +510,7 @@ export function HeaderSearch() {
                       onClick={() => {
                         saveRecentSearch(spa.name)
                         setIsOpen(false)
+                        setIsSearchingGoogle(false)
                       }}
                       className="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl hover:bg-stone-50 transition-colors group cursor-pointer"
                     >
@@ -788,6 +807,7 @@ export function HeaderSearch() {
                       onClick={() => {
                         saveRecentSearch(spa.name)
                         setIsOpen(false)
+                        setIsSearchingGoogle(false)
                       }}
                       className="flex items-center gap-3.5 p-3.5 hover:bg-stone-50 active:bg-stone-100 transition-colors"
                     >

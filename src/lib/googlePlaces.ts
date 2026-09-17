@@ -34,21 +34,40 @@ export function ensureGoogleMapsSdk(): Promise<void> {
 
   if (sdkLoadingPromise) return sdkLoadingPromise
 
-  sdkLoadingPromise = new Promise<void>((resolve, reject) => {
-    // Check if already injected
-    const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null
+  sdkLoadingPromise = new Promise<void>((resolve) => {
+    // 1. Guard against hanging with a 3-second hard timeout
+    const timeoutTimer = setTimeout(() => {
+      resolve()
+    }, 3000)
+
+    // Check if any Google Maps script is already in the document
+    const existing =
+      (document.getElementById(SCRIPT_ID) as HTMLScriptElement | null) ||
+      (document.getElementById('glow-google-maps-sdk') as HTMLScriptElement | null) ||
+      (document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]') as HTMLScriptElement | null)
+
     if (existing) {
       if (w.google?.maps?.places) {
+        clearTimeout(timeoutTimer)
         resolve()
-      } else {
-        existing.addEventListener('load', () => resolve())
-        existing.addEventListener('error', () => reject(new Error('Failed to load Google Maps SDK')))
+        return
       }
+      // If script is present, poll briefly for places object instead of relying on replayed event
+      let checks = 0
+      const poll = setInterval(() => {
+        checks++
+        if (w.google?.maps?.places || checks > 15) {
+          clearInterval(poll)
+          clearTimeout(timeoutTimer)
+          resolve()
+        }
+      }, 200)
       return
     }
 
     const callbackName = '__glowMapsInitCallback'
     w[callbackName] = () => {
+      clearTimeout(timeoutTimer)
       resolve()
     }
 
@@ -61,7 +80,8 @@ export function ensureGoogleMapsSdk(): Promise<void> {
     )}&libraries=places&language=vi&region=VN&callback=${callbackName}`
 
     script.onerror = () => {
-      reject(new Error('Failed to load Google Maps script'))
+      clearTimeout(timeoutTimer)
+      resolve()
     }
 
     document.head.appendChild(script)
@@ -83,27 +103,40 @@ export async function fetchGooglePlacePredictions(input: string): Promise<Google
   const query = input.trim()
   if (!query || query.length < 2) return []
 
-  await ensureGoogleMapsSdk()
+  try {
+    await ensureGoogleMapsSdk()
+  } catch {
+    return []
+  }
 
   const w = window as any
   if (!w.google?.maps?.places) return []
 
-  if (!autocompleteService) {
-    autocompleteService = new w.google.maps.places.AutocompleteService()
+  try {
+    if (!autocompleteService) {
+      autocompleteService = new w.google.maps.places.AutocompleteService()
+    }
+  } catch {
+    return []
   }
 
   return new Promise((resolve) => {
+    const fallbackTimer = setTimeout(() => {
+      resolve([])
+    }, 2000)
+
     try {
       autocompleteService.getPlacePredictions(
         {
           input: query,
           componentRestrictions: { country: 'vn' },
           locationBias: new w.google.maps.Circle({
-            center: { lat: 21.0333, lng: 105.7925 }, // Cầu Giấy, Hà Nội
+            center: { lat: 21.0333, lng: 105.7925 },
             radius: 15000,
           }),
         },
         (predictions: any[], status: any) => {
+          clearTimeout(fallbackTimer)
           if (status !== w.google.maps.places.PlacesServiceStatus.OK || !Array.isArray(predictions)) {
             resolve([])
             return
@@ -120,6 +153,7 @@ export async function fetchGooglePlacePredictions(input: string): Promise<Google
         }
       )
     } catch (err) {
+      clearTimeout(fallbackTimer)
       console.warn('Autocomplete fetch error:', err)
       resolve([])
     }

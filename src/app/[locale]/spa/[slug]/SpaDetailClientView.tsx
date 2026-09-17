@@ -333,6 +333,7 @@ export default function SpaDetailClientView({
         spa={spa}
         services={spaServices}
         initialServiceId={selectedServiceId}
+        onServiceChange={setSelectedServiceId}
         zaloPhone="0359178342"
         locale={locale}
       />

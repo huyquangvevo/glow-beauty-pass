@@ -593,6 +593,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
           onClose={() => setIsBottomSheetOpen(false)}
           spa={MVP_SPAS.find((s) => s.id === sheetSpaId) || MVP_SPAS[0]}
           initialServiceId={sheetInitialServiceId}
+          onServiceChange={setSheetInitialServiceId}
           locale={locale}
         />
       </div>
