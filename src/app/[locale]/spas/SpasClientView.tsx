@@ -256,7 +256,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
         let formattedDist = s.dist;
         if (refCoords) {
           distanceKm = computeDistanceKm(refCoords.lat, refCoords.lng, s.lat, s.lng);
-          formattedDist = distanceKm < 1 ? `${Math.round(distanceKm * 1000)}m` : `${distanceKm}km`;
+          formattedDist = distanceKm < 1 ? `${Math.round(distanceKm * 1000)}m` : `${distanceKm.toFixed(1).replace('.', ',')} km`;
         }
         return {
           ...s,
@@ -485,65 +485,33 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 <div className="absolute bottom-4 left-3 right-3 z-10 animate-in slide-in-from-bottom-3 duration-200">
                   <div
                     onClick={() => router.push(`/spa/${activeSelectedSpa.id}?service=${selectedServiceId}`)}
-                    className="bg-white/95 backdrop-blur-md rounded-[22px] p-3.5 border border-stone-200 shadow-xl flex gap-3 cursor-pointer hover:border-[#40813D] transition-all"
+                    className="bg-white/95 backdrop-blur-md rounded-[18px] p-3 sm:p-3.5 border border-[#DDE4D9] shadow-lg flex gap-3 sm:gap-3.5 cursor-pointer hover:border-[#40813D] transition-all active:scale-[0.99] overflow-hidden"
                   >
-                    <div className="relative w-20 h-20 rounded-[16px] overflow-hidden bg-[#E8FDE7] shrink-0">
+                    <div className="relative w-[66px] h-[66px] rounded-[14px] overflow-hidden bg-[#E8FDE7] shrink-0">
                       <Image
                         src={activeSelectedSpa.photos[0] || '/spas/spa_thumb_1.jpg'}
                         alt={activeSelectedSpa.name}
                         fill
                         className="object-cover"
                       />
-                      {activeSelectedSpa.tier === 'Certified' && (
-                        <div className="absolute top-1.5 left-1.5 bg-white/90 backdrop-blur-xs px-1.5 py-0.5 rounded-full text-[10px] font-bold text-[#093E06]">
-                          {locale === 'en' ? 'TOP' : locale === 'ko' ? '인증' : 'Chuẩn'}
-                        </div>
-                      )}
                     </div>
 
-                    <div className="flex-1 min-w-0 flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-center justify-between gap-1">
-                          <h2 className="font-bold text-[14.5px] text-[#093E06] truncate m-0">
-                            {activeSelectedSpa.name}
-                          </h2>
-                          <span className="text-[11.5px] font-bold text-[#40813D] shrink-0">
-                            {activeSelectedSpa.formattedDist}
-                          </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <div className="font-semibold text-[15px] text-[#093E06] truncate">
+                          {activeSelectedSpa.name}
                         </div>
-                        <div className="text-[11.5px] text-[#6B7869] line-clamp-1 mt-0.5">
-                          {activeSelectedSpa.address}
+                        <div className="font-semibold text-[13.5px] text-[#093E06] shrink-0 whitespace-nowrap">
+                          {formatPrice(activeService.price)}
                         </div>
                       </div>
-
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100">
-                        <div className="flex items-center gap-1.5 text-[12px] font-bold text-[#093E06]">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
-                          <span>{activeSelectedSpa.rating}</span>
-                          <span className="text-[#6B7869] font-medium text-[11px]">
-                            ({activeSelectedSpa.reviews})
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <div className="text-[15px] sm:text-[16px] font-extrabold text-[#093E06] tracking-tight whitespace-nowrap">
-                            {formatPrice(activeService.price)}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={(e) => handleBookSpaZalo(e, activeSelectedSpa.id)}
-                            className="h-8.5 px-3.5 rounded-full bg-[#40813D] hover:bg-[#356F32] active:bg-[#093E06] text-white text-[12.5px] font-bold flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer whitespace-nowrap shrink-0"
-                          >
-                            <Image
-                              src="/brand/Logo-Zalo-App-Rec.webp"
-                              alt="Zalo"
-                              width={16}
-                              height={16}
-                              className="w-4 h-4 rounded-xs shrink-0 object-contain shadow-2xs"
-                            />
-                            <span>{t.bookZalo}</span>
-                          </button>
-                        </div>
+                      <div className="text-[11.5px] text-[#6B7869] mt-1 truncate">
+                        ★ {activeSelectedSpa.rating} ({activeSelectedSpa.reviews}) · {activeSelectedSpa.formattedDist || activeSelectedSpa.dist} · {activeSelectedSpa.ward || activeSelectedSpa.district || activeSelectedSpa.address}
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-2">
+                        <span className="text-[11px] font-semibold text-[#093E06] bg-[#E8FDE7] rounded-full px-2.5 py-0.5 whitespace-nowrap">
+                          {locale === 'en' ? 'Open now' : locale === 'ko' ? '영업중' : 'Đang mở'}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -583,65 +551,33 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                   <div
                     key={s.id}
                     onClick={() => router.push(`/spa/${s.id}?service=${selectedServiceId}`)}
-                    className="bg-white rounded-[20px] p-3.5 border border-[#DDE4D9] flex gap-3.5 cursor-pointer hover:border-[#40813D] hover:shadow-md transition-all active:scale-[0.99]"
+                    className="bg-white rounded-[18px] p-3 sm:p-3.5 border border-[#DDE4D9] flex gap-3 sm:gap-3.5 cursor-pointer hover:border-[#40813D] hover:shadow-xs transition-all active:scale-[0.99] overflow-hidden"
                   >
-                    <div className="relative w-22 h-22 rounded-[16px] overflow-hidden bg-[#E8FDE7] shrink-0">
+                    <div className="relative w-[66px] h-[66px] rounded-[14px] overflow-hidden bg-[#E8FDE7] shrink-0">
                       <Image
                         src={s.photos[0] || '/spas/spa_thumb_1.jpg'}
                         alt={s.name}
                         fill
                         className="object-cover"
                       />
-                      {s.tier === 'Certified' && (
-                        <div className="absolute top-1.5 left-1.5 bg-white/90 backdrop-blur-xs px-1.5 py-0.5 rounded-full text-[10px] font-bold text-[#093E06]">
-                          {locale === 'en' ? 'TOP' : locale === 'ko' ? '인증' : 'Chuẩn'}
-                        </div>
-                      )}
                     </div>
 
-                    <div className="flex-1 min-w-0 flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-center justify-between gap-1">
-                          <h2 className="font-bold text-[14.5px] text-[#093E06] truncate m-0">
-                            {s.name}
-                          </h2>
-                          <span className="text-[11.5px] font-bold text-[#40813D] shrink-0">
-                            {s.formattedDist}
-                          </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <div className="font-semibold text-[15px] text-[#093E06] truncate">
+                          {s.name}
                         </div>
-                        <div className="text-[11.5px] text-[#6B7869] line-clamp-1 mt-0.5">
-                          {s.address}
+                        <div className="font-semibold text-[13.5px] text-[#093E06] shrink-0 whitespace-nowrap">
+                          {formatPrice(activeService.price)}
                         </div>
                       </div>
-
-                      <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-stone-100">
-                        <div className="flex items-center gap-1.5 text-[12px] font-bold text-[#093E06]">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
-                          <span>{s.rating}</span>
-                          <span className="text-[#6B7869] font-medium text-[11px]">
-                            ({s.reviews})
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-2.5">
-                          <div className="text-[15px] sm:text-[16px] font-extrabold text-[#093E06] tracking-tight whitespace-nowrap">
-                            {formatPrice(activeService.price)}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={(e) => handleBookSpaZalo(e, s.id)}
-                            className="h-8.5 px-3.5 rounded-full bg-[#40813D] hover:bg-[#356F32] active:bg-[#093E06] text-white text-[12.5px] font-bold flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer whitespace-nowrap shrink-0"
-                          >
-                            <Image
-                              src="/brand/Logo-Zalo-App-Rec.webp"
-                              alt="Zalo"
-                              width={16}
-                              height={16}
-                              className="w-4 h-4 rounded-xs shrink-0 object-contain shadow-2xs"
-                            />
-                            <span>{t.bookZalo}</span>
-                          </button>
-                        </div>
+                      <div className="text-[11.5px] text-[#6B7869] mt-1 truncate">
+                        ★ {s.rating} ({s.reviews}) · {s.formattedDist || s.dist} · {s.ward || s.district || s.address}
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-2">
+                        <span className="text-[11px] font-semibold text-[#093E06] bg-[#E8FDE7] rounded-full px-2.5 py-0.5 whitespace-nowrap">
+                          {locale === 'en' ? 'Open now' : locale === 'ko' ? '영업중' : 'Đang mở'}
+                        </span>
                       </div>
                     </div>
                   </div>
