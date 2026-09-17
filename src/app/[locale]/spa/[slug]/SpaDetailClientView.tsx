@@ -234,9 +234,6 @@ export default function SpaDetailClientView({
               <h2 className="text-[14px] sm:text-[14.5px] font-bold text-[#093E06]">
                 {t.customerReviewsTitle}
               </h2>
-              <span className="text-[12px] font-medium text-[#40813F]">
-                {t.verifiedCustomerBadge}
-              </span>
             </div>
 
             <div className="space-y-2.5">

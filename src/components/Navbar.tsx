@@ -5,7 +5,7 @@ import { Link, usePathname } from '@/i18n/routing'
 import { useLocale } from 'next-intl'
 import { BrandWordmark } from './BrandLogo'
 import { LanguageSwitcher } from './LanguageSwitcher'
-import { Info } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 
 export function Navbar() {
   const pathname = usePathname()
@@ -23,18 +23,18 @@ export function Navbar() {
 
   return (
     <>
-      {/* TOP HEADER: GLOW BEAUTY PASS (Left: About, Center: Logo, Right: Language) */}
+      {/* TOP HEADER: GLOW BEAUTY PASS (Left: Services, Center: Logo, Right: Language) */}
       <header className="sticky top-0 z-40 bg-[#40813D] shadow-sm border-b border-[#356F32]">
         <div className="w-full max-w-5xl mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-2 sm:gap-4">
-          {/* Left: About Link */}
+          {/* Left: Services Link (Bấm về Home xem danh sách dịch vụ) */}
           <div className="flex-1 flex items-center justify-start min-w-0">
             <Link
-              href="/about"
+              href="/"
               className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 border border-white/20 text-white text-[13px] sm:text-[13.5px] font-bold transition-all active:scale-95 shadow-xs shrink-0"
-              aria-label={locale === 'en' ? 'About Us' : locale === 'ko' ? '소개' : 'Giới thiệu'}
+              aria-label={locale === 'en' ? 'Services' : locale === 'ko' ? '서비스 목록' : 'Danh sách dịch vụ'}
             >
-              <Info className="w-3.5 h-3.5 text-white/90 shrink-0" />
-              <span className="whitespace-nowrap">{locale === 'en' ? 'About' : locale === 'ko' ? '소개' : 'Giới thiệu'}</span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+              <span className="whitespace-nowrap">{locale === 'en' ? 'Services' : locale === 'ko' ? '서비스' : 'Dịch vụ'}</span>
             </Link>
           </div>
 

@@ -11,7 +11,6 @@ import {
   Clock,
   ArrowRight,
   Sparkles,
-  Navigation,
 } from 'lucide-react';
 import {
   MVP_SERVICES,
@@ -20,7 +19,6 @@ import {
   formatPrice,
 } from '@/lib/mvp-data';
 import { useSearch } from '@/context/SearchContext';
-import { useLocation } from '@/context/LocationContext';
 import { getMvpTranslation } from '@/lib/mvp-i18n';
 import BookingBottomSheet from '@/components/BookingBottomSheet';
 
@@ -32,7 +30,6 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
   const router = useRouter();
   const t = getMvpTranslation(locale);
   const { searchQuery, setSearchQuery } = useSearch();
-  const { userCoords, locationLabel, requestLocation, isLocating } = useLocation();
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<string>('goi-dau-cap');
@@ -57,82 +54,52 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
     <div className="w-full bg-[#FAF8F5] flex flex-col items-center justify-start p-0 sm:py-6 font-sans">
       <div className="w-full max-w-[440px] bg-[#F5F7F4] relative flex flex-col sm:rounded-[32px] sm:shadow-xl sm:border sm:border-stone-200/80 mb-0 sm:mb-10 overflow-hidden animate-in fade-in duration-200">
         
-        {/* Sub-Hero Header */}
-        <div className="bg-white border-b border-[#E8EDE6] pt-5 pb-4 px-4 sm:px-5 flex-none sm:rounded-t-[32px]">
-          <div>
-            <h1 className="font-bold text-[23px] sm:text-[25px] tracking-tight text-[#141E16] leading-tight m-0">
+        {/* Hero Header Section - High-End Unified Green Theme */}
+        <div className="bg-[#40813D] pt-4 pb-5 px-4 sm:px-5 flex-none text-white relative overflow-hidden shadow-sm">
+          {/* Subtle decorative glow for agency polish */}
+          <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-white/10 blur-2xl pointer-events-none" />
+
+          <div className="relative z-10">
+            {/* Title / Tagline */}
+            <h1 className="font-extrabold text-[22px] sm:text-[24px] tracking-tight text-white leading-snug m-0">
               {t.brandTagline}
             </h1>
-          </div>
 
-          {/* Information Value Badges */}
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3">
-            {t.valuePills.map((pill, idx) => {
-              const Icon = idx === 0 ? BadgePercent : ShieldCheck;
-              return (
-                <div
-                  key={idx}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F7F9F6] border border-[#DEE5DC] text-[13.5px] sm:text-[14px] font-semibold text-stone-700 tracking-tight shadow-[0_1px_2px_rgba(0,0,0,0.02)] select-none"
-                >
-                  <Icon className="w-4 h-4 text-[#3A7B37] shrink-0" strokeWidth={2} />
-                  <span>{pill}</span>
-                </div>
-              );
-            })}
-          </div>
+            {/* Information Value Badges (Glassmorphic Pills) */}
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-2.5">
+              {t.valuePills.map((pill, idx) => {
+                const Icon = idx === 0 ? BadgePercent : ShieldCheck;
+                return (
+                  <div
+                    key={idx}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 border border-white/20 backdrop-blur-xs text-[12.5px] sm:text-[13px] font-semibold text-emerald-50 tracking-tight select-none shadow-2xs"
+                  >
+                    <Icon className="w-3.5 h-3.5 text-amber-300 shrink-0" strokeWidth={2.2} />
+                    <span>{pill}</span>
+                  </div>
+                );
+              })}
+            </div>
 
-          {/* Location status bar */}
-          <div className="mt-3 flex items-center justify-between bg-[#F4F8F3] border border-[#DEE7DC] rounded-xl px-3 py-1.5 text-[13px] sm:text-[13.5px]">
-            <div className="flex items-center gap-1.5 truncate text-stone-700">
-              <Navigation
-                className={`w-3.5 h-3.5 shrink-0 ${
-                  isLocating
-                    ? 'animate-spin text-[#40813D]'
-                    : userCoords
-                    ? 'text-[#40813D] fill-[#40813D]'
-                    : 'text-stone-400'
-                }`}
-              />
-              <span className="truncate">
-                {isLocating ? (
-                  'Đang xác định vị trí...'
-                ) : userCoords ? (
-                  <span>
-                    Vị trí của bạn: <strong className="text-[#093E06] font-bold">{locationLabel}</strong>
+            {/* Active Location Search Indicator if user searched in Header */}
+            {searchQuery && (
+              <div className="mt-2.5 flex items-center justify-between bg-white/20 border border-white/30 rounded-xl px-3.5 py-2 text-[12.5px] sm:text-[13px] text-white backdrop-blur-xs">
+                <div className="flex items-center gap-1.5 truncate">
+                  <MapPin className="w-4 h-4 text-amber-300 shrink-0" />
+                  <span className="truncate">
+                    {t.searchingAt} <strong className="font-semibold">{searchQuery}</strong>
                   </span>
-                ) : (
-                  'Chưa bật định vị GPS'
-                )}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => requestLocation(false)}
-              disabled={isLocating}
-              className="text-[12.5px] sm:text-[13px] font-bold text-[#40813D] hover:text-[#356F32] hover:underline shrink-0 ml-2 cursor-pointer active:scale-95"
-            >
-              {userCoords ? 'Định vị lại' : 'Bật vị trí'}
-            </button>
-          </div>
-
-          {/* Active Location Search Indicator if user searched in Header */}
-          {searchQuery && (
-            <div className="mt-3 flex items-center justify-between bg-emerald-50/80 border border-emerald-200/80 rounded-xl px-3.5 py-2 text-[13px] text-[#093E06]">
-              <div className="flex items-center gap-1.5 truncate">
-                <MapPin className="w-4 h-4 text-[#40813D] shrink-0" />
-                <span className="truncate">
-                  {t.searchingAt} <strong className="font-semibold">{searchQuery}</strong>
-                </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="text-[12px] font-bold text-emerald-100 hover:text-white underline shrink-0 ml-2 cursor-pointer"
+                >
+                  {t.clearFilter}
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="text-[13px] font-bold text-[#40813D] hover:underline shrink-0 ml-2 cursor-pointer"
-              >
-                {t.clearFilter}
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Content Body: Standardized Service Cards with Prominent Zalo CTAs */}
