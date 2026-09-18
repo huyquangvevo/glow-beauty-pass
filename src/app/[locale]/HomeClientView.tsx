@@ -15,6 +15,7 @@ import {
 import {
   MVP_SERVICES,
   MVP_SPAS,
+  MVPService,
   MVPSpa,
   formatPrice,
 } from '@/lib/mvp-data';
@@ -24,22 +25,31 @@ import BookingBottomSheet from '@/components/BookingBottomSheet';
 
 interface HomeClientViewProps {
   locale: string;
+  initialServices?: MVPService[];
+  initialSpas?: MVPSpa[];
 }
 
-export default function HomeClientView({ locale }: HomeClientViewProps) {
+export default function HomeClientView({
+  locale,
+  initialServices,
+  initialSpas,
+}: HomeClientViewProps) {
   const router = useRouter();
   const t = getMvpTranslation(locale);
   const { searchQuery, setSearchQuery } = useSearch();
 
+  const servicesList = initialServices && initialServices.length > 0 ? initialServices : MVP_SERVICES;
+  const spasList = initialSpas && initialSpas.length > 0 ? initialSpas : MVP_SPAS;
+
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<string>('goi-dau-cap');
-  const [selectedSpa, setSelectedSpa] = useState<MVPSpa>(MVP_SPAS[0]);
+  const [selectedSpa, setSelectedSpa] = useState<MVPSpa>(spasList[0] || MVP_SPAS[0]);
 
   const getServiceInfo = (id: string) => {
     return t.services[id] || {
-      name: MVP_SERVICES.find((s) => s.id === id)?.name || '',
-      short: MVP_SERVICES.find((s) => s.id === id)?.short || '',
-      dur: MVP_SERVICES.find((s) => s.id === id)?.dur || '',
+      name: servicesList.find((s) => s.id === id)?.name || '',
+      short: servicesList.find((s) => s.id === id)?.short || '',
+      dur: servicesList.find((s) => s.id === id)?.dur || '',
     };
   };
 
@@ -112,7 +122,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
-            {MVP_SERVICES.map((s) => {
+            {servicesList.map((s) => {
               const sInfo = getServiceInfo(s.id);
               const servicePhoto =
                 s.id === 'goi-sach'

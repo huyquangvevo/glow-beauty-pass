@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { MVP_SPAS, MVPSpa } from '@/lib/mvp-data';
 import { SUPPORTED_LOCALES } from '@/i18n/locales';
+import { getCachedSpasAndSkus, getRealSpaDetailFromDb } from '@/lib/spas-service';
 import {
   getSpaDetailMetadata,
   getSpaDetailSchema,
@@ -13,17 +13,11 @@ interface SpaPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
-function findSpa(slug: string): MVPSpa | undefined {
-  return (
-    MVP_SPAS.find((s) => s.id === slug) ||
-    MVP_SPAS.find((s) => s.name.toLowerCase().includes(slug?.replace(/-/g, ' ')))
-  );
-}
-
 export async function generateStaticParams() {
+  const { spas } = await getCachedSpasAndSkus();
   const params: { locale: string; slug: string }[] = [];
   for (const locale of SUPPORTED_LOCALES) {
-    for (const spa of MVP_SPAS) {
+    for (const spa of spas) {
       if (spa.id) {
         params.push({ locale, slug: spa.id });
       }
@@ -36,7 +30,8 @@ export async function generateMetadata({
   params,
 }: SpaPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const spa = findSpa(slug);
+  const detail = await getRealSpaDetailFromDb(slug);
+  const spa = detail?.spa;
   if (!spa) {
     return { title: 'Spa Không Tồn Tại | Glow Beauty Pass' };
   }
@@ -45,7 +40,8 @@ export async function generateMetadata({
 
 export default async function SpaPage({ params }: SpaPageProps) {
   const { locale, slug } = await params;
-  const spa = findSpa(slug);
+  const detail = await getRealSpaDetailFromDb(slug);
+  const spa = detail?.spa;
 
   if (!spa) {
     notFound();
@@ -71,7 +67,12 @@ export default async function SpaPage({ params }: SpaPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <SpaDetailClientView spa={spa} locale={locale} />
+      <SpaDetailClientView
+        spa={spa}
+        locale={locale}
+        initialServices={detail.services}
+        initialReviews={detail.reviews}
+      />
     </>
   );
 }

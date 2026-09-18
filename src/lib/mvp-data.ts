@@ -32,14 +32,18 @@ export interface MVPSpa {
 }
 
 export interface MVPReview {
+  id?: string;
   initial: string;
   name: string;
   phoneMask?: string;
   serviceUsed?: string;
   stars: string;
+  rating?: number;
   when: string;
+  createdAt?: string;
   text: string;
   photos: number;
+  photoUrls?: string[];
   verifiedPhone?: boolean;
 }
 
