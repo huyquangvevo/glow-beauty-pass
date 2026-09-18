@@ -1,4 +1,5 @@
 import { MVP_SERVICES, MVP_SPAS, MVPService, MVPSpa, MVPReview } from '@/lib/mvp-data'
+import { getSpaSpecificReviews } from '@/lib/spa-reviews-data'
 import { prisma } from '@/lib/prisma'
 
 const CACHE_TTL_MS = 60 * 1000 // 60 seconds TTL
@@ -211,6 +212,7 @@ export async function getRealSpaDetailFromDb(
           name: r.customerName || 'Khách hàng',
           phoneMask: r.customerPhone ? r.customerPhone.slice(0, 4) + '***' + r.customerPhone.slice(-3) : undefined,
           stars: '★'.repeat(r.rating) + '☆'.repeat(Math.max(0, 5 - r.rating)),
+          rating: r.rating,
           when,
           createdAt: r.createdAt.toISOString(),
           text: r.comment,
@@ -223,7 +225,7 @@ export async function getRealSpaDetailFromDb(
       return {
         spa: mappedSpa,
         services,
-        reviews: mappedReviews,
+        reviews: mappedReviews.length > 0 ? mappedReviews : getSpaSpecificReviews(mappedSpa),
       }
     }
   } catch (e) {
@@ -234,7 +236,7 @@ export async function getRealSpaDetailFromDb(
   const { spas } = await getCachedSpasAndSkus()
   const fallbackSpa = spas.find((s) => s.id === slugOrId)
   if (fallbackSpa) {
-    return { spa: fallbackSpa, services, reviews: [] }
+    return { spa: fallbackSpa, services, reviews: getSpaSpecificReviews(fallbackSpa) }
   }
 
   return null

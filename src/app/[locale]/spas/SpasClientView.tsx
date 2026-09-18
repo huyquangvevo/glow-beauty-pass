@@ -285,15 +285,22 @@ export default function SpasClientView({
     return t.defaultCityAreas?.dn || 'Hải Châu, Đà Nẵng';
   }, [searchQuery, searchParams, locationLabel, selectedCityId, userCoords, detectedCity, t]);
 
-  // Hide footer when in full-screen map mode
+  // Lock body & html scroll completely when in map mode, allow scroll in list mode
   useEffect(() => {
-    const isFullScreen = viewMode === 'map';
-    if (isFullScreen) {
+    if (typeof window === 'undefined') return;
+    const isMap = viewMode === 'map';
+    if (isMap) {
+      document.documentElement.classList.add('map-locked');
+      document.body.classList.add('map-locked');
       document.body.classList.add('hide-footer-for-map');
     } else {
+      document.documentElement.classList.remove('map-locked');
+      document.body.classList.remove('map-locked');
       document.body.classList.remove('hide-footer-for-map');
     }
     return () => {
+      document.documentElement.classList.remove('map-locked');
+      document.body.classList.remove('map-locked');
       document.body.classList.remove('hide-footer-for-map');
     };
   }, [viewMode]);
@@ -397,12 +404,12 @@ export default function SpasClientView({
 
   return (
     <div
-      className="w-full bg-[#FAF8F5] flex flex-col items-center justify-start p-0 h-[100dvh] h-screen overflow-hidden font-sans fixed inset-0 sm:relative sm:inset-auto sm:h-[100dvh]"
+      className="w-full bg-[#FAF8F5] flex flex-col items-center justify-start p-0 overflow-hidden font-sans fixed inset-0 z-30 sm:relative sm:inset-auto sm:h-[100dvh]"
     >
       <div
-        className="w-full max-w-[440px] bg-[#F5F7F4] relative flex flex-col sm:rounded-[32px] sm:shadow-xl sm:border sm:border-stone-200/80 transition-all h-full overflow-hidden mb-0"
+        className="w-full max-w-[440px] bg-[#F5F7F4] relative flex flex-col sm:rounded-[32px] sm:shadow-xl sm:border sm:border-stone-200/80 transition-all h-full min-h-0 overflow-hidden mb-0"
       >
-        <div id="danh-sach-spa" className="flex-1 flex flex-col h-full overflow-hidden animate-in fade-in duration-200">
+        <div id="danh-sach-spa" className="flex-1 flex flex-col h-full min-h-0 overflow-hidden animate-in fade-in duration-200">
           {/* Top Green Bar with Navigation & Map/List Switcher */}
           <div className="bg-[#40813D] pt-3 pb-2.5 px-3 sm:px-4 flex-none text-white border-b border-[#356F32] relative z-40">
             <div className="flex items-center gap-2 relative z-30">
@@ -579,7 +586,7 @@ export default function SpasClientView({
 
           {/* TAB 1: MAP VIEW */}
           {viewMode === 'map' && (
-            <div className="relative flex-1 w-full h-full min-h-0 overflow-hidden bg-stone-100">
+            <div className="relative flex-1 w-full h-full min-h-0 overflow-hidden bg-stone-100 touch-none overscroll-none">
               <GlowGoogleMap
                 spas={filteredSpas}
                 selectedSpaId={selectedSpaId}
@@ -594,10 +601,10 @@ export default function SpasClientView({
 
               {/* Selected Spa Floating Card at Bottom of Map */}
               {activeSelectedSpa && (
-                <div className="absolute map-floating-spa-card left-3 right-3 z-10 animate-in slide-in-from-bottom-3 duration-200">
+                <div className="absolute map-floating-spa-card bottom-[max(16px,calc(12px+env(safe-area-inset-bottom,0px)))] sm:bottom-4 left-3.5 right-3.5 z-20 animate-in slide-in-from-bottom-3 duration-200">
                   <div
                     onClick={() => router.push(`/spa/${activeSelectedSpa.id}?service=${selectedServiceId}`)}
-                    className="bg-white/95 backdrop-blur-md rounded-[18px] p-3 sm:p-3.5 border border-[#DDE4D9] shadow-lg flex gap-3 sm:gap-3.5 cursor-pointer hover:border-[#40813D] transition-all active:scale-[0.99] overflow-hidden"
+                    className="bg-white/95 backdrop-blur-md rounded-[20px] p-3 sm:p-3.5 border border-[#DDE4D9] shadow-xl flex gap-3 sm:gap-3.5 cursor-pointer hover:border-[#40813D] transition-all active:scale-[0.99] overflow-hidden"
                   >
                     <div className="relative w-[70px] h-[70px] rounded-[14px] overflow-hidden bg-[#E8FDE7] shrink-0">
                       <Image
@@ -610,18 +617,18 @@ export default function SpasClientView({
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-2">
-                        <div className="font-bold text-[17.5px] text-[#093E06] truncate">
+                        <div className="font-bold text-[17px] text-[#093E06] truncate">
                           {activeSelectedSpa.name}
                         </div>
                         <div className="font-bold text-[16px] text-[#093E06] shrink-0 whitespace-nowrap">
                           {formatPrice(activeService.price)}
                         </div>
                       </div>
-                      <div className="text-[13.5px] text-[#6B7869] mt-1 truncate">
+                      <div className="text-[13px] text-[#6B7869] mt-0.5 truncate">
                         ★ {activeSelectedSpa.rating} ({activeSelectedSpa.reviews}) · {activeSelectedSpa.formattedDist || activeSelectedSpa.dist} · {activeSelectedSpa.ward || activeSelectedSpa.district || activeSelectedSpa.address}
                       </div>
-                      <div className="flex items-center gap-1.5 mt-2">
-                        <span className={`text-[12.5px] font-semibold rounded-full px-2.5 py-0.5 whitespace-nowrap ${
+                      <div className="flex items-center gap-1.5 mt-1.5">
+                        <span className={`text-[12px] font-semibold rounded-full px-2.5 py-0.5 whitespace-nowrap ${
                           activeSelectedSpa.open ? 'bg-[#E8FDE7] text-[#093E06]' : 'bg-amber-100 text-amber-900'
                         }`}>
                           {activeSelectedSpa.open ? t.openNowStatus : t.closedStatus}
@@ -636,7 +643,7 @@ export default function SpasClientView({
 
           {/* TAB 2: LIST VIEW */}
           {viewMode === 'list' && (
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-[max(24px,calc(1.5rem+env(safe-area-inset-bottom)))] sm:pb-8">
+            <div className="flex-1 overflow-y-auto overscroll-y-contain p-4 space-y-3 pb-[max(80px,calc(4rem+env(safe-area-inset-bottom)))] sm:pb-8">
               {/* Service Count Summary Header */}
               <div className="text-[14.5px] font-bold text-[#093E06] px-1 flex items-center justify-between">
                 <span>

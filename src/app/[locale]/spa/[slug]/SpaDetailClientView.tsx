@@ -22,6 +22,7 @@ import {
   formatPrice,
 } from '@/lib/mvp-data';
 import { getMvpTranslation, formatDayRange, formatTodayHours } from '@/lib/mvp-i18n';
+import { getSpaSpecificReviews } from '@/lib/spa-reviews-data';
 import BookingBottomSheet from '@/components/BookingBottomSheet';
 import GlowGoogleMap from '@/components/GlowGoogleMap';
 
@@ -78,8 +79,12 @@ export default function SpaDetailClientView({
   const servicesList =
     initialServices && initialServices.length > 0 ? initialServices : MVP_SERVICES;
 
-  const reviewsList =
-    initialReviews && initialReviews.length > 0 ? initialReviews : t.reviews;
+  const reviewsList = useMemo(() => {
+    if (initialReviews && initialReviews.length > 0) {
+      return initialReviews;
+    }
+    return getSpaSpecificReviews(spa, locale);
+  }, [initialReviews, spa, locale]);
 
   // Filter only services that THIS spa offers!
   const spaServices = useMemo(() => {

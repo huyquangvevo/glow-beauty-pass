@@ -94,6 +94,18 @@ body.hide-footer-for-map aside[aria-label="Nhắn Zalo tư vấn và đặt lị
   display: none !important;
 }
 
+/* Lock page completely when map mode is active on mobile so only the map is interactive */
+html.map-locked,
+body.map-locked {
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  touch-action: none !important;
+  -webkit-overflow-scrolling: auto !important;
+}
+
 body.hide-footer-for-map {
   overflow: hidden;
 }
@@ -116,9 +128,9 @@ body.hide-footer-for-map {
   z-index: 100000 !important;
 }
 
-/* Floating spa card anchored securely above mobile browser navigation bars (iOS Chrome/Safari) */
+/* Floating spa card anchored cleanly above mobile browser navigation bars (iOS Chrome/Safari) */
 .map-floating-spa-card {
-  bottom: max(96px, calc(64px + env(safe-area-inset-bottom, 0px)));
+  bottom: max(16px, calc(12px + env(safe-area-inset-bottom, 0px)));
 }
 @media (min-width: 640px) {
   .map-floating-spa-card {
