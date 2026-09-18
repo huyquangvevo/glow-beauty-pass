@@ -3,6 +3,16 @@ import { prisma } from '@/lib/prisma'
 
 const CACHE_TTL_MS = 60 * 1000 // 60 seconds TTL
 
+const DEFAULT_SERVICE_ORDER = [
+  'goi-sach',
+  'goi-dau-cap',
+  'duong-sinh',
+  'massage-body',
+  'cham-soc-da',
+  'combo-goi-da',
+  'triet-long',
+]
+
 let memoryCache: {
   data: {
     spas: MVPSpa[]
@@ -118,6 +128,16 @@ export async function getCachedSpasAndSkus(): Promise<{
         dbSkus && dbSkus.length > 0
           ? dbSkus.map(mapPrismaSkuToMVPService)
           : MVP_SERVICES
+
+      // Giữ đúng thứ tự dịch vụ như thiết kế ban đầu (triệt lông luôn nằm ở cuối cùng)
+      mappedServices.sort((a, b) => {
+        const indexA = DEFAULT_SERVICE_ORDER.indexOf(a.id)
+        const indexB = DEFAULT_SERVICE_ORDER.indexOf(b.id)
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB
+        if (indexA !== -1) return -1
+        if (indexB !== -1) return 1
+        return a.price - b.price
+      })
 
       memoryCache = {
         data: {

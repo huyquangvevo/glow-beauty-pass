@@ -167,6 +167,7 @@ export default function HomeClientView({
                         {formatPrice(s.price)}
                       </div>
 
+                      {/* Tag badge - Tạm tắt theo yêu cầu, mở lại khi cần:
                       {sInfo.badge ? (
                         <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2.5 py-0.5 text-[11.5px] font-bold tracking-wide uppercase shadow-xs">
                           {sInfo.badge}
@@ -176,6 +177,7 @@ export default function HomeClientView({
                           {locale === 'en' ? 'Best Value' : locale === 'ko' ? '베스트' : 'Phổ Biến Nhất'}
                         </div>
                       ) : null}
+                      */}
                     </div>
 
                     {/* Card Body: Title & Duration */}
