@@ -197,7 +197,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
             })}
           </div>
 
-          {/* Partnership Trust Banner (Thu hút các chủ spa uy tín hợp tác) */}
+          {/* SPA PARTNERSHIP Banner - Tạm comment lại theo yêu cầu, mở lại khi cần:
           <div className="mt-3.5 bg-white border border-[#DDE4D9] rounded-[20px] p-3.5 sm:p-4 flex items-center justify-between gap-3 shadow-xs">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#236B38] uppercase tracking-wider mb-0.5">
@@ -220,6 +220,7 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
               <ArrowRight className="w-3.5 h-3.5 shrink-0" />
             </Link>
           </div>
+          */}
         </div>
 
 
