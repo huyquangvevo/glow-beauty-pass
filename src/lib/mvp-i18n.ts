@@ -28,6 +28,22 @@ export interface LocalizedMVP {
   verifiedBadge: string;
   standardBadge: string;
 
+  // Additional UI action and state tokens
+  selecting: string;
+  currentLocation: string;
+  nearYou: string;
+  locating: string;
+  currentGpsTitle: string;
+  clickToLocate: string;
+  located: string;
+  spasOffering: string;
+  selectCity: string;
+  viewPhotoZoom: string;
+  closePhoto: string;
+  mapLoadError: string;
+  searchLocation: string;
+  defaultCityAreas: Record<'hn' | 'hcm' | 'dn', string>;
+
   // Detail & location filter tokens
   cities: Record<'hn' | 'hcm' | 'dn', string>;
   locationsCount: string;
@@ -152,6 +168,24 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     certifiedBadge: 'Chứng nhận',
     verifiedBadge: 'Xác minh',
     standardBadge: 'Tiêu chuẩn',
+    selecting: 'Đang chọn',
+    currentLocation: 'Vị trí của bạn',
+    nearYou: 'Gần bạn',
+    locating: 'Đang tìm...',
+    currentGpsTitle: 'Vị trí hiện tại: {loc}',
+    clickToLocate: 'Nhấn để lấy vị trí GPS hiện tại',
+    located: 'Đã định vị',
+    spasOffering: 'chi nhánh có',
+    selectCity: 'Chọn khu vực',
+    viewPhotoZoom: 'Xem ảnh phóng to',
+    closePhoto: 'Đóng xem ảnh',
+    mapLoadError: 'Không thể tải bản đồ Google Maps.',
+    searchLocation: 'Vị trí tìm kiếm',
+    defaultCityAreas: {
+      hn: 'Cầu Giấy, Hà Nội',
+      hcm: 'Quận 1, TP.HCM',
+      dn: 'Hải Châu, Đà Nẵng',
+    },
     cities: {
       hn: 'Hà Nội',
       hcm: 'TP.HCM',
@@ -352,6 +386,24 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     certifiedBadge: 'Certified',
     verifiedBadge: 'Verified',
     standardBadge: 'Standard',
+    selecting: 'Selected',
+    currentLocation: 'Your location',
+    nearYou: 'Near you',
+    locating: 'Locating...',
+    currentGpsTitle: 'Current location: {loc}',
+    clickToLocate: 'Click to get current GPS location',
+    located: 'Located',
+    spasOffering: 'spas offering',
+    selectCity: 'Select City',
+    viewPhotoZoom: 'Enlarge photo',
+    closePhoto: 'Close preview',
+    mapLoadError: 'Unable to load Google Maps.',
+    searchLocation: 'Search location',
+    defaultCityAreas: {
+      hn: 'Cau Giay, Hanoi',
+      hcm: 'District 1, HCMC',
+      dn: 'Hai Chau, Da Nang',
+    },
     cities: {
       hn: 'Hanoi',
       hcm: 'Ho Chi Minh City',
@@ -552,6 +604,24 @@ export const MVP_TRANSLATIONS: Record<'vi' | 'en' | 'ko', LocalizedMVP> = {
     certifiedBadge: '인증 스파',
     verifiedBadge: '검증 완료',
     standardBadge: '표준 제휴',
+    selecting: '선택됨',
+    currentLocation: '현재 위치',
+    nearYou: '내 주변',
+    locating: '위치 확인 중...',
+    currentGpsTitle: '현재 위치: {loc}',
+    clickToLocate: '현재 GPS 위치 확인',
+    located: '위치 확인됨',
+    spasOffering: '개 스파',
+    selectCity: '지역 선택',
+    viewPhotoZoom: '사진 확대',
+    closePhoto: '사진 닫기',
+    mapLoadError: 'Google 지도를 불러올 수 없습니다.',
+    searchLocation: '검색 위치',
+    defaultCityAreas: {
+      hn: '하노이 꼬우저이',
+      hcm: '호치민 1군',
+      dn: '다낭 하이쩌우',
+    },
     cities: {
       hn: '하노이',
       hcm: '호치민',
@@ -777,15 +847,19 @@ export function formatDayRange(d: string, locale: string): string {
   if (locale === 'en') {
     if (d === 'T2 - T6') return 'Mon - Fri';
     if (d === 'T7 - CN') return 'Sat - Sun';
+    if (d === 'T2 - CN') return 'Mon - Sun';
+    if (d === 'Hàng ngày') return 'Everyday';
   } else if (locale === 'ko') {
     if (d === 'T2 - T6') return '월 - 금';
     if (d === 'T7 - CN') return '토 - 일';
+    if (d === 'T2 - CN') return '월 - 일';
+    if (d === 'Hàng ngày') return '매일';
   }
   return d;
 }
 
 export function formatTodayHours(todayStr: string, locale: string): string {
-  const timeOnly = todayStr.replace(/^Hôm nay\s*/i, '');
+  const timeOnly = todayStr.replace(/^(Hôm nay|Today|오늘)\s*/i, '');
   const t = getMvpTranslation(locale);
   return `${t.todayLabel} ${timeOnly}`;
 }

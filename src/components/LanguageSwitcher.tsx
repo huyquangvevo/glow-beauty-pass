@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { useLocale } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
 import { usePathname, useRouter } from '@/i18n/routing'
 import { LANGUAGE_OPTIONS, type AppLocale } from '@/i18n/locales'
 import { ChevronDown, Check } from 'lucide-react'
@@ -11,6 +12,7 @@ export function LanguageSwitcher() {
   const locale = useLocale() as AppLocale
   const pathname = usePathname()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -29,7 +31,9 @@ export function LanguageSwitcher() {
 
   const handleSelect = (code: AppLocale) => {
     setOpen(false)
-    router.replace(pathname, { locale: code })
+    const qs = searchParams ? searchParams.toString() : ''
+    const targetHref = qs ? `${pathname}?${qs}` : pathname
+    router.replace(targetHref, { locale: code })
   }
 
   return (

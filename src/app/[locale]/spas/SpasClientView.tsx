@@ -263,10 +263,10 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
         return locationLabel;
       }
     }
-    if (selectedCityId === 'hn') return 'Cầu Giấy, Hà Nội';
-    if (selectedCityId === 'hcm') return 'Quận 1, TP.HCM';
-    return 'Hải Châu, Đà Nẵng';
-  }, [searchQuery, searchParams, locationLabel, selectedCityId, userCoords, detectedCity]);
+    if (selectedCityId === 'hn') return t.defaultCityAreas?.hn || 'Cầu Giấy, Hà Nội';
+    if (selectedCityId === 'hcm') return t.defaultCityAreas?.hcm || 'Quận 1, TP.HCM';
+    return t.defaultCityAreas?.dn || 'Hải Châu, Đà Nẵng';
+  }, [searchQuery, searchParams, locationLabel, selectedCityId, userCoords, detectedCity, t]);
 
   // Hide footer when in full-screen map mode
   useEffect(() => {
@@ -447,14 +447,14 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                   className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 hover:bg-white/25 text-white text-[13.5px] font-semibold transition-colors cursor-pointer shadow-xs active:scale-95"
                 >
                   <MapPin className="w-3.5 h-3.5 text-[#D4F4D3]" />
-                  <span>{activeCity.name}</span>
+                  <span>{t.cities[selectedCityId] || activeCity.name}</span>
                   <ChevronDown className="w-3.5 h-3.5 opacity-80" />
                 </button>
 
                 {isCityMenuOpen && (
                   <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-stone-200 py-1.5 z-50 min-w-[145px] text-[#093E06] animate-in fade-in zoom-in-95 duration-150">
                     <div className="px-3.5 py-1 text-[11.5px] font-bold uppercase tracking-wider text-stone-400 border-b border-stone-100 mb-1">
-                      {locale === 'en' ? 'Select City' : locale === 'ko' ? '지역 선택' : 'Chọn khu vực'}
+                      {t.selectCity || (locale === 'en' ? 'Select City' : locale === 'ko' ? '지역 선택' : 'Chọn khu vực')}
                     </div>
                     {CITIES.map((c) => (
                       <button
@@ -465,7 +465,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                           selectedCityId === c.id ? 'text-[#40813D] bg-emerald-50/70 font-bold' : 'text-stone-700'
                         }`}
                       >
-                        <span>{c.name}</span>
+                        <span>{t.cities[c.id as 'hn' | 'hcm' | 'dn'] || c.name}</span>
                         {selectedCityId === c.id && <span className="w-2 h-2 rounded-full bg-[#40813D]" />}
                       </button>
                     ))}
@@ -480,7 +480,13 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                   type="button"
                   onClick={() => requestLocation(false)}
                   disabled={isLocating}
-                  title={userCoords ? `Vị trí hiện tại: ${locationLabel || 'Đã định vị'}` : 'Nhấn để lấy vị trí GPS hiện tại'}
+                  title={
+                    userCoords
+                      ? t.currentGpsTitle
+                        ? t.currentGpsTitle.replace('{loc}', locationLabel || t.located)
+                        : `Vị trí hiện tại: ${locationLabel || 'Đã định vị'}`
+                      : t.clickToLocate
+                  }
                   className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13.5px] font-semibold transition-all shrink-0 cursor-pointer shadow-xs active:scale-95 ${
                     userCoords
                       ? 'bg-white text-[#093E06] shadow-xs'
@@ -498,10 +504,12 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                   />
                   <span className="truncate max-w-[130px] sm:max-w-[160px]">
                     {isLocating
-                      ? 'Đang tìm...'
+                      ? t.locating
                       : userCoords
-                      ? (locationLabel || 'Gần bạn')
-                      : 'Vị trí của bạn'}
+                      ? (locationLabel && locationLabel !== 'Bật vị trí' && locationLabel !== 'Vị trí của bạn'
+                          ? locationLabel
+                          : t.nearYou)
+                      : t.currentLocation}
                   </span>
                 </button>
 
@@ -563,6 +571,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                 userCoords={userCoords}
                 activePrice={activeService.price}
                 className="w-full h-full"
+                locale={locale}
               />
 
               {/* Selected Spa Floating Card at Bottom of Map */}
@@ -594,8 +603,10 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                         ★ {activeSelectedSpa.rating} ({activeSelectedSpa.reviews}) · {activeSelectedSpa.formattedDist || activeSelectedSpa.dist} · {activeSelectedSpa.ward || activeSelectedSpa.district || activeSelectedSpa.address}
                       </div>
                       <div className="flex items-center gap-1.5 mt-2">
-                        <span className="text-[12.5px] font-semibold text-[#093E06] bg-[#E8FDE7] rounded-full px-2.5 py-0.5 whitespace-nowrap">
-                          {locale === 'en' ? 'Open now' : locale === 'ko' ? '영업중' : 'Đang mở'}
+                        <span className={`text-[12.5px] font-semibold rounded-full px-2.5 py-0.5 whitespace-nowrap ${
+                          activeSelectedSpa.open ? 'bg-[#E8FDE7] text-[#093E06]' : 'bg-amber-100 text-amber-900'
+                        }`}>
+                          {activeSelectedSpa.open ? t.openNowStatus : t.closedStatus}
                         </span>
                       </div>
                     </div>
@@ -611,10 +622,10 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
               {/* Service Count Summary Header */}
               <div className="text-[14.5px] font-bold text-[#093E06] px-1 flex items-center justify-between">
                 <span>
-                  {filteredSpas.length} {locale === 'en' ? 'spas offering' : locale === 'ko' ? '개 스파' : 'chi nhánh có'} &quot;{getServiceInfo(activeService.id).name}&quot;
+                  {filteredSpas.length} {t.spasOffering} &quot;{getServiceInfo(activeService.id).name}&quot;
                 </span>
                 <span className="text-[13.5px] font-medium text-[#6B7869]">
-                  {activeCity.name}
+                  {t.cities[selectedCityId] || activeCity.name}
                 </span>
               </div>
 
@@ -660,8 +671,10 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
                         ★ {s.rating} ({s.reviews}) · {s.formattedDist || s.dist} · {s.ward || s.district || s.address}
                       </div>
                       <div className="flex items-center gap-1.5 mt-2">
-                        <span className="text-[12.5px] font-semibold text-[#093E06] bg-[#E8FDE7] rounded-full px-2.5 py-0.5 whitespace-nowrap">
-                          {locale === 'en' ? 'Open now' : locale === 'ko' ? '영업중' : 'Đang mở'}
+                        <span className={`text-[12.5px] font-semibold rounded-full px-2.5 py-0.5 whitespace-nowrap ${
+                          s.open ? 'bg-[#E8FDE7] text-[#093E06]' : 'bg-amber-100 text-amber-900'
+                        }`}>
+                          {s.open ? t.openNowStatus : t.closedStatus}
                         </span>
                       </div>
                     </div>

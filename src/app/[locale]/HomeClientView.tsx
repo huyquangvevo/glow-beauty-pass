@@ -157,11 +157,15 @@ export default function HomeClientView({ locale }: HomeClientViewProps) {
                         {formatPrice(s.price)}
                       </div>
 
-                      {s.wide && (
-                        <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2.5 py-0.5 text-[12px] font-bold tracking-wide uppercase shadow-xs">
+                      {sInfo.badge ? (
+                        <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2.5 py-0.5 text-[11.5px] font-bold tracking-wide uppercase shadow-xs">
+                          {sInfo.badge}
+                        </div>
+                      ) : s.wide ? (
+                        <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2.5 py-0.5 text-[11.5px] font-bold tracking-wide uppercase shadow-xs">
                           {locale === 'en' ? 'Best Value' : locale === 'ko' ? '베스트' : 'Phổ Biến Nhất'}
                         </div>
-                      )}
+                      ) : null}
                     </div>
 
                     {/* Card Body: Title & Duration */}

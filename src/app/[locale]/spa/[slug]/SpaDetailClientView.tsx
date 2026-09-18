@@ -169,7 +169,7 @@ export default function SpaDetailClientView({
                         </span>
                         {isCurrent && (
                           <span className="text-[11px] font-bold text-[#40813D] bg-[#E8FDE7] px-1.5 py-0.5 rounded-full">
-                            Đang chọn
+                            {t.selecting}
                           </span>
                         )}
                       </div>
@@ -205,6 +205,7 @@ export default function SpaDetailClientView({
                   initialZoom={15}
                   interactive={true}
                   className="w-full h-full"
+                  locale={locale}
                 />
               </div>
               <div className="p-3 bg-white flex items-center justify-between gap-3">
@@ -282,12 +283,12 @@ export default function SpaDetailClientView({
                           key={phIdx}
                           type="button"
                           onClick={() => setActivePreviewPhoto(photoUrl)}
-                          title="Xem ảnh phóng to"
+                          title={t.viewPhotoZoom}
                           className="w-14 h-14 sm:w-15 sm:h-15 rounded-[13px] overflow-hidden relative border border-[#DDE4D9] shadow-2xs cursor-pointer group active:scale-95 transition-all focus:outline-none"
                         >
                           <Image
                             src={photoUrl}
-                            alt={`Ảnh đánh giá ${phIdx + 1} - ${r.name}`}
+                            alt={locale === 'en' ? `Review photo ${phIdx + 1} - ${r.name}` : locale === 'ko' ? `리뷰 사진 ${phIdx + 1} - ${r.name}` : `Ảnh đánh giá ${phIdx + 1} - ${r.name}`}
                             fill
                             sizes="100px"
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -360,7 +361,7 @@ export default function SpaDetailClientView({
             <button
               type="button"
               onClick={() => setActivePreviewPhoto(null)}
-              aria-label="Đóng xem ảnh"
+              aria-label={t.closePhoto}
               className="absolute -top-12 right-0 w-9 h-9 rounded-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
@@ -368,7 +369,7 @@ export default function SpaDetailClientView({
             <div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-black">
               <Image
                 src={activePreviewPhoto}
-                alt="Ảnh đánh giá phóng to"
+                alt={locale === 'en' ? 'Enlarged review photo' : locale === 'ko' ? '확대된 리뷰 사진' : 'Ảnh đánh giá phóng to'}
                 fill
                 sizes="(max-width: 600px) 95vw, 500px"
                 className="object-cover"

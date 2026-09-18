@@ -43,7 +43,13 @@ export function Navbar() {
             <Link
               href="/"
               className="flex items-center justify-center hover:opacity-95 transition-opacity"
-              aria-label="Glow Beauty Pass Trang Chủ"
+              aria-label={
+                locale === 'en'
+                  ? 'Glow Beauty Pass Homepage'
+                  : locale === 'ko'
+                  ? 'Glow Beauty Pass 홈'
+                  : 'Glow Beauty Pass Trang Chủ'
+              }
             >
               <BrandWordmark className="h-9 sm:h-10 w-auto text-white drop-shadow-xs" />
             </Link>
@@ -59,15 +65,33 @@ export function Navbar() {
       {/* FLOATING SUPPORT ZALO FAB (v1.0 Round Icon Only) */}
       {!isSpaDetail && !isSpasMap && !isHub && (
         <aside
-          aria-label="Liên hệ Zalo Hotline tư vấn"
+          aria-label={
+            locale === 'en'
+              ? 'Contact Zalo Hotline Consultation'
+              : locale === 'ko'
+              ? 'Zalo 핫라인 상담 문의'
+              : 'Liên hệ Zalo Hotline tư vấn'
+          }
           className="fixed bottom-6 right-4 sm:right-6 z-50 pointer-events-auto animate-in fade-in slide-in-from-bottom-4 duration-300"
         >
           <a
             href={zaloHubLink}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Liên hệ Zalo Hotline"
-            title="Liên hệ Zalo Hotline tư vấn & hỗ trợ"
+            aria-label={
+              locale === 'en'
+                ? 'Contact Zalo Hotline'
+                : locale === 'ko'
+                ? 'Zalo 핫라인 문의'
+                : 'Liên hệ Zalo Hotline'
+            }
+            title={
+              locale === 'en'
+                ? 'Contact Zalo Hotline for booking support'
+                : locale === 'ko'
+                ? 'Zalo 핫라인 예약 문의 & 지원'
+                : 'Liên hệ Zalo Hotline tư vấn & hỗ trợ'
+            }
             className="group relative w-14 h-14 sm:w-15 sm:h-15 rounded-full bg-white shadow-[0_8px_25px_rgba(0,104,255,0.38)] border-2 border-white flex items-center justify-center p-0.5 hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer"
           >
             {/* Zalo Icon */}

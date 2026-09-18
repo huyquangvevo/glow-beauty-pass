@@ -65,12 +65,36 @@ export default function BookingBottomSheet({
   const phoneDigits = guestPhone.replace(/\D/g, '');
   const phoneOk = phoneDigits.length >= 9;
 
-  // Localized days of appointment
-  const days = [
-    { id: 'd0', label: t.booking.today, date: '16/09' },
-    { id: 'd1', label: t.booking.tomorrow, date: '17/09' },
-    { id: 'd2', label: t.booking.thu, date: '18/09' },
-  ];
+  // Localized dynamic days of appointment
+  const days = React.useMemo(() => {
+    const now = new Date();
+    const d0 = new Date(now);
+    const d1 = new Date(now);
+    d1.setDate(d1.getDate() + 1);
+    const d2 = new Date(now);
+    d2.setDate(d2.getDate() + 2);
+
+    const pad = (n: number) => (n < 10 ? '0' + n : '' + n);
+    const formatDate = (date: Date) => `${pad(date.getDate())}/${pad(date.getMonth() + 1)}`;
+
+    const dayOfWeek = d2.getDay();
+    const dayNamesVi = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+    const dayNamesEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayNamesKo = ['일', '월', '화', '수', '목', '금', '토'];
+
+    const d2Label =
+      currentLocale === 'en'
+        ? dayNamesEn[dayOfWeek]
+        : currentLocale === 'ko'
+        ? dayNamesKo[dayOfWeek]
+        : dayNamesVi[dayOfWeek];
+
+    return [
+      { id: 'd0', label: t.booking.today, date: formatDate(d0) },
+      { id: 'd1', label: t.booking.tomorrow, date: formatDate(d1) },
+      { id: 'd2', label: d2Label, date: formatDate(d2) },
+    ];
+  }, [currentLocale, t.booking.today, t.booking.tomorrow]);
 
   const prevIsOpenRef = React.useRef(false);
 

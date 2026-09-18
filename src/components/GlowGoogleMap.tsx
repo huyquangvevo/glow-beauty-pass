@@ -15,6 +15,7 @@ interface GlowGoogleMapProps {
   interactive?: boolean;
   initialCenter?: { lat: number; lng: number };
   initialZoom?: number;
+  locale?: string;
 }
 
 const DEFAULT_CENTER = { lat: 21.0333, lng: 105.7925 }; // Cầu Giấy, Hà Nội
@@ -25,9 +26,11 @@ const GOOGLE_MAPS_API_KEY =
 
 let mapsLoadingPromise: Promise<void> | null = null;
 
-function loadGoogleMapsSdk(): Promise<void> {
+function loadGoogleMapsSdk(locale: string = 'vi'): Promise<void> {
   if (typeof window === 'undefined') return Promise.reject(new Error('SSR'));
   const w = window as any;
+  const targetLang = locale === 'ko' ? 'ko' : locale === 'en' ? 'en' : 'vi';
+
   if (w.google?.maps?.Map) {
     return Promise.resolve();
   }
@@ -56,9 +59,10 @@ function loadGoogleMapsSdk(): Promise<void> {
     script.id = SCRIPT_ID;
     script.async = true;
     script.defer = true;
+    script.setAttribute('data-lang', targetLang);
     script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(
       GOOGLE_MAPS_API_KEY
-    )}&libraries=places&language=vi&region=VN&callback=${callbackName}`;
+    )}&libraries=places&language=${targetLang}&region=VN&callback=${callbackName}`;
 
     script.onerror = () => {
       reject(new Error('Failed to load Google Maps script'));
@@ -84,6 +88,7 @@ export default function GlowGoogleMap({
   interactive = true,
   initialCenter,
   initialZoom = 13,
+  locale = 'vi',
 }: GlowGoogleMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
@@ -102,7 +107,7 @@ export default function GlowGoogleMap({
     if (!containerRef.current) return;
     let isCancelled = false;
 
-    loadGoogleMapsSdk()
+    loadGoogleMapsSdk(locale)
       .then(() => {
         if (isCancelled || !containerRef.current) return;
         const g = (window as any).google?.maps;
@@ -151,13 +156,21 @@ export default function GlowGoogleMap({
       })
       .catch((err) => {
         console.error('Google Maps load error:', err);
-        if (!isCancelled) setLoadError('Không thể tải bản đồ Google Maps.');
+        if (!isCancelled) {
+          const msg =
+            locale === 'en'
+              ? 'Unable to load Google Maps.'
+              : locale === 'ko'
+              ? 'Google 지도를 불러올 수 없습니다.'
+              : 'Không thể tải bản đồ Google Maps.';
+          setLoadError(msg);
+        }
       });
 
     return () => {
       isCancelled = true;
     };
-  }, [interactive, initialCenter, initialZoom]);
+  }, [interactive, initialCenter, initialZoom, locale]);
 
   // Clean overlays helper
   const clearOverlays = useCallback(() => {
@@ -436,7 +449,13 @@ export default function GlowGoogleMap({
 
       try {
         const pos = new g.LatLng(effectiveCenter.lat, effectiveCenter.lng);
-        const searchOverlay = new SearchLocationOverlay(pos, searchTitle || 'Vị trí tìm kiếm');
+        const fallbackSearchTitle =
+          locale === 'en'
+            ? 'Search location'
+            : locale === 'ko'
+            ? '검색 위치'
+            : 'Vị trí tìm kiếm';
+        const searchOverlay = new SearchLocationOverlay(pos, searchTitle || fallbackSearchTitle);
         searchOverlay.setMap(mapRef.current);
         searchMarkerRef.current = searchOverlay;
       } catch (err) {
