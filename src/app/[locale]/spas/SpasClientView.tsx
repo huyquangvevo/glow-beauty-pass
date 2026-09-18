@@ -20,6 +20,8 @@ import {
 import {
   MVP_SERVICES,
   MVP_SPAS,
+  MVPService,
+  MVPSpa,
   CITIES,
   formatPrice,
 } from '@/lib/mvp-data';
@@ -78,12 +80,27 @@ const KNOWN_AREAS: { keywords: string[]; coords: { lat: number; lng: number } }[
 
 interface SpasClientViewProps {
   locale: string;
+  initialSpas?: MVPSpa[];
+  initialServices?: MVPService[];
 }
 
-export default function SpasClientView({ locale }: SpasClientViewProps) {
+export default function SpasClientView({
+  locale,
+  initialSpas,
+  initialServices,
+}: SpasClientViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = getMvpTranslation(locale);
+
+  const allSpas = useMemo(
+    () => (initialSpas && initialSpas.length > 0 ? initialSpas : MVP_SPAS),
+    [initialSpas]
+  );
+  const allServices = useMemo(
+    () => (initialServices && initialServices.length > 0 ? initialServices : MVP_SERVICES),
+    [initialServices]
+  );
 
   // Initial params
   const initialServiceId = searchParams.get('service') || 'duong-sinh';
@@ -110,7 +127,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
   useEffect(() => {
     if (!hasUserSelectedCity.current && detectedCity && detectedCity !== selectedCityId) {
       setSelectedCityId(detectedCity);
-      const citySpas = MVP_SPAS.filter((s) => s.city === detectedCity);
+      const citySpas = allSpas.filter((s) => s.city === detectedCity);
       const matchingSpa =
         citySpas.find((s) => s.serviceIds?.includes(selectedServiceId) && (openNow ? s.open : true)) ||
         citySpas[0];
@@ -118,7 +135,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
         setSelectedSpaId(matchingSpa.id);
       }
     }
-  }, [detectedCity, selectedCityId, selectedServiceId, openNow]);
+  }, [detectedCity, selectedCityId, selectedServiceId, openNow, allSpas]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -140,7 +157,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
     setIsCityMenuOpen(false);
 
     // Pick first matching spa in the newly selected city
-    const citySpas = MVP_SPAS.filter((s) => s.city === cityId);
+    const citySpas = allSpas.filter((s) => s.city === cityId);
     const matchingSpa =
       citySpas.find((s) => s.serviceIds?.includes(selectedServiceId) && (openNow ? s.open : true)) ||
       citySpas[0];
@@ -282,7 +299,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
   }, [viewMode]);
 
   const activeService =
-    MVP_SERVICES.find((s) => s.id === selectedServiceId) || MVP_SERVICES[2];
+    allServices.find((s) => s.id === selectedServiceId) || allServices[0] || MVP_SERVICES[2];
   const activeCity = CITIES.find((c) => c.id === selectedCityId) || CITIES[0];
 
   const getServiceInfo = (id: string) => {
@@ -299,7 +316,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
 
     // Direct matches strictly within the selected city
     const directMatches = q
-      ? MVP_SPAS.filter((s) => {
+      ? allSpas.filter((s) => {
           const inCity = s.city === selectedCityId;
           const matchText =
             s.name.toLowerCase().includes(q) ||
@@ -314,7 +331,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
     const spasToFilter =
       q && directMatches.length > 0
         ? directMatches
-        : MVP_SPAS.filter((s) => s.city === selectedCityId);
+        : allSpas.filter((s) => s.city === selectedCityId);
 
     const refCoords = activeSearchCenter;
 
@@ -347,7 +364,11 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
         }
         return b.rating - a.rating;
       });
-  }, [selectedCityId, selectedServiceId, minRating, openNow, searchQuery, activeSearchCenter]);
+  }, [allSpas, selectedCityId, selectedServiceId, minRating, openNow, searchQuery, activeSearchCenter]);
+
+  // Fallback Spa Selection for Floating Bottom Card
+  const activeSelectedSpa =
+    filteredSpas.find((s) => s.id === selectedSpaId) || filteredSpas[0] || allSpas[0];
 
   // If currently selected spa is no longer in filteredSpas (e.g. after switching service), switch to first available spa
   useEffect(() => {
@@ -355,9 +376,6 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
       setSelectedSpaId(filteredSpas[0].id);
     }
   }, [filteredSpas, selectedSpaId]);
-
-  const activeSelectedSpa =
-    filteredSpas.find((s) => s.id === selectedSpaId) || filteredSpas[0] || MVP_SPAS[0];
 
   const handleOpenBooking = (spaId: string, serviceId?: string) => {
     setSheetSpaId(spaId);
@@ -689,7 +707,7 @@ export default function SpasClientView({ locale }: SpasClientViewProps) {
         <BookingBottomSheet
           isOpen={isBottomSheetOpen}
           onClose={() => setIsBottomSheetOpen(false)}
-          spa={MVP_SPAS.find((s) => s.id === sheetSpaId) || MVP_SPAS[0]}
+          spa={allSpas.find((s) => s.id === sheetSpaId) || allSpas[0]}
           initialServiceId={sheetInitialServiceId}
           onServiceChange={setSheetInitialServiceId}
           locale={locale}
