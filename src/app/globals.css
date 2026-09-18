@@ -115,3 +115,13 @@ body.hide-footer-for-map {
   transform: translate(-50%, -50%) scale(1.18);
   z-index: 100000 !important;
 }
+
+/* Floating spa card anchored securely above mobile browser navigation bars (iOS Chrome/Safari) */
+.map-floating-spa-card {
+  bottom: max(96px, calc(64px + env(safe-area-inset-bottom, 0px)));
+}
+@media (min-width: 640px) {
+  .map-floating-spa-card {
+    bottom: 1rem !important; /* 16px desktop */
+  }
+}

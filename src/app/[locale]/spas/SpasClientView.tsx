@@ -594,7 +594,7 @@ export default function SpasClientView({
 
               {/* Selected Spa Floating Card at Bottom of Map */}
               {activeSelectedSpa && (
-                <div className="absolute bottom-[max(76px,calc(44px+env(safe-area-inset-bottom)))] sm:bottom-4 left-3 right-3 z-10 animate-in slide-in-from-bottom-3 duration-200">
+                <div className="absolute map-floating-spa-card left-3 right-3 z-10 animate-in slide-in-from-bottom-3 duration-200">
                   <div
                     onClick={() => router.push(`/spa/${activeSelectedSpa.id}?service=${selectedServiceId}`)}
                     className="bg-white/95 backdrop-blur-md rounded-[18px] p-3 sm:p-3.5 border border-[#DDE4D9] shadow-lg flex gap-3 sm:gap-3.5 cursor-pointer hover:border-[#40813D] transition-all active:scale-[0.99] overflow-hidden"
