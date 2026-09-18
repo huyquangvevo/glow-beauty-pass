@@ -323,6 +323,11 @@ const PHOTO_ASSETS = [
   '/reviews/review_1.jpg',
   '/reviews/review_2.jpg',
   '/reviews/review_3.jpg',
+  '/reviews/review_4.jpg',
+  '/reviews/review_5.jpg',
+  '/reviews/review_6.jpg',
+  '/reviews/review_7.jpg',
+  '/reviews/review_8.jpg',
 ];
 
 // City & District localizers to append realistic locality context
@@ -396,8 +401,8 @@ export function getSpaSpecificReviews(spa: MVPSpa, locale: string = 'vi'): MVPRe
     hash = (hash * 31 + seedStr.charCodeAt(i)) >>> 0;
   }
 
-  // Review count: 4 or 5 reviews
-  const reviewCount = 4 + (hash % 2);
+  // Review count: 12 to 16 reviews
+  const reviewCount = 12 + (hash % 5);
 
   // Pick indices from pool spread out by hash
   const pickedTemplates: ReviewTemplate[] = [];

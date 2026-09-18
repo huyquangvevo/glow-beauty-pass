@@ -138,14 +138,21 @@ const REALISTIC_REVIEWS = [284, 412, 195, 326, 458, 167, 312, 520, 189, 476, 385
 const REALISTIC_RATINGS = [4.9, 4.8, 4.9, 4.8, 4.9, 4.9, 4.8, 5.0, 4.7, 4.9, 4.9, 4.8, 4.8, 4.9, 4.9];
 
 const PHOTO_ROTATIONS = [
-  ['/spas/spa_thumb_1.jpg', '/banners/banner_spa_ambiance.jpg', '/banners/banner_herbal_wash.jpg'],
-  ['/spas/spa_thumb_2.jpg', '/banners/banner_neck_massage.jpg', '/banners/banner_spa_ambiance.jpg'],
-  ['/spas/spa_thumb_3.jpg', '/banners/banner_herbal_wash.jpg', '/banners/banner_spa_ambiance.jpg'],
-  ['/spas/spa_thumb_4.jpg', '/banners/banner_spa_ambiance.jpg', '/banners/banner_neck_massage.jpg'],
-  ['/spas/spa_thumb_5.jpg', '/banners/banner_neck_massage.jpg', '/banners/banner_herbal_wash.jpg'],
-  ['/banners/banner_herbal_wash.jpg', '/spas/spa_thumb_1.jpg', '/banners/banner_spa_ambiance.jpg'],
-  ['/banners/banner_neck_massage.jpg', '/spas/spa_thumb_2.jpg', '/banners/banner_herbal_wash.jpg'],
-  ['/banners/banner_spa_ambiance.jpg', '/spas/spa_thumb_4.jpg', '/banners/banner_neck_massage.jpg'],
+  ['/spas/spa_real_01.jpg', '/spas/spa_real_07.jpg', '/spas/spa_real_23.jpg', '/banners/banner_herbal_wash.jpg'],
+  ['/spas/spa_real_02.jpg', '/spas/spa_real_06.jpg', '/spas/spa_real_25.jpg', '/spas/spa_real_35.jpg'],
+  ['/spas/spa_real_03.jpg', '/spas/spa_real_10.jpg', '/spas/spa_real_18.jpg', '/banners/banner_neck_massage.jpg'],
+  ['/spas/spa_real_04.jpg', '/spas/spa_real_12.jpg', '/spas/spa_real_27.jpg', '/spas/spa_facial_care.jpg'],
+  ['/spas/spa_real_05.jpg', '/spas/spa_real_15.jpg', '/spas/spa_real_29.jpg', '/banners/banner_spa_ambiance.jpg'],
+  ['/spas/spa_real_06.jpg', '/spas/spa_real_16.jpg', '/spas/spa_real_30.jpg', '/spas/spa_real_01.jpg'],
+  ['/spas/spa_real_07.jpg', '/spas/spa_real_19.jpg', '/spas/spa_real_31.jpg', '/banners/banner_herbal_wash.jpg'],
+  ['/spas/spa_real_08.jpg', '/spas/spa_real_20.jpg', '/spas/spa_real_32.jpg', '/spas/spa_real_02.jpg'],
+  ['/spas/spa_real_09.jpg', '/spas/spa_real_21.jpg', '/spas/spa_real_33.jpg', '/banners/banner_neck_massage.jpg'],
+  ['/spas/spa_real_10.jpg', '/spas/spa_real_22.jpg', '/spas/spa_real_34.jpg', '/spas/spa_real_03.jpg'],
+  ['/spas/spa_real_11.jpg', '/spas/spa_real_24.jpg', '/spas/spa_real_35.jpg', '/banners/banner_spa_ambiance.jpg'],
+  ['/spas/spa_real_12.jpg', '/spas/spa_real_26.jpg', '/spas/spa_real_36.jpg', '/spas/spa_facial_care.jpg'],
+  ['/spas/spa_real_13.jpg', '/spas/spa_real_28.jpg', '/spas/spa_real_01.jpg', '/banners/banner_herbal_wash.jpg'],
+  ['/spas/spa_real_14.jpg', '/spas/spa_real_29.jpg', '/spas/spa_real_02.jpg', '/banners/banner_neck_massage.jpg'],
+  ['/spas/spa_real_15.jpg', '/spas/spa_real_30.jpg', '/spas/spa_real_04.jpg', '/banners/banner_spa_ambiance.jpg'],
 ];
 
 const SNAPSHOT_SPAS: MVPSpa[] = (snapshotData.spas || []).map((s: any, idx: number) => {
