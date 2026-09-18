@@ -1,5 +1,6 @@
 import { MVP_SERVICES, MVP_SPAS, MVPService, MVPSpa, MVPReview } from '@/lib/mvp-data'
 import { getSpaSpecificReviews } from '@/lib/spa-reviews-data'
+import { computeDistanceKm, DEFAULT_CITY_CENTERS, formatDistanceKm } from '@/lib/formatters'
 import { prisma } from '@/lib/prisma'
 
 const CACHE_TTL_MS = 60 * 1000 // 60 seconds TTL
@@ -47,6 +48,14 @@ export function mapPrismaSpaToMVPSpa(s: any): MVPSpa {
           { d: 'T7 - CN', t: s.openHours || '09:00 - 21:30' },
         ]
 
+  const cityKey = (s.city || 'hn') as string
+  const cityCenter = DEFAULT_CITY_CENTERS[cityKey] || DEFAULT_CITY_CENTERS.hn
+  let dist = '1,2 km'
+  if (typeof s.latitude === 'number' && typeof s.longitude === 'number') {
+    const km = computeDistanceKm(cityCenter.lat, cityCenter.lng, s.latitude, s.longitude)
+    dist = formatDistanceKm(km)
+  }
+
   return {
     id: s.slug || s.id,
     name: s.name,
@@ -60,7 +69,7 @@ export function mapPrismaSpaToMVPSpa(s: any): MVPSpa {
     lng: s.longitude,
     rating: s.rating || 4.9,
     reviews: s.reviewCount || 120,
-    dist: '0,8 km',
+    dist,
     open: s.isActive !== false,
     tier: (s.tier?.toUpperCase() === 'CERTIFIED'
       ? 'Certified'

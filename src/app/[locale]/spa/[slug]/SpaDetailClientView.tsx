@@ -23,6 +23,8 @@ import {
 } from '@/lib/mvp-data';
 import { getMvpTranslation, formatDayRange, formatTodayHours } from '@/lib/mvp-i18n';
 import { getSpaSpecificReviews } from '@/lib/spa-reviews-data';
+import { useLocation } from '@/context/LocationContext';
+import { computeDistanceKm, formatDistanceKm, DEFAULT_CITY_CENTERS } from '@/lib/formatters';
 import BookingBottomSheet from '@/components/BookingBottomSheet';
 import GlowGoogleMap from '@/components/GlowGoogleMap';
 
@@ -85,6 +87,24 @@ export default function SpaDetailClientView({
     }
     return getSpaSpecificReviews(spa, locale);
   }, [initialReviews, spa, locale]);
+
+  const { userCoords } = useLocation();
+
+  // Dynamic distance based on user's live GPS coords (or city reference center)
+  const displayDistance = useMemo(() => {
+    if (typeof spa.lat !== 'number' || typeof spa.lng !== 'number') {
+      return spa.dist || null;
+    }
+    // 1. If user has active GPS coordinates, compute real distance from user
+    if (userCoords) {
+      const km = computeDistanceKm(userCoords.lat, userCoords.lon, spa.lat, spa.lng);
+      return formatDistanceKm(km);
+    }
+    // 2. Otherwise compute distance from city center reference
+    const cityCenter = DEFAULT_CITY_CENTERS[spa.city] || DEFAULT_CITY_CENTERS.hn;
+    const km = computeDistanceKm(cityCenter.lat, cityCenter.lng, spa.lat, spa.lng);
+    return formatDistanceKm(km);
+  }, [userCoords, spa.lat, spa.lng, spa.city, spa.dist]);
 
   // Filter only services that THIS spa offers!
   const spaServices = useMemo(() => {
@@ -164,7 +184,8 @@ export default function SpaDetailClientView({
             <div className="flex items-center gap-1.5 text-[13px] sm:text-[13.5px] text-[#4A5848] mt-1 leading-normal">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
               <span>
-                {spa.rating.toFixed(1)} · {spa.reviews} {t.reviewsCount} · {spa.dist} · {spa.ward}, {t.cities[spa.city] || spa.cityName}
+                {spa.rating.toFixed(1)} · {spa.reviews} {t.reviewsCount}
+                {displayDistance ? ` · ${displayDistance}` : ''} · {spa.ward}, {t.cities[spa.city] || spa.cityName}
               </span>
             </div>
 
