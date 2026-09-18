@@ -134,7 +134,7 @@ export default function HomeClientView({
                   : s.id === 'massage-body'
                   ? '/banners/banner_neck_massage.jpg'
                   : s.id === 'cham-soc-da'
-                  ? '/spas/spa_thumb_2.jpg'
+                  ? '/spas/spa_facial_care.jpg'
                   : s.id === 'combo-goi-da'
                   ? '/spas/spa_thumb_3.jpg'
                   : '/spas/spa_thumb_4.jpg';
