@@ -15,10 +15,16 @@ model Spa {
   address         String
   district        String       @default("Cầu Giấy")
   ward            String
+  city            String       @default("hn") // hn, hcm, dn
+  cityName        String       @default("Hà Nội") // Hà Nội, TP.HCM, Đà Nẵng
   phone           String
   latitude        Float
   longitude       Float
   openHours       String       @default("09:00 - 21:00")
+  todayHours      String       @default("Hôm nay 09:00 - 21:30")
+  hours           Json?        // [{ d: "T2 - T6", t: "09:00 - 21:30" }, ...]
+  photos          Json?        // ["/spas/spa_thumb_1.jpg", ...]
+  serviceIds      Json?        // ["goi-sach", "duong-sinh", ...]
   rating          Float        @default(4.8)
   reviewCount     Int          @default(0)
   tier            String       @default("STANDARD") // STANDARD, VERIFIED, CERTIFIED
@@ -45,12 +51,18 @@ model Spa {
 model ServiceSku {
   id               String    @id @default(cuid())
   name             String
-  code             String    @unique // GOI_SACH, GOI_PREMIUM, GOI_DUONG_SINH
+  code             String    @unique // goi-sach, goi-dau-cap, duong-sinh, massage-body, cham-soc-da, combo-goi-da, triet-long
+  shortName        String?   // Gội sạch, Dưỡng sinh, Massage body...
   durationMinutes  Int       @default(45)
-  pricePhase1      Int       // 49000, 69000, 149000
-  pricePhase2      Int       // 59000, 85000, 179000
-  spaCost          Int       // 49000, 69000, 149000
-  description      String
+  dur              String?   // "60 phút", "1 buổi / 1 vùng"
+  price            Int       @default(0) // Giá niêm yết: 39000, 59000, 149000, 199000...
+  pricePhase1      Int       @default(0) // 49000, 69000, 149000
+  pricePhase2      Int       @default(0) // 59000, 85000, 179000
+  spaCost          Int       @default(0) // Giá chi trả spa
+  badge            String?   // "ĐƯỢC CHỌN NHIỀU NHẤT"
+  wide             Boolean   @default(false)
+  spaCount         Int       @default(0)
+  description      String    @default("")
   standardProducts String?   // Danh mục sản phẩm chuẩn (gói Premium)
   bookings         Booking[]
 }

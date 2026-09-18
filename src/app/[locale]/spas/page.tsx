@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { MVP_SPAS } from '@/lib/mvp-data';
+import { getCachedSpasAndSkus } from '@/lib/spas-service';
 import {
   getSpasMetadata,
   getSpasCollectionSchema,
@@ -21,8 +22,10 @@ export async function generateMetadata({
 
 export default async function SpasPage({ params }: SpasPageProps) {
   const { locale } = await params;
+  const { spas, services } = await getCachedSpasAndSkus();
 
-  const collectionSchema = getSpasCollectionSchema(locale, MVP_SPAS);
+  const spaList = spas && spas.length > 0 ? spas : MVP_SPAS;
+  const collectionSchema = getSpasCollectionSchema(locale, spaList);
   const breadcrumbSchema = getBreadcrumbSchema(
     [
       { name: 'Trang chủ', path: '' },
@@ -48,7 +51,11 @@ export default async function SpasPage({ params }: SpasPageProps) {
           </div>
         }
       >
-        <SpasClientView locale={locale} />
+        <SpasClientView
+          locale={locale}
+          initialSpas={spas}
+          initialServices={services}
+        />
       </Suspense>
     </>
   );

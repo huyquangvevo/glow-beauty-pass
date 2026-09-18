@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import {
   MVP_SERVICES,
+  MVPService,
   MVPSpa,
   formatPrice,
 } from '@/lib/mvp-data';
@@ -25,20 +26,25 @@ import GlowGoogleMap from '@/components/GlowGoogleMap';
 interface SpaDetailClientViewProps {
   spa: MVPSpa;
   locale: string;
+  initialServices?: MVPService[];
 }
 
 export default function SpaDetailClientView({
   spa,
   locale,
+  initialServices,
 }: SpaDetailClientViewProps) {
   const t = getMvpTranslation(locale);
   const searchParams = useSearchParams();
   const serviceFromQuery = searchParams.get('service');
 
+  const servicesList =
+    initialServices && initialServices.length > 0 ? initialServices : MVP_SERVICES;
+
   // Filter only services that THIS spa offers!
   const spaServices = useMemo(() => {
-    return MVP_SERVICES.filter((s) => spa.serviceIds && spa.serviceIds.includes(s.id));
-  }, [spa]);
+    return servicesList.filter((s) => spa.serviceIds && spa.serviceIds.includes(s.id));
+  }, [spa, servicesList]);
 
   const [selectedServiceId, setSelectedServiceId] = useState<string>(() => {
     if (serviceFromQuery && spa.serviceIds?.includes(serviceFromQuery)) {
@@ -58,7 +64,7 @@ export default function SpaDetailClientView({
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
 
   const selectedService =
-    spaServices.find((s) => s.id === selectedServiceId) || spaServices[0] || MVP_SERVICES[2];
+    spaServices.find((s) => s.id === selectedServiceId) || spaServices[0] || servicesList[0] || MVP_SERVICES[2];
 
   const handleOpenBooking = (serviceId?: string) => {
     if (serviceId) setSelectedServiceId(serviceId);

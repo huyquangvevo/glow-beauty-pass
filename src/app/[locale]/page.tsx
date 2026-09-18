@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { MVP_SERVICES } from '@/lib/mvp-data';
+import { getCachedSpasAndSkus } from '@/lib/spas-service';
 import {
   BASE_URL,
   getHomeMetadata,
@@ -20,6 +21,9 @@ export async function generateMetadata({
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
+  const { services, spas } = await getCachedSpasAndSkus();
+
+  const serviceList = services && services.length > 0 ? services : MVP_SERVICES;
 
   // Schema.org Service Catalog JSON-LD
   const servicesCatalogSchema = {
@@ -27,7 +31,7 @@ export default async function HomePage({ params }: HomePageProps) {
     '@type': 'ItemList',
     name: 'Danh Mục Dịch Vụ Spa Chuẩn Hóa Glow Beauty Pass',
     description: 'Bảng giá niêm yết cố định các dịch vụ gội đầu dưỡng sinh và chăm sóc da',
-    itemListElement: MVP_SERVICES.map((s, idx) => ({
+    itemListElement: serviceList.map((s, idx) => ({
       '@type': 'ListItem',
       position: idx + 1,
       item: {
@@ -52,7 +56,11 @@ export default async function HomePage({ params }: HomePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesCatalogSchema) }}
       />
-      <HomeClientView locale={locale} />
+      <HomeClientView
+        locale={locale}
+        initialServices={services}
+        initialSpas={spas}
+      />
     </>
   );
 }

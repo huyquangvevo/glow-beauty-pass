@@ -10,50 +10,73 @@ function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: num
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-  return Math.round(R * c * 10) / 10 // làm tròn 1 chữ số thập phân
+  return Math.round(R * c * 10) / 10
 }
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
-    const userLat = searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : 21.0333 // Mặc định trung tâm Cầu Giấy
-    const userLon = searchParams.get('lon') ? parseFloat(searchParams.get('lon')!) : 105.7925
-    const ward = searchParams.get('ward')
+    const userLat = searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : null
+    const userLon = searchParams.get('lon') ? parseFloat(searchParams.get('lon')!) : null
+    const city = searchParams.get('city')?.toLowerCase()
+    const service = searchParams.get('service')
+    const q = searchParams.get('q')?.trim().toLowerCase()
 
-    const { spas, skus } = await getCachedSpasAndSkus()
+    const { spas, services } = await getCachedSpasAndSkus()
 
-    let filteredSpas = spas
-    if (ward) {
-      filteredSpas = filteredSpas.filter(
-        (s) => s.ward && s.ward.toLowerCase().includes(ward.toLowerCase())
+    let filtered = spas
+
+    // Lọc theo city nếu có
+    if (city && (city === 'hn' || city === 'hcm' || city === 'dn')) {
+      filtered = filtered.filter((s) => s.city === city)
+    }
+
+    // Lọc theo service nếu có
+    if (service) {
+      filtered = filtered.filter((s) => s.serviceIds?.includes(service))
+    }
+
+    // Lọc theo từ khóa tìm kiếm nếu có
+    if (q) {
+      filtered = filtered.filter(
+        (s) =>
+          s.name.toLowerCase().includes(q) ||
+          s.address.toLowerCase().includes(q) ||
+          s.ward.toLowerCase().includes(q) ||
+          (s.district && s.district.toLowerCase().includes(q)) ||
+          s.cityName.toLowerCase().includes(q)
       )
     }
 
-    // Gắn thêm khoảng cách tính toán đến người dùng
-    const spasWithDistance = filteredSpas.map((spa) => {
-      const distanceKm = calculateDistanceKm(userLat, userLon, spa.latitude, spa.longitude)
+    // Gắn thêm khoảng cách tính toán nếu người dùng có GPS
+    let result = filtered.map((spa) => {
+      let distanceKm: number | null = null
+      let formattedDistance = spa.dist
+      if (userLat !== null && userLon !== null && !isNaN(userLat) && !isNaN(userLon)) {
+        distanceKm = calculateDistanceKm(userLat, userLon, spa.lat, spa.lng)
+        formattedDistance = distanceKm < 1 ? `${Math.round(distanceKm * 1000)}m` : `${distanceKm}km`
+      }
       return {
         ...spa,
         distanceKm,
-        formattedDistance: distanceKm < 1 ? `${Math.round(distanceKm * 1000)}m` : `${distanceKm}km`,
+        formattedDistance,
       }
     })
 
-    // Sắp xếp theo thứ tự: Spa gần nhất lên đầu
-    spasWithDistance.sort((a, b) => a.distanceKm - b.distanceKm)
+    if (userLat !== null && userLon !== null) {
+      result.sort((a, b) => (a.distanceKm || 0) - (b.distanceKm || 0))
+    }
 
     return NextResponse.json(
       {
-        spas: spasWithDistance,
-        skus,
-        totalCount: spasWithDistance.length,
-        pilotDistrict: 'Cầu Giấy',
+        success: true,
+        spas: result,
+        services,
+        totalCount: result.length,
       },
       {
         headers: {
-          'Cache-Control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400',
-          'CDN-Cache-Control': 'max-age=300, stale-while-revalidate=86400',
-          'Vercel-CDN-Cache-Control': 'max-age=300, stale-while-revalidate=86400',
+          'Cache-Control': 'public, max-age=60, s-maxage=120, stale-while-revalidate=600',
         },
       }
     )
@@ -62,4 +85,3 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Failed to fetch spas' }, { status: 500 })
   }
 }
-
