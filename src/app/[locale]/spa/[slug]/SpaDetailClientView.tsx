@@ -10,6 +10,7 @@ import {
   Star,
   Compass,
   ShieldCheck,
+  CheckCircle2,
   Image as ImageIcon,
   X,
 } from 'lucide-react';
@@ -17,22 +18,58 @@ import {
   MVP_SERVICES,
   MVPService,
   MVPSpa,
+  MVPReview,
   formatPrice,
 } from '@/lib/mvp-data';
 import { getMvpTranslation, formatDayRange, formatTodayHours } from '@/lib/mvp-i18n';
 import BookingBottomSheet from '@/components/BookingBottomSheet';
 import GlowGoogleMap from '@/components/GlowGoogleMap';
 
+function formatReviewTime(when: string, createdAt?: string, locale?: string): string {
+  if (!createdAt) return when;
+  const date = new Date(createdAt);
+  const diffHours = Math.max(1, Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60)));
+
+  if (locale === 'en') {
+    if (diffHours >= 24 * 30) {
+      const m = Math.floor(diffHours / (24 * 30));
+      return m === 1 ? '1 month ago' : `${m} months ago`;
+    }
+    if (diffHours >= 24 * 7) {
+      const w = Math.floor(diffHours / (24 * 7));
+      return w === 1 ? '1 week ago' : `${w} weeks ago`;
+    }
+    if (diffHours >= 24) {
+      const d = Math.floor(diffHours / 24);
+      return d === 1 ? 'Yesterday' : `${d} days ago`;
+    }
+    return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
+  }
+  if (locale === 'ko') {
+    if (diffHours >= 24 * 30) return `${Math.floor(diffHours / (24 * 30))}개월 전`;
+    if (diffHours >= 24 * 7) return `${Math.floor(diffHours / (24 * 7))}주 전`;
+    if (diffHours >= 24) return `${Math.floor(diffHours / 24)}일 전`;
+    return `${diffHours}시간 전`;
+  }
+  // Vietnamese default
+  if (diffHours >= 24 * 30) return `${Math.floor(diffHours / (24 * 30))} tháng trước`;
+  if (diffHours >= 24 * 7) return `${Math.floor(diffHours / (24 * 7))} tuần trước`;
+  if (diffHours >= 24) return `${Math.floor(diffHours / 24)} ngày trước`;
+  return `${diffHours} giờ trước`;
+}
+
 interface SpaDetailClientViewProps {
   spa: MVPSpa;
   locale: string;
   initialServices?: MVPService[];
+  initialReviews?: MVPReview[];
 }
 
 export default function SpaDetailClientView({
   spa,
   locale,
   initialServices,
+  initialReviews,
 }: SpaDetailClientViewProps) {
   const t = getMvpTranslation(locale);
   const searchParams = useSearchParams();
@@ -40,6 +77,9 @@ export default function SpaDetailClientView({
 
   const servicesList =
     initialServices && initialServices.length > 0 ? initialServices : MVP_SERVICES;
+
+  const reviewsList =
+    initialReviews && initialReviews.length > 0 ? initialReviews : t.reviews;
 
   // Filter only services that THIS spa offers!
   const spaServices = useMemo(() => {
@@ -235,32 +275,44 @@ export default function SpaDetailClientView({
             </div>
           </div>
 
-          {/* Customer Reviews (Clean Mockup Style) */}
+          {/* Customer Reviews from Database */}
           <div className="px-5 pt-5 pb-24">
             <div className="flex items-baseline justify-between mb-2.5 px-0.5">
-              <h2 className="text-[14px] sm:text-[14.5px] font-bold text-[#093E06]">
-                {t.customerReviewsTitle}
+              <h2 className="text-[14px] sm:text-[14.5px] font-bold text-[#093E06] flex items-center gap-2">
+                <span>{t.customerReviewsTitle}</span>
+                <span className="text-[12px] font-bold px-2 py-0.5 rounded-full bg-[#E8FDE7] text-[#1F5E1B]">
+                  {reviewsList.length}
+                </span>
               </h2>
             </div>
 
             <div className="space-y-2.5">
-              {t.reviews.map((r, i) => (
+              {reviewsList.map((r, i) => (
                 <div
                   key={i}
                   className="bg-white border border-[#DDE4D9] rounded-[18px] p-3.5 shadow-xs"
                 >
-                  <div className="flex gap-2 items-center mb-1.5">
-                    <div className="w-8 h-8 rounded-full bg-[#E8FDE7] text-[#2F672E] flex items-center justify-center text-[13px] font-bold shrink-0">
+                  <div className="flex gap-2.5 items-center mb-1.5">
+                    <div className="w-8.5 h-8.5 rounded-full bg-[#E8FDE7] text-[#2F672E] flex items-center justify-center text-[13.5px] font-bold shrink-0">
                       {r.initial}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-[13.5px] font-bold text-stone-900 leading-tight">
-                        {r.name}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[13.5px] font-bold text-stone-900 leading-tight">
+                          {r.name}
+                        </span>
+                        {r.verifiedPhone && (
+                          <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-[#E8FDE7] text-[#1F5E1B] text-[10.5px] font-semibold border border-emerald-200/50">
+                            <CheckCircle2 className="w-3 h-3 text-[#236B38]" />
+                            <span>{locale === 'en' ? 'Verified' : locale === 'ko' ? '인증됨' : 'Đã xác thực'}</span>
+                          </span>
+                        )}
                       </div>
                       <div className="flex items-center gap-1.5 text-[11.5px] text-stone-500 mt-0.5">
                         <div className="flex items-center gap-0.5">
                           {Array.from({ length: 5 }).map((_, sIdx) => {
-                            const isFilled = sIdx < (r.stars.includes('☆') ? 4 : 5);
+                            const starCount = typeof (r as any).rating === 'number' ? (r as any).rating : (r.stars?.includes('☆') ? 4 : 5);
+                            const isFilled = sIdx < starCount;
                             return (
                               <Star
                                 key={sIdx}
@@ -273,7 +325,7 @@ export default function SpaDetailClientView({
                             );
                           })}
                         </div>
-                        <span>· {r.when}</span>
+                        <span>· {formatReviewTime(r.when, (r as any).createdAt, locale)}</span>
                       </div>
                     </div>
                   </div>

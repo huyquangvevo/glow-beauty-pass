@@ -71,6 +71,7 @@ export default async function SpaPage({ params }: SpaPageProps) {
         spa={spa}
         locale={locale}
         initialServices={detail.services}
+        initialReviews={detail.reviews}
       />
     </>
   );

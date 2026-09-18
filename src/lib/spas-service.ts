@@ -1,17 +1,19 @@
+import { MVP_SERVICES, MVP_SPAS, MVPService, MVPSpa, MVPReview } from '@/lib/mvp-data'
 import { prisma } from '@/lib/prisma'
-import { MVPSpa, MVPService, MVP_SPAS, MVP_SERVICES } from '@/lib/mvp-data'
 
-interface CacheEntry {
+const CACHE_TTL_MS = 60 * 1000 // 60 seconds TTL
+
+let memoryCache: {
   data: {
     spas: MVPSpa[]
     services: MVPService[]
   }
   timestamp: number
-}
+} | null = null
 
-// Global in-memory cache with 60 seconds TTL for blazing speed & realtime admin updates
-let memoryCache: CacheEntry | null = null
-const CACHE_TTL_MS = 60 * 1000
+export function clearSpasCache() {
+  memoryCache = null
+}
 
 export function mapPrismaSpaToMVPSpa(s: any): MVPSpa {
   const photos =
@@ -142,31 +144,77 @@ export async function getCachedSpasAndSkus(): Promise<{
 }
 
 /**
- * Get single Spa detail by slug or ID from real DB
+ * Get single Spa detail by slug or ID from real DB with full reviews and latest photos
  */
 export async function getRealSpaDetailFromDb(
   slugOrId: string
-): Promise<{ spa: MVPSpa; services: MVPService[] } | null> {
-  const { spas, services } = await getCachedSpasAndSkus()
-  const found = spas.find((s) => s.id === slugOrId)
+): Promise<{ spa: MVPSpa; services: MVPService[]; reviews: MVPReview[] } | null> {
+  const { services } = await getCachedSpasAndSkus()
 
-  if (found) {
-    return { spa: found, services }
-  }
-
-  // If not found in cache, perform single direct DB lookup
   try {
     const dbSpa = await prisma.spa.findFirst({
       where: {
         OR: [{ slug: slugOrId }, { id: slugOrId }],
         isActive: true,
       },
+      include: {
+        reviews: {
+          orderBy: { createdAt: 'desc' },
+        },
+      },
     })
+
     if (dbSpa) {
-      return { spa: mapPrismaSpaToMVPSpa(dbSpa), services }
+      const mappedSpa = mapPrismaSpaToMVPSpa(dbSpa)
+
+      const mappedReviews: MVPReview[] = (dbSpa.reviews || []).map((r) => {
+        let photoUrls: string[] = []
+        if (r.photoUrls) {
+          try {
+            photoUrls = JSON.parse(r.photoUrls)
+          } catch {
+            photoUrls = []
+          }
+        }
+
+        const date = new Date(r.createdAt)
+        const now = Date.now()
+        const diffHours = Math.max(1, Math.floor((now - date.getTime()) / (1000 * 60 * 60)))
+        let when = 'Hôm nay'
+        if (diffHours >= 24 * 30) when = `${Math.floor(diffHours / (24 * 30))} tháng trước`
+        else if (diffHours >= 24 * 7) when = `${Math.floor(diffHours / (24 * 7))} tuần trước`
+        else if (diffHours >= 24) when = `${Math.floor(diffHours / 24)} ngày trước`
+        else when = `${diffHours} giờ trước`
+
+        return {
+          initial: (r.customerName || 'K').trim()[0].toUpperCase(),
+          name: r.customerName || 'Khách hàng',
+          phoneMask: r.customerPhone ? r.customerPhone.slice(0, 4) + '***' + r.customerPhone.slice(-3) : undefined,
+          stars: '★'.repeat(r.rating) + '☆'.repeat(Math.max(0, 5 - r.rating)),
+          when,
+          createdAt: r.createdAt.toISOString(),
+          text: r.comment,
+          photos: photoUrls.length,
+          photoUrls,
+          verifiedPhone: r.isOtpVerified,
+        }
+      })
+
+      return {
+        spa: mappedSpa,
+        services,
+        reviews: mappedReviews,
+      }
     }
   } catch (e) {
-    console.warn('Direct lookup error:', e)
+    console.warn('Direct lookup error for spa detail:', e)
+  }
+
+  // Fallback to cached list if direct query fails
+  const { spas } = await getCachedSpasAndSkus()
+  const fallbackSpa = spas.find((s) => s.id === slugOrId)
+  if (fallbackSpa) {
+    return { spa: fallbackSpa, services, reviews: [] }
   }
 
   return null
