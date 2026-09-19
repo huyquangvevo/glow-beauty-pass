@@ -152,23 +152,6 @@ export default function HomeClientView({
                         priority={s.id === 'goi-sach'}
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-
-                      {/* Price Pill Over Image */}
-                      <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-xs text-[#093E06] rounded-full px-2.5 py-0.5 text-[13.5px] min-[360px]:text-[14.5px] font-bold shadow-xs">
-                        {formatPrice(s.price)}
-                      </div>
-
-                      {/* Tag badge - Tạm tắt theo yêu cầu, mở lại khi cần:
-                      {sInfo.badge ? (
-                        <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2.5 py-0.5 text-[11.5px] font-bold tracking-wide uppercase shadow-xs">
-                          {sInfo.badge}
-                        </div>
-                      ) : s.wide ? (
-                        <div className="absolute top-2.5 right-2.5 bg-[#236B38] text-white rounded-full px-2.5 py-0.5 text-[11.5px] font-bold tracking-wide uppercase shadow-xs">
-                          {locale === 'en' ? 'Best Value' : locale === 'ko' ? '베스트' : 'Phổ Biến Nhất'}
-                        </div>
-                      ) : null}
-                      */}
                     </div>
 
                     {/* Card Body: Title & Duration */}
@@ -185,10 +168,10 @@ export default function HomeClientView({
                     </div>
                   </div>
 
-                  {/* Card Footer: Spa count & Action */}
+                  {/* Card Footer: Price & Action */}
                   <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 pt-2 border-t border-[#EDF2EB] flex items-center justify-between gap-1.5 mt-auto">
-                    <span className="text-[13px] min-[380px]:text-[13.5px] font-semibold text-[#6B7869] whitespace-nowrap shrink-0">
-                      {s.count} {locale === 'en' ? 'spas' : locale === 'ko' ? '개 지점' : 'chi nhánh'}
+                    <span className="text-[16px] min-[360px]:text-[17px] font-bold text-[#093E06] whitespace-nowrap shrink-0 tracking-tight">
+                      {formatPrice(s.price)}
                     </span>
                     <div className="h-7.5 min-[380px]:h-8 px-3 rounded-full bg-[#E8FDE7] group-hover:bg-[#236B38] text-[#236B38] group-hover:text-white text-[13px] min-[380px]:text-[13.5px] font-bold flex items-center gap-1 transition-colors whitespace-nowrap shrink-0">
                       <span>{locale === 'en' ? 'View' : locale === 'ko' ? '보기' : 'Xem'}</span>
