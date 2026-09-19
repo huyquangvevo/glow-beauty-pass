@@ -148,13 +148,26 @@ export async function POST(request: Request) {
       )
     }
 
-    // Tạo slug duy nhất
-    let baseSlug = customSlug?.trim() ? slugify(customSlug) : slugify(name)
+    // Tạo slug duy nhất (tối ưu hóa 1 query duy nhất thay vì lặp qua mạng)
+    const baseSlug = customSlug?.trim() ? slugify(customSlug) : slugify(name)
     let slug = baseSlug
-    let counter = 1
-    while (await prisma.spa.findUnique({ where: { slug } })) {
+
+    const existingWithSlug = await prisma.spa.findMany({
+      where: {
+        slug: {
+          startsWith: baseSlug,
+        },
+      },
+      select: { slug: true },
+    })
+
+    if (existingWithSlug.some((s) => s.slug === baseSlug)) {
+      const slugSet = new Set(existingWithSlug.map((s) => s.slug))
+      let counter = 1
+      while (slugSet.has(`${baseSlug}-${counter}`)) {
+        counter++
+      }
       slug = `${baseSlug}-${counter}`
-      counter++
     }
 
     let computedRating: number | undefined = undefined
@@ -222,7 +235,7 @@ export async function POST(request: Request) {
       },
     })
 
-    // Khởi tạo trước 3 slot lịch cho ngày hôm nay nếu được chọn
+    // Khởi tạo trước 3 slot lịch cho ngày hôm nay nếu được chọn (tối ưu hóa 1 truy vấn createMany duy nhất)
     if (initSlots) {
       const todayStr = new Date().toISOString().split('T')[0]
       const defaultSlots = [
@@ -231,26 +244,17 @@ export async function POST(request: Request) {
         { timeSlot: 'EVENING', isOffPeak: false, totalSeats: 3 },
       ]
 
-      for (const slot of defaultSlots) {
-        await prisma.slot.upsert({
-          where: {
-            spaId_date_timeSlot: {
-              spaId: newSpa.id,
-              date: todayStr,
-              timeSlot: slot.timeSlot,
-            },
-          },
-          update: {},
-          create: {
-            spaId: newSpa.id,
-            date: todayStr,
-            timeSlot: slot.timeSlot,
-            isOffPeak: slot.isOffPeak,
-            totalSeats: slot.totalSeats,
-            bookedSeats: 0,
-          },
-        })
-      }
+      await prisma.slot.createMany({
+        data: defaultSlots.map((slot) => ({
+          spaId: newSpa.id,
+          date: todayStr,
+          timeSlot: slot.timeSlot,
+          isOffPeak: slot.isOffPeak,
+          totalSeats: slot.totalSeats,
+          bookedSeats: 0,
+        })),
+        skipDuplicates: true,
+      })
     }
 
     return NextResponse.json({

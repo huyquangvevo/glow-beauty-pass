@@ -16,6 +16,9 @@ import {
   HelpCircle,
   LocateFixed,
   Layers,
+  MessageSquareText,
+  Zap,
+  ClipboardCopy,
 } from 'lucide-react'
 import { ImageUploader } from '@/components/ImageUploader'
 import { MultiImageUploader } from '@/components/MultiImageUploader'
@@ -67,6 +70,130 @@ export default function OnboardSpaPage() {
 
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+
+  // Zalo Fast Parser State
+  const [zaloText, setZaloText] = useState('')
+  const [showZaloParser, setShowZaloParser] = useState(true)
+
+  // Phân tích thông tin tự động từ tin nhắn Zalo của Spa
+  const handleParseZaloText = () => {
+    if (!zaloText.trim()) return
+
+    const lines = zaloText.split('\n').map((l) => l.trim()).filter(Boolean)
+    let extractedName = ''
+    let extractedAddress = ''
+    let extractedPhone = ''
+    let extractedWard = ''
+    let extractedDistrict = ''
+    let extractedCity = ''
+    let extractedCityName = ''
+
+    // 1. Hotline / Số điện thoại
+    const phoneMatch =
+      zaloText.match(/(?:sđt|zalo|hotline|liên hệ|phone|tel)[\s:•\.-]*([0-9\.\s]{9,15})/i) ||
+      zaloText.match(/(0[235789][0-9\.\s]{8,12})/)
+    if (phoneMatch) {
+      extractedPhone = phoneMatch[1].replace(/[^0-9]/g, '')
+    }
+
+    // 2. Tìm Tên và Địa chỉ theo dòng
+    for (const line of lines) {
+      if (!extractedName && /(?:tên cửa hàng|tên spa|tên cơ sở|tên:|^•\s*tên)/i.test(line)) {
+        extractedName = line
+          .replace(/^[•\-\*]\s*/, '')
+          .replace(/^(?:tên cửa hàng|tên spa|tên cơ sở|tên)[\s:•\.-]*/i, '')
+          .trim()
+      }
+      if (!extractedAddress && /(?:địa chỉ|đ\/c|address|^•\s*địa chỉ)/i.test(line)) {
+        extractedAddress = line
+          .replace(/^[•\-\*]\s*/, '')
+          .replace(/^(?:địa chỉ|đ\/c|address)[\s:•\.-]*/i, '')
+          .trim()
+      }
+    }
+
+    // Fallback tên nếu không có nhãn
+    if (!extractedName && lines.length > 0) {
+      const firstLine = lines[0].replace(/^[•\-\*]\s*/, '')
+      if (!firstLine.includes('0') && firstLine.length < 50) {
+        extractedName = firstLine
+      }
+    }
+
+    // 3. Phân tích Phường/Xã từ địa chỉ hoặc toàn bộ văn bản
+    const searchTarget = extractedAddress || zaloText
+    const wardMatch = searchTarget.match(/(?:phường|p\.|xã|x\.|thị trấn|tt\.)\s*([^,•\n\.]+)/i)
+    if (wardMatch) {
+      extractedWard = wardMatch[1].trim()
+      // Chuẩn hóa viết hoa chữ cái đầu
+      extractedWard = extractedWard
+        .split(' ')
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' ')
+    }
+
+    // 4. Phân tích Quận/Huyện/Thị xã/Thành phố trực thuộc
+    const distMatch = searchTarget.match(/(?:quận|q\.|huyện|h\.|thị xã|tx\.|tp\.|thành phố)\s*([^,•\n\.]+)/i)
+    if (distMatch) {
+      extractedDistrict = distMatch[1].trim()
+      extractedDistrict = extractedDistrict
+        .split(' ')
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' ')
+    }
+
+    // 5. Phân tích Tỉnh / Thành Phố & Map tới mã hệ thống (hn, dn, hcm)
+    const lower = searchTarget.toLowerCase()
+    if (
+      lower.includes('hồ chí minh') ||
+      lower.includes('sài gòn') ||
+      lower.includes('thủ dầu một') ||
+      lower.includes('bình dương') ||
+      lower.includes('đồng nai') ||
+      lower.includes('vũng tàu') ||
+      lower.includes('cần thơ')
+    ) {
+      extractedCity = 'hcm'
+      if (lower.includes('thủ dầu một') || lower.includes('bình dương')) {
+        extractedCityName = 'Bình Dương'
+      } else {
+        extractedCityName = 'TP.HCM'
+      }
+    } else if (
+      lower.includes('đà nẵng') ||
+      lower.includes('quảng nam') ||
+      lower.includes('hội an') ||
+      lower.includes('huế')
+    ) {
+      extractedCity = 'dn'
+      if (lower.includes('hội an') || lower.includes('quảng nam')) {
+        extractedCityName = 'Quảng Nam'
+      } else {
+        extractedCityName = 'Đà Nẵng'
+      }
+    } else if (
+      lower.includes('hà nội') ||
+      lower.includes('hải phòng') ||
+      lower.includes('quảng ninh') ||
+      lower.includes('bắc ninh')
+    ) {
+      extractedCity = 'hn'
+      extractedCityName = 'Hà Nội'
+    }
+
+    // Áp dụng dữ liệu trích xuất vào form
+    if (extractedName) handleNameChange(extractedName)
+    if (extractedAddress) setAddress(extractedAddress)
+    if (extractedPhone) setPhone(extractedPhone)
+    if (extractedWard) setWard(extractedWard)
+    if (extractedDistrict) setDistrict(extractedDistrict)
+    if (extractedCity) setCity(extractedCity)
+    if (extractedCityName) setCityName(extractedCityName)
+
+    alert(
+      `Đã tự động điền form từ tin nhắn Zalo:\n- Tên Spa: ${extractedName || '(chưa rõ)'}\n- Hotline: ${extractedPhone || '(chưa rõ)'}\n- Địa chỉ: ${extractedAddress || '(chưa rõ)'}\n- Phường/Xã: ${extractedWard || '(chưa rõ)'}\n- Tỉnh/Khu vực: ${extractedCityName || '(chưa rõ)'}`
+    )
+  }
 
   // Tự động sinh slug khi nhập tên
   const handleNameChange = (val: string) => {
@@ -183,6 +310,76 @@ export default function OnboardSpaPage() {
 
       {/* FORM CARD */}
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* QUICK EXTRACT FROM ZALO CHAT MESSAGE */}
+        <div className="bg-gradient-to-r from-blue-50/90 via-indigo-50/70 to-emerald-50/80 rounded-3xl p-5 border border-blue-200/90 shadow-xs space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs shrink-0">
+                <MessageSquareText className="w-4.5 h-4.5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-stone-900 flex items-center gap-2">
+                  <span>⚡ Điền Nhanh Từ Tin Nhắn Zalo Đối Tác</span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-800 border border-blue-300">
+                    Bóc tách tự động
+                  </span>
+                </h3>
+                <p className="text-xs text-stone-500">
+                  Copy toàn bộ đoạn chat giới thiệu spa từ nhóm Zalo rồi dán vào đây để điền form tự động trong 1 giây!
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowZaloParser(!showZaloParser)}
+              className="text-xs font-bold text-blue-700 hover:text-blue-900 transition-colors self-start sm:self-auto cursor-pointer"
+            >
+              {showZaloParser ? 'Thu gọn' : 'Mở rộng'}
+            </button>
+          </div>
+
+          {showZaloParser && (
+            <div className="space-y-2.5 pt-1">
+              <textarea
+                rows={3}
+                value={zaloText}
+                onChange={(e) => setZaloText(e.target.value)}
+                placeholder={`Dán nội dung tin nhắn Zalo vào đây, ví dụ:\n• Tên cửa hàng Habi spa\n• Địa chỉ Đường N6 khu dân cư Phú hoà 1 phường Phú lợi tp thủ dầu một\n• Sđt/Zalo liên hệ 0772.132.715`}
+                className="w-full p-3.5 rounded-2xl bg-white border border-blue-200 text-xs sm:text-sm text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
+              />
+
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-1 text-[11px] text-blue-800 font-medium">
+                  <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Tự động nhận diện Tên, Hotline, Phường/Xã, Quận/Huyện và Tỉnh/Thành</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {zaloText && (
+                    <button
+                      type="button"
+                      onClick={() => setZaloText('')}
+                      className="px-3 py-1.5 rounded-xl bg-white border border-stone-200 text-stone-500 hover:text-stone-800 text-xs font-semibold cursor-pointer"
+                    >
+                      Xóa nội dung
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleParseZaloText}
+                    disabled={!zaloText.trim()}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95"
+                  >
+                    <Zap className="w-3.5 h-3.5" />
+                    <span>⚡ Bóc Tách & Điền Vào Form Ngay</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Section 1: Basic Information */}
         <div className="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-xs space-y-5">
           <div className="flex items-center gap-2 pb-3 border-b border-stone-100">
