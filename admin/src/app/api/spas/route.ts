@@ -119,6 +119,7 @@ export async function POST(request: Request) {
       exclusiveOffer,
       imageUrl,
       photos,
+      serviceIds,
       isActive = true,
       isVirtual = false,
       initSlots = true,
@@ -184,6 +185,11 @@ export async function POST(request: Request) {
       normalizedPhotos = [imageUrl.trim()]
     }
 
+    let normalizedServiceIds: string[] = ['goi-sach', 'duong-sinh']
+    if (Array.isArray(serviceIds) && serviceIds.length > 0) {
+      normalizedServiceIds = serviceIds.map((s: any) => String(s).trim()).filter(Boolean)
+    }
+
     // Tạo Spa trong Database
     const newSpa = await prisma.spa.create({
       data: {
@@ -202,6 +208,7 @@ export async function POST(request: Request) {
         exclusiveOffer: exclusiveOffer?.trim() || null,
         imageUrl: (imageUrl?.trim() || normalizedPhotos?.[0] || null),
         photos: normalizedPhotos || undefined,
+        serviceIds: normalizedServiceIds,
         isActive: Boolean(isActive),
         isVirtual: Boolean(isVirtual),
         reviewSectionTitle: reviewSectionTitle?.trim() || 'Khách hàng nói gì về chúng tôi',

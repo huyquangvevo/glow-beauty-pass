@@ -63,6 +63,7 @@ export async function PUT(
       exclusiveOffer,
       imageUrl,
       photos,
+      serviceIds,
       isActive,
       yellowCards,
       redCards,
@@ -107,6 +108,15 @@ export async function PUT(
       }
     }
 
+    let normalizedServiceIds: string[] | undefined = undefined
+    if (serviceIds !== undefined) {
+      if (Array.isArray(serviceIds)) {
+        normalizedServiceIds = serviceIds.map((s: any) => String(s).trim()).filter(Boolean)
+      } else {
+        normalizedServiceIds = []
+      }
+    }
+
     const updatedSpa = await prisma.spa.update({
       where: { id },
       data: {
@@ -127,6 +137,7 @@ export async function PUT(
             ? (imageUrl?.trim() || (normalizedPhotos && normalizedPhotos[0]) || null)
             : (normalizedPhotos && normalizedPhotos.length > 0 ? normalizedPhotos[0] : undefined),
         photos: normalizedPhotos !== undefined ? normalizedPhotos : undefined,
+        serviceIds: normalizedServiceIds !== undefined ? normalizedServiceIds : undefined,
         isActive: isActive !== undefined ? Boolean(isActive) : undefined,
         isVirtual: body.isVirtual !== undefined ? Boolean(body.isVirtual) : undefined,
         yellowCards: yellowCards !== undefined ? parseInt(yellowCards, 10) : undefined,

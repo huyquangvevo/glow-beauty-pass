@@ -27,6 +27,7 @@ import {
 import { ImageUploader } from '@/components/ImageUploader'
 import { MultiImageUploader } from '@/components/MultiImageUploader'
 import { GoogleMapPicker } from '@/components/GoogleMapPicker'
+import { ServiceSelector } from '@/components/ServiceSelector'
 
 const STOCK_PHOTOS = [
   { url: '/spas/spa_thumb_1.jpg', label: 'Bồn gội thảo dược & vòm LED' },
@@ -90,6 +91,7 @@ export default function EditSpaPage() {
   const [exclusiveOffer, setExclusiveOffer] = useState('')
   const [imageUrl, setImageUrl] = useState('/spas/spa_thumb_1.jpg')
   const [photos, setPhotos] = useState<string[]>([])
+  const [serviceIds, setServiceIds] = useState<string[]>([])
   const [isActive, setIsActive] = useState(true)
   const [isVirtual, setIsVirtual] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -141,6 +143,11 @@ export default function EditSpaPage() {
             setPhotos([s.imageUrl])
           } else {
             setPhotos(['/spas/spa_thumb_1.jpg'])
+          }
+          if (Array.isArray(s.serviceIds) && s.serviceIds.length > 0) {
+            setServiceIds(s.serviceIds)
+          } else {
+            setServiceIds(['goi-sach', 'duong-sinh'])
           }
           setIsActive(s.isActive)
           setIsVirtual(Boolean(s.isVirtual))
@@ -287,6 +294,7 @@ export default function EditSpaPage() {
           exclusiveOffer: exclusiveOffer.trim(),
           imageUrl: photos[0] || imageUrl,
           photos,
+          serviceIds,
           isActive,
           isVirtual,
           yellowCards,
@@ -659,14 +667,36 @@ export default function EditSpaPage() {
           </div>
         </div>
 
-        {/* Section 3: Imagery & Carousel Gallery */}
+        {/* Section 3: Services on Home Menu */}
+        <div className="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-xs space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-stone-100 gap-2">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#40813D]" />
+              <div>
+                <h2 className="text-base font-extrabold text-stone-900">
+                  3. Phân Loại Dịch Vụ Cung Cấp (Dẫn Từ Menu Trang Chủ)
+                </h2>
+                <p className="text-xs text-stone-500">
+                  Tích chọn các dịch vụ mà cơ sở này nhận khách. Khi khách bấm dịch vụ tương ứng trên Menu Home sẽ được điều hướng tới Spa này.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <ServiceSelector
+            selectedServiceIds={serviceIds}
+            onChange={setServiceIds}
+          />
+        </div>
+
+        {/* Section 4: Imagery & Carousel Gallery */}
         <div className="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-xs space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-stone-100 gap-2">
             <div className="flex items-center gap-2">
               <Layers className="w-5 h-5 text-[#40813D]" />
               <div>
                 <h2 className="text-base font-extrabold text-stone-900">
-                  3. Bộ Sưu Tập Ảnh & Carousel Trên Web
+                  4. Bộ Sưu Tập Ảnh & Carousel Trên Web
                 </h2>
                 <p className="text-xs text-stone-500">
                   Quản lý nhiều ảnh hiển thị lướt trên đầu trang chi tiết spa. Ảnh đầu tiên (#1) sẽ là Ảnh Bìa đại diện.
@@ -690,13 +720,13 @@ export default function EditSpaPage() {
           />
         </div>
 
-        {/* Section 4: WHAT OUR CUSTOMERS SAY (Matching luggage-storage) */}
+        {/* Section 5: WHAT OUR CUSTOMERS SAY (Matching luggage-storage) */}
         <div className="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-xs space-y-5">
           <div className="flex items-center justify-between pb-3 border-b border-stone-100">
             <div className="flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-[#40813D]" />
               <h2 className="text-base font-extrabold text-stone-900 uppercase tracking-wide">
-                4. WHAT OUR CUSTOMERS SAY (Đánh Giá Khách Hàng)
+                5. WHAT OUR CUSTOMERS SAY (Đánh Giá Khách Hàng)
               </h2>
             </div>
             {totalReviewsCount > 0 && (
@@ -984,12 +1014,12 @@ export default function EditSpaPage() {
           </div>
         </div>
 
-        {/* Section 5: FAQ — Frequently Asked Questions (SEO) (Matching luggage-storage Screenshot 2) */}
+        {/* Section 6: FAQ — Frequently Asked Questions (SEO) (Matching luggage-storage Screenshot 2) */}
         <div className="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-xs space-y-5">
           <div className="flex items-center gap-2 pb-3 border-b border-stone-100">
             <HelpCircle className="w-5 h-5 text-[#40813D]" />
             <h2 className="text-base font-extrabold text-stone-900 uppercase tracking-wide">
-              5. FAQ — FREQUENTLY ASKED QUESTIONS (SEO)
+              6. FAQ — FREQUENTLY ASKED QUESTIONS (SEO)
             </h2>
           </div>
 

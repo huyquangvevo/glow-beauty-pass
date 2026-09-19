@@ -20,6 +20,7 @@ import {
 import { ImageUploader } from '@/components/ImageUploader'
 import { MultiImageUploader } from '@/components/MultiImageUploader'
 import { GoogleMapPicker } from '@/components/GoogleMapPicker'
+import { ServiceSelector } from '@/components/ServiceSelector'
 
 const STOCK_PHOTOS = [
   { url: '/spas/spa_thumb_1.jpg', label: 'Bồn gội thảo dược & vòm LED' },
@@ -54,6 +55,12 @@ export default function OnboardSpaPage() {
   const [exclusiveOffer, setExclusiveOffer] = useState('Tặng 1 ly trà thảo mộc dưỡng nhan hạt chia')
   const [imageUrl, setImageUrl] = useState('/spas/spa_thumb_1.jpg')
   const [photos, setPhotos] = useState<string[]>(['/spas/spa_thumb_1.jpg'])
+  const [serviceIds, setServiceIds] = useState<string[]>([
+    'goi-sach',
+    'goi-dau-cap',
+    'duong-sinh',
+    'massage-body',
+  ])
   const [isActive, setIsActive] = useState(true)
   const [isVirtual, setIsVirtual] = useState(false)
   const [initSlots, setInitSlots] = useState(true)
@@ -119,6 +126,7 @@ export default function OnboardSpaPage() {
           exclusiveOffer: exclusiveOffer.trim(),
           imageUrl: photos[0] || imageUrl,
           photos,
+          serviceIds,
           isActive,
           isVirtual,
           initSlots,
@@ -133,16 +141,19 @@ export default function OnboardSpaPage() {
 
       // Onboard thành công -> Quay lại danh sách
       router.push('/spas')
-      router.refresh()
-    } catch {
+    } catch (err) {
+      console.error('Submit error:', err)
       setErrorMsg('Lỗi kết nối máy chủ. Vui lòng thử lại.')
     } finally {
       setLoading(false)
     }
   }
 
+  const inp =
+    'w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white'
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
+    <div className="p-4 sm:p-8 max-w-4xl mx-auto space-y-6">
       {/* HEADER & BACK BUTTON */}
       <div className="flex items-center justify-between gap-4">
         <div className="space-y-1">
@@ -193,7 +204,7 @@ export default function OnboardSpaPage() {
                 onChange={(e) => handleNameChange(e.target.value)}
                 placeholder="VD: An Nhiên Dưỡng Sinh Spa Cầu Giấy"
                 required
-                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
+                className={inp}
               />
             </div>
 
@@ -225,7 +236,7 @@ export default function OnboardSpaPage() {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="VD: 0912345001"
                 required
-                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
+                className={inp}
               />
             </div>
 
@@ -237,7 +248,7 @@ export default function OnboardSpaPage() {
                 value={openHours}
                 onChange={(e) => setOpenHours(e.target.value)}
                 placeholder="09:00 - 21:30"
-                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
+                className={inp}
               />
             </div>
           </div>
@@ -249,16 +260,16 @@ export default function OnboardSpaPage() {
             <div className="flex items-center gap-2">
               <MapPin className="w-5 h-5 text-[#40813D]" />
               <h2 className="text-base font-extrabold text-stone-900">
-                2. Địa Chỉ & Tọa Độ GPS (Tính Khoảng Cách)
+                2. Địa Chỉ & Tọa Độ Vị Trí
               </h2>
             </div>
             <button
               type="button"
               onClick={handleGetCurrentLocation}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#40813D] hover:bg-emerald-100 text-xs font-bold border border-emerald-200 transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-bold text-[#40813D] hover:underline cursor-pointer"
             >
               <LocateFixed className="w-3.5 h-3.5" />
-              <span>Dùng GPS Hiện Tại</span>
+              <span>Dùng GPS thiết bị</span>
             </button>
           </div>
 
@@ -275,7 +286,7 @@ export default function OnboardSpaPage() {
                 onChange={(e) => setWard(e.target.value)}
                 placeholder="VD: Phường Điện Dương, Dịch Vọng..."
                 required
-                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
+                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
               />
             </div>
 
@@ -337,7 +348,7 @@ export default function OnboardSpaPage() {
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="VD: 70 Đường Ven Biển, P. Điện Dương, TX. Điện Bàn, Quảng Nam"
                 required
-                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
+                className={inp}
               />
             </div>
 
@@ -391,12 +402,34 @@ export default function OnboardSpaPage() {
           </div>
         </div>
 
-        {/* Section 3: Tier & Exclusive Offer */}
+        {/* Section 3: Services on Home Menu */}
+        <div className="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-xs space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-stone-100 gap-2">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#40813D]" />
+              <div>
+                <h2 className="text-base font-extrabold text-stone-900">
+                  3. Phân Loại Dịch Vụ Cung Cấp (Dẫn Từ Menu Trang Chủ)
+                </h2>
+                <p className="text-xs text-stone-500">
+                  Tích chọn các dịch vụ mà cơ sở này nhận khách. Khi khách bấm dịch vụ tương ứng trên Menu Home sẽ được điều hướng tới Spa này.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <ServiceSelector
+            selectedServiceIds={serviceIds}
+            onChange={setServiceIds}
+          />
+        </div>
+
+        {/* Section 4: Tier & Exclusive Offer */}
         <div className="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-xs space-y-5">
           <div className="flex items-center gap-2 pb-3 border-b border-stone-100">
             <ShieldCheck className="w-5 h-5 text-[#40813D]" />
             <h2 className="text-base font-extrabold text-stone-900">
-              3. Phân Hạng Hợp Tác & Ưu Đãi Độc Quyền
+              4. Phân Hạng Hợp Tác & Ưu Đãi Độc Quyền
             </h2>
           </div>
 
@@ -479,12 +512,12 @@ export default function OnboardSpaPage() {
           </div>
         </div>
 
-        {/* Section 4: Imagery & Settings */}
+        {/* Section 5: Imagery & Settings */}
         <div className="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-xs space-y-5">
           <div className="flex items-center gap-2 pb-3 border-b border-stone-100">
             <Layers className="w-5 h-5 text-[#40813D]" />
             <h2 className="text-base font-extrabold text-stone-900">
-              4. Ảnh Đại Diện & Cấu Hình Khởi Tạo
+              5. Bộ Sưu Tập Ảnh & Cấu Hình Khởi Tạo
             </h2>
           </div>
 
