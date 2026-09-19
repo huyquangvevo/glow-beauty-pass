@@ -21,6 +21,7 @@ import {
   Sparkles,
   ShieldCheck,
   Power,
+  Trash2,
 } from 'lucide-react'
 import { PORTAL_BASE_URL } from '@/lib/config'
 
@@ -45,6 +46,7 @@ interface SpaItem {
   exclusiveOffer?: string | null
   imageUrl?: string | null
   isActive: boolean
+  isVirtual?: boolean
   createdAt: string
   _count?: {
     bookings: number
@@ -57,6 +59,8 @@ interface StatsData {
   active: number
   inactive: number
   withViolations: number
+  virtual?: number
+  real?: number
 }
 
 export default function AdminSpasPage() {
@@ -71,6 +75,8 @@ export default function AdminSpasPage() {
   const [selectedWard, setSelectedWard] = useState('ALL')
   const [selectedTier, setSelectedTier] = useState('ALL')
   const [selectedActive, setSelectedActive] = useState('ALL')
+  const [selectedVirtual, setSelectedVirtual] = useState('ALL')
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   // Dynamic Wards computed from spas list
   const dynamicWards = useMemo(() => {
@@ -87,6 +93,8 @@ export default function AdminSpasPage() {
       if (selectedTier !== 'ALL') params.set('tier', selectedTier)
       if (selectedActive === 'true') params.set('active', 'true')
       if (selectedActive === 'false') params.set('active', 'false')
+      if (selectedVirtual === 'REAL') params.set('isVirtual', 'false')
+      if (selectedVirtual === 'VIRTUAL') params.set('isVirtual', 'true')
       if (search.trim()) params.set('search', search.trim())
 
       const res = await fetch(`/api/spas?${params.toString()}`)
@@ -105,11 +113,37 @@ export default function AdminSpasPage() {
 
   useEffect(() => {
     loadSpas()
-  }, [selectedCity, selectedWard, selectedTier, selectedActive])
+  }, [selectedCity, selectedWard, selectedTier, selectedActive, selectedVirtual])
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     loadSpas()
+  }
+
+  const handleDeleteSpa = async (id: string, name: string) => {
+    const confirmed = window.confirm(
+      `CẢNH BÁO: Bạn có chắc chắn muốn XOÁ VĨNH VIỄN spa "${name}"?\n\nTất cả dữ liệu liên quan (lịch slot, đánh giá, đơn đặt) của spa này cũng sẽ bị xoá khỏi cơ sở dữ liệu.`
+    )
+    if (!confirmed) return
+
+    try {
+      setDeletingId(id)
+      const res = await fetch(`/api/spas/${id}`, {
+        method: 'DELETE',
+      })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        setSpas((prev) => prev.filter((s) => s.id !== id))
+        loadSpas()
+      } else {
+        alert(data.error || 'Không thể xoá spa.')
+      }
+    } catch (err) {
+      console.error('Delete spa error:', err)
+      alert('Đã xảy ra lỗi khi kết nối máy chủ để xoá.')
+    } finally {
+      setDeletingId(null)
+    }
   }
 
   const handleToggleActive = async (id: string, currentStatus: boolean, spaName: string) => {
@@ -179,49 +213,64 @@ export default function AdminSpasPage() {
       </div>
 
       {/* STATS OVERVIEW CARDS */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         {/* Card 1: Total */}
         <div className="bg-white rounded-3xl p-4 sm:p-5 border border-stone-200/90 shadow-xs space-y-1">
           <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-            Tổng Điểm Spa
+            Tổng Cơ Sở
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl sm:text-3xl font-black text-[#1A3B18]">{stats.total}</span>
-            <span className="text-xs text-stone-500 font-medium">cơ sở</span>
+            <span className="text-xs text-stone-500 font-medium">spa</span>
           </div>
-          <p className="text-[11px] text-stone-400">Chỉ tiêu Pha 1: 15–20 spa</p>
+          <p className="text-[11px] text-stone-400">Toàn bộ trên hệ thống</p>
         </div>
 
-        {/* Card 2: Active */}
-        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-emerald-200/90 bg-emerald-50/20 shadow-xs space-y-1">
+        {/* Card 2: Real Spas */}
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-emerald-300/90 bg-emerald-50/40 shadow-xs space-y-1">
           <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5" />
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Điểm Thật Đối Tác
+          </span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl sm:text-3xl font-black text-emerald-800">{stats.real ?? 0}</span>
+            <span className="text-xs text-emerald-600 font-bold">
+              ({stats.total > 0 ? Math.round(((stats.real ?? 0) / stats.total) * 100) : 0}%)
+            </span>
+          </div>
+          <p className="text-[11px] text-emerald-700/80">Cơ sở thật nhận khách</p>
+        </div>
+
+        {/* Card 3: Virtual Spas */}
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-purple-200/90 bg-purple-50/40 shadow-xs space-y-1">
+          <span className="text-[11px] font-bold text-purple-700 uppercase tracking-wider flex items-center gap-1">
+            <Sparkles className="w-3.5 h-3.5" />
+            Điểm Ảo Demo
+          </span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl sm:text-3xl font-black text-purple-800">{stats.virtual ?? 0}</span>
+            <span className="text-xs text-purple-600 font-bold">
+              ({stats.total > 0 ? Math.round(((stats.virtual ?? 0) / stats.total) * 100) : 0}%)
+            </span>
+          </div>
+          <p className="text-[11px] text-purple-700/80">Tạo trước hôm nay</p>
+        </div>
+
+        {/* Card 4: Active */}
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-stone-200/90 shadow-xs space-y-1">
+          <span className="text-[11px] font-bold text-stone-600 uppercase tracking-wider flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
             Đang Hoạt Động
           </span>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-emerald-800">{stats.active}</span>
-            <span className="text-xs text-emerald-600 font-bold">
-              ({stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0}%)
-            </span>
+            <span className="text-2xl sm:text-3xl font-black text-stone-800">{stats.active}</span>
+            <span className="text-xs text-stone-500 font-medium">mở cửa</span>
           </div>
-          <p className="text-[11px] text-emerald-700/80">Hiển thị cho khách book</p>
+          <p className="text-[11px] text-stone-400">Hiển thị cho khách book</p>
         </div>
 
-        {/* Card 3: Inactive */}
-        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-stone-200/90 shadow-xs space-y-1">
-          <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider flex items-center gap-1">
-            <XCircle className="w-3.5 h-3.5" />
-            Tạm Dừng Hiển Thị
-          </span>
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-stone-600">{stats.inactive}</span>
-            <span className="text-xs text-stone-400">cơ sở</span>
-          </div>
-          <p className="text-[11px] text-stone-400">Nghỉ lễ hoặc bảo trì</p>
-        </div>
-
-        {/* Card 4: Violations */}
-        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-amber-200/90 bg-amber-50/30 shadow-xs space-y-1">
+        {/* Card 5: Violations */}
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-amber-200/90 bg-amber-50/30 shadow-xs space-y-1 col-span-2 md:col-span-1">
           <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1">
             <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
             Cảnh Báo Vi Phạm
@@ -232,7 +281,7 @@ export default function AdminSpasPage() {
             </span>
             <span className="text-xs text-amber-700 font-medium">spa</span>
           </div>
-          <p className="text-[11px] text-amber-800/80">Có thẻ vàng hoặc thẻ đỏ</p>
+          <p className="text-[11px] text-amber-800/80">Có thẻ phạt SOP</p>
         </div>
       </div>
 
@@ -250,6 +299,17 @@ export default function AdminSpasPage() {
               className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white transition-all"
             />
           </div>
+
+          {/* Real vs Virtual Filter */}
+          <select
+            value={selectedVirtual}
+            onChange={(e) => setSelectedVirtual(e.target.value)}
+            className="px-3.5 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#40813D]"
+          >
+            <option value="ALL">Mọi loại điểm (Thật & Ảo)</option>
+            <option value="REAL">🟢 Chỉ điểm thật đối tác</option>
+            <option value="VIRTUAL">🟣 Chỉ điểm ảo demo</option>
+          </select>
 
           {/* City Filter */}
           <select
@@ -306,7 +366,7 @@ export default function AdminSpasPage() {
             type="submit"
             className="px-5 py-2.5 rounded-2xl bg-stone-800 hover:bg-stone-900 text-white text-xs sm:text-sm font-bold active:scale-95 transition-all shrink-0 cursor-pointer"
           >
-            Lọc Dữ Liệu
+            Lọc
           </button>
         </form>
       </div>
@@ -363,9 +423,20 @@ export default function AdminSpasPage() {
                           </div>
 
                           <div className="min-w-0 space-y-0.5">
-                            <h3 className="font-extrabold text-stone-900 tracking-tight leading-snug">
-                              {spa.name}
-                            </h3>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <h3 className="font-extrabold text-stone-900 tracking-tight leading-snug">
+                                {spa.name}
+                              </h3>
+                              {spa.isVirtual ? (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-purple-100 text-purple-800 border border-purple-200 shrink-0">
+                                  Điểm ảo demo
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0">
+                                  Điểm thật đối tác
+                                </span>
+                              )}
+                            </div>
                             <p className="text-[11px] text-stone-400 font-mono">
                               slug: /{spa.slug}
                             </p>
@@ -497,6 +568,16 @@ export default function AdminSpasPage() {
                           >
                             <ExternalLink className="w-4 h-4" />
                           </a>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteSpa(spa.id, spa.name)}
+                            disabled={deletingId === spa.id}
+                            title="Xoá vĩnh viễn cơ sở này"
+                            className="p-2 rounded-xl bg-stone-100 hover:bg-rose-50 hover:text-rose-600 text-stone-500 transition-colors cursor-pointer"
+                          >
+                            <Trash2 className={`w-4 h-4 ${deletingId === spa.id ? 'animate-spin text-rose-600' : ''}`} />
+                          </button>
                         </div>
                       </td>
                     </tr>

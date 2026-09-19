@@ -112,6 +112,7 @@ export async function PUT(
         exclusiveOffer: exclusiveOffer !== undefined ? exclusiveOffer?.trim() || null : undefined,
         imageUrl: imageUrl !== undefined ? imageUrl?.trim() || null : undefined,
         isActive: isActive !== undefined ? Boolean(isActive) : undefined,
+        isVirtual: body.isVirtual !== undefined ? Boolean(body.isVirtual) : undefined,
         yellowCards: yellowCards !== undefined ? parseInt(yellowCards, 10) : undefined,
         redCards: redCards !== undefined ? parseInt(redCards, 10) : undefined,
         reviewSectionTitle: reviewSectionTitle !== undefined ? reviewSectionTitle : undefined,
@@ -134,6 +135,46 @@ export async function PUT(
     console.error('Error updating spa:', error)
     return NextResponse.json(
       { error: 'Lỗi máy chủ khi cập nhật spa.' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getAdminSession()
+    if (!session.authenticated) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { id } = await params
+    const existingSpa = await prisma.spa.findUnique({ where: { id } })
+    if (!existingSpa) {
+      return NextResponse.json({ error: 'Không tìm thấy spa.' }, { status: 404 })
+    }
+
+    await prisma.$transaction(async (tx) => {
+      // Xóa bookings liên quan trước nếu có
+      await tx.booking.deleteMany({ where: { spaId: id } })
+      // Xóa reviews
+      await tx.review.deleteMany({ where: { spaId: id } })
+      // Xóa slots
+      await tx.slot.deleteMany({ where: { spaId: id } })
+      // Xóa chính spa
+      await tx.spa.delete({ where: { id } })
+    })
+
+    return NextResponse.json({
+      success: true,
+      message: `Đã xóa thành công cơ sở "${existingSpa.name}"`,
+    })
+  } catch (error) {
+    console.error('Error deleting spa:', error)
+    return NextResponse.json(
+      { error: 'Lỗi máy chủ khi xóa spa.' },
       { status: 500 }
     )
   }

@@ -33,6 +33,7 @@ export async function GET(request: Request) {
     const tier = searchParams.get('tier')
     const active = searchParams.get('active')
     const search = searchParams.get('search')?.toLowerCase()
+    const isVirtual = searchParams.get('isVirtual')
 
     const where: any = {}
     if (city && city !== 'ALL') where.city = city
@@ -40,6 +41,8 @@ export async function GET(request: Request) {
     if (tier && tier !== 'ALL') where.tier = tier
     if (active === 'true') where.isActive = true
     if (active === 'false') where.isActive = false
+    if (isVirtual === 'true') where.isVirtual = true
+    if (isVirtual === 'false') where.isVirtual = false
 
     const spas = await prisma.spa.findMany({
       where,
@@ -70,6 +73,8 @@ export async function GET(request: Request) {
       active: spas.filter((s) => s.isActive).length,
       inactive: spas.filter((s) => !s.isActive).length,
       withViolations: spas.filter((s) => s.yellowCards > 0 || s.redCards > 0).length,
+      virtual: spas.filter((s) => s.isVirtual).length,
+      real: spas.filter((s) => !s.isVirtual).length,
     }
 
     return NextResponse.json({
@@ -114,6 +119,7 @@ export async function POST(request: Request) {
       exclusiveOffer,
       imageUrl,
       isActive = true,
+      isVirtual = false,
       initSlots = true,
       reviewSectionTitle = 'Khách hàng nói gì về chúng tôi',
       reviewSectionSubtitle = 'Đánh giá từ trải nghiệm dịch vụ thực tế',
@@ -184,6 +190,7 @@ export async function POST(request: Request) {
         exclusiveOffer: exclusiveOffer?.trim() || null,
         imageUrl: imageUrl?.trim() || null,
         isActive: Boolean(isActive),
+        isVirtual: Boolean(isVirtual),
         reviewSectionTitle: reviewSectionTitle?.trim() || 'Khách hàng nói gì về chúng tôi',
         reviewSectionSubtitle: reviewSectionSubtitle?.trim() || 'Đánh giá từ trải nghiệm dịch vụ thực tế',
         reviewBreakdown: reviewBreakdown || undefined,

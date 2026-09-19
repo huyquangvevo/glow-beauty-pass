@@ -33,6 +33,7 @@ model Spa {
   exclusiveOffer  String?      // Ưu đãi riêng: "Tặng 10p massage vai gáy"
   imageUrl        String?
   isActive        Boolean      @default(true)
+  isVirtual       Boolean      @default(false) // Điểm ảo (dữ liệu mẫu) vs Điểm thật đối tác
   // Review Breakdown, Tags, Curated Reviews & FAQs (matching luggage-storage)
   reviewSectionTitle    String?   @default("Khách hàng nói gì về chúng tôi")
   reviewSectionSubtitle String?   @default("Đánh giá từ trải nghiệm dịch vụ thực tế")

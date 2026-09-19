@@ -47,6 +47,7 @@ export default function OnboardSpaPage() {
   const [exclusiveOffer, setExclusiveOffer] = useState('Tặng 1 ly trà thảo mộc dưỡng nhan hạt chia')
   const [imageUrl, setImageUrl] = useState('/spas/spa_thumb_1.jpg')
   const [isActive, setIsActive] = useState(true)
+  const [isVirtual, setIsVirtual] = useState(false)
   const [initSlots, setInitSlots] = useState(true)
 
   const [loading, setLoading] = useState(false)
@@ -110,6 +111,7 @@ export default function OnboardSpaPage() {
           exclusiveOffer: exclusiveOffer.trim(),
           imageUrl,
           isActive,
+          isVirtual,
           initSlots,
         }),
       })
@@ -486,6 +488,32 @@ export default function OnboardSpaPage() {
 
             {/* Toggles */}
             <div className="pt-3 border-t border-stone-100 space-y-3">
+              <label className="flex items-center gap-3 cursor-pointer p-3.5 rounded-2xl bg-stone-50 border border-stone-200">
+                <input
+                  type="checkbox"
+                  checked={isVirtual}
+                  onChange={(e) => setIsVirtual(e.target.checked)}
+                  className="w-4.5 h-4.5 text-purple-600 rounded border-stone-300 focus:ring-purple-600"
+                />
+                <div>
+                  <span className="text-xs sm:text-sm font-bold text-stone-900 flex items-center gap-2">
+                    <span>Đánh dấu là Điểm Ảo (Demo)</span>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        isVirtual
+                          ? 'bg-purple-100 text-purple-800 border border-purple-200'
+                          : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      }`}
+                    >
+                      {isVirtual ? 'Điểm ảo demo' : 'Điểm thật đối tác'}
+                    </span>
+                  </span>
+                  <span className="text-[11px] text-stone-400">
+                    Bật tùy chọn này nếu đây là spa tạo phục vụ mục đích chạy thử/demo. Mặc định tắt để tạo điểm thật đối tác.
+                  </span>
+                </div>
+              </label>
+
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"

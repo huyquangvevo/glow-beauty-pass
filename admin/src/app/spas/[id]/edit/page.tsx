@@ -83,6 +83,8 @@ export default function EditSpaPage() {
   const [exclusiveOffer, setExclusiveOffer] = useState('')
   const [imageUrl, setImageUrl] = useState('/spas/spa_thumb_1.jpg')
   const [isActive, setIsActive] = useState(true)
+  const [isVirtual, setIsVirtual] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [yellowCards, setYellowCards] = useState(0)
   const [redCards, setRedCards] = useState(0)
 
@@ -126,6 +128,7 @@ export default function EditSpaPage() {
           setExclusiveOffer(s.exclusiveOffer || '')
           setImageUrl(s.imageUrl || '/spas/spa_thumb_1.jpg')
           setIsActive(s.isActive)
+          setIsVirtual(Boolean(s.isVirtual))
           setYellowCards(s.yellowCards || 0)
           setRedCards(s.redCards || 0)
 
@@ -269,6 +272,7 @@ export default function EditSpaPage() {
           exclusiveOffer: exclusiveOffer.trim(),
           imageUrl,
           isActive,
+          isVirtual,
           yellowCards,
           redCards,
           reviewSectionTitle: reviewSectionTitle.trim(),
@@ -292,6 +296,32 @@ export default function EditSpaPage() {
       setErrorMsg('Lỗi máy chủ khi cập nhật.')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      `CẢNH BÁO NGUY HIỂM: Bạn có chắc chắn muốn XOÁ VĨNH VIỄN spa "${name}"?\n\nTất cả dữ liệu liên quan (lịch slot, đánh giá, đơn đặt) của spa này cũng sẽ bị xoá khỏi cơ sở dữ liệu.`
+    )
+    if (!confirmed) return
+
+    try {
+      setDeleting(true)
+      const res = await fetch(`/api/spas/${id}`, {
+        method: 'DELETE',
+      })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        router.push('/spas')
+        router.refresh()
+      } else {
+        alert(data.error || 'Không thể xoá spa.')
+      }
+    } catch (err) {
+      console.error('Delete spa error:', err)
+      alert('Đã xảy ra lỗi khi kết nối máy chủ để xoá.')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -572,7 +602,33 @@ export default function EditSpaPage() {
             </div>
           </div>
 
-          <div className="pt-3 border-t border-stone-100">
+          <div className="pt-3 border-t border-stone-100 space-y-3">
+            <label className="flex items-center gap-3 cursor-pointer p-3.5 rounded-2xl bg-stone-50 border border-stone-200">
+              <input
+                type="checkbox"
+                checked={isVirtual}
+                onChange={(e) => setIsVirtual(e.target.checked)}
+                className="w-4.5 h-4.5 text-purple-600 rounded border-stone-300 focus:ring-purple-600"
+              />
+              <div>
+                <span className="text-xs sm:text-sm font-bold text-stone-900 flex items-center gap-2">
+                  <span>Đánh dấu là Điểm Ảo (Demo)</span>
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      isVirtual
+                        ? 'bg-purple-100 text-purple-800 border border-purple-200'
+                        : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                    }`}
+                  >
+                    {isVirtual ? 'Điểm ảo demo' : 'Điểm thật đối tác'}
+                  </span>
+                </span>
+                <span className="text-[11px] text-stone-400">
+                  Các điểm tạo trước hôm nay mặc định là điểm ảo demo. Tắt tùy chọn này nếu đây là đối tác thật nhận khách.
+                </span>
+              </div>
+            </label>
+
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -966,27 +1022,39 @@ export default function EditSpaPage() {
           </div>
         </div>
 
-        {/* Submit */}
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <Link
-            href="/spas"
-            className="px-5 py-3 rounded-2xl bg-white border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs sm:text-sm font-bold transition-all shadow-xs"
-          >
-            Hủy Bỏ
-          </Link>
-
+        {/* Submit & Danger Action */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
           <button
-            type="submit"
-            disabled={saving}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#40813D] hover:bg-[#356F32] text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-98 disabled:opacity-60 cursor-pointer"
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting || saving}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs sm:text-sm transition-all border border-rose-200 cursor-pointer disabled:opacity-60"
           >
-            {saving ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <Save className="w-4 h-4" />
-            )}
-            <span>Lưu Thay Đổi</span>
+            <Trash2 className={`w-4 h-4 ${deleting ? 'animate-spin' : ''}`} />
+            <span>{deleting ? 'Đang xoá cơ sở...' : 'Xoá Vĩnh Viễn Cơ Sở Này'}</span>
           </button>
+
+          <div className="w-full sm:w-auto flex items-center justify-end gap-3">
+            <Link
+              href="/spas"
+              className="flex-1 sm:flex-initial text-center px-5 py-3 rounded-2xl bg-white border border-stone-200 text-stone-700 hover:bg-stone-50 text-xs sm:text-sm font-bold transition-all shadow-xs"
+            >
+              Hủy Bỏ
+            </Link>
+
+            <button
+              type="submit"
+              disabled={saving || deleting}
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-[#40813D] hover:bg-[#356F32] text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-98 disabled:opacity-60 cursor-pointer"
+            >
+              {saving ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
+              <span>Lưu Thay Đổi</span>
+            </button>
+          </div>
         </div>
       </form>
     </div>
