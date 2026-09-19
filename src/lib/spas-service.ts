@@ -48,8 +48,63 @@ export function mapPrismaSpaToMVPSpa(s: any): MVPSpa {
           { d: 'T7 - CN', t: s.openHours || '09:00 - 21:30' },
         ]
 
-  const cityKey = (s.city || 'hn') as string
-  const cityCenter = DEFAULT_CITY_CENTERS[cityKey] || DEFAULT_CITY_CENTERS.hn
+  // 1. Xác định chính xác khu vực thành phố (cityKey & cityName) theo toạ độ GPS hoặc địa chỉ
+  let resolvedCity: 'hn' | 'hcm' | 'dn' = (s.city as any) || 'hn'
+  let resolvedCityName = s.cityName
+
+  if (typeof s.latitude === 'number' && s.latitude > 0) {
+    if (s.latitude >= 14.0 && s.latitude < 18.0) {
+      resolvedCity = 'dn'
+      if (!resolvedCityName || resolvedCityName.includes('Hà Nội') || resolvedCityName.includes('TP.HCM')) {
+        resolvedCityName = 'Đà Nẵng'
+      }
+    } else if (s.latitude < 13.5) {
+      resolvedCity = 'hcm'
+      if (!resolvedCityName || resolvedCityName.includes('Hà Nội') || resolvedCityName.includes('Đà Nẵng')) {
+        resolvedCityName = 'TP.HCM'
+      }
+    } else if (s.latitude >= 18.0) {
+      resolvedCity = 'hn'
+      if (!resolvedCityName) resolvedCityName = 'Hà Nội'
+    }
+  } else if (s.address) {
+    const addr = s.address.toLowerCase()
+    if (addr.includes('đà nẵng') || addr.includes('da nang') || addr.includes('quảng nam') || addr.includes('điện bàn') || addr.includes('hội an')) {
+      resolvedCity = 'dn'
+      if (!resolvedCityName) resolvedCityName = 'Đà Nẵng'
+    } else if (addr.includes('hồ chí minh') || addr.includes('sài gòn')) {
+      resolvedCity = 'hcm'
+      if (!resolvedCityName) resolvedCityName = 'TP.HCM'
+    }
+  }
+
+  if (!resolvedCityName) {
+    resolvedCityName = resolvedCity === 'dn' ? 'Đà Nẵng' : resolvedCity === 'hcm' ? 'TP.HCM' : 'Hà Nội'
+  }
+
+  // 2. Khử sạch ward nếu bị dính text mặc định Hà Nội cũ khi toạ độ/địa chỉ thuộc Đà Nẵng / HCM
+  let ward = s.ward || ''
+  let district = s.district || ''
+  if (resolvedCity === 'dn') {
+    const wLower = ward.toLowerCase()
+    if (wLower.includes('dịch vọng') || wLower.includes('cầu giấy') || wLower.includes('hà nội')) {
+      ward = district && !district.toLowerCase().includes('cầu giấy') ? district : 'Điện Bàn Đông'
+    }
+    if (!ward) ward = district || 'Hải Châu'
+    if (!district) district = ward
+  } else if (resolvedCity === 'hcm') {
+    const wLower = ward.toLowerCase()
+    if (wLower.includes('dịch vọng') || wLower.includes('cầu giấy') || wLower.includes('hà nội')) {
+      ward = district && !district.toLowerCase().includes('cầu giấy') ? district : 'Bến Nghé'
+    }
+    if (!ward) ward = district || 'Quận 1'
+    if (!district) district = ward
+  } else {
+    if (!ward) ward = district || 'Cầu Giấy'
+    if (!district) district = ward
+  }
+
+  const cityCenter = DEFAULT_CITY_CENTERS[resolvedCity] || DEFAULT_CITY_CENTERS.hn
   let dist = '1,2 km'
   if (typeof s.latitude === 'number' && typeof s.longitude === 'number') {
     const km = computeDistanceKm(cityCenter.lat, cityCenter.lng, s.latitude, s.longitude)
@@ -59,12 +114,10 @@ export function mapPrismaSpaToMVPSpa(s: any): MVPSpa {
   return {
     id: s.slug || s.id,
     name: s.name,
-    ward: s.ward || 'Cầu Giấy',
-    district: s.district || s.ward || 'Cầu Giấy',
-    city: (s.city || 'hn') as 'hn' | 'hcm' | 'dn',
-    cityName:
-      s.cityName ||
-      (s.city === 'hcm' ? 'TP.HCM' : s.city === 'dn' ? 'Đà Nẵng' : 'Hà Nội'),
+    ward,
+    district,
+    city: resolvedCity,
+    cityName: resolvedCityName,
     lat: s.latitude,
     lng: s.longitude,
     rating: s.rating || 4.9,

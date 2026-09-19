@@ -180,10 +180,11 @@ export function getSpasMetadata(locale: string): Metadata {
 }
 
 export function getSpaDetailMetadata(locale: string, spa: MVPSpa): Metadata {
+  const locationLabel = spa.district || spa.ward || spa.cityName;
   const titles: Record<string, string> = {
-    vi: `${spa.name} Cầu Giấy - Dịch Vụ Chuẩn Hóa Đồng Giá | Glow Beauty Pass`,
-    en: `${spa.name} Hanoi - Certified Head Spa | Glow Beauty Pass`,
-    ko: `${spa.name} 하노이 꼬우저이 - 엄선 인증 스파 | Glow Beauty Pass`,
+    vi: `${spa.name} (${locationLabel}) - Dịch Vụ Chuẩn Hóa Đồng Giá | Glow Beauty Pass`,
+    en: `${spa.name} (${spa.cityName || 'Vietnam'}) - Certified Head Spa | Glow Beauty Pass`,
+    ko: `${spa.name} (${spa.cityName || '베트남'}) - 엄선 인증 스파 | Glow Beauty Pass`,
   };
 
   const descriptions: Record<string, string> = {
@@ -283,7 +284,7 @@ export function getSpasCollectionSchema(locale: string, spas: MVPSpa[]) {
             '@type': 'PostalAddress',
             streetAddress: spa.address,
             addressLocality: spa.cityName,
-            addressRegion: spa.district || 'Cầu Giấy',
+            addressRegion: spa.district || spa.ward || spa.cityName,
             addressCountry: 'VN',
           },
           geo: {
@@ -316,7 +317,7 @@ export function getSpaDetailSchema(locale: string, spa: MVPSpa) {
       '@type': 'PostalAddress',
       streetAddress: spa.address,
       addressLocality: spa.cityName,
-      addressRegion: spa.district || 'Cầu Giấy',
+      addressRegion: spa.district || spa.ward || spa.cityName,
       addressCountry: 'VN',
     },
     geo: {

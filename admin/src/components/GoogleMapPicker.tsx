@@ -96,13 +96,14 @@ export function GoogleMapPicker({
   }, [])
 
   // Helper trích xuất thành phần địa chỉ (Hỗ trợ toàn quốc: Phường/Xã, Quận/Huyện/Thị xã, Tỉnh/TP)
-  const parseAddressComponents = (place: any) => {
+  const parseAddressComponents = (place: any, lat?: number, lng?: number) => {
     const list = place?.address_components
     let district: string | undefined
     let ward: string | undefined
     let cityName: string | undefined
     let cityCode: string | undefined
 
+    // 1. Phân tích address_components từ Google Places
     if (Array.isArray(list)) {
       for (const c of list) {
         const types: string[] = c?.types || []
@@ -130,28 +131,56 @@ export function GoogleMapPicker({
       }
     }
 
-    // Fallback phân tích chuỗi formatted_address nếu thiếu thông tin từ types
+    // 2. Fallback phân tích chuỗi formatted_address nếu thiếu thông tin
     const fullAddress = place?.formatted_address || ''
-    if ((!ward || !district || !cityName) && fullAddress) {
+    if (fullAddress) {
       const parts = fullAddress.split(',').map((p: string) => p.trim())
       const cleanParts = parts.filter(
         (p: string) =>
           !p.toLowerCase().includes('việt nam') &&
           !p.toLowerCase().includes('vietnam') &&
-          !/^\d{5,6}$/.test(p) // Bỏ zip code
+          !/^\d{5,6}$/.test(p) && // Bỏ zip code
+          !/^[A-Z0-9]{4}\+[A-Z0-9]{2,}/i.test(p) && // Bỏ Plus Code
+          !p.toLowerCase().includes('unnamed road') &&
+          !p.toLowerCase().includes('đường không tên')
       )
-      if (cleanParts.length >= 3) {
-        if (!cityName) cityName = cleanParts[cleanParts.length - 1]
-        if (!district) district = cleanParts[cleanParts.length - 2]
-        if (!ward) ward = cleanParts[cleanParts.length - 3]
-      } else if (cleanParts.length === 2) {
-        if (!cityName) cityName = cleanParts[cleanParts.length - 1]
-        if (!district) district = cleanParts[cleanParts.length - 2]
+
+      if (!cityName && cleanParts.length > 0) {
+        cityName = cleanParts[cleanParts.length - 1]
+      }
+      if (!district && cleanParts.length > 1) {
+        district = cleanParts[cleanParts.length - 2]
+      }
+      if (!ward && cleanParts.length > 2) {
+        ward = cleanParts[cleanParts.length - 3]
+      }
+      if (!ward && district) {
+        ward = district
       }
     }
 
-    // Tự động map city code chuẩn của hệ thống Glow (hn, hcm, dn)
-    if (cityName) {
+    // 3. Tự động xác định city code & cityName chuẩn xác dựa theo Tọa độ GPS (Lat/Lng)
+    if (typeof lat === 'number' && lat > 0) {
+      if (lat >= 14.0 && lat < 18.0) {
+        cityCode = 'dn'
+        if (!cityName || cityName.toLowerCase().includes('hà nội') || cityName.toLowerCase().includes('hồ chí minh')) {
+          cityName = 'Đà Nẵng'
+        }
+      } else if (lat < 13.5) {
+        cityCode = 'hcm'
+        if (!cityName || cityName.toLowerCase().includes('hà nội') || cityName.toLowerCase().includes('đà nẵng')) {
+          cityName = 'TP.HCM'
+        }
+      } else if (lat >= 18.0) {
+        cityCode = 'hn'
+        if (!cityName) {
+          cityName = 'Hà Nội'
+        }
+      }
+    }
+
+    // 4. Phân tích bổ sung từ cityName nếu chưa có cityCode
+    if (!cityCode && cityName) {
       const lower = cityName.toLowerCase()
       if (lower.includes('hồ chí minh') || lower.includes('ho chi minh') || lower.includes('sài gòn')) {
         cityCode = 'hcm'
@@ -160,17 +189,20 @@ export function GoogleMapPicker({
         lower.includes('da nang') ||
         lower.includes('quảng nam') ||
         lower.includes('quang nam') ||
-        lower.includes('hội an')
+        lower.includes('hội an') ||
+        lower.includes('điện bàn')
       ) {
         cityCode = 'dn'
-      } else if (lower.includes('hà nội') || lower.includes('ha noi')) {
-        cityCode = 'hn'
       } else {
         cityCode = 'hn'
       }
     }
 
-    return { district, ward, cityName, city: cityCode }
+    if (!ward) {
+      ward = district || cityName || 'Đà Nẵng'
+    }
+
+    return { district, ward, cityName, city: cityCode || 'dn' }
   }
 
   // Cập nhật vị trí điểm ghim
@@ -231,7 +263,7 @@ export function GoogleMapPicker({
         // Reverse geocode lấy địa chỉ tại điểm click
         geocoderRef.current?.geocode({ location: { lat, lng } }, (results: any[], status: string) => {
           if (status === 'OK' && results?.[0]) {
-            const parsed = parseAddressComponents(results[0])
+            const parsed = parseAddressComponents(results[0], lat, lng)
             onLocationChange({
               lat,
               lng,
@@ -255,7 +287,7 @@ export function GoogleMapPicker({
 
         geocoderRef.current?.geocode({ location: { lat, lng } }, (results: any[], status: string) => {
           if (status === 'OK' && results?.[0]) {
-            const parsed = parseAddressComponents(results[0])
+            const parsed = parseAddressComponents(results[0], lat, lng)
             onLocationChange({
               lat,
               lng,
@@ -299,7 +331,7 @@ export function GoogleMapPicker({
           setSearchQuery(formattedAddress)
         }
 
-        const parsed = parseAddressComponents(place)
+        const parsed = parseAddressComponents(place, lat, lng)
         onLocationChange({
           lat,
           lng,

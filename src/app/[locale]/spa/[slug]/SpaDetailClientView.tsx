@@ -99,6 +99,11 @@ export default function SpaDetailClientView({
     // 1. If user has active GPS coordinates, compute real distance from user
     if (userCoords) {
       const km = computeDistanceKm(userCoords.lat, userCoords.lon, spa.lat, spa.lng);
+      // Nếu người dùng đang ở tỉnh/thành phố khác (> 70 km, ví dụ đang ở Hà Nội xem spa Đà Nẵng),
+      // hiển thị cự ly so với trung tâm thành phố sở tại (spa.dist) để tránh gây nhầm lẫn
+      if (km > 70) {
+        return spa.dist || null;
+      }
       return formatDistanceKm(km);
     }
     // 2. Otherwise compute distance from city center reference
