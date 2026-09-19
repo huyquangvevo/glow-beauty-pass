@@ -118,6 +118,7 @@ export async function POST(request: Request) {
       tier = 'STANDARD',
       exclusiveOffer,
       imageUrl,
+      photos,
       isActive = true,
       isVirtual = false,
       initSlots = true,
@@ -172,6 +173,17 @@ export async function POST(request: Request) {
       }
     }
 
+    let normalizedPhotos: string[] | undefined = undefined
+    if (photos !== undefined) {
+      if (Array.isArray(photos)) {
+        normalizedPhotos = photos.map((p: any) => String(p).trim()).filter(Boolean)
+      } else if (typeof photos === 'string' && photos.trim()) {
+        normalizedPhotos = [photos.trim()]
+      }
+    } else if (imageUrl?.trim()) {
+      normalizedPhotos = [imageUrl.trim()]
+    }
+
     // Tạo Spa trong Database
     const newSpa = await prisma.spa.create({
       data: {
@@ -188,7 +200,8 @@ export async function POST(request: Request) {
         openHours: openHours.trim(),
         tier,
         exclusiveOffer: exclusiveOffer?.trim() || null,
-        imageUrl: imageUrl?.trim() || null,
+        imageUrl: (imageUrl?.trim() || normalizedPhotos?.[0] || null),
+        photos: normalizedPhotos || undefined,
         isActive: Boolean(isActive),
         isVirtual: Boolean(isVirtual),
         reviewSectionTitle: reviewSectionTitle?.trim() || 'Khách hàng nói gì về chúng tôi',

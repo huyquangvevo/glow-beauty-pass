@@ -25,14 +25,21 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import { ImageUploader } from '@/components/ImageUploader'
+import { MultiImageUploader } from '@/components/MultiImageUploader'
 import { GoogleMapPicker } from '@/components/GoogleMapPicker'
 
 const STOCK_PHOTOS = [
-  { url: '/spas/spa_thumb_1.jpg', label: 'Bồn gội thảo dược' },
-  { url: '/spas/spa_thumb_2.jpg', label: 'Massage vai gáy' },
-  { url: '/spas/spa_thumb_3.jpg', label: 'Không gian ấm cúng' },
-  { url: '/spas/spa_thumb_4.jpg', label: 'Khay thảo mộc' },
-  { url: '/spas/spa_thumb_5.jpg', label: 'Gội đầu dưỡng sinh' },
+  { url: '/spas/spa_thumb_1.jpg', label: 'Bồn gội thảo dược & vòm LED' },
+  { url: '/spas/spa_thumb_2.jpg', label: 'Massage vai gáy trị liệu' },
+  { url: '/spas/spa_thumb_3.jpg', label: 'Không gian ấm cúng sang trọng' },
+  { url: '/spas/spa_thumb_4.jpg', label: 'Khay thảo mộc & bồ kết' },
+  { url: '/spas/spa_thumb_5.jpg', label: 'Gội đầu dưỡng sinh thư giãn' },
+  { url: '/banners/banner_spa_ambiance.jpg', label: 'Không gian spa thiên nhiên' },
+  { url: '/banners/banner_herbal_wash.jpg', label: 'Bồn thảo mộc dưỡng sinh' },
+  { url: '/banners/banner_neck_massage.jpg', label: 'Massage cổ vai gáy chuyên sâu' },
+  { url: '/spas/spa_real_01.jpg', label: 'Giường massage SOP 01' },
+  { url: '/spas/spa_real_02.jpg', label: 'Giường massage SOP 02' },
+  { url: '/spas/spa_real_03.jpg', label: 'Không gian gội dưỡng sinh 03' },
 ]
 
 interface ReviewBreakdown {
@@ -82,6 +89,7 @@ export default function EditSpaPage() {
   const [tier, setTier] = useState('STANDARD')
   const [exclusiveOffer, setExclusiveOffer] = useState('')
   const [imageUrl, setImageUrl] = useState('/spas/spa_thumb_1.jpg')
+  const [photos, setPhotos] = useState<string[]>([])
   const [isActive, setIsActive] = useState(true)
   const [isVirtual, setIsVirtual] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -127,6 +135,13 @@ export default function EditSpaPage() {
           setTier(s.tier || 'STANDARD')
           setExclusiveOffer(s.exclusiveOffer || '')
           setImageUrl(s.imageUrl || '/spas/spa_thumb_1.jpg')
+          if (Array.isArray(s.photos) && s.photos.length > 0) {
+            setPhotos(s.photos)
+          } else if (s.imageUrl) {
+            setPhotos([s.imageUrl])
+          } else {
+            setPhotos(['/spas/spa_thumb_1.jpg'])
+          }
           setIsActive(s.isActive)
           setIsVirtual(Boolean(s.isVirtual))
           setYellowCards(s.yellowCards || 0)
@@ -270,7 +285,8 @@ export default function EditSpaPage() {
           openHours: openHours.trim(),
           tier,
           exclusiveOffer: exclusiveOffer.trim(),
-          imageUrl,
+          imageUrl: photos[0] || imageUrl,
+          photos,
           isActive,
           isVirtual,
           yellowCards,
@@ -643,18 +659,33 @@ export default function EditSpaPage() {
           </div>
         </div>
 
-        {/* Section 3: Imagery */}
+        {/* Section 3: Imagery & Carousel Gallery */}
         <div className="bg-white rounded-3xl p-5 sm:p-7 border border-stone-200/90 shadow-xs space-y-5">
-          <div className="flex items-center gap-2 pb-3 border-b border-stone-100">
-            <Layers className="w-5 h-5 text-[#40813D]" />
-            <h2 className="text-base font-extrabold text-stone-900">
-              3. Ảnh Đại Diện Cơ Sở
-            </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-stone-100 gap-2">
+            <div className="flex items-center gap-2">
+              <Layers className="w-5 h-5 text-[#40813D]" />
+              <div>
+                <h2 className="text-base font-extrabold text-stone-900">
+                  3. Bộ Sưu Tập Ảnh & Carousel Trên Web
+                </h2>
+                <p className="text-xs text-stone-500">
+                  Quản lý nhiều ảnh hiển thị lướt trên đầu trang chi tiết spa. Ảnh đầu tiên (#1) sẽ là Ảnh Bìa đại diện.
+                </p>
+              </div>
+            </div>
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#E8F5E9] text-[#236B38] border border-emerald-200 shrink-0 self-start sm:self-auto">
+              {photos.length} ảnh trong Carousel
+            </span>
           </div>
 
-          <ImageUploader
-            currentImageUrl={imageUrl}
-            onImageChange={setImageUrl}
+          <MultiImageUploader
+            photos={photos}
+            onChange={(newPhotos) => {
+              setPhotos(newPhotos)
+              if (newPhotos.length > 0) {
+                setImageUrl(newPhotos[0])
+              }
+            }}
             stockPhotos={STOCK_PHOTOS}
           />
         </div>

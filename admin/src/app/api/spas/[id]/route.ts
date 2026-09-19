@@ -62,6 +62,7 @@ export async function PUT(
       tier,
       exclusiveOffer,
       imageUrl,
+      photos,
       isActive,
       yellowCards,
       redCards,
@@ -95,6 +96,17 @@ export async function PUT(
       }
     }
 
+    let normalizedPhotos: string[] | undefined = undefined
+    if (photos !== undefined) {
+      if (Array.isArray(photos)) {
+        normalizedPhotos = photos.map((p: any) => String(p).trim()).filter(Boolean)
+      } else if (typeof photos === 'string' && photos.trim()) {
+        normalizedPhotos = [photos.trim()]
+      } else {
+        normalizedPhotos = []
+      }
+    }
+
     const updatedSpa = await prisma.spa.update({
       where: { id },
       data: {
@@ -110,7 +122,11 @@ export async function PUT(
         openHours: openHours !== undefined ? openHours.trim() : undefined,
         tier: tier !== undefined ? tier : undefined,
         exclusiveOffer: exclusiveOffer !== undefined ? exclusiveOffer?.trim() || null : undefined,
-        imageUrl: imageUrl !== undefined ? imageUrl?.trim() || null : undefined,
+        imageUrl:
+          imageUrl !== undefined
+            ? (imageUrl?.trim() || (normalizedPhotos && normalizedPhotos[0]) || null)
+            : (normalizedPhotos && normalizedPhotos.length > 0 ? normalizedPhotos[0] : undefined),
+        photos: normalizedPhotos !== undefined ? normalizedPhotos : undefined,
         isActive: isActive !== undefined ? Boolean(isActive) : undefined,
         isVirtual: body.isVirtual !== undefined ? Boolean(body.isVirtual) : undefined,
         yellowCards: yellowCards !== undefined ? parseInt(yellowCards, 10) : undefined,

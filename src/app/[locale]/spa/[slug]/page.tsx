@@ -9,6 +9,8 @@ import {
 } from '@/lib/seo-helpers';
 import SpaDetailClientView from './SpaDetailClientView';
 
+export const revalidate = 0;
+
 interface SpaPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }

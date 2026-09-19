@@ -18,14 +18,21 @@ import {
   Layers,
 } from 'lucide-react'
 import { ImageUploader } from '@/components/ImageUploader'
+import { MultiImageUploader } from '@/components/MultiImageUploader'
 import { GoogleMapPicker } from '@/components/GoogleMapPicker'
 
 const STOCK_PHOTOS = [
-  { url: '/spas/spa_thumb_1.jpg', label: 'Bồn gội thảo dược & gương vòm' },
+  { url: '/spas/spa_thumb_1.jpg', label: 'Bồn gội thảo dược & vòm LED' },
   { url: '/spas/spa_thumb_2.jpg', label: 'Massage vai gáy trị liệu' },
   { url: '/spas/spa_thumb_3.jpg', label: 'Không gian ấm cúng sang trọng' },
-  { url: '/spas/spa_thumb_4.jpg', label: 'Khay thảo mộc & bồ kết hoa cúc' },
+  { url: '/spas/spa_thumb_4.jpg', label: 'Khay thảo mộc & bồ kết' },
   { url: '/spas/spa_thumb_5.jpg', label: 'Gội đầu dưỡng sinh thư giãn' },
+  { url: '/banners/banner_spa_ambiance.jpg', label: 'Không gian spa thiên nhiên' },
+  { url: '/banners/banner_herbal_wash.jpg', label: 'Bồn thảo mộc dưỡng sinh' },
+  { url: '/banners/banner_neck_massage.jpg', label: 'Massage cổ vai gáy chuyên sâu' },
+  { url: '/spas/spa_real_01.jpg', label: 'Giường massage SOP 01' },
+  { url: '/spas/spa_real_02.jpg', label: 'Giường massage SOP 02' },
+  { url: '/spas/spa_real_03.jpg', label: 'Không gian gội dưỡng sinh 03' },
 ]
 
 export default function OnboardSpaPage() {
@@ -46,6 +53,7 @@ export default function OnboardSpaPage() {
   const [tier, setTier] = useState('STANDARD')
   const [exclusiveOffer, setExclusiveOffer] = useState('Tặng 1 ly trà thảo mộc dưỡng nhan hạt chia')
   const [imageUrl, setImageUrl] = useState('/spas/spa_thumb_1.jpg')
+  const [photos, setPhotos] = useState<string[]>(['/spas/spa_thumb_1.jpg'])
   const [isActive, setIsActive] = useState(true)
   const [isVirtual, setIsVirtual] = useState(false)
   const [initSlots, setInitSlots] = useState(true)
@@ -109,7 +117,8 @@ export default function OnboardSpaPage() {
           openHours: openHours.trim(),
           tier,
           exclusiveOffer: exclusiveOffer.trim(),
-          imageUrl,
+          imageUrl: photos[0] || imageUrl,
+          photos,
           isActive,
           isVirtual,
           initSlots,
@@ -480,9 +489,14 @@ export default function OnboardSpaPage() {
           </div>
 
           <div className="space-y-4">
-            <ImageUploader
-              currentImageUrl={imageUrl}
-              onImageChange={setImageUrl}
+            <MultiImageUploader
+              photos={photos}
+              onChange={(newPhotos) => {
+                setPhotos(newPhotos)
+                if (newPhotos.length > 0) {
+                  setImageUrl(newPhotos[0])
+                }
+              }}
               stockPhotos={STOCK_PHOTOS}
             />
 
