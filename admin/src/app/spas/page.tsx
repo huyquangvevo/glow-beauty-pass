@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
@@ -31,6 +31,8 @@ interface SpaItem {
   address: string
   district: string
   ward: string
+  city?: string
+  cityName?: string
   phone: string
   latitude: number
   longitude: number
@@ -65,25 +67,22 @@ export default function AdminSpasPage() {
 
   // Filters & Search
   const [search, setSearch] = useState('')
+  const [selectedCity, setSelectedCity] = useState('ALL')
   const [selectedWard, setSelectedWard] = useState('ALL')
   const [selectedTier, setSelectedTier] = useState('ALL')
   const [selectedActive, setSelectedActive] = useState('ALL')
 
-  const wards = [
-    { id: 'ALL', name: 'Tất cả phường' },
-    { id: 'Dịch Vọng', name: 'Dịch Vọng' },
-    { id: 'Dịch Vọng Hậu', name: 'Duy Tân / Dịch Vọng Hậu' },
-    { id: 'Trung Hòa', name: 'Hoàng Đạo Thúy / Trung Hòa' },
-    { id: 'Yên Hòa', name: 'Vũ Phạm Hàm / Yên Hòa' },
-    { id: 'Nghĩa Tân', name: 'Tô Hiệu / Nghĩa Tân' },
-    { id: 'Quan Hoa', name: 'Quan Hoa' },
-    { id: 'Mai Dịch', name: 'Mai Dịch' },
-  ]
+  // Dynamic Wards computed from spas list
+  const dynamicWards = useMemo(() => {
+    const list = Array.from(new Set(spas.map((s) => s.ward).filter(Boolean))).sort()
+    return [{ id: 'ALL', name: 'Tất cả phường/xã' }, ...list.map((w) => ({ id: w, name: w }))]
+  }, [spas])
 
   const loadSpas = async () => {
     try {
       setLoading(true)
       const params = new URLSearchParams()
+      if (selectedCity !== 'ALL') params.set('city', selectedCity)
       if (selectedWard !== 'ALL') params.set('ward', selectedWard)
       if (selectedTier !== 'ALL') params.set('tier', selectedTier)
       if (selectedActive === 'true') params.set('active', 'true')
@@ -106,7 +105,7 @@ export default function AdminSpasPage() {
 
   useEffect(() => {
     loadSpas()
-  }, [selectedWard, selectedTier, selectedActive])
+  }, [selectedCity, selectedWard, selectedTier, selectedActive])
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -252,13 +251,28 @@ export default function AdminSpasPage() {
             />
           </div>
 
+          {/* City Filter */}
+          <select
+            value={selectedCity}
+            onChange={(e) => {
+              setSelectedCity(e.target.value)
+              setSelectedWard('ALL')
+            }}
+            className="px-3.5 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#40813D]"
+          >
+            <option value="ALL">Toàn quốc (Mọi tỉnh/TP)</option>
+            <option value="dn">Đà Nẵng / Quảng Nam</option>
+            <option value="hn">Hà Nội & Miền Bắc</option>
+            <option value="hcm">TP.HCM & Miền Nam</option>
+          </select>
+
           {/* Ward Filter */}
           <select
             value={selectedWard}
             onChange={(e) => setSelectedWard(e.target.value)}
             className="px-3.5 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#40813D]"
           >
-            {wards.map((w) => (
+            {dynamicWards.map((w) => (
               <option key={w.id} value={w.id}>
                 {w.name}
               </option>

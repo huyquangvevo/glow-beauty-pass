@@ -20,6 +20,8 @@ interface GoogleMapPickerProps {
     address?: string
     district?: string
     ward?: string
+    cityName?: string
+    city?: string
   }) => void
 }
 
@@ -93,31 +95,82 @@ export function GoogleMapPicker({
     document.head.appendChild(script)
   }, [])
 
-  // Helper trích xuất thành phần địa chỉ
+  // Helper trích xuất thành phần địa chỉ (Hỗ trợ toàn quốc: Phường/Xã, Quận/Huyện/Thị xã, Tỉnh/TP)
   const parseAddressComponents = (place: any) => {
     const list = place?.address_components
-    if (!Array.isArray(list)) return { district: undefined, ward: undefined }
-
     let district: string | undefined
     let ward: string | undefined
+    let cityName: string | undefined
+    let cityCode: string | undefined
 
-    for (const c of list) {
-      const types: string[] = c?.types || []
-      // Phường / Xã
-      if (
-        types.includes('sublocality_level_1') ||
-        types.includes('sublocality') ||
-        types.includes('administrative_area_level_3')
-      ) {
-        ward = c.long_name || c.short_name
-      }
-      // Quận / Huyện
-      if (types.includes('administrative_area_level_2')) {
-        district = c.long_name || c.short_name
+    if (Array.isArray(list)) {
+      for (const c of list) {
+        const types: string[] = c?.types || []
+        // Phường / Xã / Thị trấn
+        if (
+          types.includes('sublocality_level_1') ||
+          types.includes('sublocality') ||
+          types.includes('administrative_area_level_3') ||
+          types.includes('ward') ||
+          types.includes('commune')
+        ) {
+          ward = c.long_name || c.short_name
+        }
+        // Quận / Huyện / Thị xã / Thành phố thuộc tỉnh
+        if (
+          types.includes('administrative_area_level_2') ||
+          types.includes('district')
+        ) {
+          district = c.long_name || c.short_name
+        }
+        // Tỉnh / Thành phố trực thuộc trung ương
+        if (types.includes('administrative_area_level_1')) {
+          cityName = c.long_name || c.short_name
+        }
       }
     }
 
-    return { district, ward }
+    // Fallback phân tích chuỗi formatted_address nếu thiếu thông tin từ types
+    const fullAddress = place?.formatted_address || ''
+    if ((!ward || !district || !cityName) && fullAddress) {
+      const parts = fullAddress.split(',').map((p: string) => p.trim())
+      const cleanParts = parts.filter(
+        (p: string) =>
+          !p.toLowerCase().includes('việt nam') &&
+          !p.toLowerCase().includes('vietnam') &&
+          !/^\d{5,6}$/.test(p) // Bỏ zip code
+      )
+      if (cleanParts.length >= 3) {
+        if (!cityName) cityName = cleanParts[cleanParts.length - 1]
+        if (!district) district = cleanParts[cleanParts.length - 2]
+        if (!ward) ward = cleanParts[cleanParts.length - 3]
+      } else if (cleanParts.length === 2) {
+        if (!cityName) cityName = cleanParts[cleanParts.length - 1]
+        if (!district) district = cleanParts[cleanParts.length - 2]
+      }
+    }
+
+    // Tự động map city code chuẩn của hệ thống Glow (hn, hcm, dn)
+    if (cityName) {
+      const lower = cityName.toLowerCase()
+      if (lower.includes('hồ chí minh') || lower.includes('ho chi minh') || lower.includes('sài gòn')) {
+        cityCode = 'hcm'
+      } else if (
+        lower.includes('đà nẵng') ||
+        lower.includes('da nang') ||
+        lower.includes('quảng nam') ||
+        lower.includes('quang nam') ||
+        lower.includes('hội an')
+      ) {
+        cityCode = 'dn'
+      } else if (lower.includes('hà nội') || lower.includes('ha noi')) {
+        cityCode = 'hn'
+      } else {
+        cityCode = 'hn'
+      }
+    }
+
+    return { district, ward, cityName, city: cityCode }
   }
 
   // Cập nhật vị trí điểm ghim
@@ -185,6 +238,8 @@ export function GoogleMapPicker({
               address: results[0].formatted_address,
               district: parsed.district,
               ward: parsed.ward,
+              cityName: parsed.cityName,
+              city: parsed.city,
             })
           } else {
             onLocationChange({ lat, lng })
@@ -207,6 +262,8 @@ export function GoogleMapPicker({
               address: results[0].formatted_address,
               district: parsed.district,
               ward: parsed.ward,
+              cityName: parsed.cityName,
+              city: parsed.city,
             })
           } else {
             onLocationChange({ lat, lng })
@@ -249,6 +306,8 @@ export function GoogleMapPicker({
           address: formattedAddress,
           district: parsed.district,
           ward: parsed.ward,
+          cityName: parsed.cityName,
+          city: parsed.city,
         })
       })
     }
@@ -311,6 +370,8 @@ export function GoogleMapPicker({
           address: first.formatted_address,
           district: parsed.district,
           ward: parsed.ward,
+          cityName: parsed.cityName,
+          city: parsed.city,
         })
       }
     )
@@ -344,6 +405,8 @@ export function GoogleMapPicker({
               address: results[0].formatted_address,
               district: parsed.district,
               ward: parsed.ward,
+              cityName: parsed.cityName,
+              city: parsed.city,
             })
           } else {
             onLocationChange({ lat, lng })

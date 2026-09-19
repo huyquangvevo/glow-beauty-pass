@@ -73,6 +73,8 @@ export default function EditSpaPage() {
   const [address, setAddress] = useState('')
   const [ward, setWard] = useState('Dịch Vọng')
   const [district, setDistrict] = useState('Cầu Giấy')
+  const [city, setCity] = useState('hn')
+  const [cityName, setCityName] = useState('Hà Nội')
   const [phone, setPhone] = useState('')
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
@@ -112,8 +114,10 @@ export default function EditSpaPage() {
           const s = data.spa
           setName(s.name)
           setAddress(s.address)
-          setWard(s.ward)
-          setDistrict(s.district || 'Cầu Giấy')
+          setWard(s.ward || '')
+          setDistrict(s.district || '')
+          setCity(s.city || 'hn')
+          setCityName(s.cityName || 'Hà Nội')
           setPhone(s.phone)
           setLatitude(s.latitude.toString())
           setLongitude(s.longitude.toString())
@@ -253,8 +257,10 @@ export default function EditSpaPage() {
         body: JSON.stringify({
           name: name.trim(),
           address: address.trim(),
-          ward,
-          district,
+          ward: ward.trim(),
+          district: district.trim(),
+          city,
+          cityName: cityName.trim(),
           phone: phone.trim(),
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
@@ -406,8 +412,70 @@ export default function EditSpaPage() {
                   if (loc.address) setAddress(loc.address)
                   if (loc.district) setDistrict(loc.district)
                   if (loc.ward) setWard(loc.ward)
+                  if (loc.cityName) setCityName(loc.cityName)
+                  if (loc.city) setCity(loc.city)
                 }}
               />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-stone-700 flex items-center justify-between">
+                <span>Phường / Xã / Thị Trấn</span>
+                <span className="text-[11px] text-emerald-600 font-medium">Tự động lấy theo Map</span>
+              </label>
+              <input
+                type="text"
+                value={ward}
+                onChange={(e) => setWard(e.target.value)}
+                placeholder="VD: Phường Điện Dương, Dịch Vọng..."
+                required
+                className={inp}
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-stone-700 flex items-center justify-between">
+                <span>Quận / Huyện / Thị Xã</span>
+                <span className="text-[11px] text-emerald-600 font-medium">Tự động lấy theo Map</span>
+              </label>
+              <input
+                type="text"
+                value={district}
+                onChange={(e) => setDistrict(e.target.value)}
+                placeholder="VD: Thị xã Điện Bàn, Quận Cầu Giấy..."
+                className={inp}
+              />
+            </div>
+
+            <div className="space-y-1 sm:col-span-2">
+              <label className="text-xs font-bold text-stone-700 flex items-center justify-between">
+                <span>Tỉnh / Thành Phố</span>
+                <span className="text-[11px] text-emerald-600 font-medium">Tự động nhận diện toàn quốc</span>
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  value={cityName}
+                  onChange={(e) => {
+                    setCityName(e.target.value)
+                    const lower = e.target.value.toLowerCase()
+                    if (lower.includes('hồ chí minh') || lower.includes('sài gòn')) setCity('hcm')
+                    else if (lower.includes('đà nẵng') || lower.includes('quảng nam') || lower.includes('hội an')) setCity('dn')
+                    else if (lower.includes('hà nội')) setCity('hn')
+                  }}
+                  placeholder="VD: Quảng Nam, Đà Nẵng, Hà Nội, TP.HCM..."
+                  className={inp}
+                />
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className={`${inp} font-medium`}
+                >
+                  <option value="dn">Khu vực Web: Đà Nẵng / Quảng Nam / Miền Trung (dn)</option>
+                  <option value="hn">Khu vực Web: Hà Nội & Miền Bắc (hn)</option>
+                  <option value="hcm">Khu vực Web: TP.HCM & Miền Nam (hcm)</option>
+                </select>
+              </div>
             </div>
 
             <div className="space-y-1 sm:col-span-2">

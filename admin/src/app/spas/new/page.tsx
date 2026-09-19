@@ -20,17 +20,6 @@ import {
 import { ImageUploader } from '@/components/ImageUploader'
 import { GoogleMapPicker } from '@/components/GoogleMapPicker'
 
-// Tọa độ gợi ý trung tâm các phường Cầu Giấy để hỗ trợ nhập nhanh
-const WARD_PRESETS: Record<string, { lat: number; lon: number; addressHint: string }> = {
-  'Dịch Vọng': { lat: 21.0345, lon: 105.7930, addressHint: 'Ngõ 165 Cầu Giấy / Phố Thọ Tháp' },
-  'Dịch Vọng Hậu': { lat: 21.0315, lon: 105.7830, addressHint: 'Phố Duy Tân / Trần Thái Tông' },
-  'Trung Hòa': { lat: 21.0110, lon: 105.8010, addressHint: 'Phố Hoàng Đạo Thúy / Trung Hòa' },
-  'Yên Hòa': { lat: 21.0220, lon: 105.7940, addressHint: 'Phố Vũ Phạm Hàm / Trung Kính' },
-  'Nghĩa Tân': { lat: 21.0450, lon: 105.7960, addressHint: 'Phố Tô Hiệu / Nghĩa Tân' },
-  'Quan Hoa': { lat: 21.0360, lon: 105.8010, addressHint: 'Đường Nguyễn Khánh Toàn / Quan Hoa' },
-  'Mai Dịch': { lat: 21.0390, lon: 105.7760, addressHint: 'Đường Hồ Tùng Mậu / Mai Dịch' },
-}
-
 const STOCK_PHOTOS = [
   { url: '/spas/spa_thumb_1.jpg', label: 'Bồn gội thảo dược & gương vòm' },
   { url: '/spas/spa_thumb_2.jpg', label: 'Massage vai gáy trị liệu' },
@@ -46,11 +35,13 @@ export default function OnboardSpaPage() {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [address, setAddress] = useState('')
-  const [ward, setWard] = useState('Dịch Vọng')
-  const [district, setDistrict] = useState('Cầu Giấy')
+  const [ward, setWard] = useState('')
+  const [district, setDistrict] = useState('')
+  const [city, setCity] = useState('dn')
+  const [cityName, setCityName] = useState('')
   const [phone, setPhone] = useState('')
-  const [latitude, setLatitude] = useState('21.0345')
-  const [longitude, setLongitude] = useState('105.7930')
+  const [latitude, setLatitude] = useState('15.9320')
+  const [longitude, setLongitude] = useState('108.3180')
   const [openHours, setOpenHours] = useState('09:00 - 21:30')
   const [tier, setTier] = useState('STANDARD')
   const [exclusiveOffer, setExclusiveOffer] = useState('Tặng 1 ly trà thảo mộc dưỡng nhan hạt chia')
@@ -76,23 +67,13 @@ export default function OnboardSpaPage() {
     setSlug(generatedSlug)
   }
 
-  // Tự động điền tọa độ mẫu theo phường
-  const handleWardChange = (val: string) => {
-    setWard(val)
-    const preset = WARD_PRESETS[val]
-    if (preset) {
-      setLatitude(preset.lat.toString())
-      setLongitude(preset.lon.toString())
-    }
-  }
-
   // Dùng GPS thiết bị
   const handleGetCurrentLocation = () => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          setLatitude(pos.coords.latitude.toFixed(4))
-          setLongitude(pos.coords.longitude.toFixed(4))
+          setLatitude(pos.coords.latitude.toFixed(6))
+          setLongitude(pos.coords.longitude.toFixed(6))
         },
         () => alert('Không thể lấy tọa độ hiện tại. Vui lòng cho phép quyền truy cập GPS.')
       )
@@ -103,8 +84,8 @@ export default function OnboardSpaPage() {
     e.preventDefault()
     setErrorMsg('')
 
-    if (!name.trim() || !address.trim() || !phone.trim()) {
-      setErrorMsg('Vui lòng điền đầy đủ Tên, Địa chỉ và Số điện thoại hotline.')
+    if (!name.trim() || !address.trim() || !phone.trim() || !ward.trim()) {
+      setErrorMsg('Vui lòng điền đầy đủ Tên, Địa chỉ, Phường/Xã và Số điện thoại hotline.')
       return
     }
 
@@ -117,8 +98,10 @@ export default function OnboardSpaPage() {
           name: name.trim(),
           slug: slug.trim(),
           address: address.trim(),
-          ward,
-          district,
+          ward: ward.trim(),
+          district: district.trim() || 'Thành phố',
+          city: city || 'dn',
+          cityName: cityName.trim() || 'Việt Nam',
           phone: phone.trim(),
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
@@ -269,32 +252,67 @@ export default function OnboardSpaPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Phường */}
+            {/* Phường / Xã */}
             <div className="space-y-1">
-              <label className="text-xs font-bold text-stone-700">Phường (Khu Vực)</label>
-              <select
+              <label className="text-xs font-bold text-stone-700 flex items-center justify-between">
+                <span>Phường / Xã / Thị Trấn <span className="text-red-500">*</span></span>
+                <span className="text-[11px] text-emerald-600 font-medium">Tự động lấy theo Map</span>
+              </label>
+              <input
+                type="text"
                 value={ward}
-                onChange={(e) => handleWardChange(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
-              >
-                {Object.keys(WARD_PRESETS).map((w) => (
-                  <option key={w} value={w}>
-                    {w} ({WARD_PRESETS[w].addressHint})
-                  </option>
-                ))}
-              </select>
+                onChange={(e) => setWard(e.target.value)}
+                placeholder="VD: Phường Điện Dương, Dịch Vọng..."
+                required
+                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
+              />
             </div>
 
-            {/* Quận */}
+            {/* Quận / Huyện / Thị xã */}
             <div className="space-y-1">
-              <label className="text-xs font-bold text-stone-700">Quận (Thí điểm)</label>
+              <label className="text-xs font-bold text-stone-700 flex items-center justify-between">
+                <span>Quận / Huyện / Thị Xã</span>
+                <span className="text-[11px] text-emerald-600 font-medium">Tự động lấy theo Map</span>
+              </label>
               <input
                 type="text"
                 value={district}
                 onChange={(e) => setDistrict(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-2xl bg-stone-100 border border-stone-200 text-sm text-stone-600 focus:outline-none"
-                readOnly
+                placeholder="VD: Thị xã Điện Bàn, Quận Cầu Giấy..."
+                className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
               />
+            </div>
+
+            {/* Tỉnh / Thành phố */}
+            <div className="space-y-1 sm:col-span-2">
+              <label className="text-xs font-bold text-stone-700 flex items-center justify-between">
+                <span>Tỉnh / Thành Phố</span>
+                <span className="text-[11px] text-emerald-600 font-medium">Tự động nhận diện toàn quốc</span>
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  value={cityName}
+                  onChange={(e) => {
+                    setCityName(e.target.value)
+                    const lower = e.target.value.toLowerCase()
+                    if (lower.includes('hồ chí minh') || lower.includes('sài gòn')) setCity('hcm')
+                    else if (lower.includes('đà nẵng') || lower.includes('quảng nam') || lower.includes('hội an')) setCity('dn')
+                    else if (lower.includes('hà nội')) setCity('hn')
+                  }}
+                  placeholder="VD: Quảng Nam, Đà Nẵng, Hà Nội, TP.HCM..."
+                  className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
+                />
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
+                >
+                  <option value="dn">Khu vực Web: Đà Nẵng / Quảng Nam / Miền Trung (dn)</option>
+                  <option value="hn">Khu vực Web: Hà Nội & Miền Bắc (hn)</option>
+                  <option value="hcm">Khu vực Web: TP.HCM & Miền Nam (hcm)</option>
+                </select>
+              </div>
             </div>
 
             {/* Address */}
@@ -306,7 +324,7 @@ export default function OnboardSpaPage() {
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="VD: Số 18 Ngõ 165 Cầu Giấy, P. Dịch Vọng, Cầu Giấy, Hà Nội"
+                placeholder="VD: 70 Đường Ven Biển, P. Điện Dương, TX. Điện Bàn, Quảng Nam"
                 required
                 className="w-full px-4 py-2.5 rounded-2xl bg-stone-50 border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#40813D] focus:bg-white"
               />
@@ -319,19 +337,17 @@ export default function OnboardSpaPage() {
                 <span>Chọn & Ghim Tọa Độ Trên Bản Đồ Google Maps</span>
               </label>
               <GoogleMapPicker
-                latitude={parseFloat(latitude) || 21.0345}
-                longitude={parseFloat(longitude) || 105.7930}
+                latitude={parseFloat(latitude) || 15.9320}
+                longitude={parseFloat(longitude) || 108.3180}
                 address={address}
                 onLocationChange={(loc) => {
                   setLatitude(loc.lat.toString())
                   setLongitude(loc.lng.toString())
                   if (loc.address) setAddress(loc.address)
-                  if (loc.ward && Object.keys(WARD_PRESETS).includes(loc.ward)) {
-                    setWard(loc.ward)
-                  }
-                  if (loc.district) {
-                    setDistrict(loc.district)
-                  }
+                  if (loc.ward) setWard(loc.ward)
+                  if (loc.district) setDistrict(loc.district)
+                  if (loc.cityName) setCityName(loc.cityName)
+                  if (loc.city) setCity(loc.city)
                 }}
               />
             </div>

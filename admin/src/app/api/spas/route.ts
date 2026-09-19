@@ -29,11 +29,13 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url)
     const ward = searchParams.get('ward')
+    const city = searchParams.get('city')
     const tier = searchParams.get('tier')
     const active = searchParams.get('active')
     const search = searchParams.get('search')?.toLowerCase()
 
     const where: any = {}
+    if (city && city !== 'ALL') where.city = city
     if (ward && ward !== 'ALL') where.ward = ward
     if (tier && tier !== 'ALL') where.tier = tier
     if (active === 'true') where.isActive = true
@@ -102,6 +104,8 @@ export async function POST(request: Request) {
       address,
       district = 'Cầu Giấy',
       ward,
+      city = 'hn',
+      cityName = 'Hà Nội',
       phone,
       latitude,
       longitude,
@@ -122,7 +126,7 @@ export async function POST(request: Request) {
     // Validation
     if (!name || !address || !ward || !phone) {
       return NextResponse.json(
-        { error: 'Vui lòng điền đầy đủ Tên, Địa chỉ, Phường và Hotline.' },
+        { error: 'Vui lòng điền đầy đủ Tên, Địa chỉ, Phường/Xã và Hotline.' },
         { status: 400 }
       )
     }
@@ -168,8 +172,10 @@ export async function POST(request: Request) {
         name: name.trim(),
         slug,
         address: address.trim(),
-        district: district.trim(),
+        district: district?.trim() || 'Cầu Giấy',
         ward: ward.trim(),
+        city: city || 'hn',
+        cityName: cityName?.trim() || 'Hà Nội',
         phone: phone.trim(),
         latitude: latNum,
         longitude: lonNum,
