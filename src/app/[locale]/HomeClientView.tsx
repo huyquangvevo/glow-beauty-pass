@@ -17,6 +17,7 @@ import {
   MVP_SPAS,
   MVPService,
   MVPSpa,
+  SERVICE_BANNER_MAP,
   formatPrice,
 } from '@/lib/mvp-data';
 import { useSearch } from '@/context/SearchContext';
@@ -125,19 +126,9 @@ export default function HomeClientView({
             {servicesList.map((s) => {
               const sInfo = getServiceInfo(s.id);
               const servicePhoto =
-                s.id === 'goi-sach'
-                  ? '/banners/banner_herbal_wash.jpg'
-                  : s.id === 'goi-dau-cap'
-                  ? '/spas/spa_thumb_1.jpg'
-                  : s.id === 'duong-sinh'
-                  ? '/banners/banner_spa_ambiance.jpg'
-                  : s.id === 'massage-body'
-                  ? '/banners/banner_neck_massage.jpg'
-                  : s.id === 'cham-soc-da'
-                  ? '/spas/spa_facial_care.jpg'
-                  : s.id === 'combo-goi-da'
-                  ? '/spas/spa_thumb_3.jpg'
-                  : '/spas/spa_thumb_4.jpg';
+                s.imageUrl ||
+                SERVICE_BANNER_MAP[s.id] ||
+                '/services/goi-sach.png';
 
               return (
                 <Link

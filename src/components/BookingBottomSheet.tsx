@@ -2,7 +2,14 @@
 
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
-import { MVP_SERVICES, MVPService, MVPSpa, formatPrice, formatShortPrice } from '@/lib/mvp-data';
+import {
+  MVP_SERVICES,
+  MVPService,
+  MVPSpa,
+  formatPrice,
+  formatShortPrice,
+  SERVICE_BANNER_MAP,
+} from '@/lib/mvp-data';
 import { getMvpTranslation, getLocalizedBookingMessage } from '@/lib/mvp-i18n';
 import Image from 'next/image';
 import { X, ArrowRight, Check, Copy } from 'lucide-react';
@@ -242,9 +249,35 @@ export default function BookingBottomSheet({
             >
               {/* Step 1: Dịch vụ */}
               <div>
-                <label className="block text-[13.5px] font-bold text-[#093E06] mb-1.5 uppercase tracking-wide">
-                  {t.booking.serviceLabel}
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-[13.5px] font-bold text-[#093E06] uppercase tracking-wide">
+                    {t.booking.serviceLabel}
+                  </label>
+                  <span className="text-[13px] font-bold text-[#40813D]">
+                    {formatPrice(activeService?.price || 0)}
+                  </span>
+                </div>
+
+                {/* Selected Service Card with Official Banner */}
+                <div className="flex items-center gap-3 p-2.5 rounded-[16px] bg-[#FAFBF9] border border-[#E4EAE0] mb-2.5">
+                  <div className="relative w-12 h-12 rounded-[12px] overflow-hidden bg-stone-100 shrink-0 border border-stone-200/60 shadow-2xs">
+                    <Image
+                      src={activeService?.imageUrl || SERVICE_BANNER_MAP[activeService?.id || ''] || '/services/goi-sach.png'}
+                      alt={activeService?.name || 'Service'}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[15px] font-bold text-[#093E06] truncate">
+                      {getServiceName(activeService?.id || '')}
+                    </div>
+                    <div className="text-[12.5px] text-[#6B7869] font-medium">
+                      {activeService?.dur || '45 phút'} · {t.fixedPriceNotice || 'Đồng giá không phụ thu'}
+                    </div>
+                  </div>
+                </div>
+
                 <div className="flex flex-wrap gap-1.5">
                   {serviceList.map((s) => {
                     const isSelected = s.id === selectedServiceId;

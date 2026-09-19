@@ -19,6 +19,7 @@ import {
   MVPService,
   MVPSpa,
   MVPReview,
+  SERVICE_BANNER_MAP,
   formatPrice,
 } from '@/lib/mvp-data';
 import { getMvpTranslation, formatDayRange, formatTodayHours } from '@/lib/mvp-i18n';
@@ -226,6 +227,7 @@ export default function SpaDetailClientView({
               {spaServices.map((s) => {
                 const isCurrent = s.id === selectedServiceId;
                 const sInfo = t.services[s.id] || { name: s.name, dur: s.dur };
+                const sPhoto = s.imageUrl || SERVICE_BANNER_MAP[s.id] || '/services/goi-sach.png';
                 return (
                   <div
                     key={s.id}
@@ -234,22 +236,32 @@ export default function SpaDetailClientView({
                       isCurrent ? 'bg-[#F3FAF2] border-l-4 border-l-[#40813D]' : 'hover:bg-stone-50'
                     }`}
                   >
-                    <div className="flex-1 min-w-0 pr-3">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[14.5px] font-semibold text-[#093E06]">
-                          {sInfo.name}
-                        </span>
-                        {isCurrent && (
-                          <span className="text-[11px] font-bold text-[#40813D] bg-[#E8FDE7] px-1.5 py-0.5 rounded-full">
-                            {t.selecting}
+                    <div className="flex items-center gap-3 flex-1 min-w-0 pr-2">
+                      <div className="relative w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-[#DDE4D9] bg-[#E8FDE7]">
+                        <Image
+                          src={sPhoto}
+                          alt={sInfo.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-[14.5px] font-semibold text-[#093E06] leading-tight">
+                            {sInfo.name}
                           </span>
+                          {isCurrent && (
+                            <span className="text-[11px] font-bold text-[#40813D] bg-[#E8FDE7] px-1.5 py-0.5 rounded-full shrink-0">
+                              {t.selecting}
+                            </span>
+                          )}
+                        </div>
+                        {sInfo.dur && (
+                          <div className="text-[12px] text-[#6B7869] mt-0.5">
+                            {sInfo.dur}
+                          </div>
                         )}
                       </div>
-                      {sInfo.dur && (
-                        <div className="text-[12px] text-[#6B7869] mt-0.5">
-                          {sInfo.dur}
-                        </div>
-                      )}
                     </div>
                     <div className="text-[14.5px] font-bold text-[#093E06] shrink-0">
                       {formatPrice(s.price)}

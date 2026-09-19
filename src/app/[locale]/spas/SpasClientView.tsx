@@ -24,6 +24,7 @@ import {
   MVPSpa,
   CITIES,
   formatPrice,
+  SERVICE_BANNER_MAP,
 } from '@/lib/mvp-data';
 import { useSearch } from '@/context/SearchContext';
 import { useLocation, detectCityFromCoords } from '@/context/LocationContext';
@@ -644,6 +645,29 @@ export default function SpasClientView({
           {/* TAB 2: LIST VIEW */}
           {viewMode === 'list' && (
             <div className="flex-1 overflow-y-auto overscroll-y-contain p-4 space-y-3 pb-[max(80px,calc(4rem+env(safe-area-inset-bottom)))] sm:pb-8">
+              {/* Active Service Banner Card */}
+              <div className="relative w-full h-[95px] rounded-[20px] overflow-hidden border border-[#DDE4D9] shadow-xs shrink-0 group">
+                <Image
+                  src={activeService.imageUrl || SERVICE_BANNER_MAP[activeService.id] || '/services/goi-sach.png'}
+                  alt={getServiceInfo(activeService.id).name}
+                  fill
+                  sizes="(max-width: 440px) 100vw, 440px"
+                  className="object-cover object-center transform scale-100 group-hover:scale-102 transition-transform duration-500"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-transparent flex flex-col justify-center px-4">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-300">
+                    Dịch vụ đồng giá Glow
+                  </span>
+                  <div className="text-[18px] font-bold text-white leading-tight">
+                    {getServiceInfo(activeService.id).name}
+                  </div>
+                  <div className="text-[13px] text-white/90 font-medium mt-0.5">
+                    {formatPrice(activeService.price)} · {activeService.dur || '45 phút'} · {t.fixedPriceNotice}
+                  </div>
+                </div>
+              </div>
+
               {/* Service Count Summary Header */}
               <div className="text-[14.5px] font-bold text-[#093E06] px-1 flex items-center justify-between">
                 <span>

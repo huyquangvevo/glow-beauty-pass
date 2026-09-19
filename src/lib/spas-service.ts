@@ -1,4 +1,4 @@
-import { MVP_SERVICES, MVP_SPAS, MVPService, MVPSpa, MVPReview } from '@/lib/mvp-data'
+import { MVP_SERVICES, MVP_SPAS, MVPService, MVPSpa, MVPReview, SERVICE_BANNER_MAP } from '@/lib/mvp-data'
 import { getSpaSpecificReviews } from '@/lib/spa-reviews-data'
 import { computeDistanceKm, DEFAULT_CITY_CENTERS, formatDistanceKm } from '@/lib/formatters'
 import { prisma } from '@/lib/prisma'
@@ -85,8 +85,9 @@ export function mapPrismaSpaToMVPSpa(s: any): MVPSpa {
 }
 
 export function mapPrismaSkuToMVPService(sku: any): MVPService {
+  const code = sku.code || sku.id;
   return {
-    id: sku.code || sku.id,
+    id: code,
     name: sku.name,
     short: sku.shortName || sku.name,
     price: sku.price || sku.pricePhase1 || 39000,
@@ -95,6 +96,7 @@ export function mapPrismaSkuToMVPService(sku: any): MVPService {
     badge: sku.badge || undefined,
     wide: !!sku.wide,
     desc: sku.description || undefined,
+    imageUrl: SERVICE_BANNER_MAP[code] || '/services/goi-sach.png',
   }
 }
 

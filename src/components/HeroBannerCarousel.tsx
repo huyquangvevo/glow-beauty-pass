@@ -24,7 +24,7 @@ export function HeroBannerCarousel() {
   const slides: BannerSlide[] = [
     {
       id: 'slide-1',
-      image: '/banners/banner_herbal_wash.jpg',
+      image: '/services/duong-sinh.png',
       tag: tHero('slide1.tag'),
       title: tHero('slide1.title'),
       highlight: tHero('slide1.highlight'),
@@ -35,7 +35,7 @@ export function HeroBannerCarousel() {
     },
     {
       id: 'slide-2',
-      image: '/banners/banner_neck_massage.jpg',
+      image: '/services/massage-body.png',
       tag: tHero('slide2.tag'),
       title: tHero('slide2.title'),
       highlight: tHero('slide2.highlight'),
@@ -46,7 +46,7 @@ export function HeroBannerCarousel() {
     },
     {
       id: 'slide-3',
-      image: '/banners/banner_spa_ambiance.jpg',
+      image: '/services/cham-soc-da.png',
       tag: tHero('slide3.tag'),
       title: tHero('slide3.title'),
       highlight: tHero('slide3.highlight'),

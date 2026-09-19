@@ -8,7 +8,18 @@ export interface MVPService {
   count: number;
   badge?: string;
   wide?: boolean;
+  imageUrl?: string;
 }
+
+export const SERVICE_BANNER_MAP: Record<string, string> = {
+  'goi-sach': '/services/goi-sach.png',
+  'goi-dau-cap': '/services/goi-dau-cap.png',
+  'duong-sinh': '/services/duong-sinh.png',
+  'massage-body': '/services/massage-body.png',
+  'cham-soc-da': '/services/cham-soc-da.png',
+  'combo-goi-da': '/services/combo-goi-da.png',
+  'triet-long': '/services/triet-long.png',
+};
 
 export interface MVPSpa {
   id: string;
@@ -61,6 +72,7 @@ export const MVP_SERVICES: MVPService[] = [
     price: 39000,
     dur: '',
     count: 482,
+    imageUrl: '/services/goi-sach.png',
   },
   {
     id: 'goi-dau-cap',
@@ -69,6 +81,7 @@ export const MVP_SERVICES: MVPService[] = [
     price: 59000,
     dur: '',
     count: 395,
+    imageUrl: '/services/goi-dau-cap.png',
   },
   {
     id: 'duong-sinh',
@@ -78,6 +91,7 @@ export const MVP_SERVICES: MVPService[] = [
     dur: '',
     badge: 'ĐƯỢC CHỌN NHIỀU NHẤT',
     count: 468,
+    imageUrl: '/services/duong-sinh.png',
   },
   {
     id: 'massage-body',
@@ -86,6 +100,7 @@ export const MVP_SERVICES: MVPService[] = [
     price: 199000,
     dur: '60 phút',
     count: 312,
+    imageUrl: '/services/massage-body.png',
   },
   {
     id: 'cham-soc-da',
@@ -94,6 +109,7 @@ export const MVP_SERVICES: MVPService[] = [
     price: 169000,
     dur: '',
     count: 286,
+    imageUrl: '/services/cham-soc-da.png',
   },
   {
     id: 'combo-goi-da',
@@ -102,6 +118,7 @@ export const MVP_SERVICES: MVPService[] = [
     price: 199000,
     dur: '',
     count: 245,
+    imageUrl: '/services/combo-goi-da.png',
   },
   {
     id: 'triet-long',
@@ -111,6 +128,7 @@ export const MVP_SERVICES: MVPService[] = [
     dur: '1 buổi / 1 vùng',
     count: 178,
     wide: true,
+    imageUrl: '/services/triet-long.png',
   },
 ];
 
@@ -138,21 +156,21 @@ const REALISTIC_REVIEWS = [284, 412, 195, 326, 458, 167, 312, 520, 189, 476, 385
 const REALISTIC_RATINGS = [4.9, 4.8, 4.9, 4.8, 4.9, 4.9, 4.8, 5.0, 4.7, 4.9, 4.9, 4.8, 4.8, 4.9, 4.9];
 
 const PHOTO_ROTATIONS = [
-  ['/spas/spa_real_01.jpg', '/spas/spa_real_07.jpg', '/spas/spa_real_23.jpg', '/banners/banner_herbal_wash.jpg'],
+  ['/spas/spa_real_01.jpg', '/spas/spa_real_07.jpg', '/spas/spa_real_23.jpg', '/services/duong-sinh.png'],
   ['/spas/spa_real_02.jpg', '/spas/spa_real_06.jpg', '/spas/spa_real_25.jpg', '/spas/spa_real_35.jpg'],
-  ['/spas/spa_real_03.jpg', '/spas/spa_real_10.jpg', '/spas/spa_real_18.jpg', '/banners/banner_neck_massage.jpg'],
+  ['/spas/spa_real_03.jpg', '/spas/spa_real_10.jpg', '/spas/spa_real_18.jpg', '/services/massage-body.png'],
   ['/spas/spa_real_04.jpg', '/spas/spa_real_12.jpg', '/spas/spa_real_27.jpg', '/spas/spa_facial_care.jpg'],
-  ['/spas/spa_real_05.jpg', '/spas/spa_real_15.jpg', '/spas/spa_real_29.jpg', '/banners/banner_spa_ambiance.jpg'],
+  ['/spas/spa_real_05.jpg', '/spas/spa_real_15.jpg', '/spas/spa_real_29.jpg', '/services/cham-soc-da.png'],
   ['/spas/spa_real_06.jpg', '/spas/spa_real_16.jpg', '/spas/spa_real_30.jpg', '/spas/spa_real_01.jpg'],
-  ['/spas/spa_real_07.jpg', '/spas/spa_real_19.jpg', '/spas/spa_real_31.jpg', '/banners/banner_herbal_wash.jpg'],
+  ['/spas/spa_real_07.jpg', '/spas/spa_real_19.jpg', '/spas/spa_real_31.jpg', '/services/duong-sinh.png'],
   ['/spas/spa_real_08.jpg', '/spas/spa_real_20.jpg', '/spas/spa_real_32.jpg', '/spas/spa_real_02.jpg'],
-  ['/spas/spa_real_09.jpg', '/spas/spa_real_21.jpg', '/spas/spa_real_33.jpg', '/banners/banner_neck_massage.jpg'],
+  ['/spas/spa_real_09.jpg', '/spas/spa_real_21.jpg', '/spas/spa_real_33.jpg', '/services/massage-body.png'],
   ['/spas/spa_real_10.jpg', '/spas/spa_real_22.jpg', '/spas/spa_real_34.jpg', '/spas/spa_real_03.jpg'],
-  ['/spas/spa_real_11.jpg', '/spas/spa_real_24.jpg', '/spas/spa_real_35.jpg', '/banners/banner_spa_ambiance.jpg'],
+  ['/spas/spa_real_11.jpg', '/spas/spa_real_24.jpg', '/spas/spa_real_35.jpg', '/services/cham-soc-da.png'],
   ['/spas/spa_real_12.jpg', '/spas/spa_real_26.jpg', '/spas/spa_real_36.jpg', '/spas/spa_facial_care.jpg'],
-  ['/spas/spa_real_13.jpg', '/spas/spa_real_28.jpg', '/spas/spa_real_01.jpg', '/banners/banner_herbal_wash.jpg'],
-  ['/spas/spa_real_14.jpg', '/spas/spa_real_29.jpg', '/spas/spa_real_02.jpg', '/banners/banner_neck_massage.jpg'],
-  ['/spas/spa_real_15.jpg', '/spas/spa_real_30.jpg', '/spas/spa_real_04.jpg', '/banners/banner_spa_ambiance.jpg'],
+  ['/spas/spa_real_13.jpg', '/spas/spa_real_28.jpg', '/spas/spa_real_01.jpg', '/services/duong-sinh.png'],
+  ['/spas/spa_real_14.jpg', '/spas/spa_real_29.jpg', '/spas/spa_real_02.jpg', '/services/massage-body.png'],
+  ['/spas/spa_real_15.jpg', '/spas/spa_real_30.jpg', '/spas/spa_real_04.jpg', '/services/cham-soc-da.png'],
 ];
 
 const SNAPSHOT_SPAS: MVPSpa[] = (snapshotData.spas || []).map((s: any, idx: number) => {
